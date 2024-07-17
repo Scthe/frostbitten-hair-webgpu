@@ -1,7 +1,8 @@
-import { mat4 } from 'wgpu-matrix';
-import { BYTES_MAT4, BYTES_VEC4, CONFIG } from '../constants.ts';
+import { mat4, vec3 } from 'wgpu-matrix';
+import { BYTES_MAT4, BYTES_VEC4, CONFIG, LightCfg } from '../constants.ts';
 import { PassCtx } from './passCtx.ts';
 import { TypedArrayView } from '../utils/typedArrayView.ts';
+import { sphericalToCartesian } from '../utils/index.ts';
 
 export class RenderUniformsBuffer {
   public static SHADER_SNIPPET = (group: number) => /* wgsl */ `
@@ -11,6 +12,11 @@ export class RenderUniformsBuffer {
     const b11111 = 31u; // binary 0b11111
     const b111111 = 63u; // binary 0b111111
 
+    struct Light {
+      position: vec4f,
+      colorAndEnergy: vec4f,
+    }
+
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
       vpMatrixInv: mat4x4<f32>,
@@ -19,19 +25,27 @@ export class RenderUniformsBuffer {
       viewport: vec4f,
       cameraPosition: vec4f,
       colorMgmt: vec4f,
+      lightAmbient: vec4f,
+      light0: Light,
+      light1: Light,
+      light2: Light,
     };
     @binding(0) @group(${group})
     var<uniform> _uniforms: Uniforms;
   `;
 
-  public static BUFFER_SIZE =
+  private static LIGHT_SIZE = 2 * BYTES_VEC4;
+
+  private static BUFFER_SIZE =
     BYTES_MAT4 + // vpMatrix
     BYTES_MAT4 + // vpMatrixInv
     BYTES_MAT4 + // viewMatrix
     BYTES_MAT4 + // projMatrix
     BYTES_VEC4 + // viewport
     BYTES_VEC4 + // cameraPosition
-    BYTES_VEC4; // color mgmt
+    BYTES_VEC4 + // color mgmt
+    BYTES_VEC4 + // lightAmbient
+    3 * RenderUniformsBuffer.LIGHT_SIZE; // lights
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(RenderUniformsBuffer.BUFFER_SIZE);
@@ -51,7 +65,7 @@ export class RenderUniformsBuffer {
     resource: { buffer: this.gpuBuffer },
   });
 
-  update2(ctx: PassCtx) {
+  update(ctx: PassCtx) {
     const {
       device,
       vpMatrix,
@@ -84,9 +98,33 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(col.exposure);
     this.dataView.writeF32(col.ditherStrength);
     this.dataView.writeF32(0.0);
+    // lights
+    this.dataView.writeF32(c.lightAmbient.color[0]);
+    this.dataView.writeF32(c.lightAmbient.color[1]);
+    this.dataView.writeF32(c.lightAmbient.color[2]);
+    this.dataView.writeF32(c.lightAmbient.energy);
+    this.writeLight(c.lights[0]);
+    this.writeLight(c.lights[1]);
+    this.writeLight(c.lights[2]);
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);
     this.dataView.upload(device, this.gpuBuffer, 0);
   }
+
+  private writeLight(l: LightCfg) {
+    const pos = sphericalToCartesian(l.posPhi, l.posTheta, TMP_VEC3, true);
+    const dist = 2.0;
+    this.dataView.writeF32(pos[0] * dist);
+    this.dataView.writeF32(pos[1] * dist);
+    this.dataView.writeF32(pos[2] * dist);
+    this.dataView.writeF32(0.0);
+
+    this.dataView.writeF32(l.color[0]);
+    this.dataView.writeF32(l.color[1]);
+    this.dataView.writeF32(l.color[2]);
+    this.dataView.writeF32(l.energy);
+  }
 }
+
+const TMP_VEC3 = vec3.create();

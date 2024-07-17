@@ -15,6 +15,7 @@ import { PassCtx } from './passes/passCtx.ts';
 import { PresentPass } from './passes/presentPass/presentPass.ts';
 import { DrawMeshesPass } from './passes/drawMeshes/drawMeshesPass.ts';
 import { DrawBackgroundGradientPass } from './passes/drawBackgroundGradient/drawBackgroundGradientPass.ts';
+import { HwHairPass } from './passes/hwHair/hwHairPass.ts';
 
 export class Renderer {
   private readonly renderUniformBuffer: RenderUniformsBuffer;
@@ -33,6 +34,7 @@ export class Renderer {
   // passes
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
   private readonly drawMeshesPass: DrawMeshesPass;
+  private readonly hwHairPass: HwHairPass;
   private readonly presentPass: PresentPass;
 
   constructor(
@@ -48,11 +50,13 @@ export class Renderer {
     );
     this.renderUniformBuffer = new RenderUniformsBuffer(device);
 
+    // passes
     this.drawBackgroundGradientPass = new DrawBackgroundGradientPass(
       device,
       HDR_RENDER_TEX_FORMAT
     );
     this.drawMeshesPass = new DrawMeshesPass(device, HDR_RENDER_TEX_FORMAT);
+    this.hwHairPass = new HwHairPass(device, HDR_RENDER_TEX_FORMAT);
     this.presentPass = new PresentPass(device, preferredCanvasFormat);
 
     this.handleViewportResize(viewportSize);
@@ -91,7 +95,7 @@ export class Renderer {
       globalUniforms: this.renderUniformBuffer,
     };
 
-    this.renderUniformBuffer.update2(ctx);
+    this.renderUniformBuffer.update(ctx);
 
     this.drawBackgroundGradientPass.cmdDraw(ctx, 'load');
     this.cmdDrawScene(ctx);
@@ -103,38 +107,7 @@ export class Renderer {
 
   private cmdDrawScene(ctx: PassCtx) {
     this.drawMeshesPass.cmdDrawMeshes(ctx);
-    /*
-    const softwareRasterizeEnabled = ctx.softwareRasterizerEnabled;
-    if (softwareRasterizeEnabled) {
-      this.rasterizeSwPass.clearFramebuffer(ctx);
-    }
-
-    // draw objects
-    for (let i = 0; i < naniteObjects.length; i++) {
-      const naniteObject = naniteObjects[i];
-      const loadOp: GPULoadOp = i == 0 ? 'clear' : 'load';
-
-      if (!CONFIG.nanite.render.freezeGPU_Visibilty) {
-        if (CONFIG.cullingInstances.enabled) {
-          this.cullInstancesPass.cmdCullInstances(ctx, naniteObject);
-        }
-        this.cullMeshletsPass.cmdCullMeshlets(ctx, naniteObject);
-      }
-
-      // draw: hardware
-      this.rasterizeHwPass.cmdHardwareRasterize(ctx, naniteObject, loadOp);
-
-      // draw: software
-      if (softwareRasterizeEnabled) {
-        this.rasterizeSwPass.cmdSoftwareRasterize(ctx, naniteObject);
-      }
-    }
-
-    // combine hardware + software rasterizer results
-    if (softwareRasterizeEnabled) {
-      this.rasterizeCombine.cmdCombineRasterResults(ctx);
-    }
-    */
+    this.hwHairPass.cmdDrawHair(ctx);
   }
 
   private handleViewportResize = (viewportSize: Dimensions) => {

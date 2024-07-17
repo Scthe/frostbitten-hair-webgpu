@@ -56,14 +56,13 @@ fn main_vs(
 
 @fragment
 fn main_fs(fragIn: VertexOutput) -> @location(0) vec4<f32> {
+  // material
   var material: Material;
   createDefaultMaterial(&material, fragIn.positionWS, normalize(fragIn.normalWS));
   // material.albedo = textureSample(_diffuseTexture, _sampler, fragIn.uv).rgb;
   
   // shading
-  var lights = array<Light, LIGHT_COUNT>();
-  fillLightsData(&lights);
-  let color = doShading(material, AMBIENT_LIGHT, lights);
+  let color = doShading(material);
 
   return vec4(color.xyz, 1.0);
 }

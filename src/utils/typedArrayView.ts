@@ -2,8 +2,8 @@ import { Mat4 } from 'wgpu-matrix';
 import { BYTES_F32, BYTES_U32 } from '../constants.ts';
 
 export class TypedArrayView {
-  private readonly asF32: Float32Array;
-  private readonly asU32: Uint32Array;
+  public readonly asF32: Float32Array;
+  public readonly asU32: Uint32Array;
 
   /** Write cursor */
   private offsetBytes = 0;

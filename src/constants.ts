@@ -50,27 +50,35 @@ export const CONFIG = {
   ///////////////
   /// GENERIC/SCENE STUFF
   clearColor: [0.2, 0.2, 0.2, 0.0] as ClearColor,
-  lightsCount: 2,
 
   ///////////////
   /// CAMERA
   camera: {
     position: {
-      position: [1.5, 1.9, 2.3],
-      rotation: [-0.6, 0.3], // [pitch, yaw]
+      position: [0.25, 1.6, 0.6],
+      rotation: [-0.4, 0.1], // [pitch, yaw]
     } satisfies CameraPosition,
     projection: {
-      fovDgr: 45,
+      fovDgr: 30,
       near: 0.01,
       far: 100.0,
     },
     /** Camera rotation sensitivity */
     rotationSpeed: 1,
     /** Camera movement sensitivity */
-    movementSpeed: 3,
+    movementSpeed: 0.5,
     /** Camera movement sensitivity when pressing SPEED BUTTON */
-    movementSpeedFaster: 20,
+    movementSpeedFaster: 3,
   },
+
+  ///////////////
+  /// LIGHTS
+  lightAmbient: { color: [1, 1, 1], energy: 0.05 },
+  lights: [
+    { posPhi: 60.0, posTheta: 20.0, color: [1, 0.95, 0.8], energy: 0.8 },
+    { posPhi: 100.0, posTheta: 75.0, color: [0.8, 0.98, 1.0], energy: 0.8 },
+    { posPhi: -90.0, posTheta: 30.0, color: [1, 0.95, 0.8], energy: 0.8 },
+  ] as LightCfg[],
 
   ///////////////
   /// PostFX-like effects (dither, tonemapping, exposure, gamma etc.)
@@ -87,3 +95,10 @@ export type CameraPosition = {
 };
 
 export type CameraProjection = (typeof CONFIG)['camera']['projection'];
+
+export type LightCfg = {
+  posPhi: number;
+  posTheta: number;
+  color: [number, number, number];
+  energy: number;
+};

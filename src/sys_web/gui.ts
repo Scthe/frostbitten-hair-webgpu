@@ -1,6 +1,6 @@
 // @deno-types="npm:@types/dat.gui@0.7.9"
 import * as dat from 'dat.gui';
-import { CONFIG } from '../constants.ts';
+import { CONFIG, LightCfg } from '../constants.ts';
 import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
@@ -35,11 +35,35 @@ export function initializeGUI(
 
   // profiler
   gui.add(dummyObject, 'profile').name('Profile');
+
+  // folders
+  addAmbientLightFolder(gui);
+  addLightFolder(gui, CONFIG.lights[0], 'Light 0');
+  addLightFolder(gui, CONFIG.lights[1], 'Light 1');
+  addLightFolder(gui, CONFIG.lights[2], 'Light 2');
   addColorMgmt();
   addDbgFolder();
 
   //////////////
   /// subdirs
+
+  function addAmbientLightFolder(gui: dat.GUI) {
+    const dir = gui.addFolder('Ambient light');
+    // dir.open();
+
+    addColorController(dir, CONFIG.lightAmbient, 'color', 'Color');
+    dir.add(CONFIG.lightAmbient, 'energy', 0.0, 0.2, 0.01).name('Energy');
+  }
+
+  function addLightFolder(gui: dat.GUI, lightObj: LightCfg, name: string) {
+    const dir = gui.addFolder(name);
+    // dir.open();
+
+    dir.add(lightObj, 'posPhi', -179, 179).step(1).name('Position phi');
+    dir.add(lightObj, 'posTheta', 15, 165).step(1).name('Position th');
+    addColorController(dir, lightObj, 'color', 'Color');
+    dir.add(lightObj, 'energy', 0.0, 2.0).name('Energy');
+  }
 
   function addColorMgmt() {
     const dir = gui.addFolder('Color mgmt');
@@ -90,23 +114,6 @@ export function initializeGUI(
     });
 
     dir.addColor(dummy, 'value').name(name);
-  }
-}
-
-function setVisible(ctrl: GuiCtrl, isVisible: boolean) {
-  if (!ctrl) {
-    // use stacktrace/debugger to identify which..
-    console.error(`Not controller for gui element found!`);
-    return;
-  }
-
-  // deno-lint-ignore no-explicit-any
-  const parentEl: HTMLElement = (ctrl as any).__li;
-
-  if (isVisible) {
-    parentEl.style.display = '';
-  } else {
-    parentEl.style.display = 'none';
   }
 }
 

@@ -53,7 +53,7 @@ export function loadObjFile(
     mesh.indices
   );
   const bounds = calculateBounds(positions);
-  console.log(`Loaded OBJ object '${name}', bounds`, bounds);
+  console.log(`Loaded OBJ object '${name}', bounds`, bounds.sphere);
 
   return {
     name,

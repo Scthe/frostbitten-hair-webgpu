@@ -1,3 +1,5 @@
+import { Vec3 } from 'wgpu-matrix';
+
 export interface Dimensions {
   width: number;
   height: number;
@@ -9,6 +11,7 @@ export type ValueOf<T> = T[keyof T];
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
 export const dgr2rad = (dgr: number) => (dgr * Math.PI) / 180;
+export const rad2dgr = (radians: number) => (radians / Math.PI) * 180;
 
 export function getClassName(a: object) {
   // deno-lint-ignore no-explicit-any
@@ -42,3 +45,19 @@ export function debounce<T extends unknown[]>(
     timer = setTimeout(() => callback(...args), wait);
   };
 }
+
+export const sphericalToCartesian = (
+  phi: number,
+  theta: number,
+  result: Vec3,
+  autoConvertToRad = false
+) => {
+  if (autoConvertToRad) {
+    phi = dgr2rad(phi);
+    theta = dgr2rad(theta);
+  }
+  result[0] = Math.cos(phi) * Math.sin(theta);
+  result[1] = Math.cos(theta);
+  result[2] = Math.sin(phi) * Math.sin(theta);
+  return result;
+};

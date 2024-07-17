@@ -115,7 +115,7 @@ fn pbr_mixDiffuseAndSpecular(material: Material, diffuse: vec3f, specular: vec3f
 fn disneyPBR(material: Material, light: Light) -> vec3f {
   let N = material.normal; // normal at fragment
   let V = material.toEye; // viewDir
-  let L = normalize(light.position - material.positionWS); // wi in integral
+  let L = normalize(light.position.xyz - material.positionWS.xyz); // wi in integral
   let attenuation = 1.0; // hardcoded for this demo
 
   // diffuse
@@ -128,7 +128,7 @@ fn disneyPBR(material: Material, light: Light) -> vec3f {
   // final light calc.
   let NdotL = dotMax0(N, L);
   let brdfFinal = pbr_mixDiffuseAndSpecular(material, lambert, specular, F);
-  let radiance = light.color * attenuation * light.intensity; // incoming color from light
+  let radiance = light.colorAndEnergy.rgb * attenuation * light.colorAndEnergy.a; // incoming color from light
   return brdfFinal * radiance * NdotL;
 }
 `;

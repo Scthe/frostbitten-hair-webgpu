@@ -48,13 +48,14 @@ export function createGPUBuffer<T extends TypedArray>(
     size: data.byteLength,
     usage,
   });
-  /*console.log(`create buffer [${label}]`, {
+  /*console.log(`Create buffer [${label}]`, {
     dataLen: data.length,
     dataBytes: data.byteLength,
     gpuSize: gpuBuffer.size,
-    data,
+    // data,
   });*/
-  device.queue.writeBuffer(gpuBuffer, 0, data);
+  // device.queue.writeBuffer(gpuBuffer, 0, data, 0, data.length);
+  device.queue.writeBuffer(gpuBuffer, 0, data, 0);
   return gpuBuffer;
 }
 

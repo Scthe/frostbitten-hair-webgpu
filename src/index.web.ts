@@ -5,13 +5,16 @@ import { STATS } from './sys_web/stats.ts';
 import { initializeGUI, onGpuProfilerResult } from './sys_web/gui.ts';
 import { GpuProfiler } from './gpuProfiler.ts';
 import { initCanvasResizeSystem } from './sys_web/cavasResize.ts';
-import { MILISECONDS_TO_SECONDS } from './constants.ts';
+import { CONFIG, MILISECONDS_TO_SECONDS } from './constants.ts';
 import { createErrorSystem } from './utils/errors.ts';
 import { showHtmlEl, hideHtmlEl } from './sys_web/htmlUtils.ts';
 import { Scene } from './scene/scene.ts';
 import { loadScene } from './scene/loadScene.ts';
 
 (async function () {
+  // deno-lint-ignore no-explicit-any
+  (globalThis as any)._config = CONFIG;
+
   // GPUDevice
   const device = await createGpuDevice();
   if (!device) {
