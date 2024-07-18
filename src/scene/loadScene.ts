@@ -34,33 +34,25 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
     console.groupEnd();
   }
 
-  const hairObject = await loadHairObject(
-    device,
-    'SintelHairOriginal-sintel_hair.tfx', // 'sintel_hair.tfx',
-    'sintelHair'
-  );
+  const HAIR_FILE = 'SintelHairOriginal-sintel_hair.tfx'; // 'sintel_hair.tfx',
+  const tfxFile = await loadTfxFile(HAIR_FILE, 1.0);
+  // const tfxFile = mockTfxFile();
+  const hairObject = await createHairObject(device, 'sintelHair', tfxFile);
 
   return { objects, hairObject };
 }
 
-async function loadHairObject(
+export function createHairObject(
   device: GPUDevice,
-  fileName: string,
-  name: string
+  name: string,
+  tfxFile: TfxFileData
 ) {
-  const fileBytes = await CONFIG.loaders.binaryFileReader(
-    `${MODELS_DIR}/${fileName}`
-  );
-  const SCALE = 1;
-  const tfxFile = parseTfxFile(fileBytes, SCALE);
-  // const tfxFile = mockTfxFile();
-
   const bBox = calcBoundingBox(tfxFile.vertexPositions, 4);
   const bounds: Bounds3d = {
     box: bBox,
     sphere: calcBoundingSphere(bBox),
   };
-  console.log('Bounds', bounds);
+  console.log('Bounds', bounds.sphere);
 
   const dataBuffer = createHairDataBuffer(device, name, tfxFile);
   const pointsPositionsBuffer = createHairPointsPositionsBuffer(
@@ -85,8 +77,17 @@ async function loadHairObject(
   );
 }
 
-// deno-lint-ignore no-unused-vars
-function mockTfxFile(): TfxFileData {
+async function loadTfxFile(
+  fileName: string,
+  scale = 1.0
+): Promise<TfxFileData> {
+  const fileBytes = await CONFIG.loaders.binaryFileReader(
+    `${MODELS_DIR}/${fileName}`
+  );
+  return parseTfxFile(fileBytes, scale);
+}
+
+export function mockTfxFile(): TfxFileData {
   const x = 0,
     y = 0,
     z = 0,
