@@ -1,4 +1,4 @@
-import { assertIsGPUTextureView } from '../../utils/webgpu.ts';
+import { assertIsGPUTextureView, bindBuffer } from '../../utils/webgpu.ts';
 import { SHADER_PARAMS, SHADER_CODE } from './hairCombinePass.wgsl.ts';
 import { PassCtx } from '../passCtx.ts';
 import { cmdDrawFullscreenTriangle } from '../_shaderSnippets/fullscreenTriangle.wgsl.ts';
@@ -7,9 +7,9 @@ import {
   labelShader,
   labelPipeline,
   useColorAttachment,
-  assignResourcesToBindings2,
   PIPELINE_DEPTH_ON,
   useDepthStencilAttachment,
+  assignResourcesToBindings,
 } from '../_shared/shared.ts';
 import { CONFIG } from '../../constants.ts';
 
@@ -63,11 +63,7 @@ export class HairCombinePass {
 
   onViewportResize = () => this.bindingsCache.clear();
 
-  cmdCombineRasterResults(
-    ctx: PassCtx,
-    hairRasterizeResult: GPUBuffer,
-    hairSegmentsPerTileBuffer: GPUBuffer
-  ) {
+  cmdCombineRasterResults(ctx: PassCtx) {
     const { cmdBuf, profiler, hdrRenderTexture, depthTexture } = ctx;
     assertIsGPUTextureView(hdrRenderTexture);
 
@@ -82,7 +78,7 @@ export class HairCombinePass {
     });
 
     const bindings = this.bindingsCache.getBindings(depthTexture.label, () =>
-      this.createBindings(ctx, hairRasterizeResult, hairSegmentsPerTileBuffer)
+      this.createBindings(ctx)
     );
     renderPass.setBindGroup(0, bindings);
     renderPass.setPipeline(this.pipeline);
@@ -90,29 +86,21 @@ export class HairCombinePass {
     renderPass.end();
   }
 
-  private createBindings = (
-    { device, globalUniforms }: PassCtx,
-    hairRasterizeResult: GPUBuffer,
-    hairSegmentsPerTileBuffer: GPUBuffer
-  ): GPUBindGroup => {
+  private createBindings = (ctx: PassCtx): GPUBindGroup => {
+    const {
+      device,
+      globalUniforms,
+      hairTilesBuffer,
+      hairTileSegmentsBuffer,
+      hairRasterizerResultsBuffer,
+    } = ctx;
     const b = SHADER_PARAMS.bindings;
 
-    return assignResourcesToBindings2(
-      HairCombinePass,
-      HairCombinePass.NAME,
-      device,
-      this.pipeline,
-      [
-        globalUniforms.createBindingDesc(b.renderUniforms),
-        {
-          binding: b.hairResult,
-          resource: { buffer: hairRasterizeResult },
-        },
-        {
-          binding: b.segmentsPerTileBuffer,
-          resource: { buffer: hairSegmentsPerTileBuffer },
-        },
-      ]
-    );
+    return assignResourcesToBindings(HairCombinePass, device, this.pipeline, [
+      globalUniforms.createBindingDesc(b.renderUniforms),
+      bindBuffer(b.tilesBuffer, hairTilesBuffer),
+      bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
+      bindBuffer(b.rasterizeResultBuffer, hairRasterizerResultsBuffer),
+    ]);
   };
 }

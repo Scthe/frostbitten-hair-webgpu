@@ -1,5 +1,5 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
-import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
+import { WEBGPU_MINIMAL_BUFFER_SIZE, u32_type } from '../../../utils/webgpu.ts';
 import { getTileCount } from './hairTilesResultBuffer.ts';
 import { Dimensions } from '../../../utils/index.ts';
 
@@ -25,14 +25,14 @@ fn _storeTileSegment(
   let tileIdx: u32 = _getHairTileIdx(viewportSize, posPx);
 
   // '0' denotes end of the list. We skip that cell
-  let fragIndex = atomicAdd(&_drawnHairSegments.drawnSegmentsCount, 1u) + 1;
+  let fragIndex = atomicAdd(&_hairTileSegments.drawnSegmentsCount, 1u) + 1;
 
   // If we run out of space to store the fragments, we just lose them
   if (fragIndex < maxDrawnSegments) {
     let lastHead = atomicExchange(&_hairTilesResult[tileIdx].tileSegmentPtr, fragIndex);
     let encodedSegment = (segmentIdx << 24) | strandIdx;
-    _drawnHairSegments.data[fragIndex].strandAndSegmentIdxs = encodedSegment;
-    _drawnHairSegments.data[fragIndex].next = lastHead;
+    _hairTileSegments.data[fragIndex].strandAndSegmentIdxs = encodedSegment;
+    _hairTileSegments.data[fragIndex].next = lastHead;
   }
 }
 `;
@@ -49,7 +49,7 @@ fn _getTileSegment(
     return false;
   }
 
-  let data = _drawnHairSegments.data[tileSegmentPtr];
+  let data = _hairTileSegments.data[tileSegmentPtr];
   (*result).x = data.strandAndSegmentIdxs & 0x00ffffff;
   (*result).y = data.strandAndSegmentIdxs >> 24;
   (*result).z = data.next;
@@ -57,7 +57,7 @@ fn _getTileSegment(
 }
 `;
 
-export const BUFFER_HAIR_SEGMENTS_PER_TILE = (
+export const BUFFER_HAIR_TILE_SEGMENTS = (
   bindingIdx: number,
   access: 'read_write' | 'read'
 ) => /* wgsl */ `
@@ -69,12 +69,12 @@ struct LinkedListElement {
 };
 
 struct DrawnHairSegments {
-  drawnSegmentsCount: ${access === 'read_write' ? 'atomic<u32>' : 'u32'},
+  drawnSegmentsCount: ${u32_type(access)},
   data: array<LinkedListElement>
 };
 
 @group(0) @binding(${bindingIdx})
-var<storage, ${access}> _drawnHairSegments: DrawnHairSegments;
+var<storage, ${access}> _hairTileSegments: DrawnHairSegments;
 
 
 ${access == 'read_write' ? storeTileSegment : getTileSegment}
@@ -84,7 +84,7 @@ ${access == 'read_write' ? storeTileSegment : getTileSegment}
 /// GPU BUFFER
 ///////////////////////////
 
-export function getLengthOfHairSegmentsPerTileBuffer(viewportSize: Dimensions) {
+export function getLengthOfHairTileSegmentsBuffer(viewportSize: Dimensions) {
   const tileCount = getTileCount(viewportSize);
   const cnt = Math.ceil(
     tileCount.width * tileCount.height * CONFIG.hairRender.avgSegmentsPerTile
@@ -92,11 +92,11 @@ export function getLengthOfHairSegmentsPerTileBuffer(viewportSize: Dimensions) {
   return 1 + cnt;
 }
 
-export function createHairSegmentsPerTileBuffer(
+export function createHairTileSegmentsBuffer(
   device: GPUDevice,
   viewportSize: Dimensions
 ): GPUBuffer {
-  const entries = getLengthOfHairSegmentsPerTileBuffer(viewportSize);
+  const entries = getLengthOfHairTileSegmentsBuffer(viewportSize);
   const bytesPerEntry = 2 * BYTES_U32;
 
   return device.createBuffer({

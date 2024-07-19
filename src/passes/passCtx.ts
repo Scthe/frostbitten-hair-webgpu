@@ -18,4 +18,8 @@ export interface PassCtx {
   depthTexture: GPUTextureView;
   hdrRenderTexture: GPUTextureView;
   globalUniforms: RenderUniformsBuffer;
+  // hair:
+  hairTilesBuffer: GPUBuffer;
+  hairTileSegmentsBuffer: GPUBuffer;
+  hairRasterizerResultsBuffer: GPUBuffer;
 }

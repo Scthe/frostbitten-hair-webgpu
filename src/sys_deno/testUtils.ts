@@ -77,6 +77,9 @@ export const createMockPassCtx = (
     depthTexture: undefined!,
     hdrRenderTexture: undefined!,
     globalUniforms: undefined!,
+    hairRasterizerResultsBuffer: undefined!,
+    hairTilesBuffer: undefined!,
+    hairTileSegmentsBuffer: undefined!,
   };
 };
 

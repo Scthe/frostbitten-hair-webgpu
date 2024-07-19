@@ -2,13 +2,16 @@ import { FULLSCREEN_TRIANGLE_POSITION } from '../_shaderSnippets/fullscreenTrian
 import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import { BUFFER_HAIR_TILES_RESULT } from '../swHair/shared/hairTilesResultBuffer.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
-import { BUFFER_HAIR_SEGMENTS_PER_TILE } from '../swHair/shared/hairSegmentsPerTileBuffer.ts';
+import { BUFFER_HAIR_TILE_SEGMENTS } from '../swHair/shared/hairTileSegmentsBuffer.ts';
+import { CONFIG } from '../../constants.ts';
+import { BUFFER_HAIR_RASTERIZER_RESULTS } from '../swHair/shared/hairRasterizerResultBuffer.ts';
 
 export const SHADER_PARAMS = {
   bindings: {
     renderUniforms: 0,
-    hairResult: 1,
-    segmentsPerTileBuffer: 2,
+    tilesBuffer: 1,
+    tileSegmentsBuffer: 2,
+    rasterizeResultBuffer: 3,
   },
 };
 
@@ -20,12 +23,15 @@ const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
 
+const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
+
 ${FULLSCREEN_TRIANGLE_POSITION}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
-${BUFFER_HAIR_TILES_RESULT(b.hairResult, 'read')}
-${BUFFER_HAIR_SEGMENTS_PER_TILE(b.segmentsPerTileBuffer, 'read')}
+${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read')}
+${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read')}
+${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizeResultBuffer, 'read')}
 
 
 @vertex
@@ -56,14 +62,14 @@ fn main_fs(
   let hairResult = _getTileDepth(viewportSizeU32, fragPositionPx);
   let segmentPtr = _getTileSegmentPtr(viewportSizeU32, fragPositionPx);
 
-  if (segmentPtr == 0){ 
+  /*if (segmentPtr == 0){ // TODO restore
     // no pixel for software rasterizer, do not override.
     // 0 is the value we cleared the buffer to, so any write with atomicMax()
     // would affect the result. And it's not possible to try to write 0
     // given what software rasterizer stores. E.g. if depth bits were
     // 0, then the point would be on near plane, which is no AS terrible to cull.
     discard;
-  }
+  }*/
 
   let displayMode = getDisplayMode();
   var color = vec4f(0.0, 0.0, 0.0, 1.0);
@@ -75,7 +81,8 @@ fn main_fs(
     color.g = 1.0 - color.r;
 
   } else {
-    color.g = 1.0;
+    color = _getRasterizerResult(viewportSizeU32, fragPositionPx);
+    color.a = 1.0;
     // result.fragDepth = hairResult.x; // this pass has depth test ON!
   }
 

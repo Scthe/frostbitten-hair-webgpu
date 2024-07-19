@@ -23,6 +23,7 @@ import { DrawBackgroundGradientPass } from './passes/drawBackgroundGradient/draw
 import { HwHairPass } from './passes/hwHair/hwHairPass.ts';
 import { HairTilesPass } from './passes/swHair/hairTilesPass.ts';
 import { HairCombinePass } from './passes/hairCombine/hairCombinePass.ts';
+import { HairFinePass } from './passes/swHair/hairFinePass.ts';
 
 export class Renderer {
   private readonly renderUniformBuffer: RenderUniformsBuffer;
@@ -43,6 +44,7 @@ export class Renderer {
   private readonly drawMeshesPass: DrawMeshesPass;
   private readonly hwHairPass: HwHairPass;
   private readonly hairTilesPass: HairTilesPass;
+  private readonly hairFinePass: HairFinePass;
   private readonly hairCombinePass: HairCombinePass;
   private readonly presentPass: PresentPass;
 
@@ -67,6 +69,7 @@ export class Renderer {
     this.drawMeshesPass = new DrawMeshesPass(device, HDR_RENDER_TEX_FORMAT);
     this.hwHairPass = new HwHairPass(device, HDR_RENDER_TEX_FORMAT);
     this.hairTilesPass = new HairTilesPass(device);
+    this.hairFinePass = new HairFinePass(device);
     this.hairCombinePass = new HairCombinePass(device, HDR_RENDER_TEX_FORMAT);
     this.presentPass = new PresentPass(device, preferredCanvasFormat);
 
@@ -104,6 +107,11 @@ export class Renderer {
       cameraPositionWorldSpace: this.cameraCtrl.positionWorldSpace,
       depthTexture: this.depthTextureView,
       globalUniforms: this.renderUniformBuffer,
+      // hair:
+      hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
+      hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,
+      hairRasterizerResultsBuffer:
+        this.hairFinePass.hairRasterizerResultsBuffer,
     };
 
     this.renderUniformBuffer.update(ctx);
@@ -125,12 +133,11 @@ export class Renderer {
     }
 
     this.hairTilesPass.clearFramebuffer(ctx);
+    this.hairFinePass.clearFramebuffer(ctx);
+
     this.hairTilesPass.cmdDrawHairToTiles(ctx, ctx.scene.hairObject);
-    this.hairCombinePass.cmdCombineRasterResults(
-      ctx,
-      this.hairTilesPass.resultBuffer,
-      this.hairTilesPass.hairSegmentsPerTileBuffer
-    );
+    this.hairFinePass.cmdRasterizeSlicesHair(ctx, ctx.scene.hairObject);
+    this.hairCombinePass.cmdCombineRasterResults(ctx);
   }
 
   private handleViewportResize = (viewportSize: Dimensions) => {
@@ -175,6 +182,7 @@ export class Renderer {
     this.presentPass.onViewportResize();
     this.drawBackgroundGradientPass.onViewportResize();
     this.hairTilesPass.onViewportResize(this.device, viewportSize);
+    this.hairFinePass.onViewportResize(this.device, viewportSize);
     this.hairCombinePass.onViewportResize();
   };
 

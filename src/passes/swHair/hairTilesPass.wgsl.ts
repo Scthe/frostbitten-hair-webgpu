@@ -5,16 +5,8 @@ import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { SW_RASTERIZE_HAIR } from './shared/swRasterizeHair.wgsl.ts';
 import { BUFFER_HAIR_TILES_RESULT } from './shared/hairTilesResultBuffer.ts';
-import { BUFFER_HAIR_SEGMENTS_PER_TILE } from './shared/hairSegmentsPerTileBuffer.ts';
-
-/*
-https://github.com/Scthe/nanite-webgpu/blob/master/src/passes/rasterizeSw/rasterizeSwPass.wgsl.ts
-
-Tutorials:
-* https://fgiesen.wordpress.com/2013/02/10/optimizing-the-basic-rasterizer/
-* https://www.scratchapixel.com/lessons/3d-basic-rendering/rasterization-practical-implementation/rasterization-stage.html
-* https://jtsorlinis.github.io/rendering-tutorial/
-*/
+import { BUFFER_HAIR_TILE_SEGMENTS } from './shared/hairTileSegmentsBuffer.ts';
+import { CONFIG } from '../../constants.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 1, // TODO [LOW] set better values
@@ -24,9 +16,9 @@ export const SHADER_PARAMS = {
     hairData: 1,
     hairPositions: 2,
     hairTangents: 3,
-    resultBuffer: 4,
+    tilesBuffer: 4,
     depthTexture: 5,
-    segmentsPerTileBuffer: 6,
+    tileSegmentsBuffer: 6,
   },
 };
 
@@ -38,6 +30,8 @@ const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
 
+const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
+
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
 ${SW_RASTERIZE_HAIR}
@@ -46,8 +40,8 @@ ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_DATA(b.hairData)}
 ${BUFFER_HAIR_POINTS_POSITIONS(b.hairPositions)}
 ${BUFFER_HAIR_TANGENTS(b.hairTangents)}
-${BUFFER_HAIR_TILES_RESULT(b.resultBuffer, 'read_write')}
-${BUFFER_HAIR_SEGMENTS_PER_TILE(b.segmentsPerTileBuffer, 'read_write')}
+${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read_write')}
+${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read_write')}
 
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;

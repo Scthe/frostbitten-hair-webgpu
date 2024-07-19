@@ -1,5 +1,6 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
 import { Dimensions, divideCeil } from '../../../utils/index.ts';
+import { u32_type } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
 /// SHADER CODE
@@ -41,6 +42,10 @@ fn _getTileSegmentPtr(viewportSize: vec2u, posPx: vec2u) -> u32 {
   let tile = _hairTilesResult[tileIdx];
   return tile.tileSegmentPtr;
 }
+
+fn _getTileDataByIdx(tileIdx: u32) -> HairTileResult {
+  return _hairTilesResult[tileIdx];
+}
 `;
 
 export const BUFFER_HAIR_TILES_RESULT = (
@@ -51,22 +56,25 @@ export const BUFFER_HAIR_TILES_RESULT = (
 const MAX_U32: u32 = 0xffffffffu;
 
 struct HairTileResult {
-  minDepth: ${access === 'read_write' ? 'atomic<u32>' : 'u32'},
-  maxDepth: ${access === 'read_write' ? 'atomic<u32>' : 'u32'},
+  minDepth: ${u32_type(access)},
+  maxDepth: ${u32_type(access)},
   /** if this is 0, then end of list */
-  tileSegmentPtr: ${access === 'read_write' ? 'atomic<u32>' : 'u32'},
+  tileSegmentPtr: ${u32_type(access)},
 }
 
 @group(0) @binding(${bindingIdx})
 var<storage, ${access}> _hairTilesResult: array<HairTileResult>;
 
 fn _getHairTileIdx(viewportSize: vec2u, posPx: vec2u) -> u32 {
-  let TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
   let tilesInARow = divideCeil(viewportSize.x, TILE_SIZE);
   let x = divideCeil(posPx.x, TILE_SIZE);
   // let y = viewportSize.y - posPx.y; // invert cause WebGPU coordinates
   let y = divideCeil(posPx.y, TILE_SIZE);
   return y * tilesInARow + x;
+}
+
+fn getTileCount(viewportSize: vec2u) -> vec2u {
+  return vec2u(divideCeil(viewportSize.x, TILE_SIZE), divideCeil(viewportSize.y, TILE_SIZE));
 }
 
 ${access == 'read_write' ? storeTileDepth : getTileDepth}

@@ -3,6 +3,7 @@ import { HairObject } from '../../scene/hair/hairObject.ts';
 import { Dimensions } from '../../utils/index.ts';
 import {
   assertIsGPUTextureView,
+  bindBuffer,
   getItemsPerThread,
 } from '../../utils/webgpu.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
@@ -13,7 +14,7 @@ import {
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hairTilesPass.wgsl.ts';
-import { createHairSegmentsPerTileBuffer } from './shared/hairSegmentsPerTileBuffer.ts';
+import { createHairTileSegmentsBuffer } from './shared/hairTileSegmentsBuffer.ts';
 import { createHairTilesResultBuffer } from './shared/hairTilesResultBuffer.ts';
 
 export class HairTilesPass {
@@ -23,8 +24,8 @@ export class HairTilesPass {
   private readonly bindingsCache = new BindingsCache();
 
   /** result framebuffer as flat buffer */
-  public resultBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
-  public hairSegmentsPerTileBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
+  public hairTilesBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
+  public hairTileSegmentsBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
 
   constructor(device: GPUDevice) {
     const shaderModule = device.createShaderModule({
@@ -43,22 +44,22 @@ export class HairTilesPass {
 
   /** Clears to 0. We cannot select a number */
   clearFramebuffer(ctx: PassCtx) {
-    ctx.cmdBuf.clearBuffer(this.resultBuffer);
-    ctx.cmdBuf.clearBuffer(this.hairSegmentsPerTileBuffer, 0, BYTES_U32);
+    ctx.cmdBuf.clearBuffer(this.hairTilesBuffer, 0, this.hairTilesBuffer.size);
+    ctx.cmdBuf.clearBuffer(this.hairTileSegmentsBuffer, 0, BYTES_U32);
   }
 
   onViewportResize = (device: GPUDevice, viewportSize: Dimensions) => {
     this.bindingsCache.clear();
 
-    if (this.resultBuffer) {
-      this.resultBuffer.destroy();
+    if (this.hairTilesBuffer) {
+      this.hairTilesBuffer.destroy();
     }
-    if (this.hairSegmentsPerTileBuffer) {
-      this.hairSegmentsPerTileBuffer.destroy();
+    if (this.hairTileSegmentsBuffer) {
+      this.hairTileSegmentsBuffer.destroy();
     }
 
-    this.resultBuffer = createHairTilesResultBuffer(device, viewportSize);
-    this.hairSegmentsPerTileBuffer = createHairSegmentsPerTileBuffer(
+    this.hairTilesBuffer = createHairTilesResultBuffer(device, viewportSize);
+    this.hairTileSegmentsBuffer = createHairTileSegmentsBuffer(
       device,
       viewportSize
     );
@@ -67,7 +68,6 @@ export class HairTilesPass {
   cmdDrawHairToTiles(ctx: PassCtx, hairObject: HairObject) {
     const { cmdBuf, profiler } = ctx;
 
-    // no need to clear previous values, as we override every pixel
     const computePass = cmdBuf.beginComputePass({
       label: HairTilesPass.NAME,
       timestampWrites: profiler?.createScopeGpu(HairTilesPass.NAME),
@@ -108,11 +108,8 @@ export class HairTilesPass {
       this.pipeline,
       [
         globalUniforms.createBindingDesc(b.renderUniforms),
-        { binding: b.resultBuffer, resource: { buffer: this.resultBuffer } },
-        {
-          binding: b.segmentsPerTileBuffer,
-          resource: { buffer: this.hairSegmentsPerTileBuffer },
-        },
+        bindBuffer(b.tilesBuffer, this.hairTilesBuffer),
+        bindBuffer(b.tileSegmentsBuffer, this.hairTileSegmentsBuffer),
         object.bindHairData(b.hairData),
         object.bindPointsPositions(b.hairPositions),
         object.bindTangents(b.hairTangents),

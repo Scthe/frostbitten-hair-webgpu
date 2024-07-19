@@ -10,7 +10,7 @@ import {
 import { PassCtx } from './passCtx.ts';
 import { TypedArrayView } from '../utils/typedArrayView.ts';
 import { sphericalToCartesian } from '../utils/index.ts';
-import { getLengthOfHairSegmentsPerTileBuffer } from './swHair/shared/hairSegmentsPerTileBuffer.ts';
+import { getLengthOfHairTileSegmentsBuffer } from './swHair/shared/hairTileSegmentsBuffer.ts';
 
 export class RenderUniformsBuffer {
   public static SHADER_SNIPPET = (group: number) => /* wgsl */ `
@@ -20,9 +20,9 @@ export class RenderUniformsBuffer {
     const b11111 = 31u; // binary 0b11111
     const b111111 = 63u; // binary 0b111111
 
-    const DISPLAY_MODE_FINAL = ${DISPLAY_MODE.FINAL};
-    const DISPLAY_MODE_TILES = ${DISPLAY_MODE.TILES};
-    const DISPLAY_MODE_HW_RENDER = ${DISPLAY_MODE.HW_RENDER};
+    const DISPLAY_MODE_FINAL = ${DISPLAY_MODE.FINAL}u;
+    const DISPLAY_MODE_TILES = ${DISPLAY_MODE.TILES}u;
+    const DISPLAY_MODE_HW_RENDER = ${DISPLAY_MODE.HW_RENDER}u;
 
     struct Light {
       position: vec4f,
@@ -129,7 +129,7 @@ export class RenderUniformsBuffer {
     this.writeLight(c.lights[2]);
     // misc
     this.dataView.writeF32(c.hairRender.fiberRadius);
-    this.dataView.writeU32(getLengthOfHairSegmentsPerTileBuffer(viewport));
+    this.dataView.writeU32(getLengthOfHairTileSegmentsBuffer(viewport));
     // const debugMode = hr.displayMode | (hr.dbgTileModeMaxSegments << 8);
     const debugMode = hr.displayMode | (hr.dbgTileModeMaxSegments << 8);
     this.dataView.writeU32(debugMode);

@@ -88,16 +88,23 @@ export const CONFIG = {
   ///////////////
   /// HAIR
   hairRender: {
-    displayMode: DISPLAY_MODE.TILES,
-    tileSize: 16,
-    avgSegmentsPerTile: 512,
-    /** 1920 * 1080 * 4bytes is ~8MB. That is per slice.
-     * So with 14 slices we get 116MB. */
-    slicesPerPixel: 32,
+    displayMode: DISPLAY_MODE.FINAL,
     fiberRadius: 0.0001,
-
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 1700,
+
+    ////// TILE PASS
+    tileSize: 16,
+    avgSegmentsPerTile: 512,
+    processorCount: 32,
+
+    ////// FINE PASS
+    /**
+     * Frostbite allocates `tileSize * tileSize * sliceCount` per processor.
+     * Each processor then uses atomicAdd(+1) to loop over the tiles.
+     */
+    slicesPerPixel: 32,
+    avgFragmentsPerSlice: 4,
   },
 
   ///////////////

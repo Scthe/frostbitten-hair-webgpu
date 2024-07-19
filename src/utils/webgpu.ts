@@ -108,6 +108,17 @@ export function createGPU_StorageBuffer(
 
 export const getItemsPerThread = divideCeil;
 
+export const u32_type = (access: 'read_write' | 'read') =>
+  access === 'read_write' ? 'atomic<u32>' : 'u32';
+
+export const bindBuffer = (
+  idx: number,
+  buffer: GPUBuffer
+): GPUBindGroupEntry => ({
+  binding: idx,
+  resource: { buffer },
+});
+
 ///////////////
 /// Readback GPU -> CPU
 
