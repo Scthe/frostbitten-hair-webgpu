@@ -61,3 +61,5 @@ export const sphericalToCartesian = (
   result[2] = Math.sin(phi) * Math.sin(theta);
   return result;
 };
+
+export const divideCeil = (a: number, b: number) => Math.ceil(a / b);

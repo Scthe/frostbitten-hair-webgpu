@@ -1,7 +1,10 @@
-import { BYTES_U32, CONFIG } from '../../constants.ts';
+import { BYTES_U32 } from '../../constants.ts';
 import { HairObject } from '../../scene/hair/hairObject.ts';
 import { Dimensions } from '../../utils/index.ts';
-import { getItemsPerThread } from '../../utils/webgpu.ts';
+import {
+  assertIsGPUTextureView,
+  getItemsPerThread,
+} from '../../utils/webgpu.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
   labelShader,
@@ -10,6 +13,8 @@ import {
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hairTilesPass.wgsl.ts';
+import { createHairSegmentsPerTileBuffer } from './shared/hairSegmentsPerTileBuffer.ts';
+import { createHairTilesResultBuffer } from './shared/hairTilesResultBuffer.ts';
 
 export class HairTilesPass {
   public static NAME: string = HairTilesPass.name;
@@ -19,6 +24,7 @@ export class HairTilesPass {
 
   /** result framebuffer as flat buffer */
   public resultBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
+  public hairSegmentsPerTileBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
 
   constructor(device: GPUDevice) {
     const shaderModule = device.createShaderModule({
@@ -38,6 +44,7 @@ export class HairTilesPass {
   /** Clears to 0. We cannot select a number */
   clearFramebuffer(ctx: PassCtx) {
     ctx.cmdBuf.clearBuffer(this.resultBuffer);
+    ctx.cmdBuf.clearBuffer(this.hairSegmentsPerTileBuffer, 0, BYTES_U32);
   }
 
   onViewportResize = (device: GPUDevice, viewportSize: Dimensions) => {
@@ -46,13 +53,15 @@ export class HairTilesPass {
     if (this.resultBuffer) {
       this.resultBuffer.destroy();
     }
+    if (this.hairSegmentsPerTileBuffer) {
+      this.hairSegmentsPerTileBuffer.destroy();
+    }
 
-    const extraUsage = CONFIG.isTest ? GPUBufferUsage.COPY_SRC : 0; // for stats, debug etc.
-    this.resultBuffer = device.createBuffer({
-      label: `${HairTilesPass.NAME}-result`,
-      size: BYTES_U32 * viewportSize.width * viewportSize.height,
-      usage: GPUBufferUsage.STORAGE | extraUsage,
-    });
+    this.resultBuffer = createHairTilesResultBuffer(device, viewportSize);
+    this.hairSegmentsPerTileBuffer = createHairSegmentsPerTileBuffer(
+      device,
+      viewportSize
+    );
   };
 
   cmdDrawHairToTiles(ctx: PassCtx, hairObject: HairObject) {
@@ -79,17 +88,18 @@ export class HairTilesPass {
       hairObject.pointsPerStrand,
       SHADER_PARAMS.workgroupSizeY
     );
-    console.log(`${HairTilesPass.NAME}.dispatch(${workgroupsX}, ${workgroupsY}, 1)`); // prettier-ignore
+    // console.log(`${HairTilesPass.NAME}.dispatch(${workgroupsX}, ${workgroupsY}, 1)`); // prettier-ignore
     computePass.dispatchWorkgroups(workgroupsX, workgroupsY, 1);
 
     computePass.end();
   }
 
   private createBindings = (
-    { device, globalUniforms }: PassCtx,
+    { device, globalUniforms, depthTexture }: PassCtx,
     object: HairObject
   ): GPUBindGroup => {
     const b = SHADER_PARAMS.bindings;
+    assertIsGPUTextureView(depthTexture);
 
     return assignResourcesToBindings2(
       HairTilesPass,
@@ -99,9 +109,14 @@ export class HairTilesPass {
       [
         globalUniforms.createBindingDesc(b.renderUniforms),
         { binding: b.resultBuffer, resource: { buffer: this.resultBuffer } },
+        {
+          binding: b.segmentsPerTileBuffer,
+          resource: { buffer: this.hairSegmentsPerTileBuffer },
+        },
         object.bindHairData(b.hairData),
         object.bindPointsPositions(b.hairPositions),
         object.bindTangents(b.hairTangents),
+        { binding: b.depthTexture, resource: depthTexture },
       ]
     );
   };

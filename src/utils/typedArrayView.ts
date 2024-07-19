@@ -1,5 +1,6 @@
 import { Mat4 } from 'wgpu-matrix';
 import { BYTES_F32, BYTES_U32 } from '../constants.ts';
+import { divideCeil } from './index.ts';
 
 export class TypedArrayView {
   public readonly asF32: Float32Array;
@@ -34,6 +35,11 @@ export class TypedArrayView {
   assertWrittenBytes(bytesCount: number) {
     if (this.offsetBytes !== bytesCount) {
       throw new Error(`Written invalid byte count ${this.offsetBytes}. Expected ${bytesCount}.`); // prettier-ignore
+    }
+    if (this.offsetBytes % 16 !== 0) {
+      const nextValidSize = divideCeil(this.offsetBytes, 16) * 16;
+      const padddingU32s = (nextValidSize - this.offsetBytes) / BYTES_U32;
+      throw new Error(`Byte count ${this.offsetBytes} does not cleanly divide by 16. This might lead to errors. Add padding to fill to ${nextValidSize} bytes (${padddingU32s} u32 elements is enough).`); // prettier-ignore
     }
   }
 

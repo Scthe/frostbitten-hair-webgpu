@@ -1,8 +1,16 @@
 import { mat4, vec3 } from 'wgpu-matrix';
-import { BYTES_MAT4, BYTES_VEC4, CONFIG, LightCfg } from '../constants.ts';
+import {
+  BYTES_F32,
+  BYTES_MAT4,
+  BYTES_VEC4,
+  CONFIG,
+  DISPLAY_MODE,
+  LightCfg,
+} from '../constants.ts';
 import { PassCtx } from './passCtx.ts';
 import { TypedArrayView } from '../utils/typedArrayView.ts';
 import { sphericalToCartesian } from '../utils/index.ts';
+import { getLengthOfHairSegmentsPerTileBuffer } from './swHair/shared/hairSegmentsPerTileBuffer.ts';
 
 export class RenderUniformsBuffer {
   public static SHADER_SNIPPET = (group: number) => /* wgsl */ `
@@ -11,6 +19,10 @@ export class RenderUniformsBuffer {
     const b1111 = 15u; // binary 0b1111
     const b11111 = 31u; // binary 0b11111
     const b111111 = 63u; // binary 0b111111
+
+    const DISPLAY_MODE_FINAL = ${DISPLAY_MODE.FINAL};
+    const DISPLAY_MODE_TILES = ${DISPLAY_MODE.TILES};
+    const DISPLAY_MODE_HW_RENDER = ${DISPLAY_MODE.HW_RENDER};
 
     struct Light {
       position: vec4f,
@@ -29,9 +41,16 @@ export class RenderUniformsBuffer {
       light0: Light,
       light1: Light,
       light2: Light,
+      fiberRadius: f32,
+      maxDrawnHairSegments: u32,
+      displayMode: u32, // display mode + some of it's settings
+      padding2: f32,
     };
     @binding(0) @group(${group})
     var<uniform> _uniforms: Uniforms;
+
+    fn getDisplayMode() -> u32 { return _uniforms.displayMode & 0xff;}
+    fn getDbgTileModeMaxSegments() -> u32 { return (_uniforms.displayMode >> 8) & 0xffff;}
   `;
 
   private static LIGHT_SIZE = 2 * BYTES_VEC4;
@@ -45,7 +64,8 @@ export class RenderUniformsBuffer {
     BYTES_VEC4 + // cameraPosition
     BYTES_VEC4 + // color mgmt
     BYTES_VEC4 + // lightAmbient
-    3 * RenderUniformsBuffer.LIGHT_SIZE; // lights
+    3 * RenderUniformsBuffer.LIGHT_SIZE + // lights
+    4 * BYTES_F32; // fiberRadius, maxDrawnHairSegments, padding
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(RenderUniformsBuffer.BUFFER_SIZE);
@@ -76,6 +96,7 @@ export class RenderUniformsBuffer {
     } = ctx;
     const c = CONFIG;
     const col = c.colors;
+    const hr = c.hairRender;
     const camPos = cameraPositionWorldSpace;
 
     this.dataView.resetCursor();
@@ -106,6 +127,13 @@ export class RenderUniformsBuffer {
     this.writeLight(c.lights[0]);
     this.writeLight(c.lights[1]);
     this.writeLight(c.lights[2]);
+    // misc
+    this.dataView.writeF32(c.hairRender.fiberRadius);
+    this.dataView.writeU32(getLengthOfHairSegmentsPerTileBuffer(viewport));
+    // const debugMode = hr.displayMode | (hr.dbgTileModeMaxSegments << 8);
+    const debugMode = hr.displayMode | (hr.dbgTileModeMaxSegments << 8);
+    this.dataView.writeU32(debugMode);
+    this.dataView.writeU32(0); // padding
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);

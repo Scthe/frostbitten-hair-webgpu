@@ -63,14 +63,14 @@ fn main_vs(
   let vpMatrix = _uniforms.vpMatrix;
   let cameraPosition = _uniforms.cameraPosition;
   
-  let fiberRadius = 0.0001; // TODO uniform
+  let fiberRadius = _uniforms.fiberRadius;
   // let strandId: u32 = inVertexIndex / 2u / pointsPerStrand;
   let index: u32 = inVertexIndex / 2u; // each segment is 2 triangles, so we get same strand data twice.
   let isOdd = (inVertexIndex & 0x01u) > 0u;
   let positionOrg = _hairPointPositions[index].xyz;
-  let tangent = _hairTangents[index].xyz; // TODO to world space!
+  let tangent = _hairTangents[index].xyz;
   let positionWS = vec4f(positionOrg, 1.0);
-  // TODO convert positions+tangents to world space
+  // TODO convert positions+tangents to world space using model matrix
 
   // Calculate bitangent vectors
   let towardsCamera: vec3f = safeNormalize(cameraPosition.xyz - positionWS.xyz);

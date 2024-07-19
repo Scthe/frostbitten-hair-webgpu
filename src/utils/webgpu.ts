@@ -1,4 +1,4 @@
-import { getClassName, getTypeName } from './index.ts';
+import { divideCeil, getClassName, getTypeName } from './index.ts';
 import { CONFIG } from '../constants.ts';
 import { TypedArray, ensureTypedArray } from './arrays.ts';
 
@@ -106,8 +106,7 @@ export function createGPU_StorageBuffer(
   );
 }
 
-export const getItemsPerThread = (items: number, threads: number) =>
-  Math.ceil(items / threads);
+export const getItemsPerThread = divideCeil;
 
 ///////////////
 /// Readback GPU -> CPU

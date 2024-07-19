@@ -27,6 +27,8 @@ const OBJ_NAME = 'HairTilesPass-obj';
 const PREVIEW_PATH = relativePath(import.meta, '__test__/tiles.preview.png');
 const SNAPSHOT_FILE = relativePath(import.meta, '__test__/tiles.snapshot.bin');
 
+// let fiberRadius = 0.1; // TODO use
+
 Deno.test('HairTilesPass', async () => {
   const [device, reportWebGPUErrAsync] = await createGpuDevice_TESTS();
 

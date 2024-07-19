@@ -8,17 +8,6 @@ Tutorials:
 */
 export const SW_RASTERIZE_HAIR = /* wgsl */ `
 
-// TODO move to some shared util, copied from hwHair
-const TRESSFX_FLOAT_EPSILON: f32 = 1e-7;
-
-fn safeNormalize(v: vec3f) -> vec3f {
-  return select(
-    vec3f(0., 0., 0.), // when not OK
-    normalize(v), // when OK
-    length(v) >= TRESSFX_FLOAT_EPSILON
-  );
-}
-
 
 // test colors in ABGR
 const COLOR_RED: u32 = 0xff0000ffu;
@@ -41,20 +30,19 @@ struct SwRasterizedHair {
 
 fn swRasterizeHair(
   viewportSize: vec2f,
+  viewModelMat: mat4x4f,
   strandIdx: u32,
   segmentIdx: u32, // [0...31], we later discard 31
 ) -> SwRasterizedHair {
   var r: SwRasterizedHair;
 
   // NOTE: all the comments assume you have 32 verts per strand
-  // let vpMat = _uniforms.vpMatrix;
-  let viewModelMat = _uniforms.viewMatrix;
   let projMat = _uniforms.projMatrix;
   let cameraPosition = _uniforms.cameraPosition;
   let viewportSizeU32: vec2u = vec2u(viewportSize);
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
-  let fiberRadius = 0.1; // TODO uniform
+  let fiberRadius = _uniforms.fiberRadius;
 
   // TODO use modelMat to convert positions + tangents to world space
   let p0_VS: vec4f = viewModelMat * vec4f(_getHairPointPosition(pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.0);
@@ -131,7 +119,13 @@ fn projectPointToLine(l1: vec2f, l2: vec2f, p: vec2f) -> vec2f {
   let d = l1 + ad;
   return d;
 }
-
+/**
+ * result[0] - value in 0-1 range along the width of the segment.
+ *             0 is on the side edges, 1 is on the other one
+ * result[1] - value in 0-1 range along the length of the segment,
+ *             0 is near the segment start point,
+ *             1 is near the segment end point
+ */
 fn interpolateQuad(sw: SwRasterizedHair, c: vec2f) -> vec2f {
   // vertices for edge at the start of the segment: sw.v00 , sw.v01
   let startEdgeMidpoint = (sw.v00 + sw.v01) / 2.0;
@@ -159,6 +153,12 @@ fn interpolateQuad(sw: SwRasterizedHair, c: vec2f) -> vec2f {
   let d0 =  length(c - e1) / expectedWidth;
 
   return vec2f(d0, d1);
+}
+
+fn interpolateHairF32(w: vec2f, values: vec4f) -> f32 {
+  let valueStart = mix(values.x, values.y, w.x);
+  let valueEnd   = mix(values.z, values.w, w.x);
+  return mix(valueStart, valueEnd, w.y);
 }
 
 `;

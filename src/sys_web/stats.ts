@@ -21,6 +21,7 @@ type StatName = keyof typeof AvailableStats;
 const DELTA_SMOOTHING = 0.95;
 const UPDATE_FREQ_MS = 1000;
 
+// TODO memory statistics, tile count etc.
 class Stats {
   // deno-lint-ignore no-explicit-any
   private values: Record<StatName, number | string> = {} as any;

@@ -1,6 +1,6 @@
 // @deno-types="npm:@types/dat.gui@0.7.9"
 import * as dat from 'dat.gui';
-import { CONFIG, LightCfg } from '../constants.ts';
+import { CONFIG, DISPLAY_MODE, LightCfg } from '../constants.ts';
 import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
@@ -37,6 +37,7 @@ export function initializeGUI(
   gui.add(dummyObject, 'profile').name('Profile');
 
   // folders
+  addHairRenderFolder(gui);
   addAmbientLightFolder(gui);
   addLightFolder(gui, CONFIG.lights[0], 'Light 0');
   addLightFolder(gui, CONFIG.lights[1], 'Light 1');
@@ -46,6 +47,36 @@ export function initializeGUI(
 
   //////////////
   /// subdirs
+
+  function addHairRenderFolder(gui: dat.GUI) {
+    const cfg = CONFIG.hairRender;
+    const dir = gui.addFolder('Hair render');
+    dir.open();
+
+    // display mode
+    const modeDummy = createDummy(cfg, 'displayMode', [
+      { label: 'Final', value: DISPLAY_MODE.FINAL },
+      { label: 'DBG: tiles', value: DISPLAY_MODE.TILES },
+      { label: 'DBG: hw-render', value: DISPLAY_MODE.HW_RENDER },
+    ]);
+    const modeCtrl = dir
+      .add(modeDummy, 'displayMode', modeDummy.values)
+      .name('Display mode');
+
+    dir.add(cfg, 'fiberRadius', 0.0001, 0.5).name('Radius');
+    const tileSegmentsCtrl = dir
+      .add(cfg, 'dbgTileModeMaxSegments', 1, 1024 * 4)
+      .step(1)
+      .name('Tile segments');
+
+    // init
+    modeCtrl.onFinishChange(onDisplayModeChange);
+
+    function onDisplayModeChange() {
+      const mode = cfg.displayMode;
+      setVisible(tileSegmentsCtrl, mode === DISPLAY_MODE.TILES);
+    }
+  }
 
   function addAmbientLightFolder(gui: dat.GUI) {
     const dir = gui.addFolder('Ambient light');
@@ -114,6 +145,23 @@ export function initializeGUI(
     });
 
     dir.addColor(dummy, 'value').name(name);
+  }
+}
+
+function setVisible(ctrl: GuiCtrl, isVisible: boolean) {
+  if (!ctrl) {
+    // use stacktrace/debugger to identify which..
+    console.error(`Not controller for gui element found!`);
+    return;
+  }
+
+  // deno-lint-ignore no-explicit-any
+  const parentEl: HTMLElement = (ctrl as any).__li;
+
+  if (isVisible) {
+    parentEl.style.display = '';
+  } else {
+    parentEl.style.display = 'none';
   }
 }
 

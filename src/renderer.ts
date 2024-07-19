@@ -2,7 +2,12 @@ import { Mat4, mat4 } from 'wgpu-matrix';
 import { RenderUniformsBuffer } from './passes/renderUniformsBuffer.ts';
 import { Dimensions, debounce } from './utils/index.ts';
 import Input from './sys_web/input.ts';
-import { CONFIG, DEPTH_FORMAT, HDR_RENDER_TEX_FORMAT } from './constants.ts';
+import {
+  CONFIG,
+  DEPTH_FORMAT,
+  DISPLAY_MODE,
+  HDR_RENDER_TEX_FORMAT,
+} from './constants.ts';
 import { Camera } from './camera.ts';
 import { GpuProfiler } from './gpuProfiler.ts';
 import { Scene } from './scene/scene.ts';
@@ -16,6 +21,8 @@ import { PresentPass } from './passes/presentPass/presentPass.ts';
 import { DrawMeshesPass } from './passes/drawMeshes/drawMeshesPass.ts';
 import { DrawBackgroundGradientPass } from './passes/drawBackgroundGradient/drawBackgroundGradientPass.ts';
 import { HwHairPass } from './passes/hwHair/hwHairPass.ts';
+import { HairTilesPass } from './passes/swHair/hairTilesPass.ts';
+import { HairCombinePass } from './passes/hairCombine/hairCombinePass.ts';
 
 export class Renderer {
   private readonly renderUniformBuffer: RenderUniformsBuffer;
@@ -35,6 +42,8 @@ export class Renderer {
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
   private readonly drawMeshesPass: DrawMeshesPass;
   private readonly hwHairPass: HwHairPass;
+  private readonly hairTilesPass: HairTilesPass;
+  private readonly hairCombinePass: HairCombinePass;
   private readonly presentPass: PresentPass;
 
   constructor(
@@ -57,6 +66,8 @@ export class Renderer {
     );
     this.drawMeshesPass = new DrawMeshesPass(device, HDR_RENDER_TEX_FORMAT);
     this.hwHairPass = new HwHairPass(device, HDR_RENDER_TEX_FORMAT);
+    this.hairTilesPass = new HairTilesPass(device);
+    this.hairCombinePass = new HairCombinePass(device, HDR_RENDER_TEX_FORMAT);
     this.presentPass = new PresentPass(device, preferredCanvasFormat);
 
     this.handleViewportResize(viewportSize);
@@ -107,7 +118,19 @@ export class Renderer {
 
   private cmdDrawScene(ctx: PassCtx) {
     this.drawMeshesPass.cmdDrawMeshes(ctx);
-    this.hwHairPass.cmdDrawHair(ctx);
+
+    if (CONFIG.hairRender.displayMode === DISPLAY_MODE.HW_RENDER) {
+      this.hwHairPass.cmdDrawHair(ctx);
+      return;
+    }
+
+    this.hairTilesPass.clearFramebuffer(ctx);
+    this.hairTilesPass.cmdDrawHairToTiles(ctx, ctx.scene.hairObject);
+    this.hairCombinePass.cmdCombineRasterResults(
+      ctx,
+      this.hairTilesPass.resultBuffer,
+      this.hairTilesPass.hairSegmentsPerTileBuffer
+    );
   }
 
   private handleViewportResize = (viewportSize: Dimensions) => {
@@ -151,6 +174,8 @@ export class Renderer {
     // reset bindings that used texture
     this.presentPass.onViewportResize();
     this.drawBackgroundGradientPass.onViewportResize();
+    this.hairTilesPass.onViewportResize(this.device, viewportSize);
+    this.hairCombinePass.onViewportResize();
   };
 
   onCanvasResize = debounce(this.handleViewportResize, 500);

@@ -18,3 +18,20 @@ fn transformNormalToWorldSpace(modelMat: mat4x4f, normalV: vec3f) -> vec3f {
   return normalize(normalWS.xyz);
 }
 `;
+
+export const GENERIC_UTILS = /* wgsl */ `
+
+const FLOAT_EPSILON: f32 = 1e-7;
+
+fn safeNormalize(v: vec3f) -> vec3f {
+  return select(
+    vec3f(0., 0., 0.), // when not OK
+    normalize(v), // when OK
+    length(v) >= FLOAT_EPSILON
+  );
+}
+
+fn divideCeil(a: u32, b: u32) -> u32 {
+  return (a + b - 1) / b;
+}
+`;

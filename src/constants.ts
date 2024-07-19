@@ -30,11 +30,16 @@ export const IS_WGPU = IS_DENO;
 export const MODELS_DIR = IS_DENO ? 'static/models' : 'models';
 
 export const DEPTH_FORMAT: GPUTextureFormat = 'depth24plus';
-export const HDR_RENDER_TEX_FORMAT: GPUTextureFormat = IS_DENO
-  ? 'rgba16float' // Cause: "Color state [0] is invalid: Format Rgba32Float is not blendable"
-  : 'rgba32float';
+// Not 'rgba32float' Cause: "Color state [0] is invalid: Format Rgba32Float is not blendable"
+export const HDR_RENDER_TEX_FORMAT: GPUTextureFormat = 'rgba16float';
 
 export type ClearColor = [number, number, number, number];
+
+export const DISPLAY_MODE = {
+  FINAL: 0,
+  TILES: 1,
+  HW_RENDER: 2,
+};
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -81,7 +86,22 @@ export const CONFIG = {
   ] as LightCfg[],
 
   ///////////////
-  /// PostFX-like effects (dither, tonemapping, exposure, gamma etc.)
+  /// HAIR
+  hairRender: {
+    displayMode: DISPLAY_MODE.TILES,
+    tileSize: 16,
+    avgSegmentsPerTile: 512,
+    /** 1920 * 1080 * 4bytes is ~8MB. That is per slice.
+     * So with 14 slices we get 116MB. */
+    slicesPerPixel: 32,
+    fiberRadius: 0.0001,
+
+    /** When in 'tiles' display mode, how much segments are considered full */
+    dbgTileModeMaxSegments: 1700,
+  },
+
+  ///////////////
+  /// POSTFX-LIKE EFFECTS (dither, tonemapping, exposure, gamma etc.)
   colors: {
     gamma: 2.2,
     ditherStrength: 1.0,

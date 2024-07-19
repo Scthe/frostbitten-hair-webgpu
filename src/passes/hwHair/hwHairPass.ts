@@ -52,7 +52,6 @@ export class HwHairPass {
     // https://developer.mozilla.org/en-US/docs/Web/API/GPUCommandEncoder/beginRenderPass
     const renderPass = cmdBuf.beginRenderPass({
       label: HwHairPass.NAME,
-      // TODO ?
       colorAttachments: [
         useColorAttachment(hdrRenderTexture, CONFIG.clearColor, 'load'),
       ],
