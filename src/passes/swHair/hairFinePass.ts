@@ -119,9 +119,9 @@ export class HairFinePass {
         bindBuffer(b.tilesBuffer, hairTilesBuffer),
         bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
         bindBuffer(b.rasterizerResult, this.hairRasterizerResultsBuffer),
-        // object.bindHairData(b.hairData),
-        // object.bindPointsPositions(b.hairPositions),
-        // object.bindTangents(b.hairTangents),
+        object.bindHairData(b.hairData),
+        object.bindPointsPositions(b.hairPositions),
+        object.bindTangents(b.hairTangents),
       ]
     );
   };
