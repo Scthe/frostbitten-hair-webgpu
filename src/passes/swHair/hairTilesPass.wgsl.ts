@@ -52,23 +52,32 @@ var _depthTexture: texture_depth_2d;
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
 ) {
-  let viewModelMat = _uniforms.viewMatrix; // TODO finish
   let viewportSize: vec2f = _uniforms.viewport.xy;
-  let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
   let viewportSizeU32: vec2u = vec2u(viewportSize);
+  let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
 
   let strandIdx = global_id.x;
   let segmentIdx = global_id.y; // [0...31]
+  
   // There are 32 points but only 31 segments. Dispatching 1 per point is suboptimal..
   // Discard 32th last invocation (so idx 31)
   if (segmentIdx >= pointsPerStrand - 1) { return; }
   if (strandIdx >= strandsCount) { return; }
 
-  let sw = swRasterizeHair(
+  // get rasterize data
+  let swHairRasterizeParams = SwHairRasterizeParams(
+    _uniforms.viewMatrix,
+    _uniforms.projMatrix,
+    viewportSizeU32,
+    strandsCount,
+    pointsPerStrand,
     viewportSize,
-    viewModelMat,
+    _uniforms.fiberRadius
+  );
+  let sw = swRasterizeHair(
+    swHairRasterizeParams,
     strandIdx,
     segmentIdx
   );

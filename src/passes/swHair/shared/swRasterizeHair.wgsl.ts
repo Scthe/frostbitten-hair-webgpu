@@ -18,6 +18,16 @@ const COLOR_PINK: u32 = 0xffff00ffu;
 const COLOR_YELLOW: u32 = 0xff00ffffu;
 const COLOR_WHITE: u32 = 0xffffffffu;
 
+struct SwHairRasterizeParams {
+  viewModelMat: mat4x4f,
+  projMat: mat4x4f,
+  viewportSizeU32: vec2u, // u32's first
+  strandsCount: u32,
+  pointsPerStrand: u32,
+  viewportSize: vec2f, // f32's (AWKWARD!)
+  fiberRadius: f32,
+}
+
 struct SwRasterizedHair {
   v00: vec2f,
   v01: vec2f,
@@ -28,45 +38,37 @@ struct SwRasterizedHair {
   boundRectMin: vec2f,
 }
 
+/** NOTE: all the comments assume you have 32 verts per strand */
 fn swRasterizeHair(
-  viewportSize: vec2f,
-  viewModelMat: mat4x4f,
+  p: SwHairRasterizeParams,
   strandIdx: u32,
   segmentIdx: u32, // [0...31], we later discard 31
 ) -> SwRasterizedHair {
   var r: SwRasterizedHair;
 
-  // NOTE: all the comments assume you have 32 verts per strand
-  let projMat = _uniforms.projMatrix;
-  let cameraPosition = _uniforms.cameraPosition;
-  let viewportSizeU32: vec2u = vec2u(viewportSize);
-  let strandsCount: u32 = _hairData.strandsCount;
-  let pointsPerStrand: u32 = _hairData.pointsPerStrand;
-  let fiberRadius = _uniforms.fiberRadius;
-
   // TODO use modelMat to convert positions + tangents to world space
-  let p0_VS: vec4f = viewModelMat * vec4f(_getHairPointPosition(pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.0);
-  let p1_VS: vec4f = viewModelMat * vec4f(_getHairPointPosition(pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.0);
-  let t0_VS: vec4f = viewModelMat * vec4f(_getHairTangent(pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.,);
-  let t1_VS: vec4f = viewModelMat * vec4f(_getHairTangent(pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.,);
+  let p0_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.0);
+  let p1_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.0);
+  let t0_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.,);
+  let t1_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.,);
 
-  // Calculate bitangent vectors
-  let right0: vec3f = safeNormalize(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * fiberRadius;
-  let right1: vec3f = safeNormalize(cross(t1_VS.xyz, vec3f(0., 0., 1.))) * fiberRadius;
+  // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
+  let right0: vec3f = safeNormalize(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
+  let right1: vec3f = safeNormalize(cross(t1_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
 
   // Vertex positions
   let v00_VS = vec4f(p0_VS.xyz - right0, 1.0);
   let v01_VS = vec4f(p0_VS.xyz + right0, 1.0);
   let v10_VS = vec4f(p1_VS.xyz - right1, 1.0);
   let v11_VS = vec4f(p1_VS.xyz + right1, 1.0);
-  let v00_NDC: vec3f = projectVertex(projMat, v00_VS);
-  let v01_NDC: vec3f = projectVertex(projMat, v01_VS);
-  let v10_NDC: vec3f = projectVertex(projMat, v10_VS);
-  let v11_NDC: vec3f = projectVertex(projMat, v11_VS);
-  r.v00 = ndc2viewportPx(viewportSize.xy, v00_NDC); // in pixels
-  r.v01 = ndc2viewportPx(viewportSize.xy, v01_NDC); // in pixels
-  r.v10 = ndc2viewportPx(viewportSize.xy, v10_NDC); // in pixels
-  r.v11 = ndc2viewportPx(viewportSize.xy, v11_NDC); // in pixels
+  let v00_NDC: vec3f = projectVertex(p.projMat, v00_VS);
+  let v01_NDC: vec3f = projectVertex(p.projMat, v01_VS);
+  let v10_NDC: vec3f = projectVertex(p.projMat, v10_VS);
+  let v11_NDC: vec3f = projectVertex(p.projMat, v11_VS);
+  r.v00 = ndc2viewportPx(p.viewportSize.xy, v00_NDC); // in pixels
+  r.v01 = ndc2viewportPx(p.viewportSize.xy, v01_NDC); // in pixels
+  r.v10 = ndc2viewportPx(p.viewportSize.xy, v10_NDC); // in pixels
+  r.v11 = ndc2viewportPx(p.viewportSize.xy, v11_NDC); // in pixels
   r.depthsProj = vec4f(v00_NDC.z, v01_NDC.z, v10_NDC.z, v11_NDC.z);
 
   // get bounding box XY points. All values in pixels as f32
@@ -75,7 +77,7 @@ fn swRasterizeHair(
   // MIN: bottom left on screen, but remember Y is inverted!
   r.boundRectMin = floor(min(min(r.v00, r.v01), min(r.v10, r.v11)));
   // scissor
-  r.boundRectMax = min(r.boundRectMax, viewportSize.xy);
+  r.boundRectMax = min(r.boundRectMax, p.viewportSize.xy);
   r.boundRectMin = max(r.boundRectMin, vec2f(0.0, 0.0));
 
   return r;
@@ -146,9 +148,9 @@ fn interpolateQuad(sw: SwRasterizedHair, c: vec2f) -> vec2f {
   // using the geometric definition of dot product.
   let widthEnd = widthStart * dot(normalize(sw.v00 - sw.v01), normalize(sw.v10 - sw.v11));
   let expectedWidth = mix(widthStart, widthEnd, d1);
-  // project point to one of the side edges
+  // project pixel to one of the side edges
   let e1 = projectPointToLine(sw.v00, sw.v10, c);
-  // distance between point and it's projection on the edge.
+  // distance between pixel and it's projection on the edge.
   // Divided by full width of the strand around that point
   let d0 =  length(c - e1) / expectedWidth;
 
