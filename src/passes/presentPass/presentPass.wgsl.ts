@@ -50,10 +50,11 @@ fn main_fs(
     let exposure = _uniforms.colorMgmt.y;
     let ditherStr = _uniforms.colorMgmt.z;
   
-    color = ditherColor(fragPositionPx, color, ditherStr);
-    color = color * exposure;
-    color = saturate(doACES_Tonemapping(color));
-    color = doGamma(color, gamma);
+    // TODO restore
+    // color = ditherColor(fragPositionPx, color, ditherStr);
+    // color = color * exposure;
+    // color = saturate(doACES_Tonemapping(color));
+    // color = doGamma(color, gamma);
   //}
 
   return vec4(color.xyz, 1.0);

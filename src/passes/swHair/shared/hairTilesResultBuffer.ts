@@ -43,9 +43,9 @@ fn _getTileSegmentPtr(viewportSize: vec2u, posPx: vec2u) -> u32 {
   return tile.tileSegmentPtr;
 }
 
-fn _getTileDataByIdx(tileIdx: u32) -> HairTileResult {
-  return _hairTilesResult[tileIdx];
-}
+// fn _getTileDataByIdx(tileIdx: u32) -> HairTileResult {
+  // return _hairTilesResult[tileIdx];
+// }
 `;
 
 export const BUFFER_HAIR_TILES_RESULT = (

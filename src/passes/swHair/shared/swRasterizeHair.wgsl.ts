@@ -121,6 +121,7 @@ fn projectPointToLine(l1: vec2f, l2: vec2f, p: vec2f) -> vec2f {
   let d = l1 + ad;
   return d;
 }
+
 /**
  * result[0] - value in 0-1 range along the width of the segment.
  *             0 is on the side edges, 1 is on the other one

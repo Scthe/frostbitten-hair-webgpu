@@ -62,14 +62,14 @@ fn main_fs(
   let hairResult = _getTileDepth(viewportSizeU32, fragPositionPx);
   let segmentPtr = _getTileSegmentPtr(viewportSizeU32, fragPositionPx);
 
-  /*if (segmentPtr == 0){ // TODO restore
+  if (segmentPtr == 0){ // TODO restore
     // no pixel for software rasterizer, do not override.
     // 0 is the value we cleared the buffer to, so any write with atomicMax()
     // would affect the result. And it's not possible to try to write 0
     // given what software rasterizer stores. E.g. if depth bits were
     // 0, then the point would be on near plane, which is no AS terrible to cull.
     discard;
-  }*/
+  }
 
   let displayMode = getDisplayMode();
   var color = vec4f(0.0, 0.0, 0.0, 1.0);
@@ -81,9 +81,19 @@ fn main_fs(
     color.g = 1.0 - color.r;
 
   } else {
-    color = _getRasterizerResult(viewportSizeU32, fragPositionPx);
-    color.a = 1.0;
+    // color = _getRasterizerResult(viewportSizeU32, fragPositionPx);
+    color = _getRasterizerResult(viewportSizeU32, fragPositionPx - vec2u(0u, 0u));
+    // color.a = select(0.2, color.w, color.w > 0.);
     // result.fragDepth = hairResult.x; // this pass has depth test ON!
+    
+    // nothing was explicitly drawn
+    // fill tile bg with some pattern
+    if (color.w == 0.) {
+      color.a = 0.9; // add some tile bg
+      let TILE_SIZE = ${CONFIG.hairRender.tileSize}u;
+      color.g = f32(((fragPositionPx.x - 1u) / TILE_SIZE) % 2) / 2.0;
+      color.b = f32(((fragPositionPx.y - 1u) / TILE_SIZE) % 2) / 2.0;
+    }
   }
 
   result.color = color;

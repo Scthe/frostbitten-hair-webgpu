@@ -96,7 +96,7 @@ export const CONFIG = {
     ////// TILE PASS
     tileSize: 16,
     avgSegmentsPerTile: 512,
-    processorCount: 32,
+    processorCount: 128,
 
     ////// FINE PASS
     /**
