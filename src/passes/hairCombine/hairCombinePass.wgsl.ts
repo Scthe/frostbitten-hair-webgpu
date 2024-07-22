@@ -97,7 +97,7 @@ fn main_fs(
     // nothing was explicitly drawn
     // fill tile bg with some pattern
     let hasContent = color.w > 0.;
-    let drawDebugTileOverlay = 1;
+    let drawDebugTileOverlay = 0;
     if (!hasContent && drawDebugTileOverlay!=0) {
       // color.a = select(0.9, color.w, hasContent); // add some tile bg
       let TILE_SIZE = ${CONFIG.hairRender.tileSize}u;

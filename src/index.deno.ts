@@ -34,7 +34,7 @@ async function renderSceneToFile(
   outputPath: string
 ) {
   const VIEWPORT_SIZE: Dimensions = {
-    width: 1270,
+    width: 1280,
     height: 720,
   };
   const PREFERRED_CANVAS_FORMAT = 'rgba8unorm-srgb';

@@ -30,9 +30,6 @@ export const SHADER_PARAMS = {
 const c = SHADER_PARAMS;
 const b = SHADER_PARAMS.bindings;
 
-// ${BUFFER_HAIR_TANGENTS(b.hairTangents)}
-// ${SW_RASTERIZE_HAIR}
-
 export const SHADER_CODE = () => /* wgsl */ `
 
 const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
@@ -53,6 +50,7 @@ ${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read')}
 ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read')}
 ${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizerResult, 'read_write')}
 ${BUFFER_HAIR_SLICES_HEADS(b.hairSlicesHeads, 'read_write')}
+${BUFFER_HAIR_SLICES_DATA(b.hairSlicesData, 'read_write')}
 
 
 struct FineRasterParams {
@@ -128,6 +126,8 @@ fn processTile(
     // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
   // }
   
+  // for each segment:
+  //    iterate over tile's pixels and write color to appropriate depth-slice
   while (count < MAX_PROCESSED_SEGMENTS){
     if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
       // clean previous tile's BUFFER_HAIR_SLICES_HEADS if it was written to previously
@@ -135,13 +135,13 @@ fn processTile(
         // _clearSlicesHeadPtrs(p.processorId);
       // }
 
-      /*let writtenSliceDataCount =*/ processHairSegment(
+      let writtenSliceDataCount = processHairSegment(
         p,
         tileBoundsPx, sliceDataOffset,
         segmentData.x, segmentData.y // strandIdx, segmentIdx
       );
-      // sliceDataOffset = sliceDataOffset + writtenSliceDataCount;
-      // if (!_hasMoreSliceDataSlots(sliceDataOffset)) { break; }
+      sliceDataOffset = sliceDataOffset + writtenSliceDataCount;
+      if (!_hasMoreSliceDataSlots(sliceDataOffset)) { break; }
 
       // move to next segment
       count = count + 1;
@@ -153,9 +153,8 @@ fn processTile(
   }
 
   // for each pixel:
-  // iterate over slices and accumulate color
-  // var sliceData: SliceData;
-  // let boundRectMax = vec2u(tileBoundsPx.zw);
+  //    iterate over slices and accumulate color
+  var sliceData: SliceData;
   let boundRectMax = vec2u(tileBoundsPx.zw);
   let boundRectMin = vec2u(tileBoundsPx.xy);
 
@@ -165,23 +164,29 @@ fn processTile(
     let px = vec2u(x, y); // pixel coordinates wrt. viewport
     let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
     
-    /*
     // iterate slices front to back
-    for (var s: u32 = 0u; x < SLICES_PER_PIXEL; s += 1u) {
-      var cnt = 0u;
-      var slicePtr = _getSlicesHeadPtr(p.processorId, px, s);
-      while(_getSliceData(p.processorId, slicePtr, &sliceData) && cnt < 2u) {
+    for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
+      var slicePtr = _getSlicesHeadPtr(p.processorId, pxInTile, s);
+      
+      // aggregate colors in this slice
+      while(_getSliceData(p.processorId, slicePtr, &sliceData)) {
         slicePtr = sliceData.nextPtr;
-        cnt += 1u;
         // We could have a better blend if there are 2+ segments in slice, but meh..
         finalColor = mix(finalColor, sliceData.color, 1.0 - finalColor.a);
       }
-    }*/
-    var slicePtr = _getSlicesHeadPtr(p.processorId, pxInTile, 0u);
+
+      // dbg: use only 1st slice data
+      // if (_getSliceData(p.processorId, slicePtr, &sliceData)) {
+        // finalColor = mix(finalColor, sliceData.color, 1.0 - finalColor.a);
+      // }
+    }
+
+    // dbg: color using only head ptrs
+    /*var slicePtr = _getSlicesHeadPtr(p.processorId, pxInTile, 0u);
     if(slicePtr != INVALID_SLICE_DATA_PTR) {
       finalColor.r = 1.0;
       finalColor.a = 1.0;
-    }
+    }*/
     
     _setRasterizerResult(p.viewportSizeU32, px, finalColor);
   }}
@@ -192,8 +197,8 @@ fn processHairSegment(
   p: FineRasterParams,
   tileBoundsPx: vec4u, sliceDataOffset: u32,
   strandIdx: u32, segmentIdx: u32
-) {
-  // var writtenSliceDataCount: u32 = 0u;
+) -> u32 {
+  var writtenSliceDataCount: u32 = 0u;
 
   // project segment's start and end points
   let segment0_obj: vec3f = _getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz;
@@ -237,9 +242,8 @@ fn processHairSegment(
   // for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
 
     // stop if there is no space inside processor's sliceData linked list.
-    // let nextSliceDataPtr: u32 = sliceDataOffset + writtenSliceDataCount; 
-    let nextSliceDataPtr: u32 = 0xff00ff00u;
-    // if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; }
+    let nextSliceDataPtr: u32 = sliceDataOffset + writtenSliceDataCount; 
+    if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; }
 
     // get coordinates if iter using [boundRectMin .. boundRectMax]
     let px = vec2f(x, y); // pixel coordinates wrt. viewport
@@ -255,8 +259,6 @@ fn processHairSegment(
     
     let segmentStartTowardPixel: vec2f = pxOnSegment - segment0_px.xy;
     let segmentEndTowardPixel: vec2f = pxOnSegment - segment1_px.xy;
-    // let d1 = length(segmentStartTowardPixel) / segmentLength; // TODO 
-    // let t = d1;
     let t: f32 = max(
       segmentStartTowardPixel.x / tangent_proj.x,
       segmentStartTowardPixel.y / tangent_proj.y
@@ -276,7 +278,7 @@ fn processHairSegment(
     let alpha = saturate(1.0 - distToStrandPx / fiberRadiusPx);
     
     if (isInsideSegment && alpha > 0.){
-      // let color = vec4f(1.0, 0.0, 0.0, alpha);
+      let color = vec4f(1.0, 0.0, 0.0, alpha);
 
       // dbg
       // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, 1.0));
@@ -287,14 +289,14 @@ fn processHairSegment(
 
       // insert into per-slice linked list
       let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-      // _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
-      // writtenSliceDataCount += 1u;
+      _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
+      writtenSliceDataCount += 1u;
     }
   }}
 
   // debugColorPointInTile(tileBoundsPx, segment0_px, vec4f(0.0, 1.0, 0.0, 1.0));
   // debugColorPointInTile(tileBoundsPx, segment1_px, vec4f(0.0, 0.0, 1.0, 1.0));
-  // return writtenSliceDataCount;
+  return writtenSliceDataCount;
 }
 
 /** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */
