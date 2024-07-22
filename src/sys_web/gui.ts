@@ -57,6 +57,7 @@ export function initializeGUI(
     const modeDummy = createDummy(cfg, 'displayMode', [
       { label: 'Final', value: DISPLAY_MODE.FINAL },
       { label: 'DBG: tiles', value: DISPLAY_MODE.TILES },
+      { label: 'DBG: slices cnt', value: DISPLAY_MODE.USED_SLICES },
       { label: 'DBG: hw-render', value: DISPLAY_MODE.HW_RENDER },
     ]);
     const modeCtrl = dir

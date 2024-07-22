@@ -39,15 +39,13 @@ fn main_vs(
   @location(2) inUV : vec2f,
 ) -> VertexOutput {
   var result: VertexOutput;
+  let mvpMatrix = _uniforms.mvpMatrix;
+  let modelMat = _uniforms.modelMatrix;
 
-  // let modelMat = ;
-  // let mvpMatrix = getMVP_Mat(modelMat, _uniforms.viewMatrix, _uniforms.projMatrix); // either here or upload from CPU
-  let mvpMatrix = _uniforms.vpMatrix;
   let vertexPos = vec4<f32>(inWorldPos.xyz, 1.0);
   result.position = mvpMatrix * vertexPos;
   result.positionWS = vertexPos;
-  // result.normalWS = transformNormalToWorldSpace(modelMat, inNormal);
-  result.normalWS = inNormal;
+  result.normalWS = transformNormalToWorldSpace(modelMat, inNormal);
   result.uv = inUV;
 
   return result;

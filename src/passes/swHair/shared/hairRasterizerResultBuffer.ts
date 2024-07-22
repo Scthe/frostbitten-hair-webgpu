@@ -1,5 +1,7 @@
 import { BYTES_VEC4 } from '../../../constants.ts';
+import { STATS } from '../../../sys_web/stats.ts';
 import { Dimensions } from '../../../utils/index.ts';
+import { formatBytes } from '../../../utils/string.ts';
 
 ///////////////////////////
 /// SHADER CODE
@@ -45,10 +47,12 @@ export function createHairRasterizerResultsBuffer(
 ): GPUBuffer {
   const pixels = viewportSize.width * viewportSize.height;
   const bytesPerPixel = BYTES_VEC4;
+  const size = pixels * bytesPerPixel;
+  STATS.update('Hair FBO', formatBytes(size));
 
   return device.createBuffer({
     label: `hair-rasterizer-result`,
-    size: pixels * bytesPerPixel,
+    size,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 }

@@ -22,6 +22,10 @@ export class HairObject {
     return this.strandsCount * this.pointsPerStrand;
   }
 
+  get segmentCount() {
+    return this.strandsCount * (this.pointsPerStrand - 1);
+  }
+
   bindPointsPositions = (bindingIdx: number): GPUBindGroupEntry => ({
     binding: bindingIdx,
     resource: { buffer: this.buffers.pointsPositionsBuffer },

@@ -15,6 +15,17 @@ const AvailableStats = {
   ms: { hideLabel: true } as StatOpts,
   'Camera pos': {} as StatOpts,
   'Camera rot': {} as StatOpts,
+  'Strands': {} as StatOpts,
+  'Points per strand': {} as StatOpts,
+  'Segments': {} as StatOpts,
+  'Tiles': {} as StatOpts,
+  // memory
+  s0: { categoryName: 'Memory' } as StatOpts,
+  'Tiles heads': {} as StatOpts, // per tile depth data + segment head
+  'Tiles segments': {} as StatOpts, // hair segments per tile PPLL data
+  'Slices heads': {} as StatOpts, // hair slices pointers
+  'Slices data': {} as StatOpts, // hair slices color data
+  'Hair FBO': {} as StatOpts, // final color framebuffer
 };
 type StatName = keyof typeof AvailableStats;
 
@@ -78,6 +89,26 @@ class Stats {
     }
   };
 
+  printStats = () => {
+    const TAB = '  ';
+
+    console.log('STATS {');
+    Object.entries(AvailableStats).forEach(([name_, opts]) => {
+      // deno-lint-ignore no-explicit-any
+      const name: StatName = name_ as any; // TS..
+
+      if (opts.categoryName) {
+        console.log(`%c${TAB}--- ${opts.categoryName} ---`, 'color: blue');
+      } else {
+        const value = this.values[name];
+        if (value !== undefined && value !== null) {
+          console.log(`%c${TAB}${name}:`, 'color: green', value);
+        }
+      }
+    });
+    console.log('}');
+  };
+
   private renderStats = () => {
     const statsChildrenEls: HTMLElement[] = Array.from(
       this.parentEl.children
@@ -86,7 +117,7 @@ class Stats {
 
     Object.entries(AvailableStats).forEach(([name_, opts]) => {
       // deno-lint-ignore no-explicit-any
-      const name: StatName = name_ as any; // ...TS
+      const name: StatName = name_ as any; // TS..
       const el = this.getStatsHtmlEl(statsChildrenEls, name, opts);
 
       if (opts.categoryName) {

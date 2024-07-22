@@ -65,7 +65,7 @@ fn main_fs(
   let hairResult = _getTileDepth(viewportSizeU32, fragPositionPx);
   let segmentPtr = _getTileSegmentPtr(viewportSizeU32, fragPositionPx);
 
-  if (segmentPtr == 0){ // TODO restore
+  if (segmentPtr == 0){
     // no pixel for software rasterizer, do not override.
     // 0 is the value we cleared the buffer to, so any write with atomicMax()
     // would affect the result. And it's not possible to try to write 0

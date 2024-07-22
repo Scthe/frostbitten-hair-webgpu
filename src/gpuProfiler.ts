@@ -1,4 +1,6 @@
-import { BYTES_U64, NANO_TO_MILISECONDS } from './constants.ts';
+import { BYTES_U64, IS_DENO, NANO_TO_MILISECONDS } from './constants.ts';
+
+const FORCE_DISABLE_GPU_TIMINGS = IS_DENO;
 
 /// Big amount of queries to never have to carry about it
 const MAX_QUERY_COUNT = 1024;
@@ -18,6 +20,8 @@ export const getDeltaFromTimestampMS = (start: number) => {
   return end - start;
 };
 
+type CurrentFrameScopes = Array<[string, 'cpu' | 'gpu', number]>;
+
 /**
  * https://github.com/Scthe/Rust-Vulkan-TressFX/blob/master/src/gpu_profiler.rs
  *
@@ -30,7 +34,7 @@ export class GpuProfiler {
   private readonly queryInProgressBuffer: GPUBuffer;
   private readonly resultsBuffer: GPUBuffer;
 
-  private currentFrameScopes: Array<[string, 'cpu' | 'gpu', number]> = [];
+  private currentFrameScopes: CurrentFrameScopes = [];
 
   get enabled() {
     return this._profileThisFrame && this.hasRequiredFeature;
@@ -38,7 +42,7 @@ export class GpuProfiler {
 
   constructor(device: GPUDevice) {
     this.hasRequiredFeature = device.features.has('timestamp-query');
-    if (!this.hasRequiredFeature) {
+    if (!this.hasRequiredFeature || FORCE_DISABLE_GPU_TIMINGS) {
       // we should never use them if no feature available
       this.queryPool = undefined!;
       this.queryInProgressBuffer = undefined!;
@@ -74,7 +78,7 @@ export class GpuProfiler {
   }
 
   endFrame(cmdBuf: GPUCommandEncoder) {
-    if (!this.enabled) {
+    if (!this.enabled || FORCE_DISABLE_GPU_TIMINGS) {
       return;
     }
 
@@ -106,26 +110,40 @@ export class GpuProfiler {
     this._profileThisFrame = false;
     const scopeNames = this.currentFrameScopes.slice();
 
+    if (FORCE_DISABLE_GPU_TIMINGS) {
+      const times = new BigInt64Array();
+      const result = this.parseScopeTimers(scopeNames, times);
+      onResult?.(result);
+      return;
+    }
+
     if (this.resultsBuffer.mapState === 'unmapped') {
       await this.resultsBuffer.mapAsync(GPUMapMode.READ);
       const times = new BigInt64Array(this.resultsBuffer.getMappedRange());
-      const result = scopeNames.map(
-        ([name, type, cpuTime], idx): GpuProfilerResultItem => {
-          let time = 0;
-          if (type === 'gpu') {
-            const start = times[idx * QUERIES_PER_PASS];
-            const end = times[idx * QUERIES_PER_PASS + 1];
-            time = Number(end - start) * NANO_TO_MILISECONDS;
-          } else {
-            time = cpuTime;
-          }
-          return [name, time];
-        }
-      );
+      const result = this.parseScopeTimers(scopeNames, times);
       this.resultsBuffer.unmap();
 
       onResult?.(result);
     }
+  }
+
+  private parseScopeTimers(
+    scopeNames: CurrentFrameScopes,
+    gpuTimes: BigInt64Array
+  ) {
+    return scopeNames.map(
+      ([name, type, cpuTime], idx): GpuProfilerResultItem => {
+        let time = 0;
+        if (type === 'gpu') {
+          const start = gpuTimes[idx * QUERIES_PER_PASS];
+          const end = gpuTimes[idx * QUERIES_PER_PASS + 1];
+          time = Number(end - start) * NANO_TO_MILISECONDS;
+        } else {
+          time = cpuTime;
+        }
+        return [name, time];
+      }
+    );
   }
 
   /** Provide to beginCompute/beginRenderPass's `timestampWrites` */

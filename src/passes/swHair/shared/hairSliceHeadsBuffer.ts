@@ -1,4 +1,6 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
+import { STATS } from '../../../sys_web/stats.ts';
+import { formatBytes } from '../../../utils/string.ts';
 import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
@@ -7,6 +9,10 @@ import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
 /// NOTE: the memory is per-processor, so we do not need atomics
 ///////////////////////////
 
+/**
+ * For each processor, contains `TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL`
+ * entries. Each entry is a pointer into slices data buffer.
+ */
 export const BUFFER_HAIR_SLICES_HEADS = (
   bindingIdx: number,
   access: 'read_write'
@@ -80,10 +86,12 @@ export function getActiveSlicesCount() {
 export function createHairSlicesHeadsBuffer(device: GPUDevice): GPUBuffer {
   const entries = getActiveSlicesCount();
   const bytesPerEntry = BYTES_U32;
+  const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
+  STATS.update('Slices heads', formatBytes(size));
 
   return device.createBuffer({
     label: `hair-slices-heads`,
-    size: Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE),
+    size,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 }

@@ -10,8 +10,7 @@ import { BUFFER_HAIR_SLICES_HEADS } from './shared/hairSliceHeadsBuffer.ts';
 import { BUFFER_HAIR_SLICES_DATA } from './shared/hairSlicesDataBuffer.ts';
 
 export const SHADER_PARAMS = {
-  // workgroupSizeX: Math.max(CONFIG.hairRender.processorCount, 32), // TODO [LOW] set better values. TBH what about 1? The threads WILL diverge..
-  workgroupSizeX: 1,
+  workgroupSizeX: CONFIG.hairRender.finePassWorkgroupSizeX,
   bindings: {
     renderUniforms: 0,
     hairData: 1,
@@ -21,6 +20,7 @@ export const SHADER_PARAMS = {
     hairSlicesHeads: 5,
     hairSlicesData: 6,
     rasterizerResult: 7,
+    depthTexture: 8,
   },
 };
 
@@ -39,6 +39,7 @@ const TILE_SIZE_2f: vec2f = vec2f(
 );
 const PROCESSOR_COUNT: u32 = ${CONFIG.hairRender.processorCount}u;
 const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel}u;
+const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
 
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
@@ -52,17 +53,23 @@ ${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizerResult, 'read_write')}
 ${BUFFER_HAIR_SLICES_HEADS(b.hairSlicesHeads, 'read_write')}
 ${BUFFER_HAIR_SLICES_DATA(b.hairSlicesData, 'read_write')}
 
+@group(0) @binding(${b.depthTexture})
+var _depthTexture: texture_depth_2d;
+
 
 struct FineRasterParams {
   modelViewMat: mat4x4f,
   projMat: mat4x4f,
   mvpMat: mat4x4f,
+  // START: vec4u
   strandsCount: u32, // u32's first
   pointsPerStrand: u32,
   viewportSizeU32: vec2u,
+  // START: mixed
   viewportSize: vec2f, // f32's
   fiberRadius: f32,
   processorId: u32,
+  dbgSlicesModeMaxSlices: u32,
 }
 
 
@@ -78,15 +85,16 @@ fn main(
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
 
   let params = FineRasterParams(
-    _uniforms.viewMatrix, // TODO model-view matrix!
+    _uniforms.modelViewMat,
     _uniforms.projMatrix,
-    _uniforms.projMatrix * _uniforms.viewMatrix, // TODO make MVP
+    _uniforms.mvpMatrix,
     strandsCount,
     pointsPerStrand,
     vec2u(viewportSize),
     viewportSize,
     _uniforms.fiberRadius,
-    processorId
+    processorId,
+    getDbgSlicesModeMaxSlices(),
   );
 
   let tileCount2d = getTileCount(params.viewportSizeU32);
@@ -114,6 +122,7 @@ fn processTile(
   let tileBoundsPx: vec4u = getTileBoundsPx(p.viewportSizeU32, tileIdx);
   let tileCenterPx: vec2u = (tileBoundsPx.xy + tileBoundsPx.zw) / 2u;
   var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileCenterPx);
+  var tileDepth = _getTileDepth(p.viewportSizeU32, tileCenterPx);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var count = 0u;
@@ -137,7 +146,7 @@ fn processTile(
 
       let writtenSliceDataCount = processHairSegment(
         p,
-        tileBoundsPx, sliceDataOffset,
+        tileBoundsPx, tileDepth, sliceDataOffset,
         segmentData.x, segmentData.y // strandIdx, segmentIdx
       );
       sliceDataOffset = sliceDataOffset + writtenSliceDataCount;
@@ -152,27 +161,41 @@ fn processTile(
     }
   }
 
+  if (sliceDataOffset == 0) {
+    // no pixels were changed. This should not happen (cause tile pass), but just in case
+    return;
+  }
+
   // for each pixel:
   //    iterate over slices and accumulate color
   var sliceData: SliceData;
   let boundRectMax = vec2u(tileBoundsPx.zw);
   let boundRectMin = vec2u(tileBoundsPx.xy);
+  let ALPHA_CUTOFF = 0.999; // TBH does not help much, it's not where the actuall cost is. Still..
 
   for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y+=1u) {
   for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x+=1u) {
     var finalColor = vec4f();
+    var sliceCount = 0u;
     let px = vec2u(x, y); // pixel coordinates wrt. viewport
     let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
     
     // iterate slices front to back
     for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
+      if (finalColor.a >= ALPHA_CUTOFF) { break; }
       var slicePtr = _getSlicesHeadPtr(p.processorId, pxInTile, s);
       
       // aggregate colors in this slice
       while(_getSliceData(p.processorId, slicePtr, &sliceData)) {
-        slicePtr = sliceData.nextPtr;
-        // We could have a better blend if there are 2+ segments in slice, but meh..
-        finalColor = mix(finalColor, sliceData.color, 1.0 - finalColor.a);
+        if (finalColor.a >= ALPHA_CUTOFF) { break; }
+        slicePtr = sliceData.value[2];
+        sliceCount += 1u;
+        
+        let sliceColor = vec4f(
+          unpack2x16float(sliceData.value[0]),
+          unpack2x16float(sliceData.value[1])
+        );
+        finalColor += sliceColor * (1.0 - finalColor.a);
       }
 
       // dbg: use only 1st slice data
@@ -188,14 +211,21 @@ fn processTile(
       finalColor.a = 1.0;
     }*/
     
-    _setRasterizerResult(p.viewportSizeU32, px, finalColor);
+    if (p.dbgSlicesModeMaxSlices == 0u) {
+      // the prod value
+      _setRasterizerResult(p.viewportSizeU32, px, finalColor);
+    } else {
+      // debug value
+      let c = saturate(f32(sliceCount) / f32(p.dbgSlicesModeMaxSlices));
+      _setRasterizerResult(p.viewportSizeU32, px, vec4f(c, 0., 0., 1.0));
+    }
   }}
 }
 
 
 fn processHairSegment(
   p: FineRasterParams,
-  tileBoundsPx: vec4u, sliceDataOffset: u32,
+  tileBoundsPx: vec4u, tileDepth: vec2f, sliceDataOffset: u32,
   strandIdx: u32, segmentIdx: u32
 ) -> u32 {
   var writtenSliceDataCount: u32 = 0u;
@@ -267,36 +297,47 @@ fn processHairSegment(
       length(segmentStartTowardPixel) < rasterErrMarginStart || 
       length(segmentEndTowardPixel  ) < rasterErrMarginEnd;
 
-    // TODO depth test. interpolate depth using 't', compare to zBuffer
-    //      or maybe keep depth in view-space? But tile depth is projected, so we also project..
-    // let t = length(segment0_proj - pxOnSegment) / segmentLength;
-    // let depth = mix(segment0_proj.z, segment1_proj.z, t); // TODO it's in [-1, 1] or [0, 1]?
-    let sliceIdx = 0u; // TODO calc the tile's min/max depth
-    
     let distToStrandPx = length(pxOnSegment - px);
     // let distToStrand_0_1 = distToStrandPx / f32(TILE_SIZE); // dbg
     let alpha = saturate(1.0 - distToStrandPx / fiberRadiusPx);
     
     if (isInsideSegment && alpha > 0.){
-      let color = vec4f(1.0, 0.0, 0.0, alpha);
+      let hairDepth: f32 = mix(segment0_proj.z, segment1_proj.z, saturate(t));
+      // sample depth buffer
+      let depthTextSamplePx: vec2i = vec2i(i32(px_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
+      let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
 
-      // dbg
-      // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, 1.0));
-      // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, alpha));
-      // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(t, 0.0, 0.0, 1.0));
-      // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(distToStrand_0_1, 0.0, 0.0, 1.0));
-      // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(-tangent_proj.xy, 0.0, 1.0));
+      if (hairDepth < depthBufferValue) { // depth test with GL_LESS
+        let color = vec4f(1.0, 0.0, 0.0, alpha);
+        let sliceIdx = getSliceIdx(tileDepth, hairDepth);
 
-      // insert into per-slice linked list
-      let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-      _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
-      writtenSliceDataCount += 1u;
+        // dbg
+        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, 1.0));
+        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, alpha));
+        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(t, 0.0, 0.0, 1.0));
+        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(distToStrand_0_1, 0.0, 0.0, 1.0));
+        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(-tangent_proj.xy, 0.0, 1.0));
+
+        // insert into per-slice linked list
+        let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
+        _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
+        writtenSliceDataCount += 1u;
+      }
     }
   }}
 
   // debugColorPointInTile(tileBoundsPx, segment0_px, vec4f(0.0, 1.0, 0.0, 1.0));
   // debugColorPointInTile(tileBoundsPx, segment1_px, vec4f(0.0, 0.0, 1.0, 1.0));
   return writtenSliceDataCount;
+}
+
+fn getSliceIdx(
+  tileDepth: vec2f,
+  pixelDepth: f32,
+) -> u32 {
+  let tileDepthSpan = tileDepth.y - tileDepth.x;
+  let t = (pixelDepth - tileDepth.x) / tileDepthSpan;
+  return u32(clamp(t * SLICES_PER_PIXEL_f32, 0.0, SLICES_PER_PIXEL_f32));
 }
 
 /** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */

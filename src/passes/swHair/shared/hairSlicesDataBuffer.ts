@@ -1,4 +1,6 @@
-import { BYTES_U32, BYTES_VEC4, CONFIG } from '../../../constants.ts';
+import { BYTES_U32, CONFIG } from '../../../constants.ts';
+import { STATS } from '../../../sys_web/stats.ts';
+import { formatBytes } from '../../../utils/string.ts';
 import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
@@ -17,6 +19,11 @@ const SLICE_DATA_PER_PROCESSOR_COUNT =
   cfgHair.tileSize *
   cfgHair.tileSize;
 
+/**
+ * Memory pool for slice data. Each processor contains own subregion
+ * to make it easier to free() the memory between tiles. Each slice
+ * data contains color and a pointer to next entry.
+ */
 export const BUFFER_HAIR_SLICES_DATA = (
   bindingIdx: number,
   access: 'read_write'
@@ -25,12 +32,7 @@ export const BUFFER_HAIR_SLICES_DATA = (
 const SLICE_DATA_PER_PROCESSOR_COUNT = ${SLICE_DATA_PER_PROCESSOR_COUNT}u;
 
 struct SliceData {
-  // TODO alignment is terrible, padding wastes nigh-50% of the space
-  color: vec4f,
-  nextPtr: u32,
-  padding0: u32,
-  padding1: u32,
-  padding2: u32,
+  value: vec4u,
 }
 
 @group(0) @binding(${bindingIdx})
@@ -50,8 +52,13 @@ fn _setSliceData(
   color: vec4f, previousPtr: u32 // both are data to be written
 ) {
   let offset = _getSliceDataProcessorOffset(processorId) + slicePtr;
-  _hairSliceData[offset].color = color;
-  _hairSliceData[offset].nextPtr = previousPtr;
+  let value = vec4u(
+    pack2x16float(color.rg),
+    pack2x16float(color.ba),
+    previousPtr,
+    0u
+  );
+  _hairSliceData[offset].value = value;
 }
 
 fn _getSliceData(
@@ -65,10 +72,8 @@ fn _getSliceData(
   ) { return false; }
   
   let offset = _getSliceDataProcessorOffset(processorId) + slicePtr;
-  (*data).color = _hairSliceData[offset].color;
-  (*data).nextPtr = _hairSliceData[offset].nextPtr;
+  (*data).value = _hairSliceData[offset].value;
   return true;
-  // return false;
 }
 `;
 
@@ -79,11 +84,13 @@ fn _getSliceData(
 export function createHairSlicesDataBuffer(device: GPUDevice): GPUBuffer {
   const { processorCount } = CONFIG.hairRender;
   const entries = SLICE_DATA_PER_PROCESSOR_COUNT * processorCount;
-  const bytesPerEntry = BYTES_VEC4 + 4 * BYTES_U32;
+  const bytesPerEntry = 4 * BYTES_U32;
+  const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
+  STATS.update('Slices data', formatBytes(size));
 
   return device.createBuffer({
-    label: `hair-slices-ppll-data`,
-    size: Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE),
+    label: `hair-slices-data`,
+    size,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 }

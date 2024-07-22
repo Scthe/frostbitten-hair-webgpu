@@ -12,6 +12,8 @@ import {
 } from './sys_deno/loadersDeno.ts';
 import { Scene } from './scene/scene.ts';
 import { loadScene } from './scene/loadScene.ts';
+import { STATS } from './sys_web/stats.ts';
+import { GpuProfiler, GpuProfilerResult } from './gpuProfiler.ts';
 
 CONFIG.loaders.textFileReader = textFileReader_Deno;
 CONFIG.loaders.binaryFileReader = binaryFileReader_Deno;
@@ -48,8 +50,14 @@ async function renderSceneToFile(
   );
   const windowTextureView = windowTexture.createView();
 
+  // profiler
+  // GPU timestamp do not work in Deno, but sync CPU timestamp
+  // after device.queue.submit() at least gives SOME number.
+  // It's crap, but..
+  const profiler = new GpuProfiler(device);
+  profiler.profileNextFrame(true);
+
   // renderer setup
-  // const profiler = new GpuProfiler(device);
   console.log('Creating renderer..');
   const renderer = new Renderer(
     device,
@@ -76,7 +84,6 @@ async function renderSceneToFile(
   errorSystem.startErrorScope('frame');
 
   // profiler.beginFrame();
-  // const deltaTime = STATS.deltaTimeMS * MILISECONDS_TO_SECONDS;
 
   // const inputState = getInputState();
   // renderer.updateCamera(deltaTime, inputState);
@@ -90,6 +97,7 @@ async function renderSceneToFile(
 
   // submit commands
   // profiler.endFrame(cmdBuf);
+  const profilerScopeToken = profiler.startRegionCpu('CPU Frame');
   device.queue.submit([cmdBuf.finish()]);
   console.log('Frame submitted, checking errors..');
 
@@ -101,6 +109,14 @@ async function renderSceneToFile(
 
   // write output
   await writePngFromGPUBuffer(outputBuffer, VIEWPORT_SIZE, outputPath);
+
+  // end scope now, after guaranteed GPU sync point. The timings are skewed,
+  // but best we get
+  profiler.endRegionCpu(profilerScopeToken);
+
+  STATS.printStats();
+
+  await profiler.scheduleRaportIfNeededAsync(reportProfiler);
 }
 
 /////////////////////
@@ -122,4 +138,12 @@ function cmdCopyTextureToBuffer(
     },
     dimensions
   );
+}
+
+function reportProfiler(result: GpuProfilerResult) {
+  console.log('PROFILER [');
+  result.forEach(([name, timeMs]) => {
+    console.log(`%c - %c${name}:`, '', 'color: green', `${timeMs}ms`);
+  });
+  console.log(']');
 }

@@ -68,7 +68,7 @@ fn main(
 
   // get rasterize data
   let swHairRasterizeParams = SwHairRasterizeParams(
-    _uniforms.viewMatrix,
+    _uniforms.modelViewMat,
     _uniforms.projMatrix,
     viewportSizeU32,
     strandsCount,

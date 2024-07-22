@@ -2,6 +2,8 @@ import { BYTES_U32, CONFIG } from '../../../constants.ts';
 import { WEBGPU_MINIMAL_BUFFER_SIZE, u32_type } from '../../../utils/webgpu.ts';
 import { getTileCount } from './hairTilesResultBuffer.ts';
 import { Dimensions } from '../../../utils/index.ts';
+import { STATS } from '../../../sys_web/stats.ts';
+import { formatBytes } from '../../../utils/string.ts';
 
 /*
 https://webgpu.github.io/webgpu-samples/?sample=a-buffer#translucent.wgsl
@@ -10,6 +12,7 @@ https://webgpu.github.io/webgpu-samples/?sample=a-buffer#translucent.wgsl
 ///////////////////////////
 /// SHADER CODE
 ///////////////////////////
+
 const storeTileSegment = /* wgsl */ `
 
 fn _storeTileSegment(
@@ -57,6 +60,9 @@ fn _getTileSegment(
 }
 `;
 
+/**
+ * Per-tile linked list of packed (strandId, segmentId).
+ */
 export const BUFFER_HAIR_TILE_SEGMENTS = (
   bindingIdx: number,
   access: 'read_write' | 'read'
@@ -98,10 +104,12 @@ export function createHairTileSegmentsBuffer(
 ): GPUBuffer {
   const entries = getLengthOfHairTileSegmentsBuffer(viewportSize);
   const bytesPerEntry = 2 * BYTES_U32;
+  const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
+  STATS.update('Tiles segments', formatBytes(size));
 
   return device.createBuffer({
     label: `hair-segments-per-tile`,
-    size: Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE),
+    size,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 }

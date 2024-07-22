@@ -1,9 +1,12 @@
+import { mat4 } from 'wgpu-matrix';
 import { CONFIG, MODELS_DIR } from '../constants.ts';
+import { STATS } from '../sys_web/stats.ts';
 import {
   Bounds3d,
   calcBoundingBox,
   calcBoundingSphere,
 } from '../utils/bounds.ts';
+import { formatNumber } from '../utils/string.ts';
 import { createHairDataBuffer } from './hair/hairDataBuffer.ts';
 import { createHairIndexBuffer } from './hair/hairIndexBuffer.ts';
 import { HairObject } from './hair/hairObject.ts';
@@ -12,6 +15,7 @@ import { createHairTangentsBuffer } from './hair/hairTangentsBuffer.ts';
 import { parseTfxFile, TfxFileData } from './hair/tfxFileLoader.ts';
 import { loadObjFile } from './objLoader.ts';
 import { Scene } from './scene.ts';
+import { dgr2rad } from '../utils/index.ts';
 
 const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
@@ -38,8 +42,14 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
   const tfxFile = await loadTfxFile(HAIR_FILE, 1.0);
   // const tfxFile = mockTfxFile();
   const hairObject = await createHairObject(device, 'sintelHair', tfxFile);
+  STATS.update('Strands', formatNumber(hairObject.strandsCount));
+  STATS.update('Points per strand', hairObject.pointsPerStrand);
+  STATS.update('Segments', formatNumber(hairObject.segmentCount));
 
-  return { objects, hairObject };
+  const modelMatrix = mat4.identity();
+  mat4.rotateY(modelMatrix, dgr2rad(0), modelMatrix);
+
+  return { objects, hairObject, modelMatrix };
 }
 
 export function createHairObject(

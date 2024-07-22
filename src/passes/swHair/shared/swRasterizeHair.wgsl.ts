@@ -46,7 +46,6 @@ fn swRasterizeHair(
 ) -> SwRasterizedHair {
   var r: SwRasterizedHair;
 
-  // TODO use modelMat to convert positions + tangents to world space
   let p0_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.0);
   let p1_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.0);
   let t0_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.,);

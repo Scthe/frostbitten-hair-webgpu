@@ -60,6 +60,7 @@ fn main_vs(
 ) -> VertexOutput {
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
+  let modelMatrix = _uniforms.modelMatrix;
   let vpMatrix = _uniforms.vpMatrix;
   let cameraPosition = _uniforms.cameraPosition;
   
@@ -68,13 +69,13 @@ fn main_vs(
   let index: u32 = inVertexIndex / 2u; // each segment is 2 triangles, so we get same strand data twice.
   let isOdd = (inVertexIndex & 0x01u) > 0u;
   let positionOrg = _hairPointPositions[index].xyz;
-  let tangent = _hairTangents[index].xyz;
-  let positionWS = vec4f(positionOrg, 1.0);
-  // TODO convert positions+tangents to world space using model matrix
+  let tangentOrg = _hairTangents[index].xyz;
+  let positionWS = modelMatrix * vec4f(positionOrg, 1.0);
+  let tangentWS = modelMatrix * vec4f(tangentOrg, 1.0);
 
   // Calculate bitangent vectors
   let towardsCamera: vec3f = safeNormalize(cameraPosition.xyz - positionWS.xyz);
-  let right: vec3f = safeNormalize(cross(tangent, towardsCamera));
+  let right: vec3f = safeNormalize(cross(tangentWS.xyz, towardsCamera));
   
   // Calculate the negative and positive offset screenspace positions
   // 0 is for odd vertexId, 1 is for even vertexId

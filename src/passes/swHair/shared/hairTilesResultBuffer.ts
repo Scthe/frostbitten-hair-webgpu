@@ -1,5 +1,7 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
+import { STATS } from '../../../sys_web/stats.ts';
 import { Dimensions, divideCeil } from '../../../utils/index.ts';
+import { formatBytes } from '../../../utils/string.ts';
 import { u32_type } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
@@ -45,6 +47,11 @@ fn _getTileSegmentPtr(viewportSize: vec2u, posPx: vec2u) -> u32 {
 
 `;
 
+/**
+ * For each tile contains:
+ * - min and max depth
+ * - pointer into the tile segments buffer
+ */
 export const BUFFER_HAIR_TILES_RESULT = (
   bindingIdx: number,
   access: 'read_write' | 'read'
@@ -93,14 +100,18 @@ export function createHairTilesResultBuffer(
   viewportSize: Dimensions
 ): GPUBuffer {
   const tileCount = getTileCount(viewportSize);
+  console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height} tiles`); // prettier-ignore
+  STATS.update('Tiles', `${tileCount.width} x ${tileCount.height}`);
+
   const pixels = tileCount.width * tileCount.height;
   const bytesPerPixel = 3 * BYTES_U32;
-  console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height} tiles`); // prettier-ignore
+  const size = pixels * bytesPerPixel;
+  STATS.update('Tiles heads', formatBytes(size));
 
   const extraUsage = CONFIG.isTest ? GPUBufferUsage.COPY_SRC : 0; // for stats, debug etc.
   return device.createBuffer({
-    label: `hair-tiles-result-${viewportSize.width}x${viewportSize.height}`,
-    size: pixels * bytesPerPixel,
+    label: `hair-tiles-result`,
+    size,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | extraUsage,
   });
 }

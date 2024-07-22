@@ -9,7 +9,7 @@ export async function writePngFromGPUBuffer(
 ): Promise<Uint8Array> {
   console.log(`Writing result image to: '${outputPath}'`);
 
-  await buffer.mapAsync(1);
+  await buffer.mapAsync(GPUMapMode.READ);
   const inputBuffer = new Uint8Array(buffer.getMappedRange());
   const { padded, unpadded } = getRowPadding(dimensions.width);
   const outputBuffer = new Uint8Array(unpadded * dimensions.height);

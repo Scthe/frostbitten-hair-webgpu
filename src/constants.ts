@@ -39,6 +39,7 @@ export const DISPLAY_MODE = {
   FINAL: 0,
   TILES: 1,
   HW_RENDER: 2,
+  USED_SLICES: 3,
 };
 
 export const CONFIG = {
@@ -89,22 +90,22 @@ export const CONFIG = {
   /// HAIR
   hairRender: {
     displayMode: DISPLAY_MODE.FINAL,
-    fiberRadius: 0.0001,
+    fiberRadius: 0.0002,
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 1700,
+    /** When in 'used_slices' display mode, how much slices are considered full */
+    dbgSlicesModeMaxSlices: 50,
 
     ////// TILE PASS
     tileSize: 16,
     avgSegmentsPerTile: 512,
-    processorCount: 128,
 
     ////// FINE PASS
-    /**
-     * Frostbite allocates `tileSize * tileSize * sliceCount` per processor.
-     * Each processor then uses atomicAdd(+1) to loop over the tiles.
-     */
-    slicesPerPixel: 1,
-    avgFragmentsPerSlice: 32,
+    // TODO find better values.
+    slicesPerPixel: 30,
+    avgFragmentsPerSlice: 16,
+    processorCount: 64,
+    finePassWorkgroupSizeX: 1,
   },
 
   ///////////////
