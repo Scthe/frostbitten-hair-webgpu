@@ -55,7 +55,10 @@ fn main_fs(
   let viewportSize: vec2f = _uniforms.viewport.xy;
   let viewportSizeU32 = vec2u(viewportSize.xy);
   // invert cause it's WebGPU thing
-  let fragPositionPx = vec2u(u32(positionPxF32.x), viewportSizeU32.y - u32(positionPxF32.y));
+  let fragPositionPx = vec2u(
+    u32(positionPxF32.x),
+    u32(viewportSize.y - positionPxF32.y)
+  );
 
   // sample software rasterizer
   // .x is close, .y is far depth
@@ -75,24 +78,35 @@ fn main_fs(
   var color = vec4f(0.0, 0.0, 0.0, 1.0);
 
   if (displayMode == DISPLAY_MODE_TILES) {
+    // output: segment count in each tile normalized by UI provided value
     let maxSegmentsCount = getDbgTileModeMaxSegments();
     let segments = getSegmentCountInTiles(viewportSizeU32, maxSegmentsCount, fragPositionPx);
     color.r = f32(segments) / f32(maxSegmentsCount);
     color.g = 1.0 - color.r;
 
+    // dbg: tile bounds
+    // let tileIdx: u32 = _getHairTileIdx(viewportSizeU32, fragPositionPx);
+    // color.r = f32((tileIdx * 17) % 33) / 33.0;
+    // color.a = 1.0;
+
   } else {
-    // color = _getRasterizerResult(viewportSizeU32, fragPositionPx);
-    color = _getRasterizerResult(viewportSizeU32, fragPositionPx - vec2u(0u, 0u));
+    color = _getRasterizerResult(viewportSizeU32, fragPositionPx);
     // color.a = select(0.2, color.w, color.w > 0.);
     // result.fragDepth = hairResult.x; // this pass has depth test ON!
     
     // nothing was explicitly drawn
     // fill tile bg with some pattern
-    if (color.w == 0.) {
-      color.a = 0.9; // add some tile bg
+    let hasContent = color.w > 0.;
+    let drawDebugTileOverlay = 1;
+    if (!hasContent && drawDebugTileOverlay!=0) {
+      // color.a = select(0.9, color.w, hasContent); // add some tile bg
       let TILE_SIZE = ${CONFIG.hairRender.tileSize}u;
-      color.g = f32(((fragPositionPx.x - 1u) / TILE_SIZE) % 2) / 2.0;
-      color.b = f32(((fragPositionPx.y - 1u) / TILE_SIZE) % 2) / 2.0;
+      var dbgTileColor = vec4f(1.0);
+      dbgTileColor.r = 0.0;
+      dbgTileColor.g = f32((fragPositionPx.x / TILE_SIZE) % 2) / 2.0;
+      dbgTileColor.b = f32((fragPositionPx.y / TILE_SIZE) % 2) / 2.0;
+      color = dbgTileColor + color * color.a;
+      // color = dbgTileColor;
     }
   }
 

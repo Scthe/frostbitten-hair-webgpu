@@ -1,61 +1,69 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
-import { WEBGPU_MINIMAL_BUFFER_SIZE, u32_type } from '../../../utils/webgpu.ts';
+import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
 /// SHADER CODE
-/// TODO how to clear this between slices? Just be carefull with
-/// first write and ignore first value from setSlicesHeadPtr()?
+///
+/// NOTE: the memory is per-processor, so we do not need atomics
 ///////////////////////////
 
-const setSlicesHeadPtr = /* wgsl */ `
+export const BUFFER_HAIR_SLICES_HEADS = (
+  bindingIdx: number,
+  access: 'read_write'
+) => /* wgsl */ `
+
+const INVALID_SLICE_DATA_PTR: u32 = 0xffffffffu;
+
+@group(0) @binding(${bindingIdx})
+var<storage, ${access}> _hairSliceHeads: array<u32>;
+
+fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
+  return processorId * TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL;
+}
+
+fn _getHeadsSliceIdx(
+  processorId: u32,
+  pixelInTile: vec2u, sliceIdx: u32,
+) -> u32 {
+  let offset = _getHeadsProcessorOffset(processorId);
+  let offsetInProcessor = (
+    pixelInTile.y * TILE_SIZE * SLICES_PER_PIXEL +
+    pixelInTile.x * SLICES_PER_PIXEL +
+    sliceIdx
+  );
+  return offset + offsetInProcessor;
+}
 
 fn _setSlicesHeadPtr(
   processorId: u32,
   pixelInTile: vec2u, sliceIdx: u32,
-  value: u32
+  nextPtr: u32
 ) -> u32 {
-  let idx = _getSliceIdx(processorId, pixelInTile, sliceIdx);
-  let lastHead = atomicExchange(&_hairSliceHeads[idx], value);
-  return lastHead;
+  let idx = _getHeadsSliceIdx(processorId, pixelInTile, sliceIdx);
+  let prevPtr = _hairSliceHeads[idx];
+  _hairSliceHeads[idx] = nextPtr;
+  return prevPtr;
 }
-`;
-
-const getSlicesHeadPtr = /* wgsl */ `
 
 fn _getSlicesHeadPtr(
   processorId: u32,
   pixelInTile: vec2u, sliceIdx: u32,
 ) -> u32 {
-  let idx = _getSliceIdx(processorId, pixelInTile, sliceIdx);
+  let idx = _getHeadsSliceIdx(processorId, pixelInTile, sliceIdx);
+  // let idx = pixelInTile.x * 16u + pixelInTile.y;
   return _hairSliceHeads[idx];
 }
-`;
 
-export const BUFFER_HAIR_SLICES_HEADS = (
-  bindingIdx: number,
-  access: 'read_write' | 'read'
-) => /* wgsl */ `
+// TODO is there a better way?
+fn _clearSlicesHeadPtrs(processorId: u32) {
+  let offset = _getHeadsProcessorOffset(processorId);
+  let count = TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL;
+  // let offset = 0u;
+  // let count = 16u * 16u;
 
-@group(0) @binding(${bindingIdx})
-var<storage, ${access}> _hairSliceHeads: array<${u32_type(access)}>
-
-
-${access == 'read_write' ? setSlicesHeadPtr : getSlicesHeadPtr}
-
-
-const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel};
-
-fn _getSliceIdx(
-  processorId: u32,
-  pixelInTile: vec2u, sliceIdx: u32,
-) -> u32 {
-  let offset = processorId * TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL;
-  let offsetInProcessor = (
-    pixelInTile.x * TILE_SIZE * TILE_SIZE +
-    pixelInTile.y * TILE_SIZE +
-    sliceIdx
-  );
-  return offset + offsetInProcessor;
+  for (var i: u32 = 0u; i < count; i += 1u) {
+    _hairSliceHeads[offset + i] = INVALID_SLICE_DATA_PTR;
+  }
 }
 `;
 
@@ -63,7 +71,7 @@ fn _getSliceIdx(
 /// GPU BUFFER
 ///////////////////////////
 
-/** Active := can be addressed by currently working processorrs */
+/** Active := can be addressed by currently working processors */
 export function getActiveSlicesCount() {
   const { tileSize, slicesPerPixel, processorCount } = CONFIG.hairRender;
   return tileSize * tileSize * slicesPerPixel * processorCount;
@@ -74,7 +82,7 @@ export function createHairSlicesHeadsBuffer(device: GPUDevice): GPUBuffer {
   const bytesPerEntry = BYTES_U32;
 
   return device.createBuffer({
-    label: `hair-slice-heads`,
+    label: `hair-slices-heads`,
     size: Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE),
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });

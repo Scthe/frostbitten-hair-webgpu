@@ -83,16 +83,6 @@ fn swRasterizeHair(
   return r;
 }
 
-fn projectVertex(mvpMat: mat4x4f, pos: vec4f) -> vec3f {
-  let posClip = mvpMat * pos;
-  let posNDC = posClip / posClip.w;
-  return posNDC.xyz;
-}
-
-fn ndc2viewportPx(viewportSize: vec2f, pos: vec3f) -> vec2f {
-  let pos_0_1 = pos.xy * 0.5 + 0.5; // to [0-1]
-  return pos_0_1 * viewportSize.xy;
-}
 
 fn edgeFunction(v0: vec2f, v1: vec2f, p: vec2f) -> f32 {
   return (p.x - v0.x) * (v1.y - v0.y) - (p.y - v0.y) * (v1.x - v0.x);
@@ -111,15 +101,6 @@ fn debugBarycentric(w: vec4f) -> u32 {
     (color1 << 8) | // green
     (color2 << 16) // blue
   );
-}
-
-/** https://stackoverflow.com/a/64330724 */
-fn projectPointToLine(l1: vec2f, l2: vec2f, p: vec2f) -> vec2f {
-  let ab = l2 - l1;
-  let ac = p - l1;
-  let ad = ab * dot(ab, ac) / dot(ab, ab);
-  let d = l1 + ad;
-  return d;
 }
 
 /**

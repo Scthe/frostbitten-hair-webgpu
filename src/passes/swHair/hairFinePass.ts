@@ -92,7 +92,7 @@ export class HairFinePass {
       CONFIG.hairRender.processorCount,
       SHADER_PARAMS.workgroupSizeX
     );
-    // console.log(`${HairFinePass.NAME}.dispatch(${workgroupsX}, 1,1)`);
+    console.log(`${HairFinePass.NAME}.dispatch(${workgroupsX}, 1, 1)`);
     computePass.dispatchWorkgroups(workgroupsX, 1, 1);
 
     computePass.end();
@@ -118,6 +118,8 @@ export class HairFinePass {
         globalUniforms.createBindingDesc(b.renderUniforms),
         bindBuffer(b.tilesBuffer, hairTilesBuffer),
         bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
+        bindBuffer(b.hairSlicesHeads, this.hairSlicesHeadsBuffer),
+        // bindBuffer(b.hairSlicesData, this.hairSlicesDataBuffer),
         bindBuffer(b.rasterizerResult, this.hairRasterizerResultsBuffer),
         object.bindHairData(b.hairData),
         object.bindPointsPositions(b.hairPositions),

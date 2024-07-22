@@ -103,8 +103,8 @@ export const CONFIG = {
      * Frostbite allocates `tileSize * tileSize * sliceCount` per processor.
      * Each processor then uses atomicAdd(+1) to loop over the tiles.
      */
-    slicesPerPixel: 32,
-    avgFragmentsPerSlice: 4,
+    slicesPerPixel: 1,
+    avgFragmentsPerSlice: 32,
   },
 
   ///////////////

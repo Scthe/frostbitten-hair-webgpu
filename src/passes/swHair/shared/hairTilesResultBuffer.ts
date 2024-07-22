@@ -43,9 +43,6 @@ fn _getTileSegmentPtr(viewportSize: vec2u, posPx: vec2u) -> u32 {
   return tile.tileSegmentPtr;
 }
 
-// fn _getTileDataByIdx(tileIdx: u32) -> HairTileResult {
-  // return _hairTilesResult[tileIdx];
-// }
 `;
 
 export const BUFFER_HAIR_TILES_RESULT = (
@@ -66,11 +63,10 @@ struct HairTileResult {
 var<storage, ${access}> _hairTilesResult: array<HairTileResult>;
 
 fn _getHairTileIdx(viewportSize: vec2u, posPx: vec2u) -> u32 {
-  let tilesInARow = divideCeil(viewportSize.x, TILE_SIZE);
-  let x = divideCeil(posPx.x, TILE_SIZE);
-  // let y = viewportSize.y - posPx.y; // invert cause WebGPU coordinates
-  let y = divideCeil(posPx.y, TILE_SIZE);
-  return y * tilesInARow + x;
+  let tileCount = getTileCount(viewportSize);
+  let x = posPx.x / TILE_SIZE;
+  let y = posPx.y / TILE_SIZE;
+  return y * tileCount.x + x;
 }
 
 fn getTileCount(viewportSize: vec2u) -> vec2u {
