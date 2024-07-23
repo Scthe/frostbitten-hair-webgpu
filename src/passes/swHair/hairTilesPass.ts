@@ -1,6 +1,9 @@
-import { BYTES_U32 } from '../../constants.ts';
+import { BYTES_U32, CONFIG } from '../../constants.ts';
 import { HairObject } from '../../scene/hair/hairObject.ts';
+import { STATS } from '../../sys_web/stats.ts';
+import { clamp } from '../../utils/index.ts';
 import { Dimensions } from '../../utils/index.ts';
+import { formatPercentageNumber } from '../../utils/string.ts';
 import {
   assertIsGPUTextureView,
   bindBuffer,
@@ -81,7 +84,7 @@ export class HairTilesPass {
 
     // dispatch
     const workgroupsX = getItemsPerThread(
-      hairObject.strandsCount,
+      this.getRenderedStrandCount(hairObject),
       SHADER_PARAMS.workgroupSizeX
     );
     const workgroupsY = getItemsPerThread(
@@ -92,6 +95,24 @@ export class HairTilesPass {
     computePass.dispatchWorkgroups(workgroupsX, workgroupsY, 1);
 
     computePass.end();
+  }
+
+  private getRenderedStrandCount(hairObject: HairObject) {
+    const pct = CONFIG.hairRender.lodRenderPercent;
+    const { strandsCount, pointsPerStrand, segmentCount } = hairObject;
+    let result = Math.ceil((strandsCount * pct) / 100.0);
+    result = clamp(result, 0, strandsCount);
+
+    STATS.update(
+      'Rendered strands',
+      formatPercentageNumber(result, strandsCount)
+    );
+    const segments = result * (pointsPerStrand - 1);
+    STATS.update(
+      'Rendered segments',
+      formatPercentageNumber(segments, segmentCount)
+    );
+    return result;
   }
 
   private createBindings = (

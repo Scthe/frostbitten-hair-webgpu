@@ -64,6 +64,7 @@ export function initializeGUI(
       .add(modeDummy, 'displayMode', modeDummy.values)
       .name('Display mode');
 
+    dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
     dir.add(cfg, 'fiberRadius', 0.0001, 0.5).name('Radius');
     const tileSegmentsCtrl = dir
       .add(cfg, 'dbgTileModeMaxSegments', 1, 1024 * 4)

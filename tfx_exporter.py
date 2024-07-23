@@ -2,6 +2,7 @@ import bpy
 import struct
 import cmath
 from array import array
+import random
 
 # DONE co.w defines if is movable, set 1 for root
 # DONE increase sintel scale
@@ -140,23 +141,19 @@ class StrandVertexDistributor:
 
 
 def export_hair(particle_modifier, verts_per_strand):
-    particle_system = particle_modifier.particle_system
-    strands_cnt = particle_system.settings.count
-
     # create mesh from hair object to get nicer b-spline interpolated version
-    bpy.ops.object.modifier_convert(
-        modifier=particle_modifier.name
-    )  # we prob. can remove this and use raw hair system
+    # TBH we prob. can remove this and use raw hair system
+    bpy.ops.object.modifier_convert(modifier=particle_modifier.name)
     hair_mesh_object = bpy.context.object
-    print("Created tmp object: ", hair_mesh_object.name)
+    print(f"Created tmp object: '{hair_mesh_object.name}'")
 
     # process mesh version of hair
     strands = find_strands(hair_mesh_object)
+    # shuffle hair strands order so it works better with LOD system
+    random.shuffle(strands)
     # print(strands)
-    # print(len(strands), strands_cnt)
-    if len(strands) != strands_cnt:
-        print(f"[Warning] expected {strands_cnt} strands, found {len(strands)}")
-        strands_cnt = len(strands)
+    strands_cnt = len(strands)
+    print(f"Found {strands_cnt} strands")
 
     # save strands to vertex positions
     locations = []
@@ -165,6 +162,7 @@ def export_hair(particle_modifier, verts_per_strand):
         vertex_locations = get_strand_vertex_locations(hair_mesh_object, strand)
         for vert in vert_distributor.distribute(vertex_locations):
             locations.extend(vert)
+    print(f"Created {len(locations)} points ({verts_per_strand} per strand)")
 
     # dbg
     # for i in range(0, len(locations), 4):
@@ -182,7 +180,7 @@ def export_hair(particle_modifier, verts_per_strand):
     return True, (header_data, strands_array)
 
 
-def export_hair_systems(out_dir, hair_object, verts_per_strand):
+def export_hair_systems(out_dir, hair_object, verts_per_strand, dry_run=False):
     from os import path
 
     #  TODO raise if verts_per_strand < len(strand.vertices), as this requires cutting vertices
@@ -192,19 +190,21 @@ def export_hair_systems(out_dir, hair_object, verts_per_strand):
 
     for mod in hair_modifiers:
         particle_system = mod.particle_system
-        strands_cnt = particle_system.settings.count
-        print(
-            f"Exporting hair: '{hair_object.name}'.'{particle_system.name}' ({strands_cnt} hair strands)"
-        )
+        print(f"Exporting hair: '{hair_object.name}'.'{particle_system.name}'")
 
         ok, data = export_hair(mod, verts_per_strand)
         if not ok:
             return data
 
-        # print("--- SKIP FILE WRITE ---")
-        filename = f"{hair_object.name}-{particle_system.name}.tfx"
+        if dry_run:
+            print("Dry run: skipping writing to file")
+            continue
+
+        filename = (
+            f"{hair_object.name}-{particle_system.name}.{verts_per_strand}points.tfx"
+        )
         filepath = path.join(out_dir, filename)
-        print("Exporting to:", filepath)
+        print(f"Exporting to: '{filepath}'")
         with open(filepath, "wb") as file:
             # debug("processing went ok, writing file")
             for d in data:
@@ -217,9 +217,11 @@ if __name__ == "__main__":
     print("----------------------")
     from os import path
 
-    verts_per_strand = 32
+    verts_per_strand = 8  # 24, 16, 12, 8
     object_name = "SintelHairOriginal"
     # object_name = "TestPlane"
+    dry_run = False  # True
+
     hair_object = bpy.data.objects[object_name]
     out_dir = path.join(path.dirname(__file__), "static", "models")
     # print(out_dir)
@@ -227,7 +229,9 @@ if __name__ == "__main__":
 
     bpy.context.view_layer.objects.active = hair_object
 
-    err_msg = export_hair_systems(out_dir, hair_object, verts_per_strand)
+    err_msg = export_hair_systems(
+        out_dir, hair_object, verts_per_strand, dry_run=dry_run
+    )
     if err_msg:
         print("[Error]", err_msg)
 

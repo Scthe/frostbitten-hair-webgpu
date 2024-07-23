@@ -127,7 +127,8 @@ export class Renderer {
   private cmdDrawScene(ctx: PassCtx) {
     this.drawMeshesPass.cmdDrawMeshes(ctx);
 
-    if (CONFIG.hairRender.displayMode === DISPLAY_MODE.HW_RENDER) {
+    const { displayMode } = CONFIG.hairRender;
+    if (displayMode === DISPLAY_MODE.HW_RENDER) {
       this.hwHairPass.cmdDrawHair(ctx);
       return;
     }
@@ -136,7 +137,9 @@ export class Renderer {
     this.hairFinePass.clearFramebuffer(ctx);
 
     this.hairTilesPass.cmdDrawHairToTiles(ctx, ctx.scene.hairObject);
-    this.hairFinePass.cmdRasterizeSlicesHair(ctx, ctx.scene.hairObject);
+    if (displayMode !== DISPLAY_MODE.TILES) {
+      this.hairFinePass.cmdRasterizeSlicesHair(ctx, ctx.scene.hairObject);
+    }
     this.hairCombinePass.cmdCombineRasterResults(ctx);
   }
 

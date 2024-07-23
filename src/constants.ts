@@ -42,6 +42,13 @@ export const DISPLAY_MODE = {
   USED_SLICES: 3,
 };
 
+export type HairFile =
+  | 'SintelHairOriginal-sintel_hair.32points.tfx'
+  | 'SintelHairOriginal-sintel_hair.24points.tfx'
+  | 'SintelHairOriginal-sintel_hair.16points.tfx'
+  | 'SintelHairOriginal-sintel_hair.12points.tfx'
+  | 'SintelHairOriginal-sintel_hair.8points.tfx';
+
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
   isTest: false,
@@ -88,6 +95,8 @@ export const CONFIG = {
 
   ///////////////
   /// HAIR
+  hairFile: 'SintelHairOriginal-sintel_hair.16points.tfx' as HairFile,
+
   hairRender: {
     displayMode: DISPLAY_MODE.FINAL,
     fiberRadius: 0.0002,
@@ -106,6 +115,9 @@ export const CONFIG = {
     avgFragmentsPerSlice: 16,
     processorCount: 64,
     finePassWorkgroupSizeX: 1,
+
+    ////// LOD
+    lodRenderPercent: 100, // range [0..100]
   },
 
   ///////////////

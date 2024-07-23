@@ -26,6 +26,10 @@ const AvailableStats = {
   'Slices heads': {} as StatOpts, // hair slices pointers
   'Slices data': {} as StatOpts, // hair slices color data
   'Hair FBO': {} as StatOpts, // final color framebuffer
+  // render
+  s1: { categoryName: 'Render' } as StatOpts,
+  'Rendered strands': {} as StatOpts,
+  'Rendered segments': {} as StatOpts,
 };
 type StatName = keyof typeof AvailableStats;
 

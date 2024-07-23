@@ -1,5 +1,5 @@
 import { mat4 } from 'wgpu-matrix';
-import { CONFIG, MODELS_DIR } from '../constants.ts';
+import { CONFIG, HairFile, MODELS_DIR } from '../constants.ts';
 import { STATS } from '../sys_web/stats.ts';
 import {
   Bounds3d,
@@ -38,8 +38,7 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
     console.groupEnd();
   }
 
-  const HAIR_FILE = 'SintelHairOriginal-sintel_hair.tfx'; // 'sintel_hair.tfx',
-  const tfxFile = await loadTfxFile(HAIR_FILE, 1.0);
+  const tfxFile = await loadTfxFile(CONFIG.hairFile, 1.0);
   // const tfxFile = mockTfxFile();
   const hairObject = await createHairObject(device, 'sintelHair', tfxFile);
   STATS.update('Strands', formatNumber(hairObject.strandsCount));
@@ -88,9 +87,10 @@ export function createHairObject(
 }
 
 async function loadTfxFile(
-  fileName: string,
+  fileName: HairFile,
   scale = 1.0
 ): Promise<TfxFileData> {
+  console.log(`Loading hair file: '${fileName}'`);
   const fileBytes = await CONFIG.loaders.binaryFileReader(
     `${MODELS_DIR}/${fileName}`
   );
