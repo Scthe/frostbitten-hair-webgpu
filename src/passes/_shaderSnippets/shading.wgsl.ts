@@ -3,8 +3,6 @@ export const DEFAULT_COLOR: [number, number, number] = [0.9, 0.9, 0.9];
 /** https://github.com/Scthe/WebFX/blob/master/src/shaders/sintel.frag.glsl#L135 */
 export const SNIPPET_SHADING = /* wgsl */ `
 
-const PI: f32 = ${Math.PI};
-
 struct Material {
   positionWS: vec3f,
   normal: vec3f,
@@ -16,10 +14,6 @@ struct Material {
   // ao: f32
 };
 
-
-fn dotMax0 (n: vec3f, toEye: vec3f) -> f32 {
-  return max(0.0, dot(n, toEye));
-}
 
 fn doShading(material: Material) -> vec3f {
   let ambient = _uniforms.lightAmbient.rgb * _uniforms.lightAmbient.a;

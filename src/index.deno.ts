@@ -12,7 +12,7 @@ import {
 } from './sys_deno/loadersDeno.ts';
 import { Scene } from './scene/scene.ts';
 import { loadScene } from './scene/loadScene.ts';
-import { STATS } from './sys_web/stats.ts';
+import { STATS } from './stats.ts';
 import { GpuProfiler, GpuProfilerResult } from './gpuProfiler.ts';
 
 CONFIG.loaders.textFileReader = textFileReader_Deno;

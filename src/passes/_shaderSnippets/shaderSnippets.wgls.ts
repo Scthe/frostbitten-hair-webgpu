@@ -21,6 +21,7 @@ fn transformNormalToWorldSpace(modelMat: mat4x4f, normalV: vec3f) -> vec3f {
 
 export const GENERIC_UTILS = /* wgsl */ `
 
+const PI: f32 = ${Math.PI};
 const FLOAT_EPSILON: f32 = 1e-7;
 
 fn safeNormalize3(v: vec3f) -> vec3f {
@@ -61,5 +62,9 @@ fn projectPointToLine(l1: vec2f, l2: vec2f, p: vec2f) -> vec2f {
 fn ndc2viewportPx(viewportSize: vec2f, pos: vec3f) -> vec2f {
   let pos_0_1 = pos.xy * 0.5 + 0.5; // to [0-1]
   return pos_0_1 * viewportSize.xy;
+}
+
+fn dotMax0 (n: vec3f, toEye: vec3f) -> f32 {
+  return max(0.0, dot(n, toEye));
 }
 `;

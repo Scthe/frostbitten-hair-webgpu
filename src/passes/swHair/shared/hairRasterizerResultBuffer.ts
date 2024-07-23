@@ -1,5 +1,5 @@
 import { BYTES_VEC4 } from '../../../constants.ts';
-import { STATS } from '../../../sys_web/stats.ts';
+import { STATS } from '../../../stats.ts';
 import { Dimensions } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
 

@@ -1,7 +1,7 @@
 import { createGpuDevice } from './utils/webgpu.ts';
 import { createInputHandler } from './sys_web/input.ts';
 import { Renderer } from './renderer.ts';
-import { STATS } from './sys_web/stats.ts';
+import { STATS } from './stats.ts';
 import { initializeGUI, onGpuProfilerResult } from './sys_web/gui.ts';
 import { GpuProfiler } from './gpuProfiler.ts';
 import { initCanvasResizeSystem } from './sys_web/cavasResize.ts';

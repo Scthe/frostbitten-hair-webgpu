@@ -1,5 +1,5 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
-import { STATS } from '../../../sys_web/stats.ts';
+import { STATS } from '../../../stats.ts';
 import { Dimensions, divideCeil } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
 import { u32_type } from '../../../utils/webgpu.ts';

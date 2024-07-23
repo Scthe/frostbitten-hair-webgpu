@@ -2,7 +2,7 @@ import { Mat4, mat4, vec3 } from 'wgpu-matrix';
 import Input from './sys_web/input.ts';
 import { CONFIG, CameraPosition } from './constants.ts';
 import { clamp } from './utils/index.ts';
-import { STATS } from './sys_web/stats.ts';
+import { STATS } from './stats.ts';
 import { projectPoint } from './utils/matrices.ts';
 
 const ANGLE_90_DRG_IN_RAD = Math.PI / 2;

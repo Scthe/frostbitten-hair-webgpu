@@ -1,6 +1,6 @@
 import { BYTES_U32, CONFIG } from '../../constants.ts';
 import { HairObject } from '../../scene/hair/hairObject.ts';
-import { STATS } from '../../sys_web/stats.ts';
+import { STATS } from '../../stats.ts';
 import { clamp } from '../../utils/index.ts';
 import { Dimensions } from '../../utils/index.ts';
 import { formatPercentageNumber } from '../../utils/string.ts';

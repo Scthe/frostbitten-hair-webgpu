@@ -6,6 +6,7 @@ interface HairObjectBuffers {
   pointsPositionsBuffer: GPUBuffer;
   tangentsBuffer: GPUBuffer;
   dataBuffer: GPUBuffer;
+  shadingBuffer: GPUBuffer;
   indicesData: HairIndexBuffer;
 }
 
@@ -39,6 +40,11 @@ export class HairObject {
   bindHairData = (bindingIdx: number): GPUBindGroupEntry => ({
     binding: bindingIdx,
     resource: { buffer: this.buffers.dataBuffer },
+  });
+
+  bindShading = (bindingIdx: number): GPUBindGroupEntry => ({
+    binding: bindingIdx,
+    resource: { buffer: this.buffers.shadingBuffer },
   });
 
   bindIndexBuffer(renderPass: GPURenderPassEncoder) {

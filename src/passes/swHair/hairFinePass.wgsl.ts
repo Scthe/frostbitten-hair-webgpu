@@ -10,6 +10,7 @@ import { BUFFER_HAIR_SLICES_HEADS } from './shared/hairSliceHeadsBuffer.ts';
 import { BUFFER_HAIR_SLICES_DATA } from './shared/hairSlicesDataBuffer.ts';
 import { SHADER_IMPL_PROCESS_HAIR_SEGMENT } from './shaderImpl/processHairSegment.wgsl.ts';
 import { SHADER_IMPL_REDUCE_HAIR_SLICES } from './shaderImpl/reduceHairSlices.wgsl.ts';
+import { BUFFER_HAIR_SHADING } from '../../scene/hair/hairShadingBuffer.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: CONFIG.hairRender.finePassWorkgroupSizeX,
@@ -23,6 +24,7 @@ export const SHADER_PARAMS = {
     hairSlicesData: 6,
     rasterizerResult: 7,
     depthTexture: 8,
+    hairShading: 9,
   },
 };
 
@@ -57,6 +59,7 @@ ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read')}
 ${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizerResult, 'read_write')}
 ${BUFFER_HAIR_SLICES_HEADS(b.hairSlicesHeads, 'read_write')}
 ${BUFFER_HAIR_SLICES_DATA(b.hairSlicesData, 'read_write')}
+${BUFFER_HAIR_SHADING(b.hairShading, 'read')}
 
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;

@@ -1,6 +1,6 @@
 import { mat4 } from 'wgpu-matrix';
 import { CONFIG, HairFile, MODELS_DIR } from '../constants.ts';
-import { STATS } from '../sys_web/stats.ts';
+import { STATS } from '../stats.ts';
 import {
   Bounds3d,
   calcBoundingBox,
@@ -16,6 +16,7 @@ import { parseTfxFile, TfxFileData } from './hair/tfxFileLoader.ts';
 import { loadObjFile } from './objLoader.ts';
 import { Scene } from './scene.ts';
 import { dgr2rad } from '../utils/index.ts';
+import { createHairShadingBuffer } from './hair/hairShadingBuffer.ts';
 
 const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
@@ -70,6 +71,7 @@ export function createHairObject(
     tfxFile.vertexPositions
   );
   const tangentsBuffer = createHairTangentsBuffer(device, name, tfxFile);
+  const shadingBuffer = createHairShadingBuffer(device, name, tfxFile);
   const indicesData = createHairIndexBuffer(device, name, tfxFile);
 
   return new HairObject(
@@ -81,6 +83,7 @@ export function createHairObject(
       dataBuffer,
       indicesData,
       pointsPositionsBuffer,
+      shadingBuffer,
       tangentsBuffer,
     }
   );

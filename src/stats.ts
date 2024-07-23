@@ -1,5 +1,9 @@
-import { getProfilerTimestamp } from '../gpuProfiler.ts';
-import { hideHtmlEl, isHtmlElVisible, showHtmlEl } from './htmlUtils.ts';
+import { getProfilerTimestamp } from './gpuProfiler.ts';
+import {
+  hideHtmlEl,
+  isHtmlElVisible,
+  showHtmlEl,
+} from './sys_web/htmlUtils.ts';
 
 type StatsValue = number | string;
 

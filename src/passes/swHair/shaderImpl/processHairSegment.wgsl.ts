@@ -90,8 +90,10 @@ fn processHairSegment(
       let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
 
       if (hairDepth < depthBufferValue) { // depth test with GL_LESS
-        let c = (f32(segmentIdx) + t) / f32(segmentCount); // red at root, green at tip
-        let color = vec4f(1.0 - c, c, 0.0, alpha);
+        let tFullStrand = (f32(segmentIdx) + t) / f32(segmentCount);
+        // let color = vec4f(1.0 - c, c, 0.0, alpha); // red at root, green at tip
+        var color = _sampleShading(strandIdx, tFullStrand);
+        color.a = color.a * alpha;
         let sliceIdx = getSliceIdx(tileDepth, hairDepth);
 
         // dbg

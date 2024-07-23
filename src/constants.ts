@@ -103,7 +103,10 @@ export const CONFIG = {
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 1700,
     /** When in 'used_slices' display mode, how much slices are considered full */
-    dbgSlicesModeMaxSlices: 50,
+    dbgSlicesModeMaxSlices: 50, // TODO add to GUI
+
+    ////// SHADING
+    shadingPoints: 8,
 
     ////// TILE PASS
     tileSize: 16,
