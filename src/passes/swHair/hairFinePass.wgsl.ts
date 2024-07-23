@@ -8,6 +8,8 @@ import { BUFFER_HAIR_RASTERIZER_RESULTS } from './shared/hairRasterizerResultBuf
 import { CONFIG } from '../../constants.ts';
 import { BUFFER_HAIR_SLICES_HEADS } from './shared/hairSliceHeadsBuffer.ts';
 import { BUFFER_HAIR_SLICES_DATA } from './shared/hairSlicesDataBuffer.ts';
+import { SHADER_IMPL_PROCESS_HAIR_SEGMENT } from './shaderImpl/processHairSegment.wgsl.ts';
+import { SHADER_IMPL_REDUCE_HAIR_SLICES } from './shaderImpl/reduceHairSlices.wgsl.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: CONFIG.hairRender.finePassWorkgroupSizeX,
@@ -40,6 +42,9 @@ const TILE_SIZE_2f: vec2f = vec2f(
 const PROCESSOR_COUNT: u32 = ${CONFIG.hairRender.processorCount}u;
 const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel}u;
 const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
+// Stop processing slices once we reach opaque color
+// TBH does not help much, it's not where the actuall cost is. Still..
+const ALPHA_CUTOFF = 0.999;
 
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
@@ -71,6 +76,10 @@ struct FineRasterParams {
   processorId: u32,
   dbgSlicesModeMaxSlices: u32,
 }
+
+// Extra code to make this file manageable
+${SHADER_IMPL_PROCESS_HAIR_SEGMENT()}
+${SHADER_IMPL_REDUCE_HAIR_SLICES()}
 
 
 @compute
@@ -127,7 +136,6 @@ fn processTile(
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var count = 0u;
   var sliceDataOffset = 0u;
-  // TODO local idx variable to store next idx into slice data in "SlicesDataBuffer"
 
   _clearSlicesHeadPtrs(p.processorId); // TODO not needed if previous tile was empty
 
@@ -166,179 +174,15 @@ fn processTile(
     return;
   }
 
-  // for each pixel:
-  //    iterate over slices and accumulate color
-  var sliceData: SliceData;
-  let boundRectMax = vec2u(tileBoundsPx.zw);
-  let boundRectMin = vec2u(tileBoundsPx.xy);
-  let ALPHA_CUTOFF = 0.999; // TBH does not help much, it's not where the actuall cost is. Still..
-
-  for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y+=1u) {
-  for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x+=1u) {
-    var finalColor = vec4f();
-    var sliceCount = 0u;
-    let px = vec2u(x, y); // pixel coordinates wrt. viewport
-    let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
-    
-    // iterate slices front to back
-    for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
-      if (finalColor.a >= ALPHA_CUTOFF) { break; }
-      var slicePtr = _getSlicesHeadPtr(p.processorId, pxInTile, s);
-      
-      // aggregate colors in this slice
-      while(_getSliceData(p.processorId, slicePtr, &sliceData)) {
-        if (finalColor.a >= ALPHA_CUTOFF) { break; }
-        slicePtr = sliceData.value[2];
-        sliceCount += 1u;
-        
-        let sliceColor = vec4f(
-          unpack2x16float(sliceData.value[0]),
-          unpack2x16float(sliceData.value[1])
-        );
-        finalColor += sliceColor * (1.0 - finalColor.a);
-      }
-
-      // dbg: use only 1st slice data
-      // if (_getSliceData(p.processorId, slicePtr, &sliceData)) {
-        // finalColor = mix(finalColor, sliceData.color, 1.0 - finalColor.a);
-      // }
-    }
-
-    // dbg: color using only head ptrs
-    /*var slicePtr = _getSlicesHeadPtr(p.processorId, pxInTile, 0u);
-    if(slicePtr != INVALID_SLICE_DATA_PTR) {
-      finalColor.r = 1.0;
-      finalColor.a = 1.0;
-    }*/
-    
-    if (p.dbgSlicesModeMaxSlices == 0u) {
-      // the prod value
-      _setRasterizerResult(p.viewportSizeU32, px, finalColor);
-    } else {
-      // debug value
-      let c = saturate(f32(sliceCount) / f32(p.dbgSlicesModeMaxSlices));
-      _setRasterizerResult(p.viewportSizeU32, px, vec4f(c, 0., 0., 1.0));
-    }
-  }}
+  // reduce over slices list and set final color into result buffer
+  reduceHairSlices(
+    p.processorId,
+    p.viewportSizeU32,
+    p.dbgSlicesModeMaxSlices,
+    tileBoundsPx
+  );
 }
 
-
-fn processHairSegment(
-  p: FineRasterParams,
-  tileBoundsPx: vec4u, tileDepth: vec2f, sliceDataOffset: u32,
-  strandIdx: u32, segmentIdx: u32
-) -> u32 {
-  var writtenSliceDataCount: u32 = 0u;
-
-  // project segment's start and end points
-  let segment0_obj: vec3f = _getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz;
-  let segment1_obj: vec3f = _getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz;
-  let segment0_proj: vec3f = projectVertex(p.mvpMat, vec4f(segment0_obj, 1.0));
-  let segment1_proj: vec3f = projectVertex(p.mvpMat, vec4f(segment1_obj, 1.0));
-  let segment0_px: vec2f = ndc2viewportPx(p.viewportSize, segment0_proj);
-  let segment1_px: vec2f = ndc2viewportPx(p.viewportSize, segment1_proj);
-  let segmentLength = length(segment1_px - segment0_px);
-  let tangent_proj = normalize(segment1_px - segment0_px); // TODO safe normalize!!!
-
-  // TODO calculate radius only once, depending on if it's 1st segment in tile. Use inout param?
-  // We measure difference in pixels between original point and one $fiberRadius afar from it
-  var radiusTestVP =  p.modelViewMat * vec4f(segment0_obj, 1.0);
-  radiusTestVP.y = radiusTestVP.y + p.fiberRadius * 2.0; // TODO [CRITICAL] magic multiplier
-  let radiusTest_proj = projectVertex(p.projMat, radiusTestVP);
-  let radiusTest_px: vec2f = ndc2viewportPx(p.viewportSize, radiusTest_proj); // projected $fiberRadius's pixel
-  let fiberRadiusPx = abs(radiusTest_px.y - segment0_px.y); // difference. It's one dimensional (we moved in Y-axis), so no need for length, just abs()
-  // let fiberRadiusPx = 5.0;
-
-  // fix subpixel projection errors at the start/end of the segment.
-  // there are tiny edge cases where valid pixel will be projected 'outside' the 0-1
-  // so we enlarge segment near start-end. Unless it's strand tip
-  let isLastSegment = segmentIdx >= (p.pointsPerStrand - 2); // -2 or -1?
-  let rasterErrMarginStart = 3.0;
-  let rasterErrMarginEnd = select(rasterErrMarginStart, 0.0, isLastSegment);
-
-  // bounds
-  // TODO optimize bounds. Scissor based on segment0_px, segment1_px.
-  // let segmentRectMax = ceil(max(segment0_px, segment1_px));
-  // let segmentRectMin = floor(min(segment0_px, segment1_px));
-  // scissor
-  // let segmentScissorRectMax = min(segmentRectMax, tileBoundsPx.zw);
-  // let segmentScissorRectMin = max(segmentRectMin, tileBoundsPx.xy);
-  let boundRectMax = vec2f(tileBoundsPx.zw);
-  let boundRectMin = vec2f(tileBoundsPx.xy);
-
-  for (var y: f32 = boundRectMin.y; y < boundRectMax.y; y+=1.0) {
-  for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x+=1.0) {
-  // for (var y: u32 = 0u; y < TILE_SIZE; y += 1u) { // ALT. iter for doublechecking
-  // for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
-
-    // stop if there is no space inside processor's sliceData linked list.
-    let nextSliceDataPtr: u32 = sliceDataOffset + writtenSliceDataCount; 
-    if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; }
-
-    // get coordinates if iter using [boundRectMin .. boundRectMax]
-    let px = vec2f(x, y); // pixel coordinates wrt. viewport
-    let px_u32 = vec2u(u32(x), u32(y));
-    let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
-    // ALT: get coordinates if iter using [0 .. TILE_SIZE]
-    // let px = vec2f(boundRectMin + vec2f(f32(x), f32(y))); // pixel coordinates wrt. viewport
-    // let px_u32 = vec2u(px);
-    // let pxInTile: vec2u = vec2u(x, y); // pixel coordinates wrt. tile
-
-    // project the pixel onto a line between segment's start and end points
-    let pxOnSegment = projectPointToLine(segment0_px, segment1_px, px);
-    
-    let segmentStartTowardPixel: vec2f = pxOnSegment - segment0_px.xy;
-    let segmentEndTowardPixel: vec2f = pxOnSegment - segment1_px.xy;
-    let t: f32 = max(
-      segmentStartTowardPixel.x / tangent_proj.x,
-      segmentStartTowardPixel.y / tangent_proj.y
-    ) / segmentLength; // TODO no point normalizing tangent_proj if we divide by 'segmentLength' here
-    var isInsideSegment = (t >= 0 && t <= 1.0) ||
-      length(segmentStartTowardPixel) < rasterErrMarginStart || 
-      length(segmentEndTowardPixel  ) < rasterErrMarginEnd;
-
-    let distToStrandPx = length(pxOnSegment - px);
-    // let distToStrand_0_1 = distToStrandPx / f32(TILE_SIZE); // dbg
-    let alpha = saturate(1.0 - distToStrandPx / fiberRadiusPx);
-    
-    if (isInsideSegment && alpha > 0.){
-      let hairDepth: f32 = mix(segment0_proj.z, segment1_proj.z, saturate(t));
-      // sample depth buffer
-      let depthTextSamplePx: vec2i = vec2i(i32(px_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
-      let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
-
-      if (hairDepth < depthBufferValue) { // depth test with GL_LESS
-        let color = vec4f(1.0, 0.0, 0.0, alpha);
-        let sliceIdx = getSliceIdx(tileDepth, hairDepth);
-
-        // dbg
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, 1.0));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, alpha));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(t, 0.0, 0.0, 1.0));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(distToStrand_0_1, 0.0, 0.0, 1.0));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(-tangent_proj.xy, 0.0, 1.0));
-
-        // insert into per-slice linked list
-        let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-        _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
-        writtenSliceDataCount += 1u;
-      }
-    }
-  }}
-
-  // debugColorPointInTile(tileBoundsPx, segment0_px, vec4f(0.0, 1.0, 0.0, 1.0));
-  // debugColorPointInTile(tileBoundsPx, segment1_px, vec4f(0.0, 0.0, 1.0, 1.0));
-  return writtenSliceDataCount;
-}
-
-fn getSliceIdx(
-  tileDepth: vec2f,
-  pixelDepth: f32,
-) -> u32 {
-  let tileDepthSpan = tileDepth.y - tileDepth.x;
-  let t = (pixelDepth - tileDepth.x) / tileDepthSpan;
-  return u32(clamp(t * SLICES_PER_PIXEL_f32, 0.0, SLICES_PER_PIXEL_f32));
-}
 
 /** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */
 fn getTileXY(viewportSize: vec2u, tileIdx: u32) -> vec2u {
