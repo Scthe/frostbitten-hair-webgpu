@@ -26,7 +26,7 @@ fn reduceHairSlices(
     
     // iterate slices front to back
     for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
-      if (finalColor.a >= ALPHA_CUTOFF) { break; }
+      if (finalColor.a >= ALPHA_CUTOFF) { break; } // conflicts with head ptr clear, be careful!
       var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, s);
       
       // aggregate colors in this slice

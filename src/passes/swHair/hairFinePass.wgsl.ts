@@ -106,6 +106,9 @@ fn main(
     getDbgSlicesModeMaxSlices(),
   );
 
+  // clear memory before starting work
+  _clearSlicesHeadPtrs(processorId);
+
   let tileCount2d = getTileCount(params.viewportSizeU32);
   let tileCount = tileCount2d.x * tileCount2d.y;
   var tileIdx = processorId; // TODO use queue: getNextTileIdx(); with atomic to implement naive work queue
@@ -134,34 +137,26 @@ fn processTile(
   var tileDepth = _getTileDepth(p.viewportSizeU32, tileCenterPx);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
-  var count = 0u;
+  var processedSegmentCnt = 0u;
   var sliceDataOffset = 0u;
+  var fiberRadiusPx = -1.0; // negative as it will cause recalc on first segment
 
-  _clearSlicesHeadPtrs(p.processorId); // TODO not needed if previous tile was empty
-
-  // if ((tileIdx&1) == 0){
-    // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
-  // }
-  
   // for each segment:
   //    iterate over tile's pixels and write color to appropriate depth-slice
-  while (count < MAX_PROCESSED_SEGMENTS){
+  while (processedSegmentCnt < MAX_PROCESSED_SEGMENTS){
     if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
-      // clean previous tile's BUFFER_HAIR_SLICES_HEADS if it was written to previously
-      // if (count == 0){ // first segment in tile
-        // _clearSlicesHeadPtrs(p.processorId);
-      // }
-
       let writtenSliceDataCount = processHairSegment(
         p,
-        tileBoundsPx, tileDepth, sliceDataOffset,
+        tileBoundsPx, tileDepth,
+        sliceDataOffset,
+        &fiberRadiusPx,
         segmentData.x, segmentData.y // strandIdx, segmentIdx
       );
       sliceDataOffset = sliceDataOffset + writtenSliceDataCount;
       if (!_hasMoreSliceDataSlots(sliceDataOffset)) { break; }
 
       // move to next segment
-      count = count + 1;
+      processedSegmentCnt = processedSegmentCnt + 1;
       segmentPtr = segmentData.z;
     } else {
       // no more segment data for this tile, break
@@ -174,13 +169,16 @@ fn processTile(
     return;
   }
 
-  // reduce over slices list and set final color into result buffer
+  // reduce over slices list and set the final color into result buffer
   reduceHairSlices(
     p.processorId,
     p.viewportSizeU32,
     p.dbgSlicesModeMaxSlices,
     tileBoundsPx
   );
+
+  // clear written values before moving to next tile
+  _clearSlicesHeadPtrs(p.processorId);
 }
 
 

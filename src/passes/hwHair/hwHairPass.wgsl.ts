@@ -24,6 +24,7 @@ export const SHADER_CODE = () => /* wgsl */ `
 
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.NORMALS_UTILS}
+${SHADER_SNIPPETS.GENERIC_UTILS}
 ${SNIPPET_SHADING_PBR}
 ${SNIPPET_SHADING}
 
@@ -44,15 +45,6 @@ struct VertexOutput {
 // And by 'left' and 'right' we mean according to normal&tangent.
 // And by normal we mean (hair_pos - camera_pos)
 
-const TRESSFX_FLOAT_EPSILON: f32 = 1e-7;
-
-fn safeNormalize(v: vec3f) -> vec3f {
-  return select(
-    vec3f(0., 0., 0.), // when not OK
-    normalize(v), // when OK
-    length(v) >= TRESSFX_FLOAT_EPSILON
-  );
-}
 
 @vertex
 fn main_vs(
@@ -74,8 +66,8 @@ fn main_vs(
   let tangentWS = modelMatrix * vec4f(tangentOrg, 1.0);
 
   // Calculate bitangent vectors
-  let towardsCamera: vec3f = safeNormalize(cameraPosition.xyz - positionWS.xyz);
-  let right: vec3f = safeNormalize(cross(tangentWS.xyz, towardsCamera));
+  let towardsCamera: vec3f = safeNormalize3(cameraPosition.xyz - positionWS.xyz);
+  let right: vec3f = safeNormalize3(cross(tangentWS.xyz, towardsCamera));
   
   // Calculate the negative and positive offset screenspace positions
   // 0 is for odd vertexId, 1 is for even vertexId

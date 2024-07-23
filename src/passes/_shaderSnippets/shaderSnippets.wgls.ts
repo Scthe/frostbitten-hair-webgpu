@@ -23,11 +23,19 @@ export const GENERIC_UTILS = /* wgsl */ `
 
 const FLOAT_EPSILON: f32 = 1e-7;
 
-fn safeNormalize(v: vec3f) -> vec3f {
+fn safeNormalize3(v: vec3f) -> vec3f {
   return select(
     vec3f(0., 0., 0.), // when not OK
     normalize(v), // when OK
-    length(v) >= FLOAT_EPSILON
+    dot(v, v) >= FLOAT_EPSILON
+  );
+}
+
+fn safeNormalize2(v: vec2f) -> vec2f {
+  return select(
+    vec2f(0., 0.), // when not OK
+    normalize(v), // when OK
+    dot(v, v) >= FLOAT_EPSILON
   );
 }
 

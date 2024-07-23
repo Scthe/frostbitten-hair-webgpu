@@ -52,8 +52,8 @@ fn swRasterizeHair(
   let t1_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.,);
 
   // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
-  let right0: vec3f = safeNormalize(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
-  let right1: vec3f = safeNormalize(cross(t1_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
+  let right0: vec3f = safeNormalize3(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
+  let right1: vec3f = safeNormalize3(cross(t1_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
 
   // Vertex positions
   let v00_VS = vec4f(p0_VS.xyz - right0, 1.0);

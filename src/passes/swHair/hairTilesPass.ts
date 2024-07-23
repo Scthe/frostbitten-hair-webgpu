@@ -105,12 +105,12 @@ export class HairTilesPass {
 
     STATS.update(
       'Rendered strands',
-      formatPercentageNumber(result, strandsCount)
+      formatPercentageNumber(result, strandsCount, 0)
     );
     const segments = result * (pointsPerStrand - 1);
     STATS.update(
       'Rendered segments',
-      formatPercentageNumber(segments, segmentCount)
+      formatPercentageNumber(segments, segmentCount, 0)
     );
     return result;
   }

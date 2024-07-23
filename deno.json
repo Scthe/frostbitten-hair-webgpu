@@ -1,6 +1,7 @@
 {
   "tasks": {
     "start": "DENO_NO_PACKAGE_JSON=1 && deno run --allow-read=. --allow-write=. --unstable-webgpu src/index.deno.ts",
+    "compile": "DENO_NO_PACKAGE_JSON=1 && deno compile --allow-read=. --allow-write=. --unstable-webgpu src/index.deno.ts",
     "test": "DENO_NO_PACKAGE_JSON=1 && deno test --allow-read=. --allow-write=. --unstable-webgpu src"
   },
   "imports": {

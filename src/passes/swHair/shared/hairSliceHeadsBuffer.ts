@@ -5,13 +5,13 @@ import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
 /// SHADER CODE
-///
-/// NOTE: the memory is per-processor, so we do not need atomics
 ///////////////////////////
 
 /**
  * For each processor, contains `TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL`
  * entries. Each entry is a pointer into slices data buffer.
+ *
+ * The memory is per-processor, so we do not need atomics.
  */
 export const BUFFER_HAIR_SLICES_HEADS = (
   bindingIdx: number,
@@ -56,16 +56,12 @@ fn _getSlicesHeadPtr(
   pixelInTile: vec2u, sliceIdx: u32,
 ) -> u32 {
   let idx = _getHeadsSliceIdx(processorId, pixelInTile, sliceIdx);
-  // let idx = pixelInTile.x * 16u + pixelInTile.y;
   return _hairSliceHeads[idx];
 }
 
-// TODO is there a better way?
 fn _clearSlicesHeadPtrs(processorId: u32) {
   let offset = _getHeadsProcessorOffset(processorId);
   let count = TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL;
-  // let offset = 0u;
-  // let count = 16u * 16u;
 
   for (var i: u32 = 0u; i < count; i += 1u) {
     _hairSliceHeads[offset + i] = INVALID_SLICE_DATA_PTR;

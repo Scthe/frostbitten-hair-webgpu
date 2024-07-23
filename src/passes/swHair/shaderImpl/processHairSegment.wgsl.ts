@@ -13,7 +13,9 @@ export const SHADER_IMPL_PROCESS_HAIR_SEGMENT = () => /* wgsl */ `
 
 fn processHairSegment(
   p: FineRasterParams,
-  tileBoundsPx: vec4u, tileDepth: vec2f, sliceDataOffset: u32,
+  tileBoundsPx: vec4u, tileDepth: vec2f,
+  sliceDataOffset: u32,
+  fiberRadiusPx: ptr<function, f32>,
   strandIdx: u32, segmentIdx: u32
 ) -> u32 {
   var writtenSliceDataCount: u32 = 0u;
@@ -26,21 +28,17 @@ fn processHairSegment(
   let segment0_px: vec2f = ndc2viewportPx(p.viewportSize, segment0_proj);
   let segment1_px: vec2f = ndc2viewportPx(p.viewportSize, segment1_proj);
   let segmentLength = length(segment1_px - segment0_px);
-  let tangent_proj = normalize(segment1_px - segment0_px); // TODO safe normalize!!!
+  let tangent_proj = safeNormalize2(segment1_px - segment0_px);
 
-  // TODO calculate radius only once, depending on if it's 1st segment in tile. Use inout param?
-  // We measure difference in pixels between original point and one $fiberRadius afar from it
-  var radiusTestVP =  p.modelViewMat * vec4f(segment0_obj, 1.0);
-  radiusTestVP.y = radiusTestVP.y + p.fiberRadius * 2.0; // TODO [CRITICAL] magic multiplier
-  let radiusTest_proj = projectVertex(p.projMat, radiusTestVP);
-  let radiusTest_px: vec2f = ndc2viewportPx(p.viewportSize, radiusTest_proj); // projected $fiberRadius's pixel
-  let fiberRadiusPx = abs(radiusTest_px.y - segment0_px.y); // difference. It's one dimensional (we moved in Y-axis), so no need for length, just abs()
-  // let fiberRadiusPx = 5.0;
+ if ((*fiberRadiusPx) < 0.0) {
+  *fiberRadiusPx = calculateFiberRadius(p, segment0_obj, segment0_px);
+ }
 
   // fix subpixel projection errors at the start/end of the segment.
   // there are tiny edge cases where valid pixel will be projected 'outside' the 0-1
   // so we enlarge segment near start-end. Unless it's strand tip
-  let isLastSegment = segmentIdx >= (p.pointsPerStrand - 2); // -2 cause there are 'p.pointsPerStrand - 1' segments and we sub1 from this to get idx of last segment
+  let segmentCount = p.pointsPerStrand - 1;
+  let isLastSegment = segmentIdx >= (segmentCount - 1);
   let rasterErrMarginStart = 3.0;
   let rasterErrMarginEnd = select(rasterErrMarginStart, 0.0, isLastSegment);
 
@@ -72,7 +70,7 @@ fn processHairSegment(
     // Just like in ray tracing's ray definition
     let segmentStartTowardPixel: vec2f = pxOnSegment - segment0_px.xy;
     let segmentEndTowardPixel: vec2f = pxOnSegment - segment1_px.xy;
-    // TODO no point normalizing tangent_proj if we divide by 'segmentLength' here
+    // TBH no point normalizing tangent_proj if we divide by 'segmentLength' here
     let t: f32 = max(
       segmentStartTowardPixel.x / tangent_proj.x,
       segmentStartTowardPixel.y / tangent_proj.y
@@ -83,7 +81,7 @@ fn processHairSegment(
 
     let distToStrandPx = length(pxOnSegment - px);
     // let distToStrand_0_1 = distToStrandPx / f32(TILE_SIZE); // dbg
-    let alpha = saturate(1.0 - distToStrandPx / fiberRadiusPx);
+    let alpha = saturate(1.0 - distToStrandPx / (*fiberRadiusPx));
     
     if (isInsideSegment && alpha > 0.){
       let hairDepth: f32 = mix(segment0_proj.z, segment1_proj.z, saturate(t));
@@ -92,7 +90,8 @@ fn processHairSegment(
       let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
 
       if (hairDepth < depthBufferValue) { // depth test with GL_LESS
-        let color = vec4f(1.0, 0.0, 0.0, alpha);
+        let c = (f32(segmentIdx) + t) / f32(segmentCount); // red at root, green at tip
+        let color = vec4f(1.0 - c, c, 0.0, alpha);
         let sliceIdx = getSliceIdx(tileDepth, hairDepth);
 
         // dbg
@@ -122,6 +121,21 @@ fn getSliceIdx(
   let tileDepthSpan = tileDepth.y - tileDepth.x;
   let t = (pixelDepth - tileDepth.x) / tileDepthSpan;
   return u32(clamp(t * SLICES_PER_PIXEL_f32, 0.0, SLICES_PER_PIXEL_f32));
+}
+
+fn calculateFiberRadius(
+  p: FineRasterParams,
+  point0_obj: vec3f,
+  point0_px: vec2f,
+) -> f32 {
+  // We measure difference in pixels between original point and one $fiberRadius afar from it
+  var radiusTestVP =  p.modelViewMat * vec4f(point0_obj, 1.0);
+  radiusTestVP.y = radiusTestVP.y + p.fiberRadius;
+  let radiusTest_proj = projectVertex(p.projMat, radiusTestVP);
+  let radiusTest_px: vec2f = ndc2viewportPx(p.viewportSize, radiusTest_proj); // projected $fiberRadius's pixel
+  
+  // difference. It's one dimensional (we moved in Y-axis), so no need for length, just abs()
+  return abs(radiusTest_px.y - point0_px.y);
 }
 
 `;

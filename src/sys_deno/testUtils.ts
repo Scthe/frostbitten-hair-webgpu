@@ -73,7 +73,11 @@ export const createMockPassCtx = (
     cameraPositionWorldSpace: cameraCtrl.positionWorldSpace,
     profiler: undefined,
     viewport,
-    scene: undefined!,
+    scene: {
+      modelMatrix: mat4.identity(),
+      hairObject: undefined!,
+      objects: [],
+    },
     depthTexture: undefined!,
     hdrRenderTexture: undefined!,
     globalUniforms: undefined!,

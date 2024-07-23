@@ -41,9 +41,9 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
   const tfxFile = await loadTfxFile(CONFIG.hairFile, 1.0);
   // const tfxFile = mockTfxFile();
   const hairObject = await createHairObject(device, 'sintelHair', tfxFile);
-  STATS.update('Strands', formatNumber(hairObject.strandsCount));
+  STATS.update('Strands', formatNumber(hairObject.strandsCount, 1));
   STATS.update('Points per strand', hairObject.pointsPerStrand);
-  STATS.update('Segments', formatNumber(hairObject.segmentCount));
+  STATS.update('Segments', formatNumber(hairObject.segmentCount, 0));
 
   const modelMatrix = mat4.identity();
   mat4.rotateY(modelMatrix, dgr2rad(0), modelMatrix);

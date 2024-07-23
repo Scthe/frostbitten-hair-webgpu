@@ -76,7 +76,7 @@ export class Renderer {
     this.handleViewportResize(viewportSize);
   }
 
-  updateCamera(deltaTime: number, input: Input): Mat4 {
+  updateCamera(deltaTime: number, input: Input) {
     this.cameraCtrl.update(deltaTime, input);
   }
 

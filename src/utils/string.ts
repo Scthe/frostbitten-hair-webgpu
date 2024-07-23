@@ -1,8 +1,8 @@
-export function formatBytes(bytes: number, decimals = 2) {
+export function formatBytes(bytes: number, decimals = 0) {
   if (bytes <= 0) return '0 Bytes';
 
   // prettier-ignore
-  const units = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
   const k = 1024;
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   const v = (bytes / Math.pow(k, i)).toFixed(decimals);
@@ -22,7 +22,11 @@ export function formatNumber(num: number, decimals = 2) {
 }
 
 /** Format 4 out of 100 into: '4 (4%)' */
-export function formatPercentageNumber(actual: number, total: number) {
+export function formatPercentageNumber(
+  actual: number,
+  total: number,
+  decimals = 2
+) {
   const percent = total > 0 ? (actual / total) * 100.0 : 0;
-  return `${formatNumber(actual)} (${percent.toFixed(1)}%)`;
+  return `${formatNumber(actual, decimals)} (${percent.toFixed(1)}%)`;
 }
