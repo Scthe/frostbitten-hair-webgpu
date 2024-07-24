@@ -29,8 +29,8 @@ export class RenderUniformsBuffer {
     const DISPLAY_MODE_USED_SLICES = ${DISPLAY_MODE.USED_SLICES}u;
 
     struct Light {
-      position: vec4f,
-      colorAndEnergy: vec4f,
+      position: vec4f, // [x, y, z, 0.0]
+      colorAndEnergy: vec4f, // [r, g, b, energy]
     }
 
     struct Uniforms {

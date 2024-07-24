@@ -76,9 +76,10 @@ export class HairShadingPass {
       device,
       this.pipeline,
       [
-        // globalUniforms.createBindingDesc(b.renderUniforms),
-        // object.bindHairData(b.hairData),
-        // object.bindPointsPositions(b.hairPositions),
+        globalUniforms.createBindingDesc(b.renderUniforms),
+        object.bindHairData(b.hairData),
+        object.bindPointsPositions(b.hairPositions),
+        object.bindTangents(b.hairTangents),
         object.bindShading(b.hairShading),
       ]
     );

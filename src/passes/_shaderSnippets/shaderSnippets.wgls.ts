@@ -67,4 +67,19 @@ fn ndc2viewportPx(viewportSize: vec2f, pos: vec3f) -> vec2f {
 fn dotMax0 (n: vec3f, toEye: vec3f) -> f32 {
   return max(0.0, dot(n, toEye));
 }
+
+/**
+ * Takes param 't' in range [0.0 .. 1.0] and 'maxIdx'. Returns u32 indices
+ * of points before 't' and after 't' as well as the fract between these points.
+ * 
+ * E.g.
+ * When 't=0.6' and 'maxIdx=4', it returns indices 1, 2 and the fract is 0.4.
+ */
+fn remapToIndices(maxIdx: u32, t: f32, outIdx: ptr<function, vec2u>) -> f32 {
+  let a = t * (f32(maxIdx) - 1.);
+  let a_u32 = u32(a);
+  (*outIdx).x = clamp(a_u32,      0u, maxIdx - 1u);
+  (*outIdx).y = clamp(a_u32 + 1u, 0u, maxIdx - 1u);
+  return fract(a);
+}
 `;

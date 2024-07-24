@@ -30,13 +30,11 @@ fn _sampleShading(strandId: u32, t: f32) -> vec4f {
   let offset = strandId * SHADING_POINTS;
   let SHADING_POINTS_f32 = f32(SHADING_POINTS);
 
-  let a = (SHADING_POINTS_f32 - 1.) * t;
-  let a_u32 = u32(a);
-  let i0 = clamp(a_u32,      0u, SHADING_POINTS - 1u);
-  let i1 = clamp(a_u32 + 1u, 0u, SHADING_POINTS - 1u);
-  let c0 = _hairShading[offset + i0];
-  let c1 = _hairShading[offset + i1];
-  return mix(c0, c1, fract(a));
+  var indices: vec2u;
+  let fractMod = remapToIndices(SHADING_POINTS, t, &indices);
+  let c0 = _hairShading[offset + indices.x];
+  let c1 = _hairShading[offset + indices.y];
+  return mix(c0, c1, fractMod);
 }
 
 ${access === 'read_write' ? setShadingPoint : ''}

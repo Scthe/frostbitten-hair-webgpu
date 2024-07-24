@@ -18,6 +18,10 @@ export const SNIPPET_SHADING_PBR_UTILS = /* wgsl */ `
 fn FresnelSchlick(cosTheta: f32, F0: vec3f) -> vec3f {
   return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
+/** Same as above, but for a single value (no color) */
+fn FresnelSchlick1(cosTheta: f32, F0: f32) -> f32 {
+  return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
 
 /**
 * Normal distribution function (D): GGX
