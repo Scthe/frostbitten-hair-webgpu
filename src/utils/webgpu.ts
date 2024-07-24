@@ -24,6 +24,7 @@ export async function createGpuDevice() {
       requiredFeatures.push('timestamp-query');
     }
 
+    // Limits change: https://gpuweb.github.io/gpuweb/#gpusupportedlimits
     const device = await adapter?.requestDevice({ requiredFeatures });
     if (!device) {
       onError('Failed to get GPUDevice from the adapter.');

@@ -41,7 +41,6 @@ const TILE_SIZE_2f: vec2f = vec2f(
   f32(${CONFIG.hairRender.tileSize}),
   f32(${CONFIG.hairRender.tileSize})
 );
-const PROCESSOR_COUNT: u32 = ${CONFIG.hairRender.processorCount}u;
 const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel}u;
 const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
 // Stop processing slices once we reach opaque color
@@ -114,13 +113,13 @@ fn main(
 
   let tileCount2d = getTileCount(params.viewportSizeU32);
   let tileCount = tileCount2d.x * tileCount2d.y;
-  var tileIdx = processorId; // TODO use queue: getNextTileIdx(); with atomic to implement naive work queue
+  var tileIdx = _getNextTileIdx();
 
   while (tileIdx < tileCount) {
     processTile(params, maxDrawnSegments, tileIdx);
 
     // move to next tile
-    tileIdx = tileIdx + PROCESSOR_COUNT;
+    tileIdx = _getNextTileIdx();
   }
 }
 

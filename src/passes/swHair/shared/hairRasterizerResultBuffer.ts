@@ -2,6 +2,7 @@ import { BYTES_VEC4 } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { Dimensions } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
+import { u32_type } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
 /// SHADER CODE
@@ -15,14 +16,11 @@ fn _setRasterizerResult(viewportSize: vec2u, posPx: vec2u, color: vec4f) {
   ) { return; }
 
   let idx = viewportSize.x * posPx.y + posPx.x;
-  _hairRasterizerResults[idx] = color;
+  _hairRasterizerResults.data[idx] = color;
 }
-`;
 
-const getRasterizerResult = /* wgsl */ `
-fn _getRasterizerResult(viewportSize: vec2u, posPx: vec2u) -> vec4f {
-  let idx = viewportSize.x * posPx.y + posPx.x;
-  return _hairRasterizerResults[idx];
+fn _getNextTileIdx() -> u32 {
+  return atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, 1u);
 }
 `;
 
@@ -31,10 +29,23 @@ export const BUFFER_HAIR_RASTERIZER_RESULTS = (
   access: 'read_write' | 'read'
 ) => /* wgsl */ `
 
-@group(0) @binding(${bindingIdx})
-var<storage, ${access}> _hairRasterizerResults: array<vec4f>;
+struct HairRasterResult {
+  // there is a limit of 8 storage buffers. We are reaching this limit right now.
+  // So pack this counter 'somewhere'. I could raise a limit, but..
+  // https://gpuweb.github.io/gpuweb/#gpusupportedlimits
+  tileQueueAtomicIdx: ${u32_type(access)},
+  data: array<vec4f>,
+}
 
-${access == 'read_write' ? setRasterizerResult : getRasterizerResult}
+@group(0) @binding(${bindingIdx})
+var<storage, ${access}> _hairRasterizerResults: HairRasterResult;
+
+fn _getRasterizerResult(viewportSize: vec2u, posPx: vec2u) -> vec4f {
+  let idx = viewportSize.x * posPx.y + posPx.x;
+  return _hairRasterizerResults.data[idx];
+}
+
+${access == 'read_write' ? setRasterizerResult : ''}
 `;
 
 ///////////////////////////
