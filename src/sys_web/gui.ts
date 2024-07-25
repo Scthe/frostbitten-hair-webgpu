@@ -71,8 +71,9 @@ export function initializeGUI(
       .add(cfg, 'dbgTileModeMaxSegments', 1, 1024 * 4)
       .step(1)
       .name('Max segments');
+    const maxV = cfg.slicesPerPixel * cfg.avgFragmentsPerSlice;
     const slicesCtrl = dir
-      .add(cfg, 'dbgSlicesModeMaxSlices', 1, 1024)
+      .add(cfg, 'dbgSlicesModeMaxSlices', 1, maxV)
       .step(1)
       .name('Max slices');
 

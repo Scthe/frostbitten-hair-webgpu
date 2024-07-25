@@ -52,11 +52,11 @@ fn processHairSegment(
   let boundRectMax = vec2f(tileBoundsPx.zw);
   let boundRectMin = vec2f(tileBoundsPx.xy);
 
-  for (var y: f32 = boundRectMin.y; y < boundRectMax.y; y+=1.0) {
-  for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x+=1.0) {
+  for (var y: f32 = boundRectMin.y; y < boundRectMax.y; y += 1.0) {
+  for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x += 1.0) {
     // stop if there is no space inside processor's sliceData linked list.
     let nextSliceDataPtr: u32 = sliceDataOffset + writtenSliceDataCount; 
-    if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; }
+    if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; } // TODO this 'optimization' is slow? +0.5ms ..
 
     // get pixel coordinates
     let px = vec2f(x, y); // pixel coordinates wrt. viewport
@@ -71,10 +71,10 @@ fn processHairSegment(
     let segmentStartTowardPixel: vec2f = pxOnSegment - segment0_px.xy;
     let segmentEndTowardPixel: vec2f = pxOnSegment - segment1_px.xy;
     // TBH no point normalizing tangent_proj if we divide by 'segmentLength' here
-    let t: f32 = max(
+    let t: f32 = saturate(max(
       segmentStartTowardPixel.x / tangent_proj.x,
       segmentStartTowardPixel.y / tangent_proj.y
-    ) / segmentLength;
+    ) / segmentLength);
     var isInsideSegment = (t >= 0 && t <= 1.0) ||
       length(segmentStartTowardPixel) < rasterErrMarginStart || 
       length(segmentEndTowardPixel  ) < rasterErrMarginEnd;
@@ -83,32 +83,38 @@ fn processHairSegment(
     // let distToStrand_0_1 = distToStrandPx / f32(TILE_SIZE); // dbg
     let alpha = saturate(1.0 - distToStrandPx / (*fiberRadiusPx));
     
-    if (isInsideSegment && alpha > 0.){
-      let hairDepth: f32 = mix(segment0_proj.z, segment1_proj.z, saturate(t));
-      // sample depth buffer
-      let depthTextSamplePx: vec2i = vec2i(i32(px_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
-      let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
-
-      if (hairDepth < depthBufferValue) { // depth test with GL_LESS
-        let tFullStrand = (f32(segmentIdx) + t) / f32(segmentCount);
-        // let color = vec4f(1.0 - c, c, 0.0, alpha); // red at root, green at tip
-        var color = _sampleShading(strandIdx, tFullStrand);
-        color.a = color.a * alpha;
-        let sliceIdx = getSliceIdx(tileDepth, hairDepth);
-
-        // dbg
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, 1.0));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, alpha));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(t, 0.0, 0.0, 1.0));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(distToStrand_0_1, 0.0, 0.0, 1.0));
-        // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(-tangent_proj.xy, 0.0, 1.0));
-
-        // insert into per-slice linked list
-        let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-        _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
-        writtenSliceDataCount += 1u;
-      }
+    if (!isInsideSegment || alpha <= (1.0 - ALPHA_CUTOFF)){
+      continue;
     }
+      
+    let hairDepth: f32 = mix(segment0_proj.z, segment1_proj.z, t);
+
+    // sample depth buffer, depth test with GL_LESS
+    let depthTextSamplePx: vec2i = vec2i(i32(px_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
+    let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
+    if (hairDepth >= depthBufferValue) {
+      continue;
+    }
+
+    // calculate final color
+    let tFullStrand = (f32(segmentIdx) + t) / f32(segmentCount);
+    // let color = vec4f(1.0 - t, t, 0.0, alpha); // red at root, green at tip
+    var color = _sampleShading(strandIdx, tFullStrand);
+    color.a = color.a * alpha;
+    let sliceIdx = getSliceIdx(tileDepth, hairDepth);
+
+    // dbg
+    // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, 1.0));
+    // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(1.0, 0.0, 0.0, alpha));
+    // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(t, 0.0, 0.0, 1.0));
+    // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(distToStrand_0_1, 0.0, 0.0, 1.0));
+    // _setRasterizerResult(p.viewportSizeU32, px_u32, vec4f(-tangent_proj.xy, 0.0, 1.0));
+
+    // insert into per-slice linked list
+    // WARNING: Both lines below can be slow!
+    let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
+    _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
+    writtenSliceDataCount += 1u;
   }}
 
   // debugColorPointInTile(tileBoundsPx, segment0_px, vec4f(0.0, 1.0, 0.0, 1.0));

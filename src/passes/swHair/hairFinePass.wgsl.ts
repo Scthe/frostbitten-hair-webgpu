@@ -110,7 +110,7 @@ fn main(
 
   // clear memory before starting work
   _clearSlicesHeadPtrs(processorId);
-
+  
   let tileCount2d = getTileCount(params.viewportSizeU32);
   let tileCount = tileCount2d.x * tileCount2d.y;
   var tileIdx = _getNextTileIdx();
@@ -130,6 +130,7 @@ fn processTile(
 ) {
   // let MAX_PROCESSED_SEGMENTS = 0u; // just in case
   // let MAX_PROCESSED_SEGMENTS = 1u; // just in case
+  // let MAX_PROCESSED_SEGMENTS = 32u; // just in case (the profiled case)
   // let MAX_PROCESSED_SEGMENTS = 128u; // just in case
   let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
 
@@ -172,6 +173,7 @@ fn processTile(
   }
 
   // reduce over slices list and set the final color into result buffer
+  // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
   reduceHairSlices(
     p.processorId,
     p.viewportSizeU32,

@@ -17,8 +17,8 @@ fn reduceHairSlices(
   let boundRectMax = vec2u(tileBoundsPx.zw);
   let boundRectMin = vec2u(tileBoundsPx.xy);
 
-  for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y+=1u) {
-  for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x+=1u) {
+  for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y += 1u) {
+  for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x += 1u) {
     var finalColor = vec4f();
     var sliceCount = 0u;
     let px = vec2u(x, y); // pixel coordinates wrt. viewport

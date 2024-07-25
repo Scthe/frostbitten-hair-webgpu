@@ -49,6 +49,8 @@ export type HairFile =
   | 'SintelHairOriginal-sintel_hair.12points.tfx'
   | 'SintelHairOriginal-sintel_hair.8points.tfx';
 
+type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
+
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
   isTest: false,
@@ -127,7 +129,7 @@ export const CONFIG = {
     avgFragmentsPerSlice: 16,
     processorCount: 64,
     finePassWorkgroupSizeX: 1,
-    useLocalMemoryForSlicesHeads: true,
+    sliceHeadsMemory: 'workgroup' as SliceHeadsMemory,
 
     ////// LOD
     lodRenderPercent: 100, // range [0..100]

@@ -8,10 +8,10 @@ const ENTRIES_PER_PROCESSOR =
   CONFIG.hairRender.tileSize *
   CONFIG.hairRender.slicesPerPixel;
 
-const USE_LOCAL_MEMORY = CONFIG.hairRender.useLocalMemoryForSlicesHeads;
+const SLICE_HEADS_MEMORY = CONFIG.hairRender.sliceHeadsMemory;
 
 export const getLocalMemoryRequirements = () =>
-  USE_LOCAL_MEMORY ? ENTRIES_PER_PROCESSOR * BYTES_U32 : 0;
+  SLICE_HEADS_MEMORY === 'workgroup' ? ENTRIES_PER_PROCESSOR * BYTES_U32 : 0;
 
 ///////////////////////////
 /// SHADER CODE - SHARED - UTILS
@@ -93,14 +93,15 @@ ${SHARED_UTILS}
 /// SHADER CODE - LOCAL MEMORY
 ///////////////////////////
 
-// TODO assert workgroup size is 1
-// TODO do not allocate the vram
+const LOCAL_MEMORY_ACCESS =
+  SLICE_HEADS_MEMORY === 'workgroup' ? 'workgroup' : 'private';
+
 const BUFFER_HAIR_SLICES_HEADS_LOCAL = (
   _bindingIdx: number,
   _access: 'read_write'
 ) => /* wgsl */ `
 
-var<workgroup> _hairSliceHeads: array<u32, ${ENTRIES_PER_PROCESSOR}u>;
+var<${LOCAL_MEMORY_ACCESS}> _hairSliceHeads: array<u32, ${ENTRIES_PER_PROCESSOR}u>;
 
 fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
   return 0u;
@@ -109,9 +110,10 @@ fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
 ${SHARED_UTILS}
 `;
 
-export const BUFFER_HAIR_SLICES_HEADS = USE_LOCAL_MEMORY
-  ? BUFFER_HAIR_SLICES_HEADS_LOCAL
-  : BUFFER_HAIR_SLICES_HEADS_GLOBAL;
+export const BUFFER_HAIR_SLICES_HEADS =
+  SLICE_HEADS_MEMORY === 'global'
+    ? BUFFER_HAIR_SLICES_HEADS_GLOBAL
+    : BUFFER_HAIR_SLICES_HEADS_LOCAL;
 
 ///////////////////////////
 /// GPU BUFFER
@@ -146,6 +148,7 @@ function createHairSlicesHeadsBuffer_LOCAL(_device: GPUDevice): undefined {
   return undefined;
 }
 
-export const createHairSlicesHeadsBuffer: Allocator = USE_LOCAL_MEMORY
-  ? createHairSlicesHeadsBuffer_LOCAL
-  : createHairSlicesHeadsBuffer_GLOBAL;
+export const createHairSlicesHeadsBuffer: Allocator =
+  SLICE_HEADS_MEMORY === 'global'
+    ? createHairSlicesHeadsBuffer_GLOBAL
+    : createHairSlicesHeadsBuffer_LOCAL;
