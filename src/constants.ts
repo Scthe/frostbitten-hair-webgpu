@@ -118,6 +118,7 @@ export const CONFIG = {
     avgFragmentsPerSlice: 16,
     processorCount: 64,
     finePassWorkgroupSizeX: 1,
+    useLocalMemoryForSlicesHeads: true,
 
     ////// LOD
     lodRenderPercent: 100, // range [0..100]

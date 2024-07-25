@@ -24,7 +24,7 @@ export class HairFinePass {
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();
 
-  public hairSlicesHeadsBuffer: GPUBuffer;
+  public hairSlicesHeadsBuffer: GPUBuffer | undefined;
   public hairSlicesDataBuffer: GPUBuffer;
   public hairRasterizerResultsBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
 
@@ -48,11 +48,13 @@ export class HairFinePass {
 
   /** Clears to 0. We cannot select a number */
   clearFramebuffer(ctx: PassCtx) {
-    ctx.cmdBuf.clearBuffer(
-      this.hairSlicesHeadsBuffer,
-      0,
-      this.hairSlicesHeadsBuffer.size
-    );
+    if (this.hairSlicesHeadsBuffer) {
+      ctx.cmdBuf.clearBuffer(
+        this.hairSlicesHeadsBuffer,
+        0,
+        this.hairSlicesHeadsBuffer.size
+      );
+    }
     ctx.cmdBuf.clearBuffer(
       this.hairRasterizerResultsBuffer,
       0,
@@ -109,23 +111,29 @@ export class HairFinePass {
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(depthTexture);
 
+    const entries: GPUBindGroupEntry[] = [
+      globalUniforms.createBindingDesc(b.renderUniforms),
+      bindBuffer(b.tilesBuffer, hairTilesBuffer),
+      bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
+      bindBuffer(b.hairSlicesData, this.hairSlicesDataBuffer),
+      bindBuffer(b.rasterizerResult, this.hairRasterizerResultsBuffer),
+      object.bindHairData(b.hairData),
+      object.bindPointsPositions(b.hairPositions),
+      object.bindShading(b.hairShading),
+      { binding: b.depthTexture, resource: depthTexture },
+    ];
+
+    // no needed if using local memory
+    if (this.hairSlicesHeadsBuffer) {
+      entries.push(bindBuffer(b.hairSlicesHeads, this.hairSlicesHeadsBuffer));
+    }
+
     return assignResourcesToBindings2(
       HairFinePass,
       object.name,
       device,
       this.pipeline,
-      [
-        globalUniforms.createBindingDesc(b.renderUniforms),
-        bindBuffer(b.tilesBuffer, hairTilesBuffer),
-        bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
-        bindBuffer(b.hairSlicesHeads, this.hairSlicesHeadsBuffer),
-        bindBuffer(b.hairSlicesData, this.hairSlicesDataBuffer),
-        bindBuffer(b.rasterizerResult, this.hairRasterizerResultsBuffer),
-        object.bindHairData(b.hairData),
-        object.bindPointsPositions(b.hairPositions),
-        object.bindShading(b.hairShading),
-        { binding: b.depthTexture, resource: depthTexture },
-      ]
+      entries
     );
   };
 }
