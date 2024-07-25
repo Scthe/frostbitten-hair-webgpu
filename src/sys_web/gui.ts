@@ -38,6 +38,7 @@ export function initializeGUI(
 
   // folders
   addHairRenderFolder(gui);
+  addHairMaterialFolder(gui);
   addAmbientLightFolder(gui);
   addLightFolder(gui, CONFIG.lights[0], 'Light 0');
   addLightFolder(gui, CONFIG.lights[1], 'Light 1');
@@ -69,7 +70,11 @@ export function initializeGUI(
     const tileSegmentsCtrl = dir
       .add(cfg, 'dbgTileModeMaxSegments', 1, 1024 * 4)
       .step(1)
-      .name('Tile segments');
+      .name('Max segments');
+    const slicesCtrl = dir
+      .add(cfg, 'dbgSlicesModeMaxSlices', 1, 1024)
+      .step(1)
+      .name('Max slices');
 
     // init
     modeCtrl.onFinishChange(onDisplayModeChange);
@@ -77,7 +82,22 @@ export function initializeGUI(
     function onDisplayModeChange() {
       const mode = cfg.displayMode;
       setVisible(tileSegmentsCtrl, mode === DISPLAY_MODE.TILES);
+      setVisible(slicesCtrl, mode === DISPLAY_MODE.USED_SLICES);
     }
+  }
+
+  function addHairMaterialFolder(gui: dat.GUI) {
+    const cfg = CONFIG.hairRender.material;
+    const dir = gui.addFolder('Hair material');
+    dir.open();
+
+    // TODO tune ranges
+    addColorController(dir, cfg, 'color', 'Color');
+    dir.add(cfg, 'specular', 0.0, 3.0, 0.01).name('Specular');
+    dir.add(cfg, 'weightTT', 0.0, 2.0, 0.01).name('Weight TT');
+    dir.add(cfg, 'weightTRT', 0.0, 2.0, 0.01).name('Weight TRT');
+    dir.add(cfg, 'shift', -1.0, 1.0, 0.01).name('Shift');
+    dir.add(cfg, 'roughness', 0.0, 1.0, 0.01).name('Roughness');
   }
 
   function addAmbientLightFolder(gui: dat.GUI) {

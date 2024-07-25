@@ -104,7 +104,15 @@ export const CONFIG = {
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 1700,
     /** When in 'used_slices' display mode, how much slices are considered full */
-    dbgSlicesModeMaxSlices: 50, // TODO add to GUI
+    dbgSlicesModeMaxSlices: 50,
+    material: {
+      color: [0.0, 0.0, 1.0],
+      specular: 2.0, // weight for lobe: R
+      weightTT: 1.0, // weight for lobe: TT
+      weightTRT: 1.0, // weight for lobe: TRT
+      shift: 0.0,
+      roughness: 0.2,
+    },
 
     ////// SHADING
     shadingPoints: 64,

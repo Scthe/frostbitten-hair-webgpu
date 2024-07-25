@@ -57,7 +57,7 @@ export class HairShadingPass {
       CONFIG.hairRender.shadingPoints,
       SHADER_PARAMS.workgroupSizeY
     );
-    console.log(`${HairShadingPass.NAME}.dispatch(${workgroupsX}, ${workgroupsY}, 1)`); // prettier-ignore
+    // console.log(`${HairShadingPass.NAME}.dispatch(${workgroupsX}, ${workgroupsY}, 1)`); // prettier-ignore
     computePass.dispatchWorkgroups(workgroupsX, workgroupsY, 1);
 
     computePass.end();

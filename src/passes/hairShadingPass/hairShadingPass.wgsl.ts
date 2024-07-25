@@ -49,7 +49,6 @@ fn main(
   let strandIdx = global_id.x;
   let shadingPointId = global_id.y;
   let SHADING_POINTS_f32 = f32(SHADING_POINTS);
-  let lightPositionWS = _uniforms.light0.position.xyz;
   let cameraPositionWS = _uniforms.cameraPosition.xyz;
   let modelMatrix = _uniforms.modelMatrix;
   let pointsPerStrand = _hairData.pointsPerStrand;
@@ -76,38 +75,93 @@ fn main(
   let positionWS = modelMatrix * vec4f(positionOBJ, 1.0);
   let tangentWS = modelMatrix * vec4f(tangentOBJ, 1.0);
 
-  let toLight: vec3f = normalize(lightPositionWS - positionWS.xyz);
   let toCamera: vec3f = normalize(cameraPositionWS - positionWS.xyz);
-  let baseColor: vec3f = vec3f(0., 0., 1.0);
-  let specular: f32 = f32(2.0); // weight for .r
-  let shift: f32 = f32(0.0); // TODO
-  let roughness: f32 = f32(0.2); // TODO
+  let params = MarschnerParams(
+    _uniforms.hairMaterial.color, // vec3f(0., 0., 1.0), // baseColor
+    _uniforms.hairMaterial.specular, // (weight for .r)
+    _uniforms.hairMaterial.weightTT,
+    _uniforms.hairMaterial.weightTRT,
+    _uniforms.hairMaterial.shift,
+    _uniforms.hairMaterial.roughness,
+  );
+  
+  let ambient = _uniforms.lightAmbient.rgb * _uniforms.lightAmbient.a;
+  var radianceSum = vec3(0.0);
+
+  radianceSum += hairShading(params, _uniforms.light0, toCamera, tangentWS, positionWS);
+  radianceSum += hairShading(params, _uniforms.light1, toCamera, tangentWS, positionWS);
+  radianceSum += hairShading(params, _uniforms.light2, toCamera, tangentWS, positionWS);
+
+  color = vec4f(radianceSum, 1.0); // TODO add alpha?
+  _setShadingPoint(strandIdx, shadingPointId, color);
+}
+
+fn hairShading(
+  p: MarschnerParams,
+  light: Light,
+  toCamera: vec3f,
+  tangentWS: vec4f,
+  positionWS: vec4f,
+) -> vec3f {
+  let toLight: vec3f = normalize(light.position.xyz - positionWS.xyz);
+  // TODO add ambient occlusion and shadows
+  let shadow = 0.0;
+  let aoTerm = 0.0; // 0-unoccluded, 1-occluded
+
+  let diffuse = KajiyaKayDiffuse(p.baseColor, toLight, tangentWS.xyz);
+  let multipleScatter = fakeMultipleScattering(
+    toCamera,
+    toLight,
+    tangentWS,
+    p.baseColor,
+    shadow
+  );
+  let diffuseTotal = diffuse * multipleScatter * saturate(dot(tangentWS.xyz, toLight));
+
   let marschnerSpec = hairSpecularMarschner(
+    p,
     toLight,
     toCamera,
     tangentWS.xyz,
-    baseColor,
-    specular,
-    shift,
-    roughness
   );
 
-  let diffuse = KajiyaKayDiffuse(baseColor, toLight, tangentWS.xyz);
-  // TODO many lights
-  color = vec4f(marschnerSpec.rgb + diffuse, 1.0);
-  // color = vec4f(diffuse, 1.0);
-  // (diffuse + specular) * light.color
-
+  // TODO better tune diffuse-specular addition
+  let brdfFinal = diffuseTotal + marschnerSpec;
+  // let brdfFinal = pbr_mixDiffuseAndSpecular(material, lambert, specular, F);
   
+  let lightAttenuation = 1.0; // hardcoded for this demo
+  let radiance = lightAttenuation * light.colorAndEnergy.rgb * light.colorAndEnergy.a; // incoming color from light
 
-  _setShadingPoint(strandIdx, shadingPointId, color);
+  return brdfFinal * radiance * (1.0 - aoTerm);
 }
+
 
 /** https://web.engr.oregonstate.edu/~mjb/cs557/Projects/Papers/HairRendering.pdf#page=12 */
 fn KajiyaKayDiffuse(baseColor: vec3f, toLight: vec3f, tangent: vec3f) -> vec3f {
   // diffuse lighting: the lerp shifts the shadow boundary for a softer look
   let diffuse = mix(0.25, 1.0, dot(tangent, toLight));
   return diffuse * baseColor;
+}
+
+/** https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=39 */
+fn fakeMultipleScattering(
+  toCamera: vec3f,
+  toLight: vec3f,
+  tangentWS: vec4f,
+  baseColor: vec3f,
+  shadow: f32,
+) -> vec3f {
+  let fakeNormal: vec3f = normalize(toCamera - tangentWS.xyz * dot(toCamera, tangentWS.xyz));
+
+  // term 2
+  let NoL = saturate(dot(fakeNormal, toLight));
+  let diffuseScatter = (NoL + 1.0) / (4.0 * PI);
+  // term 3
+  let luma = toLuma_fromLinear(baseColor);
+  let tint: vec3f = pow(baseColor / luma, vec3f(1. - shadow));
+
+  // combine
+  return sqrt(baseColor) * diffuseScatter * tint;
 }
 
 `;

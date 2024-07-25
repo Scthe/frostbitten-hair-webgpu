@@ -94,7 +94,7 @@ export class HairFinePass {
       CONFIG.hairRender.processorCount,
       SHADER_PARAMS.workgroupSizeX
     );
-    console.log(`${HairFinePass.NAME}.dispatch(${workgroupsX}, 1, 1)`);
+    // console.log(`${HairFinePass.NAME}.dispatch(${workgroupsX}, 1, 1)`);
     computePass.dispatchWorkgroups(workgroupsX, 1, 1);
 
     computePass.end();

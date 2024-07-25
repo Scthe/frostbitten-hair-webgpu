@@ -10,6 +10,9 @@ const ENTRIES_PER_PROCESSOR =
 
 const USE_LOCAL_MEMORY = CONFIG.hairRender.useLocalMemoryForSlicesHeads;
 
+export const getLocalMemoryRequirements = () =>
+  USE_LOCAL_MEMORY ? ENTRIES_PER_PROCESSOR * BYTES_U32 : 0;
+
 ///////////////////////////
 /// SHADER CODE - SHARED - UTILS
 ///////////////////////////

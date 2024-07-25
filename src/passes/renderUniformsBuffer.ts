@@ -33,6 +33,16 @@ export class RenderUniformsBuffer {
       colorAndEnergy: vec4f, // [r, g, b, energy]
     }
 
+    struct HairMaterialParams {
+      color: vec3f,
+      specular: f32,
+      // 4 * f32 alignment end
+      weightTT: f32,
+      weightTRT: f32,
+      shift: f32,
+      roughness: f32,
+    }
+
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
       vpMatrixInv: mat4x4<f32>,
@@ -48,10 +58,11 @@ export class RenderUniformsBuffer {
       light0: Light,
       light1: Light,
       light2: Light,
+      hairMaterial: HairMaterialParams,
       fiberRadius: f32,
       maxDrawnHairSegments: u32,
       displayMode: u32, // display mode + some of it's settings
-      padding2: f32,
+      padding2: u32,
     };
     @binding(0) @group(${group})
     var<uniform> _uniforms: Uniforms;
@@ -79,6 +90,7 @@ export class RenderUniformsBuffer {
     BYTES_VEC4 + // color mgmt
     BYTES_VEC4 + // lightAmbient
     3 * RenderUniformsBuffer.LIGHT_SIZE + // lights
+    2 * BYTES_VEC4 + // hairMaterial
     4 * BYTES_F32; // fiberRadius, maxDrawnHairSegments, padding
 
   private readonly gpuBuffer: GPUBuffer;
@@ -149,6 +161,8 @@ export class RenderUniformsBuffer {
     this.writeLight(c.lights[0]);
     this.writeLight(c.lights[1]);
     this.writeLight(c.lights[2]);
+    // hair material
+    this.writeHairMaterial();
     // misc
     this.dataView.writeF32(c.hairRender.fiberRadius);
     this.dataView.writeU32(getLengthOfHairTileSegmentsBuffer(viewport));
@@ -172,6 +186,19 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(l.color[1]);
     this.dataView.writeF32(l.color[2]);
     this.dataView.writeF32(l.energy);
+  }
+
+  private writeHairMaterial() {
+    const m = CONFIG.hairRender.material;
+    this.dataView.writeF32(m.color[0]);
+    this.dataView.writeF32(m.color[1]);
+    this.dataView.writeF32(m.color[2]);
+    this.dataView.writeF32(m.specular);
+
+    this.dataView.writeF32(m.weightTT);
+    this.dataView.writeF32(m.weightTRT);
+    this.dataView.writeF32(m.shift);
+    this.dataView.writeF32(m.roughness);
   }
 
   private encodeDebugMode() {

@@ -1,6 +1,7 @@
 import { divideCeil, getBytes, getClassName, getTypeName } from './index.ts';
 import { CONFIG } from '../constants.ts';
 import { TypedArray, ensureTypedArray } from './arrays.ts';
+import { getLocalMemoryRequirements } from '../passes/swHair/shared/hairSliceHeadsBuffer.ts';
 
 export const WEBGPU_MINIMAL_BUFFER_SIZE = 256;
 
@@ -29,7 +30,13 @@ export async function createGpuDevice() {
     if (CONFIG.increaseStorageMemoryLimits) {
       requiredLimits.maxStorageBufferBindingSize = getBytes(1024, 'MB');
     }
+    requiredLimits.maxComputeWorkgroupStorageSize = Math.max(
+      getLocalMemoryRequirements(),
+      // 16Kb is the default limit on Chrome, provided to cover for undefined default limit
+      adapter.limits.maxComputeWorkgroupStorageSize || getBytes(16, 'KB')
+    );
 
+    // create device
     const device = await adapter?.requestDevice({
       requiredFeatures,
       // deno-lint-ignore no-explicit-any

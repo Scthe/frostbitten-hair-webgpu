@@ -82,4 +82,10 @@ fn remapToIndices(maxIdx: u32, t: f32, outIdx: ptr<function, vec2u>) -> f32 {
   (*outIdx).y = clamp(a_u32 + 1u, 0u, maxIdx - 1u);
   return fract(a);
 }
+
+/** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/shaders/_utils.glsl#L41 */
+fn toLuma_fromLinear(rgbCol: vec3f) -> f32 {
+  let toLumaCoef = vec3f(0.2126729,  0.7151522, 0.0721750);
+  return dot(toLumaCoef, rgbCol);
+}
 `;

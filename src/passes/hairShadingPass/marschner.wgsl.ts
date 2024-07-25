@@ -16,20 +16,26 @@
  */
 export const SHADER_CODE_MARSCHNER = /* wgsl */ `
 
-fn hairSpecularMarschner(
-  toLight: vec3f, // L
-  toCamera: vec3f, // V
-  tangent: vec3f,
+struct MarschnerParams {
   // https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=44
   baseColor: vec3f,
   // scales the R term
   specular: f32,
   // shift - based on the tilt of the cuticle scales
   // \alpha_R = -2*s; \alpha_{TT} = s; \alpha_{TRT} = 4 * s
+  weightTT: f32,
+  weightTRT: f32,
   shift: f32,
   // hair roughness
   // \beta_R = r^2; \beta_{TT} = 0.5 * (r^2); \beta_{TRT} = 2 * (r^2)
   roughness: f32
+}
+
+fn hairSpecularMarschner(
+  p: MarschnerParams,
+  toLight: vec3f, // L
+  toCamera: vec3f, // V
+  tangent: vec3f,
 ) -> vec3f {
   // from [Marschner03]
   // w_i - direction of illumination (w Illumination/Incoming)
@@ -59,29 +65,29 @@ fn hairSpecularMarschner(
 
   // R: The light ray **REFLECTS** off the front of the hair fiber.
   // Not much color (smth. like specular), as the light does not penetrate strand.
-  var alpha = -2.0 * shift;
-  var beta = roughness * roughness;
+  var alpha = -2.0 * p.shift;
+  var beta = p.roughness * p.roughness;
   let M_r = longitudinalScattering_Gaussian(sin_theta_i, sin_theta_r, alpha, beta);
   let N_r = azimuthalScattering_R(cos_theta_d, cos_half_phi);
   // TT: The light ray **TRANSMITS THROUGH** the front of the fiber,
   // passes through the interior which colors it due to absorption
   // and then transmits through the other side.
   // Some color. Light goes through the strand once.
-  alpha = shift;
-  beta = 0.5 * roughness * roughness;
+  alpha = p.shift;
+  beta = 0.5 * p.roughness * p.roughness;
   let M_tt = longitudinalScattering_Gaussian(sin_theta_i, sin_theta_r, alpha, beta);
-  let N_tt = azimuthalScattering_TT(baseColor, cos_theta_d, cos_phi, cos_half_phi);
+  let N_tt = azimuthalScattering_TT(p.baseColor, cos_theta_d, cos_phi, cos_half_phi);
   // TRT: The light ray transmits through the front of the fiber,
   // 1. **PASSES THROUGH** the colored interior.
   // 2. **REFLECTS** off the opposite side.
   // 3. **PASSES THROUGH** the interior again and transmits out the front.
   // A LOT of color. Light goes through the strand twice.
-  alpha = 4.0 * shift;
-  beta = 2.0 * roughness * roughness;
+  alpha = 4.0 * p.shift;
+  beta = 2.0 * p.roughness * p.roughness;
   let M_trt = longitudinalScattering_Gaussian(sin_theta_i, sin_theta_r, alpha, beta);
-  let N_trt = azimuthalScattering_TRT(baseColor, cos_theta_d, cos_phi);
+  let N_trt = azimuthalScattering_TRT(p.baseColor, cos_theta_d, cos_phi);
 
-  return (specular * M_r * N_r) + (M_tt * N_tt) + (M_trt * N_trt);
+  return (p.specular * M_r * N_r) + (p.weightTT * M_tt * N_tt) + (p.weightTRT * M_trt * N_trt);
   // DBG:
   // let r = (specular * M_r * N_r);
   // return vec3f(r, 0.0, 0.0); // dbg: r
@@ -91,7 +97,7 @@ fn hairSpecularMarschner(
 
 /** https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=20 */
 fn cosOfHalfAngle(cosAngle: f32) -> f32 {
-  return sqrt(0.5 + 0.5 * cosAngle);
+  return sqrt(saturate(0.5 + 0.5 * cosAngle));
 }
 
 const SQRT_TWO_PI: f32 = ${Math.sqrt(2 * Math.PI)};
@@ -135,7 +141,7 @@ fn azimuthalScattering_TT(
   // slide 29: distribution
   let D_TT = exp(-3.65 * cos_phi - 3.98);
   // slide 25
-  let f_angle = cos_theta_d * sqrt(1.0 - h_TT * h_TT);
+  let f_angle = cos_theta_d * sqrt(saturate(1.0 - h_TT * h_TT));
 	let f = FresnelSchlick1(f_angle, HAIR_F0);
 	let f_TT = (1.0 - f) * (1.0 - f); // there is also F(...)^{p-1}, but we can skip
 	
