@@ -1,4 +1,4 @@
-import { divideCeil, getClassName, getTypeName } from './index.ts';
+import { divideCeil, getBytes, getClassName, getTypeName } from './index.ts';
 import { CONFIG } from '../constants.ts';
 import { TypedArray, ensureTypedArray } from './arrays.ts';
 
@@ -25,7 +25,16 @@ export async function createGpuDevice() {
     }
 
     // Limits change: https://gpuweb.github.io/gpuweb/#gpusupportedlimits
-    const device = await adapter?.requestDevice({ requiredFeatures });
+    const requiredLimits: GPUSupportedLimits = {};
+    if (CONFIG.increaseStorageMemoryLimits) {
+      requiredLimits.maxStorageBufferBindingSize = getBytes(1024, 'MB');
+    }
+
+    const device = await adapter?.requestDevice({
+      requiredFeatures,
+      // deno-lint-ignore no-explicit-any
+      requiredLimits: requiredLimits as any,
+    });
     if (!device) {
       onError('Failed to get GPUDevice from the adapter.');
       return;

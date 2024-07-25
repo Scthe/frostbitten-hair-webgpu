@@ -10,6 +10,9 @@ export type ValueOf<T> = T[keyof T];
 /** Remove readonly from object properties */
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
 
+export type ArrayElement<ArrayType extends readonly unknown[]> =
+  ArrayType extends readonly (infer ElementType)[] ? ElementType : never;
+
 export const dgr2rad = (dgr: number) => (dgr * Math.PI) / 180;
 export const rad2dgr = (radians: number) => (radians / Math.PI) * 180;
 
@@ -63,3 +66,22 @@ export const sphericalToCartesian = (
 };
 
 export const divideCeil = (a: number, b: number) => Math.ceil(a / b);
+
+const BYTES_UNITS = [
+  'Bytes',
+  'KB',
+  'MB',
+  'GB',
+  'TB',
+  'PB',
+  'EB',
+  'ZB',
+  'YB',
+] as const;
+type ByteUnit = ArrayElement<typeof BYTES_UNITS>;
+
+export const getBytes = (a: number, unit: ByteUnit) => {
+  const i = BYTES_UNITS.indexOf(unit);
+  const unitVal = Math.floor(Math.pow(1024, i));
+  return a * unitVal;
+};

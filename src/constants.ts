@@ -59,6 +59,7 @@ export const CONFIG = {
     binaryFileReader: binaryFileReader_Web,
     createTextureFromFile: createTextureFromFile_Web,
   },
+  increaseStorageMemoryLimits: false, // TODO [CRITICAL] final release?
 
   ///////////////
   /// GENERIC/SCENE STUFF
@@ -106,7 +107,7 @@ export const CONFIG = {
     dbgSlicesModeMaxSlices: 50, // TODO add to GUI
 
     ////// SHADING
-    shadingPoints: 8,
+    shadingPoints: 64,
 
     ////// TILE PASS
     tileSize: 16,
