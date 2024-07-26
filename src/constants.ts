@@ -144,7 +144,7 @@ export const CONFIG = {
   colors: {
     gamma: 2.2,
     ditherStrength: 1.0,
-    exposure: 0.45,
+    exposure: 0.85,
   },
 };
 

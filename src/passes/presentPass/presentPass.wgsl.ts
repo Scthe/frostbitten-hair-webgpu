@@ -44,22 +44,23 @@ fn main_fs(
 ) -> @location(0) vec4<f32> {
   let fragPositionPx = vec2u(positionPxF32.xy);
   var color = textureLoad(_textureSrc, fragPositionPx, 0).rgb;
+  let displayMode = getDisplayMode();
   
-  // let shadingMode = getShadingMode(_uniforms.flags);
+  if (
+    displayMode == DISPLAY_MODE_FINAL || 
+    displayMode == DISPLAY_MODE_HW_RENDER
+  ) {
     let gamma = _uniforms.colorMgmt.x;
     let exposure = _uniforms.colorMgmt.y;
     let ditherStr = _uniforms.colorMgmt.z;
   
-    // TODO restore
-    // color = ditherColor(fragPositionPx, color, ditherStr);
-    // color = color * exposure;
-    // color = saturate(doACES_Tonemapping(color));
-    // color = doGamma(color, gamma);
-  //}
+    color = ditherColor(fragPositionPx, color, ditherStr);
+    color = color * exposure;
+    color = saturate(doACES_Tonemapping(color));
+    color = doGamma(color, gamma);
+  }
 
   return vec4(color.xyz, 1.0);
 }
 
 `;
-
-// if (shadingMode == ${SHADING_MODE_PBR}u) {
