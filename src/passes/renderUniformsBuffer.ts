@@ -48,6 +48,7 @@ export class RenderUniformsBuffer {
       vpMatrixInv: mat4x4<f32>,
       viewMatrix: mat4x4<f32>,
       projMatrix: mat4x4<f32>,
+      projMatrixInv: mat4x4<f32>,
       modelMatrix: mat4x4<f32>,
       modelViewMat: mat4x4<f32>,
       mvpMatrix: mat4x4<f32>,
@@ -73,6 +74,10 @@ export class RenderUniformsBuffer {
     fn getDbgSlicesModeMaxSlices() -> u32 { 
       return select(0u, getDbgModeExtra(), getDisplayMode() == DISPLAY_MODE_USED_SLICES);
     }
+    fn getDbgFinalModeShowTiles() -> bool {
+      let flags = select(0u, getDbgModeExtra(), getDisplayMode() == DISPLAY_MODE_FINAL);
+      return (flags & 1u) > 0u;
+    }
   `;
 
   private static LIGHT_SIZE = 2 * BYTES_VEC4;
@@ -82,6 +87,7 @@ export class RenderUniformsBuffer {
     BYTES_MAT4 + // vpMatrixInv
     BYTES_MAT4 + // viewMatrix
     BYTES_MAT4 + // projMatrix
+    BYTES_MAT4 + // projMatrixInv
     BYTES_MAT4 + // modelMat
     BYTES_MAT4 + // modelViewMat
     BYTES_MAT4 + // mvpMat
@@ -130,6 +136,7 @@ export class RenderUniformsBuffer {
     this.dataView.writeMat4(mat4.invert(vpMatrix, TMP_MAT4));
     this.dataView.writeMat4(viewMatrix);
     this.dataView.writeMat4(projMatrix);
+    this.dataView.writeMat4(mat4.invert(projMatrix, TMP_MAT4));
     this.dataView.writeMat4(modelMatrix);
     // model-view matrix
     mat4.multiply(viewMatrix, modelMatrix, TMP_MAT4);
@@ -209,6 +216,8 @@ export class RenderUniformsBuffer {
       extraData = hr.dbgTileModeMaxSegments;
     } else if (hr.displayMode === DISPLAY_MODE.USED_SLICES) {
       extraData = hr.dbgSlicesModeMaxSlices;
+    } else if (hr.displayMode === DISPLAY_MODE.FINAL) {
+      extraData = hr.dbgShowTiles ? 1 : 0;
     }
 
     return hr.displayMode | (extraData << 8);

@@ -64,7 +64,7 @@ export function createHairObject(
   };
   console.log('Bounds', bounds.sphere);
 
-  const dataBuffer = createHairDataBuffer(device, name, tfxFile);
+  const dataBuffer = createHairDataBuffer(device, name, tfxFile, bounds.sphere);
   const pointsPositionsBuffer = createHairPointsPositionsBuffer(
     device,
     name,

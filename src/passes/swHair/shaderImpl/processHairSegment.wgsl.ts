@@ -126,9 +126,7 @@ fn getSliceIdx(
   tileDepth: vec2f,
   pixelDepth: f32,
 ) -> u32 {
-  let tileDepthSpan = tileDepth.y - tileDepth.x;
-  let t = (pixelDepth - tileDepth.x) / tileDepthSpan;
-  return u32(clamp(t * SLICES_PER_PIXEL_f32, 0.0, SLICES_PER_PIXEL_f32));
+  return getDepthBin(SLICES_PER_PIXEL, tileDepth, pixelDepth);
 }
 
 fn calculateFiberRadius(

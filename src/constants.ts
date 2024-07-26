@@ -107,6 +107,9 @@ export const CONFIG = {
     dbgTileModeMaxSegments: 370,
     /** When in 'used_slices' display mode, how much slices are considered full */
     dbgSlicesModeMaxSlices: 50,
+    /** When in 'final' display mode, show tile boundaries */
+    dbgShowTiles: false,
+
     material: {
       color: [0.0, 0.0, 1.0],
       specular: 2.0, // weight for lobe: R
@@ -121,6 +124,7 @@ export const CONFIG = {
 
     ////// TILE PASS
     tileSize: 16,
+    tileDepthBins: 1, // TODO DO NOT CHANGE (for now)
     avgSegmentsPerTile: 512,
 
     ////// FINE PASS

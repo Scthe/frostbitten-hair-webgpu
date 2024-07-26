@@ -1,8 +1,10 @@
-import { BYTES_U32, CONFIG } from '../../../constants.ts';
+import { BYTES_F32, BYTES_U32, CONFIG } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { Dimensions, divideCeil } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
 import { u32_type } from '../../../utils/webgpu.ts';
+
+const TILES_BIN_COUNT = CONFIG.hairRender.tileDepthBins;
 
 ///////////////////////////
 /// SHADER CODE
@@ -12,7 +14,7 @@ const storeTileDepth = /* wgsl */ `
 
 fn _storeTileHead(
   viewportSize: vec2u,
-  tileXY: vec2u,
+  tileXY: vec2u, depthBin: u32,
   depthMin: f32, depthMax: f32,
   nextPtr: u32
 ) -> u32 {
@@ -27,7 +29,7 @@ fn _storeTileHead(
   atomicMax(&_hairTilesResult[tileIdx].minDepth, depthMin_U32);
 
   let lastHeadPtr = atomicExchange(
-    &_hairTilesResult[tileIdx].tileSegmentPtr,
+    &_hairTilesResult[tileIdx].tileSegmentPtr[depthBin],
     nextPtr + 1u
   );
 
@@ -48,9 +50,9 @@ fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u) -> vec2f {
   );
 }
 
-fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u) -> u32 {
+fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
   let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
-  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr;
+  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr[depthBin];
   return myPtr - 1u;
 }
 
@@ -68,11 +70,12 @@ export const BUFFER_HAIR_TILES_RESULT = (
 
 const MAX_U32: u32 = 0xffffffffu;
 const INVALID_TILE_SEGMENT_PTR: u32 = 0xffffffffu;
+const TILES_BIN_COUNT = ${TILES_BIN_COUNT}u;
 
 struct HairTileResult {
   minDepth: ${u32_type(access)},
   maxDepth: ${u32_type(access)},
-  tileSegmentPtr: ${u32_type(access)},
+  tileSegmentPtr: array<${u32_type(access)}, TILES_BIN_COUNT>,
 }
 
 @group(0) @binding(${bindingIdx})
@@ -98,11 +101,14 @@ export function createHairTilesResultBuffer(
   viewportSize: Dimensions
 ): GPUBuffer {
   const tileCount = getTileCount(viewportSize);
-  console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height} tiles`); // prettier-ignore
-  STATS.update('Tiles', `${tileCount.width} x ${tileCount.height}`);
+  console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height}x${TILES_BIN_COUNT} tiles`); // prettier-ignore
+  STATS.update(
+    'Tiles',
+    `${tileCount.width} x ${tileCount.height} x ${TILES_BIN_COUNT}`
+  );
 
   const entries = tileCount.width * tileCount.height;
-  const bytesPerEntry = 3 * BYTES_U32;
+  const bytesPerEntry = 2 * BYTES_F32 + TILES_BIN_COUNT * BYTES_U32;
   const size = entries * bytesPerEntry;
   STATS.update('Tiles heads', formatBytes(size));
 

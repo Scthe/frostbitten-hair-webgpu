@@ -95,4 +95,15 @@ fn scissorWithViewport(viewportSize: vec2u, posPx: vec2u) -> vec2u {
     clamp(posPx.y, 0u, viewportSize.y - 1u)
   );
 }
+
+fn getDepthBin(
+  binCount: u32,
+  tileDepth: vec2f,
+  pixelDepth: f32,
+) -> u32 {
+  let tileDepthSpan = abs(tileDepth.y - tileDepth.x);
+  let t = (pixelDepth - tileDepth.x) / tileDepthSpan;
+  return clamp(u32(t * f32(binCount)), 0u, binCount - 1u);
+}
+
 `;

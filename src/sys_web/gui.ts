@@ -75,6 +75,7 @@ export function initializeGUI(
       .add(cfg, 'dbgSlicesModeMaxSlices', 1, 128)
       .step(1)
       .name('Max slices');
+    const showTilesCtrl = dir.add(cfg, 'dbgShowTiles').name('Show tiles');
 
     // init
     modeCtrl.onFinishChange(onDisplayModeChange);
@@ -83,6 +84,7 @@ export function initializeGUI(
       const mode = cfg.displayMode;
       setVisible(tileSegmentsCtrl, mode === DISPLAY_MODE.TILES);
       setVisible(slicesCtrl, mode === DISPLAY_MODE.USED_SLICES);
+      setVisible(showTilesCtrl, mode === DISPLAY_MODE.FINAL);
     }
   }
 

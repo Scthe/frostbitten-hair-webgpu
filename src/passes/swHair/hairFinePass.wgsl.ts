@@ -136,9 +136,14 @@ fn processTile(
   // let MAX_PROCESSED_SEGMENTS = 128u; // just in case
   let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
 
+  
+  // TODO finish tiles depth bins:
+  //  - how to pick up the previous bin's color? Just a memory read?
+  //  - clear heads
+  let MOCKED_DEPTH_BIN = 0u;
   let tileXY = getTileXY(p.viewportSizeU32, tileIdx);
   let tileBoundsPx: vec4u = getTileBoundsPx(p.viewportSizeU32, tileXY);
-  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY);
+  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, MOCKED_DEPTH_BIN);
   var tileDepth = _getTileDepth(p.viewportSizeU32, tileXY);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]

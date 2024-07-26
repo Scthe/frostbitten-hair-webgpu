@@ -1,3 +1,4 @@
+import { BoundingSphere } from '../../utils/bounds.ts';
 import { TypedArrayView } from '../../utils/typedArrayView.ts';
 import {
   WEBGPU_MINIMAL_BUFFER_SIZE,
@@ -12,6 +13,7 @@ import { TfxFileData } from './tfxFileLoader.ts';
 export const BUFFER_HAIR_DATA = (bindingIdx: number) => /* wgsl */ `
 
 struct HairData {
+  boundingSphere: vec4f,
   strandsCount: u32,
   pointsPerStrand: u32,
 };
@@ -27,12 +29,17 @@ var<storage, read> _hairData: HairData;
 export function createHairDataBuffer(
   device: GPUDevice,
   name: string,
-  tfxData: TfxFileData
+  tfxData: TfxFileData,
+  boundingSphere: BoundingSphere
 ): GPUBuffer {
   const BYTES = WEBGPU_MINIMAL_BUFFER_SIZE;
 
   const data = new ArrayBuffer(BYTES);
   const dataView = new TypedArrayView(data);
+  dataView.writeF32(boundingSphere.center[0]);
+  dataView.writeF32(boundingSphere.center[1]);
+  dataView.writeF32(boundingSphere.center[2]);
+  dataView.writeF32(boundingSphere.radius);
   dataView.writeU32(tfxData.header.numHairStrands);
   dataView.writeU32(tfxData.header.numVerticesPerStrand);
 

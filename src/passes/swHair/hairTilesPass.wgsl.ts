@@ -48,6 +48,8 @@ ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read_write')}
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
 
+const DEPTH_BINS_COUNT = ${CONFIG.hairRender.tileDepthBins}u;
+
 
 @compute
 @workgroup_size(${c.workgroupSizeX}, ${c.workgroupSizeY}, 1)
@@ -57,6 +59,8 @@ fn main(
   let viewportSize: vec2f = _uniforms.viewport.xy;
   let viewportSizeU32: vec2u = vec2u(viewportSize);
   let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
+  let mvMatrix = _uniforms.modelViewMat;
+  let projMatrixInv = _uniforms.projMatrixInv;
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
 
@@ -70,7 +74,7 @@ fn main(
 
   // get rasterize data
   let swHairRasterizeParams = SwHairRasterizeParams(
-    _uniforms.modelViewMat,
+    mvMatrix,
     _uniforms.projMatrix,
     viewportSizeU32,
     strandsCount,
@@ -84,6 +88,8 @@ fn main(
     segmentIdx
   );
 
+  let hairDepthBoundsVS = getHairDepthBoundsVS(mvMatrix);
+
   let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(sw.boundRectMin));
   let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(sw.boundRectMax));
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {
@@ -91,7 +97,9 @@ fn main(
     processTile(
       sw,
       viewportSizeU32,
+      projMatrixInv,
       maxDrawnSegments,
+      hairDepthBoundsVS,
       vec2u(tileX, tileY),
       strandIdx, segmentIdx
     );
@@ -101,7 +109,9 @@ fn main(
 fn processTile(
   sw: SwRasterizedHair,
   viewportSize: vec2u,
+  projMatrixInv: mat4x4f,
   maxDrawnSegments: u32,
+  hairDepthBoundsVS: vec2f,
   tileXY: vec2u,
   strandIdx: u32, segmentIdx: u32
 ) {
@@ -111,6 +121,7 @@ fn processTile(
 
   var depthMin =  999.0; // in proj. space, so *A BIT* overkill
   var depthMax = -999.0; // in proj. space, so *A BIT* overkill
+  var depthBin = DEPTH_BINS_COUNT;
 
   for (var y: u32 = boundsMin.y; y < boundsMax.y; y += 1u) {
   for (var x: u32 = boundsMin.x; x < boundsMax.x; x += 1u) {
@@ -137,9 +148,16 @@ fn processTile(
           continue;
         }
 
+        // get depth bin based on view-space depth
+        let hairDepthVS: vec3f = projectVertex(projMatrixInv, vec4f(p, hairDepth, 1.0));
+        // view space means Z is reversed. But we want bin 0 to be close etc.
+        // So we invert the bin idx.
+        let hairDepthBin = (DEPTH_BINS_COUNT - 1u) - getDepthBin(DEPTH_BINS_COUNT, hairDepthBoundsVS, hairDepthVS.z);
+
         // store px result
         depthMin = min(depthMin, hairDepth);
         depthMax = max(depthMax, hairDepth);
+        depthBin = min(depthBin, hairDepthBin); // closest bin
       }
   }} // end xy-iter
 
@@ -154,7 +172,7 @@ fn processTile(
   if (nextPtr < maxDrawnSegments) {
     let prevPtr = _storeTileHead(
       viewportSize,
-      tileXY,
+      tileXY, depthBin,
       depthMin, depthMax,
       nextPtr
     );
@@ -165,6 +183,13 @@ fn processTile(
   }
 }
 
+
+/** NOTE: This is view space. View space is weird. Expect inverted z-axis etc. */
+fn getHairDepthBoundsVS(mvMat: mat4x4f) -> vec2f {
+  let bs = _hairData.boundingSphere;
+  let bsCenterVS = mvMat * vec4f(bs.xyz, 1.0);
+  return vec2f(bsCenterVS.z - bs.w, bsCenterVS.z + bs.w);
+}
 
 /** NOTE: if you want to store color for .png file, it's in ABGR format */
 /*fn storeResult(viewportSize: vec2u, posPx: vec2u, value: u32) {

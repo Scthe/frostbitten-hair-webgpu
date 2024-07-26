@@ -62,59 +62,62 @@ fn main_fs(
     u32(viewportSize.y - positionPxF32.y)
   );
 
-  // sample software rasterizer
-  // .x is close, .y is far depth
   let tileXY = getHairTileXY_FromPx(fragPositionPx);
-  // let hairResult = _getTileDepth(viewportSizeU32, fragPositionPx);
-  let segmentPtr = _getTileSegmentPtr(viewportSizeU32, tileXY);
-
-  if (segmentPtr == 0){
-    // no pixel for software rasterizer, do not override.
-    // 0 is the value we cleared the buffer to, so any write with atomicMax()
-    // would affect the result. And it's not possible to try to write 0
-    // given what software rasterizer stores. E.g. if depth bits were
-    // 0, then the point would be on near plane, which is no AS terrible to cull.
-    discard;
-  }
-
   let displayMode = getDisplayMode();
-  var color = vec4f(0.0, 0.0, 0.0, 1.0);
 
   if (displayMode == DISPLAY_MODE_TILES) {
-    // output: segment count in each tile normalized by UI provided value
-    let maxSegmentsCount = getDbgTileModeMaxSegments();
-    let segments = getSegmentCountInTiles(viewportSizeU32, maxSegmentsCount, tileXY);
-    color.r = f32(segments) / f32(maxSegmentsCount);
-    color.g = 1.0 - color.r;
-
-    // dbg: tile bounds
-    // let tileIdx: u32 = _getHairTileIdx2222(viewportSizeU32, fragPositionPx);
-    // color.r = f32((tileIdx * 17) % 33) / 33.0;
-    // color.a = 1.0;
+    result.color = renderTileSegmentCount(viewportSizeU32, tileXY);
 
   } else {
+    var color = vec4f(0.0, 0.0, 0.0, 1.0);
     color = _getRasterizerResult(viewportSizeU32, fragPositionPx);
-    // color.a = select(0.2, color.w, color.w > 0.);
-    // result.fragDepth = hairResult.x; // this pass has depth test ON!
     
-    // nothing was explicitly drawn
     // fill tile bg with some pattern
-    let hasContent = color.w > 0.;
-    let drawDebugTileOverlay = 0;
-    if (!hasContent && drawDebugTileOverlay!=0) {
-      // color.a = select(0.9, color.w, hasContent); // add some tile bg
-      let TILE_SIZE = ${CONFIG.hairRender.tileSize}u;
-      var dbgTileColor = vec4f(1.0);
-      dbgTileColor.r = 0.0;
-      dbgTileColor.g = f32((fragPositionPx.x / TILE_SIZE) % 2) / 2.0;
-      dbgTileColor.b = f32((fragPositionPx.y / TILE_SIZE) % 2) / 2.0;
+    if (color.a <= 0. && getDbgFinalModeShowTiles()) {
+      let dbgTileColor = getDebugTileColor(tileXY);
       color = dbgTileColor + color * color.a;
-      // color = dbgTileColor;
     }
+    result.color = color;
+
+    // write depth to depth bufer
+    // let hairResult = _getTileDepth(viewportSizeU32, tileXY);
+    // result.fragDepth = hairResult.x; // TODO convert depthMin to f32 etc. first this pass has depth test ON!
   }
 
-  result.color = color;
   return result;
+}
+
+
+fn getDebugTileColor(tileXY: vec2u) -> vec4f {
+  let TILE_SIZE = ${CONFIG.hairRender.tileSize}u;
+  var dbgTileColor = vec4f(1.0);
+  dbgTileColor.r = 0.0;
+  dbgTileColor.g = f32(tileXY.x % 2) / 2.0;
+  dbgTileColor.b = f32(tileXY.y % 2) / 2.0;
+  return dbgTileColor;
+}
+
+fn renderTileSegmentCount(
+  viewportSize: vec2u,
+  tileXY: vec2u
+) -> vec4f {
+  var color = vec4f(0.0, 0.0, 0.0, 1.0);
+
+  // output: segment count in each tile normalized by UI provided value
+  let maxSegmentsCount = getDbgTileModeMaxSegments();
+  let segments = getSegmentCountInTiles(viewportSize, maxSegmentsCount, tileXY);
+  color.r = f32(segments) / f32(maxSegmentsCount);
+  color.g = 1.0 - color.r;
+
+  // dbg: tile bounds
+  // let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
+  // color.r = f32((tileIdx * 17) % 33) / 33.0;
+  // color.a = 1.0;
+  
+  if (segments == 0u) {
+    discard;
+  }
+  return color;
 }
 
 fn getSegmentCountInTiles(
@@ -123,16 +126,19 @@ fn getSegmentCountInTiles(
   tileXY: vec2u
 ) -> u32 {
   let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
-  var segmentPtr = _getTileSegmentPtr(viewportSize, tileXY);
   var segmentData = vec3u();
   var count = 0u;
-  
-  while (count < maxSegmentsCount) {
-    if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
-      count = count + 1;
-      segmentPtr = segmentData.z;
-    } else {
-      break;
+
+  for (var binIdx = 0u; binIdx < TILES_BIN_COUNT; binIdx++) {
+    var segmentPtr = _getTileSegmentPtr(viewportSize, tileXY, binIdx);
+
+    while (count < maxSegmentsCount) {
+      if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
+        count = count + 1;
+        segmentPtr = segmentData.z;
+      } else {
+        break;
+      }
     }
   }
 
