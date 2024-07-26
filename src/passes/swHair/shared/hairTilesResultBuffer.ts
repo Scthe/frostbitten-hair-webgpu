@@ -13,18 +13,18 @@ const storeTileDepth = /* wgsl */ `
 fn _storeTileHead(
   viewportSize: vec2u,
   tileXY: vec2u,
-  depth: f32,
+  depthMin: f32, depthMax: f32,
   nextPtr: u32
 ) -> u32 {
   let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
   
   // store depth
   // TODO low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
-  let depthU32 = u32(depth * f32(MAX_U32));
-  let depthU32_Inv = MAX_U32 - depthU32;
-  atomicMax(&_hairTilesResult[tileIdx].maxDepth, depthU32);
+  let depthMax_U32 = u32(depthMax * f32(MAX_U32));
   // WebGPU clears to 0. So atomicMin() is pointless. Use atomicMax() with inverted values instead
-  atomicMax(&_hairTilesResult[tileIdx].minDepth, depthU32_Inv);
+  let depthMin_U32 = u32((1.0 - depthMin) * f32(MAX_U32));
+  atomicMax(&_hairTilesResult[tileIdx].maxDepth, depthMax_U32);
+  atomicMax(&_hairTilesResult[tileIdx].minDepth, depthMin_U32);
 
   let lastHeadPtr = atomicExchange(
     &_hairTilesResult[tileIdx].tileSegmentPtr,
@@ -72,7 +72,6 @@ const INVALID_TILE_SEGMENT_PTR: u32 = 0xffffffffu;
 struct HairTileResult {
   minDepth: ${u32_type(access)},
   maxDepth: ${u32_type(access)},
-  /** if this is 0, then end of list */
   tileSegmentPtr: ${u32_type(access)},
 }
 

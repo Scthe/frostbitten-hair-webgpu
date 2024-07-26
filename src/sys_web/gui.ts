@@ -68,12 +68,11 @@ export function initializeGUI(
     dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
     dir.add(cfg, 'fiberRadius', 0.0001, 0.5).name('Radius');
     const tileSegmentsCtrl = dir
-      .add(cfg, 'dbgTileModeMaxSegments', 1, 128)
+      .add(cfg, 'dbgTileModeMaxSegments', 1, 512)
       .step(1)
       .name('Max segments');
-    const maxV = cfg.slicesPerPixel * cfg.avgFragmentsPerSlice;
     const slicesCtrl = dir
-      .add(cfg, 'dbgSlicesModeMaxSlices', 1, maxV)
+      .add(cfg, 'dbgSlicesModeMaxSlices', 1, 128)
       .step(1)
       .name('Max slices');
 

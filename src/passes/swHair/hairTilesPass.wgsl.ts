@@ -84,23 +84,48 @@ fn main(
     segmentIdx
   );
 
-  // iterate row-by-row
-  for (var y: f32 = sw.boundRectMin.y; y < sw.boundRectMax.y; y+=1.0) {
+  let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(sw.boundRectMin));
+  let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(sw.boundRectMax));
+  for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {
+  for (var tileX: u32 = tileMinXY.x; tileX <= tileMaxXY.x; tileX += 1u) {
+    processTile(
+      sw,
+      viewportSizeU32,
+      maxDrawnSegments,
+      vec2u(tileX, tileY),
+      strandIdx, segmentIdx
+    );
+  }}
+}
 
-    // iterate columns
-    for (var x: f32 = sw.boundRectMin.x; x < sw.boundRectMax.x; x+=1.0) {
-      let p = vec2f(x, y);
+fn processTile(
+  sw: SwRasterizedHair,
+  viewportSize: vec2u,
+  maxDrawnSegments: u32,
+  tileXY: vec2u,
+  strandIdx: u32, segmentIdx: u32
+) {
+  let bounds = getTileBoundsPx(viewportSize, tileXY);
+  let boundsMin = bounds.xy;
+  let boundsMax = bounds.zw;
+
+  var depthMin =  999.0; // in proj. space, so *A BIT* overkill
+  var depthMax = -999.0; // in proj. space, so *A BIT* overkill
+
+  for (var y: u32 = boundsMin.y; y < boundsMax.y; y += 1u) {
+  for (var x: u32 = boundsMin.x; x < boundsMax.x; x += 1u) {
+      let p = vec2f(f32(x), f32(y));
       let C0 = edgeFunction(sw.v01, sw.v00, p);
       let C1 = edgeFunction(sw.v11, sw.v01, p);
       let C2 = edgeFunction(sw.v10, sw.v11, p);
       let C3 = edgeFunction(sw.v00, sw.v10, p);
 
       if (C0 >= 0 && C1 >= 0 && C2 >= 0 && C3 >= 0) {
-        let p_u32 = vec2u(u32(x), u32(y));
+        let p_u32 = vec2u(x, y);
         let interpW = interpolateQuad(sw, p);
         // let value = 0xffff00ffu;
         // let value = debugBarycentric(vec4f(interpW.xy, 0.1, 0.));
-        // storeResult(viewportSizeU32, p_u32, value);
+        // storeResult(viewportSize, p_u32, value);
         
         let hairDepth: f32 = interpolateHairF32(interpW, sw.depthsProj);
         
@@ -108,28 +133,35 @@ fn main(
         let depthTextSamplePx: vec2i = vec2i(i32(x), i32(viewportSize.y - y)); // wgpu's naga requiers vec2i..
         let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
 
-        if (hairDepth < depthBufferValue) { // depth test with GL_LESS
-          // store the result
-          let nextPtr = atomicAdd(&_hairTileSegments.drawnSegmentsCount, 1u);
-          let tileXY = getHairTileXY_FromPx(p_u32);
-          // If we run out of space to store the fragments we lose them
-          if (nextPtr < maxDrawnSegments) {
-            let prevPtr = _storeTileHead(
-              viewportSizeU32,
-              tileXY,
-              hairDepth,
-              nextPtr
-            );
-            _storeTileSegment(
-              nextPtr, prevPtr,
-              strandIdx, segmentIdx
-            );
-          }
+        if (hairDepth > depthBufferValue) { // depth test with GL_LESS
+          continue;
         }
+
+        // store px result
+        depthMin = min(depthMin, hairDepth);
+        depthMax = max(depthMax, hairDepth);
       }
+  }} // end xy-iter
 
-
-    } // end xy-iter
+  // no tile px passes
+  if (depthMin > 1.0) {
+    return;
+  }
+  
+  // store the result
+  let nextPtr = atomicAdd(&_hairTileSegments.drawnSegmentsCount, 1u);
+  // If we run out of space to store the fragments we lose them
+  if (nextPtr < maxDrawnSegments) {
+    let prevPtr = _storeTileHead(
+      viewportSize,
+      tileXY,
+      depthMin, depthMax,
+      nextPtr
+    );
+    _storeTileSegment(
+      nextPtr, prevPtr,
+      strandIdx, segmentIdx
+    );
   }
 }
 

@@ -104,7 +104,7 @@ export const CONFIG = {
     displayMode: DISPLAY_MODE.FINAL,
     fiberRadius: 0.0002,
     /** When in 'tiles' display mode, how much segments are considered full */
-    dbgTileModeMaxSegments: 20,
+    dbgTileModeMaxSegments: 370,
     /** When in 'used_slices' display mode, how much slices are considered full */
     dbgSlicesModeMaxSlices: 50,
     material: {

@@ -187,6 +187,7 @@ fn processTile(
   _clearSlicesHeadPtrs(p.processorId);
 }
 
+
 fn debugColorWholeTile(tileBoundsPx: vec4u, color: vec4f) {
   let viewportSize: vec2f = _uniforms.viewport.xy;
   let viewportSizeU32: vec2u = vec2u(viewportSize);
