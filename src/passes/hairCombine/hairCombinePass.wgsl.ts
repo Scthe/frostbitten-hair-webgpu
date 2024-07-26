@@ -5,6 +5,7 @@ import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from '../swHair/shared/hairTileSegmentsBuffer.ts';
 import { CONFIG } from '../../constants.ts';
 import { BUFFER_HAIR_RASTERIZER_RESULTS } from '../swHair/shared/hairRasterizerResultBuffer.ts';
+import { SHADER_TILE_UTILS } from '../swHair/shaderImpl/tileUtils.wgsl.ts';
 
 export const SHADER_PARAMS = {
   bindings: {
@@ -27,6 +28,7 @@ const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
 
 ${FULLSCREEN_TRIANGLE_POSITION}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
+${SHADER_TILE_UTILS}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read')}
@@ -62,8 +64,9 @@ fn main_fs(
 
   // sample software rasterizer
   // .x is close, .y is far depth
-  let hairResult = _getTileDepth(viewportSizeU32, fragPositionPx);
-  let segmentPtr = _getTileSegmentPtr(viewportSizeU32, fragPositionPx);
+  let tileXY = getHairTileXY_FromPx(fragPositionPx);
+  // let hairResult = _getTileDepth(viewportSizeU32, fragPositionPx);
+  let segmentPtr = _getTileSegmentPtr(viewportSizeU32, tileXY);
 
   if (segmentPtr == 0){
     // no pixel for software rasterizer, do not override.
@@ -80,12 +83,12 @@ fn main_fs(
   if (displayMode == DISPLAY_MODE_TILES) {
     // output: segment count in each tile normalized by UI provided value
     let maxSegmentsCount = getDbgTileModeMaxSegments();
-    let segments = getSegmentCountInTiles(viewportSizeU32, maxSegmentsCount, fragPositionPx);
+    let segments = getSegmentCountInTiles(viewportSizeU32, maxSegmentsCount, tileXY);
     color.r = f32(segments) / f32(maxSegmentsCount);
     color.g = 1.0 - color.r;
 
     // dbg: tile bounds
-    // let tileIdx: u32 = _getHairTileIdx(viewportSizeU32, fragPositionPx);
+    // let tileIdx: u32 = _getHairTileIdx2222(viewportSizeU32, fragPositionPx);
     // color.r = f32((tileIdx * 17) % 33) / 33.0;
     // color.a = 1.0;
 
@@ -117,10 +120,10 @@ fn main_fs(
 fn getSegmentCountInTiles(
   viewportSize: vec2u,
   maxSegmentsCount: u32,
-  fragPositionPx: vec2u
+  tileXY: vec2u
 ) -> u32 {
   let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
-  var segmentPtr = _getTileSegmentPtr(viewportSize, fragPositionPx);
+  var segmentPtr = _getTileSegmentPtr(viewportSize, tileXY);
   var segmentData = vec3u();
   var count = 0u;
   

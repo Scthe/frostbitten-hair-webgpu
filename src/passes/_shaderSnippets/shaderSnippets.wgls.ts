@@ -88,4 +88,11 @@ fn toLuma_fromLinear(rgbCol: vec3f) -> f32 {
   let toLumaCoef = vec3f(0.2126729,  0.7151522, 0.0721750);
   return dot(toLumaCoef, rgbCol);
 }
+
+fn scissorWithViewport(viewportSize: vec2u, posPx: vec2u) -> vec2u {
+  return vec2u(
+    clamp(posPx.x, 0u, viewportSize.x - 1u),
+    clamp(posPx.y, 0u, viewportSize.y - 1u)
+  );
+}
 `;

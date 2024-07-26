@@ -7,6 +7,7 @@ import { SW_RASTERIZE_HAIR } from './shared/swRasterizeHair.wgsl.ts';
 import { BUFFER_HAIR_TILES_RESULT } from './shared/hairTilesResultBuffer.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from './shared/hairTileSegmentsBuffer.ts';
 import { CONFIG } from '../../constants.ts';
+import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 1, // TODO [LOW] set better values
@@ -35,6 +36,7 @@ const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
 ${SW_RASTERIZE_HAIR}
+${SHADER_TILE_UTILS}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_DATA(b.hairData)}
@@ -107,12 +109,22 @@ fn main(
         let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
 
         if (hairDepth < depthBufferValue) { // depth test with GL_LESS
-          _storeTileDepth(viewportSizeU32, p_u32, hairDepth);
-          _storeTileSegment(
-            viewportSizeU32, p_u32,
-            maxDrawnSegments,
-            strandIdx, segmentIdx
-          );
+          // store the result
+          let nextPtr = atomicAdd(&_hairTileSegments.drawnSegmentsCount, 1u);
+          let tileXY = getHairTileXY_FromPx(p_u32);
+          // If we run out of space to store the fragments we lose them
+          if (nextPtr < maxDrawnSegments) {
+            let prevPtr = _storeTileHead(
+              viewportSizeU32,
+              tileXY,
+              hairDepth,
+              nextPtr
+            );
+            _storeTileSegment(
+              nextPtr, prevPtr,
+              strandIdx, segmentIdx
+            );
+          }
         }
       }
 

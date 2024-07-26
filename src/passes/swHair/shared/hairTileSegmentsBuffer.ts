@@ -16,27 +16,12 @@ https://webgpu.github.io/webgpu-samples/?sample=a-buffer#translucent.wgsl
 const storeTileSegment = /* wgsl */ `
 
 fn _storeTileSegment(
-  viewportSize: vec2u, posPx: vec2u,
-  maxDrawnSegments: u32,
+  nextPtr: u32, prevPtr: u32,
   strandIdx: u32, segmentIdx: u32
 ) {
-  if(
-    posPx.x < 0 || posPx.x >= viewportSize.x ||
-    posPx.y < 0 || posPx.y >= viewportSize.y
-  ) { return; }
-
-  let tileIdx: u32 = _getHairTileIdx(viewportSize, posPx);
-
-  // '0' denotes end of the list. We skip that cell
-  let fragIndex = atomicAdd(&_hairTileSegments.drawnSegmentsCount, 1u) + 1;
-
-  // If we run out of space to store the fragments, we just lose them
-  if (fragIndex < maxDrawnSegments) {
-    let lastHead = atomicExchange(&_hairTilesResult[tileIdx].tileSegmentPtr, fragIndex);
-    let encodedSegment = (segmentIdx << 24) | strandIdx;
-    _hairTileSegments.data[fragIndex].strandAndSegmentIdxs = encodedSegment;
-    _hairTileSegments.data[fragIndex].next = lastHead;
-  }
+  let encodedSegment = (segmentIdx << 24) | strandIdx;
+  _hairTileSegments.data[nextPtr].strandAndSegmentIdxs = encodedSegment;
+  _hairTileSegments.data[nextPtr].next = prevPtr;
 }
 `;
 
@@ -48,7 +33,7 @@ fn _getTileSegment(
   /** strandIdx, segmentIdx, nextPtr */
   result: ptr<function, vec3u>
 ) -> bool {
-  if (tileSegmentPtr >= maxDrawnSegments || tileSegmentPtr == 0) {
+  if (tileSegmentPtr >= maxDrawnSegments || tileSegmentPtr == INVALID_TILE_SEGMENT_PTR) {
     return false;
   }
 
@@ -70,7 +55,6 @@ export const BUFFER_HAIR_TILE_SEGMENTS = (
 
 struct LinkedListElement {
   strandAndSegmentIdxs: u32,
-  /** if this is 0, then end of list */
   next: u32
 };
 
@@ -107,9 +91,10 @@ export function createHairTileSegmentsBuffer(
   const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
   STATS.update('Tiles segments', formatBytes(size));
 
+  const extraUsage = CONFIG.isTest ? GPUBufferUsage.COPY_SRC : 0; // for stats, debug etc.
   return device.createBuffer({
     label: `hair-segments-per-tile`,
     size,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | extraUsage,
   });
 }

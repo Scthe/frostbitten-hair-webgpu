@@ -11,6 +11,7 @@ import { BUFFER_HAIR_SLICES_DATA } from './shared/hairSlicesDataBuffer.ts';
 import { SHADER_IMPL_PROCESS_HAIR_SEGMENT } from './shaderImpl/processHairSegment.wgsl.ts';
 import { SHADER_IMPL_REDUCE_HAIR_SLICES } from './shaderImpl/reduceHairSlices.wgsl.ts';
 import { BUFFER_HAIR_SHADING } from '../../scene/hair/hairShadingBuffer.ts';
+import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: CONFIG.hairRender.finePassWorkgroupSizeX,
@@ -49,6 +50,7 @@ const ALPHA_CUTOFF = 0.999;
 
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
+${SHADER_TILE_UTILS}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_DATA(b.hairData)}
@@ -134,10 +136,10 @@ fn processTile(
   // let MAX_PROCESSED_SEGMENTS = 128u; // just in case
   let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
 
-  let tileBoundsPx: vec4u = getTileBoundsPx(p.viewportSizeU32, tileIdx);
-  let tileCenterPx: vec2u = (tileBoundsPx.xy + tileBoundsPx.zw) / 2u;
-  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileCenterPx);
-  var tileDepth = _getTileDepth(p.viewportSizeU32, tileCenterPx);
+  let tileXY = getTileXY(p.viewportSizeU32, tileIdx);
+  let tileBoundsPx: vec4u = getTileBoundsPx(p.viewportSizeU32, tileXY);
+  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY);
+  var tileDepth = _getTileDepth(p.viewportSizeU32, tileXY);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var processedSegmentCnt = 0u;
@@ -184,22 +186,6 @@ fn processTile(
   // clear written values before moving to next tile
   _clearSlicesHeadPtrs(p.processorId);
 }
-
-
-/** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */
-fn getTileXY(viewportSize: vec2u, tileIdx: u32) -> vec2u {
-  let rowWidth = divideCeil(viewportSize.x, TILE_SIZE); // in tiles
-  let row = tileIdx / rowWidth;
-  return vec2u(tileIdx - rowWidth * row, row);
-}
-
-/** Get tile's bounding box IN PIXELS */
-fn getTileBoundsPx(viewportSize: vec2u, tileIdx: u32) -> vec4u {
-  let tileXY = getTileXY(viewportSize, tileIdx);
-  let offsetPx = tileXY * TILE_SIZE;
-  return vec4u(offsetPx.xy, offsetPx.xy + vec2u(TILE_SIZE));
-}
-
 
 fn debugColorWholeTile(tileBoundsPx: vec4u, color: vec4f) {
   let viewportSize: vec2f = _uniforms.viewport.xy;

@@ -10,28 +10,37 @@ import { u32_type } from '../../../utils/webgpu.ts';
 
 const storeTileDepth = /* wgsl */ `
 
-fn _storeTileDepth(viewportSize: vec2u, posPx: vec2u, depth: f32) {
-  if(
-    posPx.x < 0 || posPx.x >= viewportSize.x ||
-    posPx.y < 0 || posPx.y >= viewportSize.y
-  ) { return; }
-
+fn _storeTileHead(
+  viewportSize: vec2u,
+  tileXY: vec2u,
+  depth: f32,
+  nextPtr: u32
+) -> u32 {
+  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
+  
+  // store depth
   // TODO low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
   let depthU32 = u32(depth * f32(MAX_U32));
   let depthU32_Inv = MAX_U32 - depthU32;
-
-
-  let tileIdx: u32 = _getHairTileIdx(viewportSize, posPx);
   atomicMax(&_hairTilesResult[tileIdx].maxDepth, depthU32);
-  // WebGPU clears to 0. So atomicMin is pointless..
+  // WebGPU clears to 0. So atomicMin() is pointless. Use atomicMax() with inverted values instead
   atomicMax(&_hairTilesResult[tileIdx].minDepth, depthU32_Inv);
+
+  let lastHeadPtr = atomicExchange(
+    &_hairTilesResult[tileIdx].tileSegmentPtr,
+    nextPtr + 1u
+  );
+
+  // there is no ternary in WGSL. There is select(). It was designed by someone THAT HAS NEVER WRITTEN A LINE OF CODE IN THEIR LIFE. I.N.C.O.M.P.E.T.E.N.C.E.
+  if (lastHeadPtr == 0u) { return INVALID_TILE_SEGMENT_PTR; } // we add +1 on write to detect never modified ptrs
+  return lastHeadPtr - 1u;
 }
 `;
 
 const getTileDepth = /* wgsl */ `
 
-fn _getTileDepth(viewportSize: vec2u, posPx: vec2u) -> vec2f {
-  let tileIdx: u32 = _getHairTileIdx(viewportSize, posPx);
+fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u) -> vec2f {
+  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
   let tile = _hairTilesResult[tileIdx];
   return vec2f(
     f32(MAX_U32 - tile.minDepth) / f32(MAX_U32),
@@ -39,10 +48,10 @@ fn _getTileDepth(viewportSize: vec2u, posPx: vec2u) -> vec2f {
   );
 }
 
-fn _getTileSegmentPtr(viewportSize: vec2u, posPx: vec2u) -> u32 {
-  let tileIdx: u32 = _getHairTileIdx(viewportSize, posPx);
-  let tile = _hairTilesResult[tileIdx];
-  return tile.tileSegmentPtr;
+fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u) -> u32 {
+  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
+  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr;
+  return myPtr - 1u;
 }
 
 `;
@@ -58,6 +67,7 @@ export const BUFFER_HAIR_TILES_RESULT = (
 ) => /* wgsl */ `
 
 const MAX_U32: u32 = 0xffffffffu;
+const INVALID_TILE_SEGMENT_PTR: u32 = 0xffffffffu;
 
 struct HairTileResult {
   minDepth: ${u32_type(access)},
@@ -68,17 +78,6 @@ struct HairTileResult {
 
 @group(0) @binding(${bindingIdx})
 var<storage, ${access}> _hairTilesResult: array<HairTileResult>;
-
-fn _getHairTileIdx(viewportSize: vec2u, posPx: vec2u) -> u32 {
-  let tileCount = getTileCount(viewportSize);
-  let x = posPx.x / TILE_SIZE;
-  let y = posPx.y / TILE_SIZE;
-  return y * tileCount.x + x;
-}
-
-fn getTileCount(viewportSize: vec2u) -> vec2u {
-  return vec2u(divideCeil(viewportSize.x, TILE_SIZE), divideCeil(viewportSize.y, TILE_SIZE));
-}
 
 ${access == 'read_write' ? storeTileDepth : getTileDepth}
 `;
@@ -103,9 +102,9 @@ export function createHairTilesResultBuffer(
   console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height} tiles`); // prettier-ignore
   STATS.update('Tiles', `${tileCount.width} x ${tileCount.height}`);
 
-  const pixels = tileCount.width * tileCount.height;
-  const bytesPerPixel = 3 * BYTES_U32;
-  const size = pixels * bytesPerPixel;
+  const entries = tileCount.width * tileCount.height;
+  const bytesPerEntry = 3 * BYTES_U32;
+  const size = entries * bytesPerEntry;
   STATS.update('Tiles heads', formatBytes(size));
 
   const extraUsage = CONFIG.isTest ? GPUBufferUsage.COPY_SRC : 0; // for stats, debug etc.

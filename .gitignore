@@ -19,13 +19,18 @@ yarn-error.log*
 # build
 build
 static/*.pem
+renderdoc.dll
+*.deno.exe
 
 # assets
 static/models/*
 
+# ignored test artefacts
+src/passes/swHair/__test__/*.png
+
 # custom
 *.code-workspace
 _references
-output.png
+output*.png
 makefile
 

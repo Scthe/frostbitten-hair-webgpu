@@ -71,10 +71,10 @@ fn processHairSegment(
     let segmentStartTowardPixel: vec2f = pxOnSegment - segment0_px.xy;
     let segmentEndTowardPixel: vec2f = pxOnSegment - segment1_px.xy;
     // TBH no point normalizing tangent_proj if we divide by 'segmentLength' here
-    let t: f32 = saturate(max(
+    let t: f32 = max(
       segmentStartTowardPixel.x / tangent_proj.x,
       segmentStartTowardPixel.y / tangent_proj.y
-    ) / segmentLength);
+    ) / segmentLength;
     var isInsideSegment = (t >= 0 && t <= 1.0) ||
       length(segmentStartTowardPixel) < rasterErrMarginStart || 
       length(segmentEndTowardPixel  ) < rasterErrMarginEnd;
