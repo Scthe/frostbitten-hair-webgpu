@@ -96,6 +96,13 @@ fn scissorWithViewport(viewportSize: vec2u, posPx: vec2u) -> vec2u {
   );
 }
 
+fn outOfScreen(coord: vec2f) -> bool {
+  return (
+    coord.x < 0.0 || coord.x > 1.0 ||
+    coord.y < 0.0 || coord.y > 1.0
+  );
+}
+
 fn getDepthBin(
   binCount: u32,
   tileDepth: vec2f,

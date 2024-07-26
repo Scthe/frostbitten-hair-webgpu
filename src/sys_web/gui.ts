@@ -43,6 +43,7 @@ export function initializeGUI(
   addLightFolder(gui, CONFIG.lights[0], 'Light 0');
   addLightFolder(gui, CONFIG.lights[1], 'Light 1');
   addLightFolder(gui, CONFIG.lights[2], 'Light 2');
+  addShadowsFolder(gui);
   addColorMgmt();
   addDbgFolder();
 
@@ -91,7 +92,7 @@ export function initializeGUI(
   function addHairMaterialFolder(gui: dat.GUI) {
     const cfg = CONFIG.hairRender.material;
     const dir = gui.addFolder('Hair material');
-    dir.open();
+    // dir.open();
 
     // TODO tune ranges
     addColorController(dir, cfg, 'color', 'Color');
@@ -118,6 +119,16 @@ export function initializeGUI(
     dir.add(lightObj, 'posTheta', 15, 165).step(1).name('Position th');
     addColorController(dir, lightObj, 'color', 'Color');
     dir.add(lightObj, 'energy', 0.0, 2.0).name('Energy');
+  }
+
+  function addShadowsFolder(gui: dat.GUI) {
+    const cfg = CONFIG.shadows;
+    const dir = gui.addFolder('Shadows');
+    dir.open();
+
+    dir.add(cfg.source, 'posPhi', -179, 179).step(1).name('Position phi');
+    dir.add(cfg.source, 'posTheta', 15, 165).step(1).name('Position th');
+    dir.add(cfg, 'showDebugView').name('Show preview');
   }
 
   function addColorMgmt() {

@@ -52,10 +52,10 @@ export function debounce<T extends unknown[]>(
 export const sphericalToCartesian = (
   phi: number,
   theta: number,
-  result: Vec3,
-  autoConvertToRad = false
+  angleUnits: 'dgr' | 'rad',
+  result: Vec3
 ) => {
-  if (autoConvertToRad) {
+  if (angleUnits === 'dgr') {
     phi = dgr2rad(phi);
     theta = dgr2rad(theta);
   }

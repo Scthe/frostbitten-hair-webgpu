@@ -25,6 +25,7 @@ import { HairTilesPass } from './passes/swHair/hairTilesPass.ts';
 import { HairCombinePass } from './passes/hairCombine/hairCombinePass.ts';
 import { HairFinePass } from './passes/swHair/hairFinePass.ts';
 import { HairShadingPass } from './passes/hairShadingPass/hairShadingPass.ts';
+import { ShadowMapPass } from './passes/shadowMapPass/shadowMapPass.ts';
 
 export class Renderer {
   private readonly renderUniformBuffer: RenderUniformsBuffer;
@@ -42,6 +43,7 @@ export class Renderer {
 
   // passes
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
+  private readonly shadowMapPass: ShadowMapPass;
   private readonly drawMeshesPass: DrawMeshesPass;
   private readonly hwHairPass: HwHairPass;
   private readonly hairTilesPass: HairTilesPass;
@@ -68,6 +70,7 @@ export class Renderer {
       device,
       HDR_RENDER_TEX_FORMAT
     );
+    this.shadowMapPass = new ShadowMapPass(device);
     this.drawMeshesPass = new DrawMeshesPass(device, HDR_RENDER_TEX_FORMAT);
     this.hwHairPass = new HwHairPass(device, HDR_RENDER_TEX_FORMAT);
     this.hairTilesPass = new HairTilesPass(device);
@@ -109,6 +112,7 @@ export class Renderer {
       projMatrix: this.projectionMat,
       cameraPositionWorldSpace: this.cameraCtrl.positionWorldSpace,
       depthTexture: this.depthTextureView,
+      shadowDepthTexture: this.shadowMapPass.shadowDepthTextureView,
       globalUniforms: this.renderUniformBuffer,
       // hair:
       hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
@@ -128,6 +132,8 @@ export class Renderer {
   }
 
   private cmdDrawScene(ctx: PassCtx) {
+    this.shadowMapPass.cmdUpdateShadowMap(ctx);
+
     this.drawMeshesPass.cmdDrawMeshes(ctx);
 
     const { displayMode } = CONFIG.hairRender;

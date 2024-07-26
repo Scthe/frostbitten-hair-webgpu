@@ -12,6 +12,11 @@ import { TypedArrayView } from '../utils/typedArrayView.ts';
 import { sphericalToCartesian } from '../utils/index.ts';
 import { getLengthOfHairTileSegmentsBuffer } from './swHair/shared/hairTileSegmentsBuffer.ts';
 import { getModelViewProjectionMatrix } from '../utils/matrices.ts';
+import {
+  getMVP_ShadowSourceMatrix,
+  getShadowSourceWorldPosition,
+} from './shadowMapPass/shared/getMVP_ShadowSourceMatrix.ts';
+import { getShadowMapPreviewSize } from './shadowMapPass/shared/getShadowMapPreviewSize.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
 
@@ -59,11 +64,13 @@ export class RenderUniformsBuffer {
       light0: Light,
       light1: Light,
       light2: Light,
+      mvpShadowSourceMatrix: mat4x4<f32>,
+      shadowSourcePosition: vec4f,
       hairMaterial: HairMaterialParams,
       fiberRadius: f32,
+      dbgShadowMapPreviewSize: f32,
       maxDrawnHairSegments: u32,
       displayMode: u32, // display mode + some of it's settings
-      padding2: u32,
     };
     @binding(0) @group(${group})
     var<uniform> _uniforms: Uniforms;
@@ -96,8 +103,10 @@ export class RenderUniformsBuffer {
     BYTES_VEC4 + // color mgmt
     BYTES_VEC4 + // lightAmbient
     3 * RenderUniformsBuffer.LIGHT_SIZE + // lights
+    BYTES_MAT4 + // mvpShadowSourceMatrix
+    BYTES_VEC4 + // shadowSourcePosition
     2 * BYTES_VEC4 + // hairMaterial
-    4 * BYTES_F32; // fiberRadius, maxDrawnHairSegments, padding
+    4 * BYTES_F32; // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(RenderUniformsBuffer.BUFFER_SIZE);
@@ -125,6 +134,7 @@ export class RenderUniformsBuffer {
       projMatrix,
       viewport,
       cameraPositionWorldSpace,
+      scene,
     } = ctx;
     const { modelMatrix } = ctx.scene;
     const c = CONFIG;
@@ -168,13 +178,21 @@ export class RenderUniformsBuffer {
     this.writeLight(c.lights[0]);
     this.writeLight(c.lights[1]);
     this.writeLight(c.lights[2]);
+    // mvpShadowSourceMatrix
+    this.dataView.writeMat4(getMVP_ShadowSourceMatrix(modelMatrix, scene));
+    // shadow position
+    const shadowPos = getShadowSourceWorldPosition();
+    this.dataView.writeF32(shadowPos[0]);
+    this.dataView.writeF32(shadowPos[1]);
+    this.dataView.writeF32(shadowPos[2]);
+    this.dataView.writeF32(0.0);
     // hair material
     this.writeHairMaterial();
     // misc
     this.dataView.writeF32(c.hairRender.fiberRadius);
+    this.dataView.writeF32(getShadowMapPreviewSize(viewport));
     this.dataView.writeU32(getLengthOfHairTileSegmentsBuffer(viewport));
     this.dataView.writeU32(this.encodeDebugMode());
-    this.dataView.writeU32(0); // padding
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);
@@ -182,7 +200,7 @@ export class RenderUniformsBuffer {
   }
 
   private writeLight(l: LightCfg) {
-    const pos = sphericalToCartesian(l.posPhi, l.posTheta, TMP_VEC3, true);
+    const pos = sphericalToCartesian(l.posPhi, l.posTheta, 'dgr', TMP_VEC3);
     const dist = 2.0;
     this.dataView.writeF32(pos[0] * dist);
     this.dataView.writeF32(pos[1] * dist);

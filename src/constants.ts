@@ -33,6 +33,8 @@ export const DEPTH_FORMAT: GPUTextureFormat = 'depth24plus';
 // Not 'rgba32float' Cause: "Color state [0] is invalid: Format Rgba32Float is not blendable"
 export const HDR_RENDER_TEX_FORMAT: GPUTextureFormat = 'rgba16float';
 
+export const AXIS_Y = [0, 1, 0];
+
 export type ClearColor = [number, number, number, number];
 
 export const DISPLAY_MODE = {
@@ -88,13 +90,27 @@ export const CONFIG = {
   },
 
   ///////////////
-  /// LIGHTS
+  /// LIGHTS AND SHADOWS
   lightAmbient: { color: [1, 1, 1], energy: 0.05 },
   lights: [
     { posPhi: 60.0, posTheta: 20.0, color: [1, 0.95, 0.8], energy: 0.8 },
     { posPhi: 100.0, posTheta: 75.0, color: [0.8, 0.98, 1.0], energy: 0.8 },
     { posPhi: -90.0, posTheta: 30.0, color: [1, 0.95, 0.8], energy: 0.8 },
   ] as LightCfg[],
+
+  /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L79 */
+  shadows: {
+    showDebugView: true,
+    debugViewPosition: [250, 0],
+    depthFormat: 'depth24plus' as GPUTextureFormat,
+    textureSize: 1024,
+    source: {
+      posPhi: 37, // horizontal [dgr]
+      posTheta: 45, // verical [dgr]
+      distance: 5.0, // verify with projection box below!!!
+      target: [0, 2, 0],
+    },
+  },
 
   ///////////////
   /// HAIR

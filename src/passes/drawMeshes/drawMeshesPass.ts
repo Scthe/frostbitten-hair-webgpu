@@ -1,5 +1,6 @@
 import { CONFIG, VERTS_IN_TRIANGLE } from '../../constants.ts';
 import { GPUMesh, VERTEX_ATTRIBUTES } from '../../scene/gpuMesh.ts';
+import { assertIsGPUTextureView } from '../../utils/webgpu.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
   labelShader,
@@ -9,6 +10,7 @@ import {
   useDepthStencilAttachment,
   assignResourcesToBindings2,
   PIPELINE_DEPTH_ON,
+  createLabel,
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawMeshesPass.wgsl.ts';
@@ -18,6 +20,7 @@ export class DrawMeshesPass {
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();
+  private readonly shadowMapSampler: GPUSampler;
 
   constructor(device: GPUDevice, outTextureFormat: GPUTextureFormat) {
     const shaderModule = device.createShaderModule({
@@ -40,6 +43,11 @@ export class DrawMeshesPass {
       },
       primitive: PIPELINE_PRIMITIVE_TRIANGLE_LIST,
       depthStencil: PIPELINE_DEPTH_ON,
+    });
+
+    this.shadowMapSampler = device.createSampler({
+      label: createLabel(DrawMeshesPass, 'shadow-map-sampler'),
+      // compare: 'less',
     });
   }
 
@@ -93,12 +101,11 @@ export class DrawMeshesPass {
   }
 
   private createBindings = (
-    { device, globalUniforms }: PassCtx,
+    { device, globalUniforms, shadowDepthTexture }: PassCtx,
     object: GPUMesh
   ): GPUBindGroup => {
     const b = SHADER_PARAMS.bindings;
-    // const diffuseTextureView = getDiffuseTexture(scene, object);
-    // assertIsGPUTextureView(diffuseTextureView);
+    assertIsGPUTextureView(shadowDepthTexture);
 
     return assignResourcesToBindings2(
       DrawMeshesPass,
@@ -107,8 +114,8 @@ export class DrawMeshesPass {
       this.pipeline,
       [
         globalUniforms.createBindingDesc(b.renderUniforms),
-        // { binding: b.diffuseTexture, resource: diffuseTextureView },
-        // { binding: b.sampler, resource: scene.samplerLinear },
+        { binding: b.shadowMapTexture, resource: shadowDepthTexture },
+        { binding: b.shadowMapSampler, resource: this.shadowMapSampler },
       ]
     );
   };

@@ -6,7 +6,8 @@ type PassClass = { NAME: string };
 export const createLabel = (pass: PassClass, name = '') =>
   `${pass.NAME}${name ? '-' + name : ''}`;
 
-export const labelShader = (pass: PassClass) => `${pass.NAME}-shader`;
+export const labelShader = (pass: PassClass, name = '') =>
+  `${createLabel(pass, name)}-shader`;
 export const labelPipeline = (pass: PassClass, name = '') =>
   `${createLabel(pass, name)}-pipeline`;
 export const labelUniformBindings = (pass: PassClass, name = '') =>

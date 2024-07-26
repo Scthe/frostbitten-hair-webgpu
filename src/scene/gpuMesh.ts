@@ -13,18 +13,20 @@ export interface GPUMesh {
   bounds: Bounds3d;
 }
 
+export const VERTEX_ATTRIBUTE_POSITION: GPUVertexBufferLayout = {
+  attributes: [
+    {
+      shaderLocation: 0, // position
+      offset: 0,
+      format: 'float32x3',
+    },
+  ],
+  arrayStride: BYTES_VEC3,
+  stepMode: 'vertex',
+};
+
 export const VERTEX_ATTRIBUTES: GPUVertexBufferLayout[] = [
-  {
-    attributes: [
-      {
-        shaderLocation: 0, // position
-        offset: 0,
-        format: 'float32x3',
-      },
-    ],
-    arrayStride: BYTES_VEC3,
-    stepMode: 'vertex',
-  },
+  VERTEX_ATTRIBUTE_POSITION,
   {
     attributes: [
       {
