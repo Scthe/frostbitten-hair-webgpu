@@ -1,4 +1,4 @@
-import { mat4, vec3 } from 'wgpu-matrix';
+import { Mat4, mat4, vec3 } from 'wgpu-matrix';
 import {
   BYTES_F32,
   BYTES_MAT4,
@@ -13,10 +13,12 @@ import { sphericalToCartesian } from '../utils/index.ts';
 import { getLengthOfHairTileSegmentsBuffer } from './swHair/shared/hairTileSegmentsBuffer.ts';
 import { getModelViewProjectionMatrix } from '../utils/matrices.ts';
 import {
-  getMVP_ShadowSourceMatrix,
+  getShadowSourceProjectionMatrix,
+  getShadowSourceViewMatrix,
   getShadowSourceWorldPosition,
 } from './shadowMapPass/shared/getMVP_ShadowSourceMatrix.ts';
 import { getShadowMapPreviewSize } from './shadowMapPass/shared/getShadowMapPreviewSize.ts';
+import { Scene } from '../scene/scene.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
 
@@ -37,6 +39,19 @@ export class RenderUniformsBuffer {
       position: vec4f, // [x, y, z, 0.0]
       colorAndEnergy: vec4f, // [r, g, b, energy]
     }
+
+    // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/webfx/passes/ForwardPass.ts#L65
+    struct Shadows {
+      sourceModelViewMat: mat4x4<f32>,
+      sourceProjMatrix: mat4x4<f32>,
+      sourceMVP_Matrix: mat4x4<f32>,
+      sourcePosition: vec4f, // xyz, but .w is fiber width
+      usePCSS: u32,
+      PCF_Radius: u32,
+      bias: f32,
+      strength: f32,
+    }
+    fn getShadowFiberRadius() -> f32 { return _uniforms.shadows.sourcePosition.w; }
 
     struct HairMaterialParams {
       color: vec3f,
@@ -64,8 +79,7 @@ export class RenderUniformsBuffer {
       light0: Light,
       light1: Light,
       light2: Light,
-      mvpShadowSourceMatrix: mat4x4<f32>,
-      shadowSourcePosition: vec4f,
+      shadows: Shadows,
       hairMaterial: HairMaterialParams,
       fiberRadius: f32,
       dbgShadowMapPreviewSize: f32,
@@ -88,6 +102,12 @@ export class RenderUniformsBuffer {
   `;
 
   private static LIGHT_SIZE = 2 * BYTES_VEC4;
+  private static SHADOWS_SIZE =
+    BYTES_MAT4 + // sourceModelViewMat
+    BYTES_MAT4 + // sourceProjMatrix
+    BYTES_MAT4 + // mvpShadowSourceMatrix
+    BYTES_VEC4 + // shadowSourcePosition;
+    BYTES_VEC4; // flags + settings
 
   private static BUFFER_SIZE =
     BYTES_MAT4 + // vpMatrix
@@ -103,8 +123,7 @@ export class RenderUniformsBuffer {
     BYTES_VEC4 + // color mgmt
     BYTES_VEC4 + // lightAmbient
     3 * RenderUniformsBuffer.LIGHT_SIZE + // lights
-    BYTES_MAT4 + // mvpShadowSourceMatrix
-    BYTES_VEC4 + // shadowSourcePosition
+    RenderUniformsBuffer.SHADOWS_SIZE +
     2 * BYTES_VEC4 + // hairMaterial
     4 * BYTES_F32; // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
 
@@ -178,14 +197,8 @@ export class RenderUniformsBuffer {
     this.writeLight(c.lights[0]);
     this.writeLight(c.lights[1]);
     this.writeLight(c.lights[2]);
-    // mvpShadowSourceMatrix
-    this.dataView.writeMat4(getMVP_ShadowSourceMatrix(modelMatrix, scene));
-    // shadow position
-    const shadowPos = getShadowSourceWorldPosition();
-    this.dataView.writeF32(shadowPos[0]);
-    this.dataView.writeF32(shadowPos[1]);
-    this.dataView.writeF32(shadowPos[2]);
-    this.dataView.writeF32(0.0);
+    // shadows
+    this.writeShadows(scene, modelMatrix);
     // hair material
     this.writeHairMaterial();
     // misc
@@ -211,6 +224,43 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(l.color[1]);
     this.dataView.writeF32(l.color[2]);
     this.dataView.writeF32(l.energy);
+  }
+
+  private writeShadows(scene: Scene, modelMatrix: Mat4) {
+    const c = CONFIG.shadows;
+    const viewMat = getShadowSourceViewMatrix();
+    const projMat = getShadowSourceProjectionMatrix(
+      modelMatrix,
+      viewMat,
+      scene
+    );
+
+    // source ModelView Mat
+    const mvMat = mat4.multiply(viewMat, modelMatrix, TMP_MAT4);
+    this.dataView.writeMat4(mvMat);
+    // source Proj Matrix
+    this.dataView.writeMat4(projMat);
+    // mvp matrix
+    const mvpMatrix = getModelViewProjectionMatrix(
+      modelMatrix,
+      viewMat,
+      projMat,
+      TMP_MAT4
+    );
+    this.dataView.writeMat4(mvpMatrix);
+    // shadow position
+    const shadowPos = getShadowSourceWorldPosition();
+    this.dataView.writeF32(shadowPos[0]);
+    this.dataView.writeF32(shadowPos[1]);
+    this.dataView.writeF32(shadowPos[2]);
+    const fiberRadius =
+      c.hairFiberWidthMultiplier * CONFIG.hairRender.fiberRadius;
+    this.dataView.writeF32(fiberRadius);
+    // settings
+    this.dataView.writeU32(c.usePCSS ? 1 : 0); // usePCSS: u32,
+    this.dataView.writeU32(c.PCF_Radius); // PCF_Radius: u32,
+    this.dataView.writeF32(c.bias); // bias: f32,
+    this.dataView.writeF32(c.strength); // strength: f32,
   }
 
   private writeHairMaterial() {

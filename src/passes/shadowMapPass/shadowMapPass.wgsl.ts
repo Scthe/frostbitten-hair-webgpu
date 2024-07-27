@@ -20,7 +20,7 @@ ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 fn main_vs(
   @location(0) inWorldPos : vec3f,
 ) -> @builtin(position) vec4f {
-  let mvpMatrix = _uniforms.mvpShadowSourceMatrix;
+  let mvpMatrix = _uniforms.shadows.sourceMVP_Matrix;
   return mvpMatrix * vec4<f32>(inWorldPos.xyz, 1.0);
 }
 

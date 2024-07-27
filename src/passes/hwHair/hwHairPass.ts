@@ -24,7 +24,15 @@ export class HwHairPass {
       code: SHADER_CODE(),
     });
 
-    this.pipeline = device.createRenderPipeline({
+    const pipelineDesc = HwHairPass.createPipelineDesc(shaderModule);
+    pipelineDesc.fragment?.targets.push({ format: outTextureFormat });
+    this.pipeline = device.createRenderPipeline(pipelineDesc);
+  }
+
+  public static createPipelineDesc(
+    shaderModule: GPUShaderModule
+  ): GPURenderPipelineDescriptor {
+    return {
       label: labelPipeline(HwHairPass),
       layout: 'auto',
       vertex: {
@@ -35,7 +43,7 @@ export class HwHairPass {
       fragment: {
         module: shaderModule,
         entryPoint: 'main_fs',
-        targets: [{ format: outTextureFormat }],
+        targets: [],
       },
       primitive: {
         cullMode: 'none',
@@ -43,7 +51,7 @@ export class HwHairPass {
         stripIndexFormat: undefined,
       },
       depthStencil: PIPELINE_DEPTH_ON,
-    });
+    };
   }
 
   cmdDrawHair(ctx: PassCtx) {
@@ -62,27 +70,26 @@ export class HwHairPass {
     // set render pass data
     renderPass.setPipeline(this.pipeline);
 
-    this.renderHair(ctx, renderPass, scene.hairObject);
+    // render hair
+    const hairObject = scene.hairObject;
+    const bindings = this.bindingsCache.getBindings(hairObject.name, () =>
+      this.createBindings(ctx, hairObject)
+    );
+    renderPass.setBindGroup(0, bindings);
+    HwHairPass.cmdRenderHair(renderPass, hairObject);
 
     // fin
     renderPass.end();
   }
 
-  private renderHair(
-    ctx: PassCtx,
+  public static cmdRenderHair(
     renderPass: GPURenderPassEncoder,
     object: HairObject
   ) {
-    const bindings = this.bindingsCache.getBindings(object.name, () =>
-      this.createBindings(ctx, object)
-    );
-
-    renderPass.setBindGroup(0, bindings);
     object.bindIndexBuffer(renderPass);
 
     const vertexCount =
       object.buffers.indicesData.triangleCount * VERTS_IN_TRIANGLE;
-    // const vertexCount = 1 * VERTS_IN_TRIANGLE;
     renderPass.drawIndexed(
       vertexCount,
       1, // instance count
@@ -105,7 +112,6 @@ export class HwHairPass {
       this.pipeline,
       [
         globalUniforms.createBindingDesc(b.renderUniforms),
-        object.bindHairData(b.hairData),
         object.bindPointsPositions(b.hairPositions),
         object.bindTangents(b.hairTangents),
       ]

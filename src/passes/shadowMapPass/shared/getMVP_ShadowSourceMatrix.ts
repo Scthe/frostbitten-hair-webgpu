@@ -1,6 +1,5 @@
-import { Vec3, mat4, vec3, vec4 } from 'wgpu-matrix';
+import { Mat4, mat4, vec3, vec4 } from 'wgpu-matrix';
 import { AXIS_Y, CONFIG } from '../../../constants.ts';
-import { getModelViewProjectionMatrix } from '../../../utils/matrices.ts';
 import { sphericalToCartesian } from '../../../utils/index.ts';
 import { Scene } from '../../../scene/scene.ts';
 import { projectPoint } from '../../../utils/matrices.ts';
@@ -8,19 +7,8 @@ import { projectPoint } from '../../../utils/matrices.ts';
 const TMP_PROJ = mat4.create();
 const TMP_VIEW = mat4.create();
 const TMP_MODEL_VIEW = mat4.create();
-const TMP_RESULT = mat4.create();
 const TMP_VEC3 = vec3.create();
 const TMP_VEC4 = vec4.create();
-
-export function getMVP_ShadowSourceMatrix(
-  modelMatrix: mat4.Mat4,
-  scene: Scene
-) {
-  const pos = getShadowSourceWorldPosition();
-  const vMat = getViewMatrix(pos);
-  const pMat = getProjectionMatrix(modelMatrix, vMat, scene);
-  return getModelViewProjectionMatrix(modelMatrix, vMat, pMat, TMP_RESULT);
-}
 
 export function getShadowSourceWorldPosition() {
   const src = CONFIG.shadows.source;
@@ -29,7 +17,8 @@ export function getShadowSourceWorldPosition() {
   return pos;
 }
 
-function getViewMatrix(pos: Vec3) {
+export function getShadowSourceViewMatrix() {
+  const pos = getShadowSourceWorldPosition();
   const src = CONFIG.shadows.source;
   return mat4.lookAt(pos, src.target, AXIS_Y, TMP_VIEW);
 }
@@ -38,9 +27,9 @@ const SAFETY_MARGIN = 1.05;
 const BIG_NUMBER = 9999999;
 
 /** this is for directional light, all rays are parallel */
-function getProjectionMatrix(
-  modelMatrix: mat4.Mat4,
-  viewMatrix: mat4.Mat4,
+export function getShadowSourceProjectionMatrix(
+  modelMatrix: Mat4,
+  viewMatrix: Mat4,
   scene: Scene
 ) {
   const mvMat = mat4.multiply(viewMatrix, modelMatrix, TMP_MODEL_VIEW);

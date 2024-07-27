@@ -85,11 +85,23 @@ fn GeometrySmith(N: vec3f, V: vec3f, L: vec3f, roughness: f32) -> f32 {
  */
 export const SNIPPET_SHADING_PBR = /* wgsl */ `
 
+${SNIPPET_SHADING_PBR_UTILS}
+
 const DIELECTRIC_FRESNEL = vec3f(0.04, 0.04, 0.04); // nearly black
 const METALLIC_DIFFUSE_CONTRIBUTION = vec3(0.0, 0.0, 0.0); // none
 
+struct Material {
+  positionWS: vec3f,
+  normal: vec3f,
+  toEye: vec3f,
+  // disney pbr:
+  albedo: vec3f,
+  roughness: f32,
+  isMetallic: f32,
+  ao: f32,
+  shadow: f32
+};
 
-${SNIPPET_SHADING_PBR_UTILS}
 
 fn pbr_LambertDiffuse(material: Material) -> vec3f {
   // return material.albedo / PI;

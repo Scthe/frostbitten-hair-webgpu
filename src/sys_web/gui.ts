@@ -122,10 +122,24 @@ export function initializeGUI(
   }
 
   function addShadowsFolder(gui: dat.GUI) {
+    // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/UISystem.ts#L170
     const cfg = CONFIG.shadows;
     const dir = gui.addFolder('Shadows');
     dir.open();
 
+    // const techniqueDummy = createDummy(cfg, 'usePCSS', [
+    // { label: 'PCF', value: false },
+    // { label: 'PCSS', value: true },
+    // ]);
+    // dir.add(techniqueDummy, 'usePCSS', techniqueDummy.values).name('Technique');
+    dir.add(cfg, 'strength', 0.0, 1.0).name('Strength');
+    dir.add(cfg, 'PCF_Radius', [0, 1, 2, 3, 4]).name('PCF radius');
+    dir.add(cfg, 'bias', 0.0001, 0.005).name('Bias');
+    // dir.add(cfg, 'blurRadiusTfx', [0, 1, 2, 3, 4]).name('HAIR Blur radius');
+    // dir.add(cfg, 'biasHairTfx', 0.001, 0.01).name('HAIR Bias');
+    dir.add(cfg, 'hairFiberWidthMultiplier', 0.5, 6.0).name('Hair width mul');
+
+    // position
     dir.add(cfg.source, 'posPhi', -179, 179).step(1).name('Position phi');
     dir.add(cfg.source, 'posTheta', 15, 165).step(1).name('Position th');
     dir.add(cfg, 'showDebugView').name('Show preview');

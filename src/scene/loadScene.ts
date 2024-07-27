@@ -22,7 +22,7 @@ const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
   { name: 'sintel', file: 'sintel.obj' },
   { name: 'sintelEyes', file: 'sintel-eyes.obj' },
-  { name: 'sintelEyelashes', file: 'sintel-eyelashes.obj' },
+  // { name: 'sintelEyelashes', file: 'sintel-eyelashes.obj' },
 ];
 
 export async function loadScene(device: GPUDevice): Promise<Scene> {

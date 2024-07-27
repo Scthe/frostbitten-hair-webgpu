@@ -3,7 +3,7 @@ import { BUFFER_HAIR_POINTS_POSITIONS } from '../../scene/hair/hairPointsPositio
 import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
 import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
-import { SW_RASTERIZE_HAIR } from './shared/swRasterizeHair.wgsl.ts';
+import { SW_RASTERIZE_HAIR } from './shaderImpl/swRasterizeHair.wgsl.ts';
 import { BUFFER_HAIR_TILES_RESULT } from './shared/hairTilesResultBuffer.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from './shared/hairTileSegmentsBuffer.ts';
 import { CONFIG } from '../../constants.ts';

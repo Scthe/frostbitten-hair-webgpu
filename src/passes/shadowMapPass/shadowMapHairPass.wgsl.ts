@@ -1,8 +1,8 @@
+import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
+import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { BUFFER_HAIR_POINTS_POSITIONS } from '../../scene/hair/hairPointsPositionsBuffer.ts';
 import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
-import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
-import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
-import { HW_RASTERIZE_HAIR } from './shaderImpl/swRasterizeHair.wgsl.ts';
+import { HW_RASTERIZE_HAIR } from '../hwHair/shaderImpl/swRasterizeHair.wgsl.ts';
 
 export const SHADER_PARAMS = {
   bindings: {
@@ -14,6 +14,8 @@ export const SHADER_PARAMS = {
 
 ///////////////////////////
 /// SHADER CODE
+///
+/// We are using hardware rasterizer as it's less hassle than software one
 ///////////////////////////
 const b = SHADER_PARAMS.bindings;
 
@@ -29,32 +31,24 @@ ${BUFFER_HAIR_POINTS_POSITIONS(b.hairPositions)}
 ${BUFFER_HAIR_TANGENTS(b.hairTangents)}
 
 
-struct VertexOutput {
-  @builtin(position) position: vec4<f32>,
-};
-
-
 @vertex
 fn main_vs(
   @builtin(vertex_index) inVertexIndex : u32
-) -> VertexOutput {
+) -> @builtin(position) vec4f {
   let hwRasterParams = HwHairRasterizeParams(
-    _uniforms.modelViewMat,
-    _uniforms.projMatrix,
-    _uniforms.fiberRadius,
+    _uniforms.shadows.sourceModelViewMat,
+    _uniforms.shadows.sourceProjMatrix,
+    getShadowFiberRadius(),
     inVertexIndex
   );
   let hwRasterResult = hwRasterizeHair(hwRasterParams);
 
-  var result: VertexOutput;
-  result.position = hwRasterResult.position;
-  return result;
+  return hwRasterResult.position;
 }
 
 
 @fragment
-fn main_fs(fragIn: VertexOutput) -> @location(0) vec4<f32> {
-  let color = vec3(1.0, 0.0, 0.0);
-  return vec4(color.xyz, 1.0);
+fn main_fs() -> @location(0) vec4<f32> {
+  return vec4(0.0);
 }
 `;

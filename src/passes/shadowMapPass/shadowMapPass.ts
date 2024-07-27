@@ -1,5 +1,6 @@
 import { CONFIG, VERTS_IN_TRIANGLE } from '../../constants.ts';
 import { GPUMesh, VERTEX_ATTRIBUTE_POSITION } from '../../scene/gpuMesh.ts';
+import { HairObject } from '../../scene/hair/hairObject.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
   labelShader,
@@ -8,34 +9,40 @@ import {
   useDepthStencilAttachment,
   PIPELINE_DEPTH_ON,
   assignResourcesToBindings,
+  assignResourcesToBindings2,
 } from '../_shared/shared.ts';
+import { HwHairPass } from '../hwHair/hwHairPass.ts';
 import { PassCtx } from '../passCtx.ts';
-import { SHADER_CODE, SHADER_PARAMS } from './shadowMapPass.wgsl.ts';
+import * as SHADER_MESHES from './shadowMapPass.wgsl.ts';
+import * as SHADER_HAIR from './shadowMapHairPass.wgsl.ts';
 
+/** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/webfx/passes/ShadowPass.ts */
 export class ShadowMapPass {
   public static NAME: string = ShadowMapPass.name;
 
-  private readonly pipeline: GPURenderPipeline;
+  private readonly pipelineMeshes: GPURenderPipeline;
+  private readonly pipelineHair: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();
+  // render targets:
   private readonly shadowDepthTexture: GPUTexture;
   public readonly shadowDepthTextureView: GPUTextureView;
 
   constructor(device: GPUDevice) {
-    const shaderModule = device.createShaderModule({
+    // meshes
+    const shaderModuleMeshes = device.createShaderModule({
       label: labelShader(ShadowMapPass),
-      code: SHADER_CODE(),
+      code: SHADER_MESHES.SHADER_CODE(),
     });
-
-    this.pipeline = device.createRenderPipeline({
+    this.pipelineMeshes = device.createRenderPipeline({
       label: labelPipeline(ShadowMapPass),
       layout: 'auto',
       vertex: {
-        module: shaderModule,
+        module: shaderModuleMeshes,
         entryPoint: 'main_vs',
         buffers: [VERTEX_ATTRIBUTE_POSITION],
       },
       fragment: {
-        module: shaderModule,
+        module: shaderModuleMeshes,
         entryPoint: 'main_fs',
         targets: [],
       },
@@ -49,6 +56,15 @@ export class ShadowMapPass {
       },
     });
 
+    // hair
+    const shaderModuleHair = device.createShaderModule({
+      label: labelShader(ShadowMapPass),
+      code: SHADER_HAIR.SHADER_CODE(),
+    });
+    const pipelineDesc = HwHairPass.createPipelineDesc(shaderModuleHair);
+    this.pipelineHair = device.createRenderPipeline(pipelineDesc);
+
+    // render targets
     const cfg = CONFIG.shadows;
     this.shadowDepthTexture = device.createTexture({
       label: `shadowmap-depth-texture`,
@@ -74,23 +90,30 @@ export class ShadowMapPass {
       timestampWrites: profiler?.createScopeGpu(ShadowMapPass.NAME),
     });
 
-    // set render pass data
-    renderPass.setPipeline(this.pipeline);
-    const bindings = this.bindingsCache.getBindings('meshes', () =>
-      this.createBindings(ctx)
+    // render meshes
+    renderPass.setPipeline(this.pipelineMeshes);
+    let bindings = this.bindingsCache.getBindings('meshes', () =>
+      this.createBindingsMeshes(ctx)
     );
-
     renderPass.setBindGroup(0, bindings);
-
     for (const object of scene.objects) {
-      this.renderObject(renderPass, object);
+      this.renderMesh(renderPass, object);
     }
+
+    // render hair
+    const hairObject = scene.hairObject;
+    renderPass.setPipeline(this.pipelineHair);
+    bindings = this.bindingsCache.getBindings(`hair-${hairObject.name}`, () =>
+      this.createBindingsHair(ctx, hairObject)
+    );
+    renderPass.setBindGroup(0, bindings);
+    HwHairPass.cmdRenderHair(renderPass, hairObject);
 
     // fin
     renderPass.end();
   }
 
-  private renderObject(renderPass: GPURenderPassEncoder, object: GPUMesh) {
+  private renderMesh(renderPass: GPURenderPassEncoder, object: GPUMesh) {
     renderPass.setVertexBuffer(0, object.positionsBuffer);
     renderPass.setIndexBuffer(object.indexBuffer, 'uint32');
 
@@ -104,14 +127,36 @@ export class ShadowMapPass {
     );
   }
 
-  private createBindings = ({
+  private createBindingsMeshes = ({
     device,
     globalUniforms,
   }: PassCtx): GPUBindGroup => {
-    const b = SHADER_PARAMS.bindings;
+    const b = SHADER_MESHES.SHADER_PARAMS.bindings;
 
-    return assignResourcesToBindings(ShadowMapPass, device, this.pipeline, [
-      globalUniforms.createBindingDesc(b.renderUniforms),
-    ]);
+    return assignResourcesToBindings(
+      ShadowMapPass,
+      device,
+      this.pipelineMeshes,
+      [globalUniforms.createBindingDesc(b.renderUniforms)]
+    );
+  };
+
+  private createBindingsHair = (
+    { device, globalUniforms }: PassCtx,
+    object: HairObject
+  ): GPUBindGroup => {
+    const b = SHADER_HAIR.SHADER_PARAMS.bindings;
+
+    return assignResourcesToBindings2(
+      HwHairPass,
+      object.name,
+      device,
+      this.pipelineHair,
+      [
+        globalUniforms.createBindingDesc(b.renderUniforms),
+        object.bindPointsPositions(b.hairPositions),
+        object.bindTangents(b.hairTangents),
+      ]
+    );
   };
 }

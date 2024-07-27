@@ -100,10 +100,18 @@ export const CONFIG = {
 
   /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L79 */
   shadows: {
-    showDebugView: true,
+    showDebugView: false,
     debugViewPosition: [250, 0],
     depthFormat: 'depth24plus' as GPUTextureFormat,
-    textureSize: 1024,
+    textureSize: 1024 * 2,
+    // runtime settings
+    usePCSS: false, // TODO implement. Restore in GUI
+    PCF_Radius: 3, // in pixels
+    bias: 0.0005,
+    strength: 0.4,
+    /** Make hair wider for shadows */
+    hairFiberWidthMultiplier: 3.0,
+    // shadow source
     source: {
       posPhi: 37, // horizontal [dgr]
       posTheta: 45, // verical [dgr]

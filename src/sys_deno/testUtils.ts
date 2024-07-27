@@ -12,6 +12,7 @@ import {
   getModelViewProjectionMatrix,
 } from '../utils/matrices.ts';
 import { createGpuDevice } from '../utils/webgpu.ts';
+import { HairObject } from '../scene/hair/hairObject.ts';
 
 export function absPathFromRepoRoot(filePath: string) {
   const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
@@ -63,6 +64,14 @@ export const createMockPassCtx = (
     projMatrix
   );
 
+  const hairObject: HairObject = {
+    bounds: {
+      box: [[0, 0, 0], [1, 1, 1]], // prettier-ignore
+      sphere: { center: [0, 0, 0], radius: 1 },
+    },
+    // deno-lint-ignore no-explicit-any
+  } as any;
+
   return {
     frameIdx: 0,
     device,
@@ -75,11 +84,12 @@ export const createMockPassCtx = (
     viewport,
     scene: {
       modelMatrix: mat4.identity(),
-      hairObject: undefined!,
+      hairObject,
       objects: [],
     },
     depthTexture: undefined!,
     hdrRenderTexture: undefined!,
+    shadowDepthTexture: undefined!,
     globalUniforms: undefined!,
     hairRasterizerResultsBuffer: undefined!,
     hairTilesBuffer: undefined!,

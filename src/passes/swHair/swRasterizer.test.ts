@@ -19,7 +19,7 @@ import { createHairObject, mockTfxFile } from '../../scene/loadScene.ts';
 import { BUFFER_HAIR_DATA } from '../../scene/hair/hairDataBuffer.ts';
 import { BUFFER_HAIR_POINTS_POSITIONS } from '../../scene/hair/hairPointsPositionsBuffer.ts';
 import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
-import { SW_RASTERIZE_HAIR } from './shared/swRasterizeHair.wgsl.ts';
+import { SW_RASTERIZE_HAIR } from './shaderImpl/swRasterizeHair.wgsl.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { BYTES_U32, CONFIG } from '../../constants.ts';
 import { HairObject } from '../../scene/hair/hairObject.ts';
