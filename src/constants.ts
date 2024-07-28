@@ -35,6 +35,13 @@ export const HDR_RENDER_TEX_FORMAT: GPUTextureFormat = 'rgba16float';
 
 export const AXIS_Y = [0, 1, 0];
 
+const DEPTH_SLICES = 32;
+const TILE_DEPTH_BINS = 8;
+const SLICES_PER_TILE_DEPTH_BIN = Math.ceil(DEPTH_SLICES / TILE_DEPTH_BINS);
+if (SLICES_PER_TILE_DEPTH_BIN !== DEPTH_SLICES / TILE_DEPTH_BINS) {
+  throw new Error(`Invalid DEPTH_SLICES value ${DEPTH_SLICES}. There are ${TILE_DEPTH_BINS} tile depth bins, and we cannot have ${(DEPTH_SLICES / TILE_DEPTH_BINS).toFixed(1)} slices per depth bin.`); // prettier-ignore
+}
+
 export type ClearColor = [number, number, number, number];
 
 export const DISPLAY_MODE = {
@@ -51,7 +58,7 @@ export type HairFile =
   | 'SintelHairOriginal-sintel_hair.12points.tfx'
   | 'SintelHairOriginal-sintel_hair.8points.tfx';
 
-type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
+export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -148,16 +155,16 @@ export const CONFIG = {
 
     ////// TILE PASS
     tileSize: 16,
-    tileDepthBins: 8,
+    tileDepthBins: TILE_DEPTH_BINS,
     avgSegmentsPerTile: 512,
 
     ////// FINE PASS
     // TODO find better values.
-    slicesPerPixel: 30,
+    slicesPerPixel: SLICES_PER_TILE_DEPTH_BIN,
     avgFragmentsPerSlice: 16,
-    processorCount: 64,
+    processorCount: 64 * 8,
     finePassWorkgroupSizeX: 1,
-    sliceHeadsMemory: 'workgroup' as SliceHeadsMemory,
+    sliceHeadsMemory: 'global' as SliceHeadsMemory,
 
     ////// LOD
     lodRenderPercent: 100, // range [0..100]

@@ -1,10 +1,8 @@
-import { BYTES_F32, BYTES_U32, CONFIG } from '../../../constants.ts';
+import { BYTES_U32, CONFIG } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { Dimensions, divideCeil } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
 import { u32_type } from '../../../utils/webgpu.ts';
-
-const TILES_BIN_COUNT = CONFIG.hairRender.tileDepthBins;
 
 ///////////////////////////
 /// SHADER CODE
@@ -18,7 +16,7 @@ fn _storeTileHead(
   depthMin: f32, depthMax: f32,
   nextPtr: u32
 ) -> u32 {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
+  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
   
   // store depth
   // TODO low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
@@ -28,21 +26,25 @@ fn _storeTileHead(
   atomicMax(&_hairTilesResult[tileIdx].maxDepth, depthMax_U32);
   atomicMax(&_hairTilesResult[tileIdx].minDepth, depthMin_U32);
 
+  // store pointer to 1st segment.
+  // 0 is the value we cleared the buffer to. We always write +1, so previous value '0'
+  // means this ptr was never modified. It signifies the end of the list.
+  // But '0' is also a valid pointer into a linked list segments buffer.
+  // That's why we add 1. To detect this case and turn it into $INVALID_TILE_SEGMENT_PTR.
+  // This $INVALID_TILE_SEGMENT_PTR will be then written to the linked list segments buffer.
   let lastHeadPtr = atomicExchange(
-    &_hairTilesResult[tileIdx].tileSegmentPtr[depthBin],
+    &_hairTilesResult[tileIdx].tileSegmentPtr,
     nextPtr + 1u
   );
 
-  // there is no ternary in WGSL. There is select(). It was designed by someone THAT HAS NEVER WRITTEN A LINE OF CODE IN THEIR LIFE. I.N.C.O.M.P.E.T.E.N.C.E.
-  if (lastHeadPtr == 0u) { return INVALID_TILE_SEGMENT_PTR; } // we add +1 on write to detect never modified ptrs
-  return lastHeadPtr - 1u;
+  return _translateHeadPointer(lastHeadPtr);
 }
 `;
 
 const getTileDepth = /* wgsl */ `
 
-fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u) -> vec2f {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
+fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> vec2f {
+  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
   let tile = _hairTilesResult[tileIdx];
   return vec2f(
     f32(MAX_U32 - tile.minDepth) / f32(MAX_U32),
@@ -51,9 +53,9 @@ fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u) -> vec2f {
 }
 
 fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
-  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr[depthBin];
-  return myPtr - 1u;
+  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
+  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr;
+  return _translateHeadPointer(myPtr);
 }
 
 `;
@@ -70,18 +72,24 @@ export const BUFFER_HAIR_TILES_RESULT = (
 
 const MAX_U32: u32 = 0xffffffffu;
 const INVALID_TILE_SEGMENT_PTR: u32 = 0xffffffffu;
-const TILES_BIN_COUNT = ${TILES_BIN_COUNT}u;
 
 struct HairTileResult {
   minDepth: ${u32_type(access)},
   maxDepth: ${u32_type(access)},
-  tileSegmentPtr: array<${u32_type(access)}, TILES_BIN_COUNT>,
+  tileSegmentPtr: ${u32_type(access)},
+  padding0: u32
 }
 
 @group(0) @binding(${bindingIdx})
 var<storage, ${access}> _hairTilesResult: array<HairTileResult>;
 
 ${access == 'read_write' ? storeTileDepth : getTileDepth}
+
+fn _translateHeadPointer(segmentPtr: u32) -> u32 {
+  // PS. there is no ternary in WGSL. There is select(). It was designed by someone THAT HAS NEVER WRITTEN A LINE OF CODE IN THEIR LIFE. I.N.C.O.M.P.E.T.E.N.C.E.
+  if (segmentPtr == 0u) { return INVALID_TILE_SEGMENT_PTR; }
+  return segmentPtr - 1u;
+}
 `;
 
 ///////////////////////////
@@ -100,15 +108,16 @@ export function createHairTilesResultBuffer(
   device: GPUDevice,
   viewportSize: Dimensions
 ): GPUBuffer {
+  const TILE_DEPTH_BINS_COUNT = CONFIG.hairRender.tileDepthBins;
   const tileCount = getTileCount(viewportSize);
-  console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height}x${TILES_BIN_COUNT} tiles`); // prettier-ignore
+  console.log(`Creating hair tiles buffer: ${tileCount.width}x${tileCount.height}x${TILE_DEPTH_BINS_COUNT} tiles`); // prettier-ignore
   STATS.update(
     'Tiles',
-    `${tileCount.width} x ${tileCount.height} x ${TILES_BIN_COUNT}`
+    `${tileCount.width} x ${tileCount.height} x ${TILE_DEPTH_BINS_COUNT}`
   );
 
-  const entries = tileCount.width * tileCount.height;
-  const bytesPerEntry = 2 * BYTES_F32 + TILES_BIN_COUNT * BYTES_U32;
+  const entries = tileCount.width * tileCount.height * TILE_DEPTH_BINS_COUNT;
+  const bytesPerEntry = 4 * BYTES_U32;
   const size = entries * bytesPerEntry;
   STATS.update('Tiles heads', formatBytes(size));
 

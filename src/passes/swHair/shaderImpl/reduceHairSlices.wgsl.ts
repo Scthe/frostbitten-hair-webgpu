@@ -13,6 +13,7 @@ fn reduceHairSlices(
   dbgSlicesModeMaxSlices: u32,
   tileBoundsPx: vec4u
 ) -> bool {
+  let isDbgSliceCnt = dbgSlicesModeMaxSlices != 0u;
   var sliceData: SliceData;
   var allPixelsDone = true;
   let boundRectMax = vec2u(tileBoundsPx.zw);
@@ -23,10 +24,10 @@ fn reduceHairSlices(
     let px = vec2u(x, y); // pixel coordinates wrt. viewport
     let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
 
-    var sliceCount = 0u; // debug value
     var finalColor = _getRasterizerResult(viewportSizeU32, px);
+    var sliceCount = select(0u, u32(finalColor.r * f32(dbgSlicesModeMaxSlices)), isDbgSliceCnt); // debug value
     
-    // iterate slices front to back
+    // START: ITERATE SLICES (front to back)
     for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
       if (isPixelDone(finalColor)) { break; } // conflicts with head ptr clear, be careful!
       // var requiresSliceHeadClear = false; // TODO, remove the clear elsewhere
@@ -48,6 +49,7 @@ fn reduceHairSlices(
 
       // if (requiresSliceHeadClear) { _clearSliceHead(processorId, tileXY, s); }
     }
+    // END: ITERATE SLICES
 
     // dbg: color using only head ptrs
     /*var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, 0u);
@@ -59,7 +61,7 @@ fn reduceHairSlices(
     allPixelsDone = allPixelsDone && isPixelDone(finalColor);
     
     // final write
-    if (dbgSlicesModeMaxSlices != 0u) { // debug value
+    if (isDbgSliceCnt) { // debug value
       let c = saturate(f32(sliceCount) / f32(dbgSlicesModeMaxSlices));
       finalColor = vec4f(c, 0., 0., 1.0);
     }

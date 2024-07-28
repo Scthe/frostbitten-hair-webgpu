@@ -37,12 +37,6 @@ const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
 
-const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
-const TILE_SIZE_2f: vec2f = vec2f(
-  f32(${CONFIG.hairRender.tileSize}),
-  f32(${CONFIG.hairRender.tileSize})
-);
-const DEPTH_BINS_COUNT = ${CONFIG.hairRender.tileDepthBins}u;
 const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel}u;
 const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
 // Stop processing slices once we reach opaque color
@@ -122,7 +116,7 @@ fn main(
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
     let tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
     
-    for (var depthBin = 0u; depthBin < DEPTH_BINS_COUNT; depthBin += 1u) {
+    for (var depthBin = 0u; depthBin < TILE_DEPTH_BINS_COUNT; depthBin += 1u) {
       let allPixelsDone = processTile(
         params,
         maxDrawnSegments,
@@ -151,7 +145,7 @@ fn processTile(
   // let MAX_PROCESSED_SEGMENTS = 128u; // just in case
   let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
   
-  let tileDepth = _getTileDepth(p.viewportSizeU32, tileXY); // TODO this should be per depth bin
+  let tileDepth = _getTileDepth(p.viewportSizeU32, tileXY, depthBin);
   var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]

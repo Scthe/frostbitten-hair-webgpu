@@ -1,4 +1,4 @@
-import { BYTES_U32, CONFIG } from '../../../constants.ts';
+import { BYTES_U32, CONFIG, SliceHeadsMemory } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { formatBytes } from '../../../utils/string.ts';
 import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../../utils/webgpu.ts';
@@ -119,19 +119,10 @@ export const BUFFER_HAIR_SLICES_HEADS =
 /// GPU BUFFER
 ///////////////////////////
 
-/** Active := can be addressed by currently working processors */
-export function getActiveSlicesCount() {
-  const { tileSize, slicesPerPixel, processorCount } = CONFIG.hairRender;
-  return tileSize * tileSize * slicesPerPixel * processorCount;
-}
-
 type Allocator = (device: GPUDevice) => GPUBuffer | undefined;
 
 function createHairSlicesHeadsBuffer_GLOBAL(device: GPUDevice): GPUBuffer {
-  const entries = getActiveSlicesCount();
-  const bytesPerEntry = BYTES_U32;
-  const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
-  STATS.update('Slices heads', formatBytes(size));
+  const size = calcMemoryReqs();
 
   return device.createBuffer({
     label: `hair-slices-heads`,
@@ -145,6 +136,7 @@ function createHairSlicesHeadsBuffer_LOCAL(_device: GPUDevice): undefined {
   if (grSize !== 1) {
     throw new Error(`Expected finePassWorkgroupSizeX to be 1, was ${grSize}`);
   }
+  calcMemoryReqs();
   return undefined;
 }
 
@@ -152,3 +144,27 @@ export const createHairSlicesHeadsBuffer: Allocator =
   SLICE_HEADS_MEMORY === 'global'
     ? createHairSlicesHeadsBuffer_GLOBAL
     : createHairSlicesHeadsBuffer_LOCAL;
+
+function calcMemoryReqs() {
+  const { tileSize, slicesPerPixel, processorCount } = CONFIG.hairRender;
+
+  const entriesPerProcessor = tileSize * tileSize * slicesPerPixel;
+  const entries = processorCount * entriesPerProcessor;
+  const bytesPerEntry = BYTES_U32;
+  const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
+
+  const memRegionNames: Record<SliceHeadsMemory, string> = {
+    global: 'VRAM',
+    workgroup: 'WKGRP',
+    registers: 'REGS',
+  };
+  const memRegionName = memRegionNames[SLICE_HEADS_MEMORY];
+
+  STATS.update('Slices heads', `${memRegionName} ${formatBytes(size)}`);
+  STATS.update(
+    ' \\ Per processor',
+    formatBytes(entriesPerProcessor * bytesPerEntry)
+  );
+
+  return size;
+}

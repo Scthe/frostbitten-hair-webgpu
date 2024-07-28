@@ -6,7 +6,6 @@ import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { SW_RASTERIZE_HAIR } from './shaderImpl/swRasterizeHair.wgsl.ts';
 import { BUFFER_HAIR_TILES_RESULT } from './shared/hairTilesResultBuffer.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from './shared/hairTileSegmentsBuffer.ts';
-import { CONFIG } from '../../constants.ts';
 import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
 
 export const SHADER_PARAMS = {
@@ -31,7 +30,6 @@ const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
 
-const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
 
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
@@ -47,8 +45,6 @@ ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read_write')}
 
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
-
-const DEPTH_BINS_COUNT = ${CONFIG.hairRender.tileDepthBins}u;
 
 
 @compute
@@ -121,7 +117,7 @@ fn processTile(
 
   var depthMin =  999.0; // in proj. space, so *A BIT* overkill
   var depthMax = -999.0; // in proj. space, so *A BIT* overkill
-  var depthBin = DEPTH_BINS_COUNT;
+  var depthBin = TILE_DEPTH_BINS_COUNT;
 
   for (var y: u32 = boundsMin.y; y < boundsMax.y; y += 1u) {
   for (var x: u32 = boundsMin.x; x < boundsMax.x; x += 1u) {
@@ -152,7 +148,7 @@ fn processTile(
         let hairDepthVS: vec3f = projectVertex(projMatrixInv, vec4f(p, hairDepth, 1.0));
         // view space means Z is reversed. But we want bin 0 to be close etc.
         // So we invert the bin idx.
-        let hairDepthBin = (DEPTH_BINS_COUNT - 1u) - getDepthBin(DEPTH_BINS_COUNT, hairDepthBoundsVS, hairDepthVS.z);
+        let hairDepthBin = (TILE_DEPTH_BINS_COUNT - 1u) - getDepthBin(TILE_DEPTH_BINS_COUNT, hairDepthBoundsVS, hairDepthVS.z);
 
         // store px result
         depthMin = min(depthMin, hairDepth);

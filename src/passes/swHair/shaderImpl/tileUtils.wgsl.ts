@@ -1,4 +1,9 @@
+import { CONFIG } from '../../../constants.ts';
+
 export const SHADER_TILE_UTILS = /* wgsl */ `
+
+const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
+const TILE_DEPTH_BINS_COUNT = ${CONFIG.hairRender.tileDepthBins}u;
 
 fn getTileCount(viewportSize: vec2u) -> vec2u {
   return vec2u(
@@ -7,9 +12,13 @@ fn getTileCount(viewportSize: vec2u) -> vec2u {
   );
 }
 
-fn getHairTileIdx(viewportSize: vec2u, tileXY: vec2u) -> u32 {
+fn getHairTileIdx(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
   let tileCount = getTileCount(viewportSize);
-  return tileXY.y * tileCount.x + tileXY.x;
+  return (
+    tileXY.y * tileCount.x  * TILE_DEPTH_BINS_COUNT +
+    tileXY.x * TILE_DEPTH_BINS_COUNT +
+    depthBin
+  );
 }
 
 /** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */

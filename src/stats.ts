@@ -28,6 +28,7 @@ const AvailableStats = {
   'Tiles heads': {} as StatOpts, // per tile depth data + segment head
   'Tiles segments': {} as StatOpts, // hair segments per tile PPLL data
   'Slices heads': {} as StatOpts, // hair slices pointers
+  ' \\ Per processor': {} as StatOpts, // memory for each fine pass processor
   'Slices data': {} as StatOpts, // hair slices color data
   'Hair FBO': {} as StatOpts, // final color framebuffer
   // render

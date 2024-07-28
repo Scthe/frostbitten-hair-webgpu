@@ -3,7 +3,6 @@ import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import { BUFFER_HAIR_TILES_RESULT } from '../swHair/shared/hairTilesResultBuffer.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from '../swHair/shared/hairTileSegmentsBuffer.ts';
-import { CONFIG } from '../../constants.ts';
 import { BUFFER_HAIR_RASTERIZER_RESULTS } from '../swHair/shared/hairRasterizerResultBuffer.ts';
 import { SHADER_TILE_UTILS } from '../swHair/shaderImpl/tileUtils.wgsl.ts';
 
@@ -23,8 +22,6 @@ export const SHADER_PARAMS = {
 const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
-
-const TILE_SIZE: u32 = ${CONFIG.hairRender.tileSize}u;
 
 ${FULLSCREEN_TRIANGLE_POSITION}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
@@ -89,7 +86,6 @@ fn main_fs(
 
 
 fn getDebugTileColor(tileXY: vec2u) -> vec4f {
-  let TILE_SIZE = ${CONFIG.hairRender.tileSize}u;
   var dbgTileColor = vec4f(1.0);
   dbgTileColor.r = 0.0;
   dbgTileColor.g = f32(tileXY.x % 2) / 2.0;
@@ -110,7 +106,7 @@ fn renderTileSegmentCount(
   color.g = 1.0 - color.r;
 
   // dbg: tile bounds
-  // let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY);
+  // let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, 0u);
   // color.r = f32((tileIdx * 17) % 33) / 33.0;
   // color.a = 1.0;
   
@@ -129,7 +125,7 @@ fn getSegmentCountInTiles(
   var segmentData = vec3u();
   var count = 0u;
 
-  for (var binIdx = 0u; binIdx < TILES_BIN_COUNT; binIdx++) {
+  for (var binIdx = 0u; binIdx < TILE_DEPTH_BINS_COUNT; binIdx++) {
     var segmentPtr = _getTileSegmentPtr(viewportSize, tileXY, binIdx);
 
     while (count < maxSegmentsCount) {
