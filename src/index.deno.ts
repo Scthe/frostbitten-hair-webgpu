@@ -117,6 +117,7 @@ async function renderSceneToFile(
   STATS.printStats();
 
   await profiler.scheduleRaportIfNeededAsync(reportProfiler);
+  console.log(`Result: '${outputPath}'`);
 }
 
 /////////////////////

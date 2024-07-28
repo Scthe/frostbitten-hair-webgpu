@@ -148,7 +148,7 @@ export const CONFIG = {
 
     ////// TILE PASS
     tileSize: 16,
-    tileDepthBins: 1, // TODO DO NOT CHANGE (for now)
+    tileDepthBins: 8,
     avgSegmentsPerTile: 512,
 
     ////// FINE PASS

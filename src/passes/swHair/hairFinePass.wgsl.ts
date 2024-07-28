@@ -42,6 +42,7 @@ const TILE_SIZE_2f: vec2f = vec2f(
   f32(${CONFIG.hairRender.tileSize}),
   f32(${CONFIG.hairRender.tileSize})
 );
+const DEPTH_BINS_COUNT = ${CONFIG.hairRender.tileDepthBins}u;
 const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel}u;
 const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
 // Stop processing slices once we reach opaque color
@@ -118,7 +119,19 @@ fn main(
   var tileIdx = _getNextTileIdx();
 
   while (tileIdx < tileCount) {
-    processTile(params, maxDrawnSegments, tileIdx);
+    let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
+    let tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
+    
+    for (var depthBin = 0u; depthBin < DEPTH_BINS_COUNT; depthBin += 1u) {
+      let allPixelsDone = processTile(
+        params,
+        maxDrawnSegments,
+        tileXY,
+        depthBin,
+        tileBoundsPx
+      );
+      if (allPixelsDone) { break; }
+    }
 
     // move to next tile
     tileIdx = _getNextTileIdx();
@@ -128,23 +141,18 @@ fn main(
 fn processTile(
   p: FineRasterParams,
   maxDrawnSegments: u32,
-  tileIdx: u32
-) {
+  tileXY: vec2u,
+  depthBin: u32,
+  tileBoundsPx: vec4u
+) -> bool {
   // let MAX_PROCESSED_SEGMENTS = 0u; // just in case
   // let MAX_PROCESSED_SEGMENTS = 1u; // just in case
   // let MAX_PROCESSED_SEGMENTS = 32u; // just in case (the profiled case)
   // let MAX_PROCESSED_SEGMENTS = 128u; // just in case
   let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
-
   
-  // TODO finish tiles depth bins:
-  //  - how to pick up the previous bin's color? Just a memory read?
-  //  - clear heads
-  let MOCKED_DEPTH_BIN = 0u;
-  let tileXY = getTileXY(p.viewportSizeU32, tileIdx);
-  let tileBoundsPx: vec4u = getTileBoundsPx(p.viewportSizeU32, tileXY);
-  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, MOCKED_DEPTH_BIN);
-  var tileDepth = _getTileDepth(p.viewportSizeU32, tileXY);
+  let tileDepth = _getTileDepth(p.viewportSizeU32, tileXY); // TODO this should be per depth bin
+  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var processedSegmentCnt = 0u;
@@ -175,13 +183,13 @@ fn processTile(
   }
 
   if (sliceDataOffset == 0) {
-    // no pixels were changed. This should not happen (cause tile pass), but just in case
-    return;
+    // no pixels were changed. This can happen if depth bin is empty. Move to next depth bin in that case
+    return false;
   }
 
   // reduce over slices list and set the final color into result buffer
   // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
-  reduceHairSlices(
+  let allPixelsDone = reduceHairSlices(
     p.processorId,
     p.viewportSizeU32,
     p.dbgSlicesModeMaxSlices,
@@ -190,6 +198,8 @@ fn processTile(
 
   // clear written values before moving to next tile
   _clearSlicesHeadPtrs(p.processorId);
+
+  return allPixelsDone;
 }
 
 

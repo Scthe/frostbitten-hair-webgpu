@@ -12,26 +12,30 @@ fn reduceHairSlices(
   viewportSizeU32: vec2u,
   dbgSlicesModeMaxSlices: u32,
   tileBoundsPx: vec4u
-) {
+) -> bool {
   var sliceData: SliceData;
+  var allPixelsDone = true;
   let boundRectMax = vec2u(tileBoundsPx.zw);
   let boundRectMin = vec2u(tileBoundsPx.xy);
 
   for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y += 1u) {
   for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x += 1u) {
-    var finalColor = vec4f();
-    var sliceCount = 0u;
     let px = vec2u(x, y); // pixel coordinates wrt. viewport
     let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
+
+    var sliceCount = 0u; // debug value
+    var finalColor = _getRasterizerResult(viewportSizeU32, px);
     
     // iterate slices front to back
     for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
-      if (finalColor.a >= ALPHA_CUTOFF) { break; } // conflicts with head ptr clear, be careful!
+      if (isPixelDone(finalColor)) { break; } // conflicts with head ptr clear, be careful!
+      // var requiresSliceHeadClear = false; // TODO, remove the clear elsewhere
       var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, s);
       
       // aggregate colors in this slice
       while (_getSliceData(processorId, slicePtr, &sliceData)) {
-        if (finalColor.a >= ALPHA_CUTOFF) { break; }
+        // requiresSliceHeadClear = true;
+        if (isPixelDone(finalColor)) { break; }
         slicePtr = sliceData.value[2];
         sliceCount += 1u;
         
@@ -41,6 +45,8 @@ fn reduceHairSlices(
         );
         finalColor += sliceColor * (1.0 - finalColor.a);
       }
+
+      // if (requiresSliceHeadClear) { _clearSliceHead(processorId, tileXY, s); }
     }
 
     // dbg: color using only head ptrs
@@ -49,16 +55,22 @@ fn reduceHairSlices(
       finalColor.r = 1.0;
       finalColor.a = 1.0;
     }*/
+
+    allPixelsDone = allPixelsDone && isPixelDone(finalColor);
     
-    if (dbgSlicesModeMaxSlices == 0u) {
-      // the prod value
-      _setRasterizerResult(viewportSizeU32, px, finalColor);
-    } else {
-      // debug value
+    // final write
+    if (dbgSlicesModeMaxSlices != 0u) { // debug value
       let c = saturate(f32(sliceCount) / f32(dbgSlicesModeMaxSlices));
-      _setRasterizerResult(viewportSizeU32, px, vec4f(c, 0., 0., 1.0));
+      finalColor = vec4f(c, 0., 0., 1.0);
     }
+    _setRasterizerResult(viewportSizeU32, px, finalColor);
   }}
+
+  return allPixelsDone;
 }
 
+/** Returns true, if any subsequent hair segments/slices do not matter. */
+fn isPixelDone (finalColor: vec4f) -> bool {
+  return finalColor.a >= ALPHA_CUTOFF;
+}
 `;

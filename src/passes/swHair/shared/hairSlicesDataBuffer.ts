@@ -32,6 +32,7 @@ export const BUFFER_HAIR_SLICES_DATA = (
 const SLICE_DATA_PER_PROCESSOR_COUNT = ${SLICE_DATA_PER_PROCESSOR_COUNT}u;
 
 struct SliceData {
+  /** [encodedColor.rg, encodedColor.ba, nextSlicePtr, 0u] */
   value: vec4u,
 }
 
