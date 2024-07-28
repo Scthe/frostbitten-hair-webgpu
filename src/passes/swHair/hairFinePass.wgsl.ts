@@ -182,6 +182,7 @@ fn processTile(
   }
 
   // reduce over slices list and set the final color into result buffer
+  // this also clears the current processor state for next tile
   // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
   let allPixelsDone = reduceHairSlices(
     p.processorId,
@@ -189,9 +190,6 @@ fn processTile(
     p.dbgSlicesModeMaxSlices,
     tileBoundsPx
   );
-
-  // clear written values before moving to next tile
-  _clearSlicesHeadPtrs(p.processorId);
 
   return allPixelsDone;
 }

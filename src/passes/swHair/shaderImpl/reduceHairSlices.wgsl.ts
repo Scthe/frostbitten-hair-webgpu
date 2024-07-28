@@ -28,14 +28,19 @@ fn reduceHairSlices(
     var sliceCount = select(0u, u32(finalColor.r * f32(dbgSlicesModeMaxSlices)), isDbgSliceCnt); // debug value
     
     // START: ITERATE SLICES (front to back)
-    for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
-      if (isPixelDone(finalColor)) { break; } // conflicts with head ptr clear, be careful!
-      // var requiresSliceHeadClear = false; // TODO, remove the clear elsewhere
+    var s: u32 = 0u;
+    for (; s < SLICES_PER_PIXEL; s += 1u) {
+      if (isPixelDone(finalColor) && !isDbgSliceCnt) {
+        // finalColor = vec4f(1., 0., 0., 1.);
+        break;
+      }
+
+      var requiresSliceHeadClear = false;
       var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, s);
       
       // aggregate colors in this slice
       while (_getSliceData(processorId, slicePtr, &sliceData)) {
-        // requiresSliceHeadClear = true;
+        requiresSliceHeadClear = true;
         if (isPixelDone(finalColor)) { break; }
         slicePtr = sliceData.value[2];
         sliceCount += 1u;
@@ -47,9 +52,15 @@ fn reduceHairSlices(
         finalColor += sliceColor * (1.0 - finalColor.a);
       }
 
-      // if (requiresSliceHeadClear) { _clearSliceHead(processorId, tileXY, s); }
+      if (requiresSliceHeadClear) {
+        _clearSliceHeadPtr(processorId, pxInTile, s);
+      }
+    } // END: ITERATE SLICES
+    
+    // finish remaining iterations if we break; early
+    for(; s < SLICES_PER_PIXEL; s += 1u) {
+      _clearSliceHeadPtr(processorId, pxInTile, s);
     }
-    // END: ITERATE SLICES
 
     // dbg: color using only head ptrs
     /*var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, 0u);

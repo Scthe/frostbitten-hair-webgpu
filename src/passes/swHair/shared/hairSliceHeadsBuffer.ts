@@ -61,6 +61,14 @@ fn _clearSlicesHeadPtrs(processorId: u32) {
     _hairSliceHeads[offset + i] = INVALID_SLICE_DATA_PTR;
   }
 }
+
+fn _clearSliceHeadPtr(
+  processorId: u32,
+  pixelInTile: vec2u, sliceIdx: u32,
+) {
+  let idx = _getHeadsSliceIdx(processorId, pixelInTile, sliceIdx);
+  _hairSliceHeads[idx] = INVALID_SLICE_DATA_PTR;
+}
 `;
 
 ///////////////////////////
