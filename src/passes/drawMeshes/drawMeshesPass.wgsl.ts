@@ -80,8 +80,14 @@ fn main_vs(
 }
 
 
+struct FragmentOutput {
+  @location(0) color: vec4<f32>,
+  @location(1) normals: vec2<f32>,
+};
+
+
 @fragment
-fn main_fs(fragIn: VertexOutput) -> @location(0) vec4<f32> {
+fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
   // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/shaders/sintel.frag.glsl
   // material
   var material: Material;
@@ -102,8 +108,10 @@ fn main_fs(fragIn: VertexOutput) -> @location(0) vec4<f32> {
   // shading
   let color = doShading(material);
 
-  return vec4(color.xyz, 1.0);
-  // return vec4(shadow, shadow, shadow, 1.0);
+  var result: FragmentOutput;
+  result.color = vec4f(color.xyz, 1.0); // vec4(shadow, shadow, shadow, 1.0);
+  result.normals = encodeOctahedronNormal(material.normal);
+  return result;
 }
 
 

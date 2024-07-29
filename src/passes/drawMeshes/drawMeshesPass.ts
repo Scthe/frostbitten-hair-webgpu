@@ -22,7 +22,11 @@ export class DrawMeshesPass {
   private readonly bindingsCache = new BindingsCache();
   private readonly shadowMapSampler: GPUSampler;
 
-  constructor(device: GPUDevice, outTextureFormat: GPUTextureFormat) {
+  constructor(
+    device: GPUDevice,
+    outTextureFormat: GPUTextureFormat,
+    normalsTextureFormat: GPUTextureFormat
+  ) {
     const shaderModule = device.createShaderModule({
       label: labelShader(DrawMeshesPass),
       code: SHADER_CODE(),
@@ -39,7 +43,10 @@ export class DrawMeshesPass {
       fragment: {
         module: shaderModule,
         entryPoint: 'main_fs',
-        targets: [{ format: outTextureFormat }],
+        targets: [
+          { format: outTextureFormat },
+          { format: normalsTextureFormat },
+        ],
       },
       primitive: PIPELINE_PRIMITIVE_TRIANGLE_LIST,
       depthStencil: PIPELINE_DEPTH_ON,
@@ -52,13 +59,21 @@ export class DrawMeshesPass {
   }
 
   cmdDrawMeshes(ctx: PassCtx) {
-    const { cmdBuf, profiler, depthTexture, hdrRenderTexture, scene } = ctx;
+    const {
+      cmdBuf,
+      profiler,
+      depthTexture,
+      hdrRenderTexture,
+      normalsTexture,
+      scene,
+    } = ctx;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/GPUCommandEncoder/beginRenderPass
     const renderPass = cmdBuf.beginRenderPass({
       label: DrawMeshesPass.NAME,
       colorAttachments: [
         useColorAttachment(hdrRenderTexture, CONFIG.clearColor, 'load'),
+        useColorAttachment(normalsTexture, CONFIG.clearNormals, 'clear'),
       ],
       depthStencilAttachment: useDepthStencilAttachment(depthTexture, 'clear'),
       timestampWrites: profiler?.createScopeGpu(DrawMeshesPass.NAME),

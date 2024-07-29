@@ -105,13 +105,21 @@ export class PresentPass {
   }
 
   private createBindings = (ctx: PassCtx): GPUBindGroup => {
-    const { device, globalUniforms, hdrRenderTexture } = ctx;
+    const {
+      device,
+      globalUniforms,
+      hdrRenderTexture,
+      normalsTexture,
+      depthTexture,
+    } = ctx;
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(hdrRenderTexture);
 
     return assignResourcesToBindings(PresentPass, device, this.pipeline, [
       globalUniforms.createBindingDesc(b.renderUniforms),
-      { binding: b.textureSrc, resource: hdrRenderTexture },
+      { binding: b.resultHDR_Texture, resource: hdrRenderTexture },
+      { binding: b.depthTexture, resource: depthTexture },
+      { binding: b.normalsTexture, resource: normalsTexture },
     ]);
   };
 

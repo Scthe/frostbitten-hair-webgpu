@@ -17,11 +17,52 @@ fn transformNormalToWorldSpace(modelMat: mat4x4f, normalV: vec3f) -> vec3f {
   let normalWS = normalMatrix * vec4f(normalV, 0.0);
   return normalize(normalWS.xyz);
 }
+
+
+/** https://knarkowicz.wordpress.com/2014/04/16/octahedron-normal-vector-encoding/
+ * 
+ * NOTE: I'm running of of patience writing this code, do not judge */
+fn OctWrap(v: vec2f) -> vec2f {
+  // https://gpuweb.github.io/gpuweb/wgsl/#select-builtin
+  // select(f, t, cond); // yes, this is the actuall syntax..
+  let signX = select(-1.0, 1.0, v.x >= 0.0);
+  let signY = select(-1.0, 1.0, v.y >= 0.0);
+  return (1.0 - abs(v.yx)) * vec2f(signX, signY);
+}
+ 
+/** https://knarkowicz.wordpress.com/2014/04/16/octahedron-normal-vector-encoding/
+ * 
+ * Result is in [0 .. 1]
+ * 
+ * NOTE: I'm running of of patience writing this code, do not judge */
+fn encodeOctahedronNormal(n0: vec3f) -> vec2f {
+  var n = n0 / (abs(n0.x) + abs(n0.y) + abs(n0.z));
+  if (n.z < 0.0) {
+    let a = OctWrap(n.xy);
+    n.x = a.x;
+    n.y = a.y;
+  }
+  return n.xy * 0.5 + 0.5;
+}
+
+/** https://knarkowicz.wordpress.com/2014/04/16/octahedron-normal-vector-encoding/ */
+fn decodeOctahedronNormal(f_: vec2f) -> vec3f {
+  let f = f_ * 2.0 - 1.0;
+ 
+  // https://twitter.com/Stubbesaurus/status/937994790553227264
+  var n = vec3f(f.x, f.y, 1.0 - abs(f.x) - abs(f.y));
+  let t = saturate(-n.z);
+  if (n.x >= 0.0){ n.x -= t; } else { n.x += t; }
+  if (n.y >= 0.0){ n.y -= t; } else { n.y += t; }
+  return normalize(n);
+}
 `;
 
 export const GENERIC_UTILS = /* wgsl */ `
 
 const PI: f32 = ${Math.PI};
+const TWO_PI: f32 = ${2 * Math.PI};
+const ONE_OVER_PI: f32 = ${1.0 / Math.PI};
 const FLOAT_EPSILON: f32 = 1e-7;
 
 fn safeNormalize3(v: vec3f) -> vec3f {
@@ -111,6 +152,15 @@ fn getDepthBin(
   let tileDepthSpan = abs(tileDepth.y - tileDepth.x);
   let t = (pixelDepth - tileDepth.x) / tileDepthSpan;
   return clamp(u32(t * f32(binCount)), 0u, binCount - 1u);
+}
+
+fn mapRange(
+  inMin: f32, inMax: f32,
+  outMin: f32, outMax: f32,
+  value: f32
+) -> f32 {
+  let t = saturate((value - inMin) / (inMax - inMin));
+  return mix(outMin, outMax, t);
 }
 
 `;

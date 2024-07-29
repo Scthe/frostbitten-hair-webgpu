@@ -32,6 +32,7 @@ export const MODELS_DIR = IS_DENO ? 'static/models' : 'models';
 export const DEPTH_FORMAT: GPUTextureFormat = 'depth24plus';
 // Not 'rgba32float' Cause: "Color state [0] is invalid: Format Rgba32Float is not blendable"
 export const HDR_RENDER_TEX_FORMAT: GPUTextureFormat = 'rgba16float';
+export const NORMALS_TEX_FORMAT: GPUTextureFormat = 'rg16float';
 
 export const AXIS_Y = [0, 1, 0];
 
@@ -49,6 +50,8 @@ export const DISPLAY_MODE = {
   TILES: 1,
   HW_RENDER: 2,
   USED_SLICES: 3,
+  DEPTH: 4,
+  NORMALS: 5,
 };
 
 export type HairFile =
@@ -75,6 +78,7 @@ export const CONFIG = {
   ///////////////
   /// GENERIC/SCENE STUFF
   clearColor: [0.2, 0.2, 0.2, 0.0] as ClearColor,
+  clearNormals: [0.0, 0.0, 0.0, 0.0] as ClearColor, // it's octahedron encoded btw.
 
   ///////////////
   /// CAMERA

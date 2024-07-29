@@ -61,6 +61,8 @@ export function initializeGUI(
       { label: 'DBG: tiles', value: DISPLAY_MODE.TILES },
       { label: 'DBG: slices cnt', value: DISPLAY_MODE.USED_SLICES },
       { label: 'DBG: hw-render', value: DISPLAY_MODE.HW_RENDER },
+      { label: 'DBG: depth', value: DISPLAY_MODE.DEPTH },
+      { label: 'DBG: normals', value: DISPLAY_MODE.NORMALS },
     ]);
     const modeCtrl = dir
       .add(modeDummy, 'displayMode', modeDummy.values)

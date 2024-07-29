@@ -34,6 +34,8 @@ export class RenderUniformsBuffer {
     const DISPLAY_MODE_TILES = ${DISPLAY_MODE.TILES}u;
     const DISPLAY_MODE_HW_RENDER = ${DISPLAY_MODE.HW_RENDER}u;
     const DISPLAY_MODE_USED_SLICES = ${DISPLAY_MODE.USED_SLICES}u;
+    const DISPLAY_MODE_DEPTH = ${DISPLAY_MODE.DEPTH}u;
+    const DISPLAY_MODE_NORMALS = ${DISPLAY_MODE.NORMALS}u;
 
     struct Light {
       position: vec4f, // [x, y, z, 0.0]

@@ -7,6 +7,7 @@ import {
   DEPTH_FORMAT,
   DISPLAY_MODE,
   HDR_RENDER_TEX_FORMAT,
+  NORMALS_TEX_FORMAT,
 } from './constants.ts';
 import { Camera } from './camera.ts';
 import { GpuProfiler } from './gpuProfiler.ts';
@@ -40,6 +41,8 @@ export class Renderer {
   private depthTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
   private hdrRenderTexture: GPUTexture = undefined!; // see this.handleViewportResize()
   private hdrRenderTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
+  private normalsTexture: GPUTexture = undefined!; // see this.handleViewportResize()
+  private normalsTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
 
   // passes
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
@@ -71,7 +74,11 @@ export class Renderer {
       HDR_RENDER_TEX_FORMAT
     );
     this.shadowMapPass = new ShadowMapPass(device);
-    this.drawMeshesPass = new DrawMeshesPass(device, HDR_RENDER_TEX_FORMAT);
+    this.drawMeshesPass = new DrawMeshesPass(
+      device,
+      HDR_RENDER_TEX_FORMAT,
+      NORMALS_TEX_FORMAT
+    );
     this.hwHairPass = new HwHairPass(device, HDR_RENDER_TEX_FORMAT);
     this.hairTilesPass = new HairTilesPass(device);
     this.hairShadingPass = new HairShadingPass(device);
@@ -106,6 +113,7 @@ export class Renderer {
       viewport: this.viewportSize,
       scene,
       hdrRenderTexture: this.hdrRenderTextureView,
+      normalsTexture: this.normalsTextureView,
       profiler: this.profiler,
       viewMatrix,
       vpMatrix,
@@ -137,7 +145,10 @@ export class Renderer {
     this.drawMeshesPass.cmdDrawMeshes(ctx);
 
     const { displayMode } = CONFIG.hairRender;
-    if (displayMode === DISPLAY_MODE.HW_RENDER) {
+    if (
+      displayMode === DISPLAY_MODE.HW_RENDER ||
+      displayMode === DISPLAY_MODE.DEPTH // better frametimes
+    ) {
       this.hwHairPass.cmdDrawHair(ctx);
       return;
     }
@@ -172,24 +183,35 @@ export class Renderer {
     if (this.hdrRenderTexture) {
       this.hdrRenderTexture.destroy();
     }
+    if (this.normalsTexture) {
+      this.normalsTexture.destroy();
+    }
 
     const vpStr = `${viewportSize.width}x${viewportSize.height}`;
+    const renderTargetUsages: GPUTextureUsageFlags =
+      GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING;
 
     this.hdrRenderTexture = this.device.createTexture({
       label: `hdr-texture-${vpStr}`,
       size: [viewportSize.width, viewportSize.height],
       format: HDR_RENDER_TEX_FORMAT,
-      usage:
-        GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+      usage: renderTargetUsages,
     });
     this.hdrRenderTextureView = this.hdrRenderTexture.createView();
+
+    this.normalsTexture = this.device.createTexture({
+      label: `normals-texture-${vpStr}`,
+      size: [viewportSize.width, viewportSize.height],
+      format: NORMALS_TEX_FORMAT,
+      usage: renderTargetUsages,
+    });
+    this.normalsTextureView = this.normalsTexture.createView();
 
     this.depthTexture = this.device.createTexture({
       label: `depth-texture-${vpStr}`,
       size: [viewportSize.width, viewportSize.height],
       format: DEPTH_FORMAT,
-      usage:
-        GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING,
+      usage: renderTargetUsages,
     });
     this.depthTextureView = this.depthTexture.createView();
 
