@@ -36,6 +36,20 @@ export function initializeGUI(
   // profiler
   gui.add(dummyObject, 'profile').name('Profile');
 
+  // display mode
+  const modeDummy = createDummy(CONFIG, 'displayMode', [
+    { label: 'Final', value: DISPLAY_MODE.FINAL },
+    { label: 'DBG: tiles', value: DISPLAY_MODE.TILES },
+    { label: 'DBG: slices cnt', value: DISPLAY_MODE.USED_SLICES },
+    { label: 'DBG: hw-render', value: DISPLAY_MODE.HW_RENDER },
+    { label: 'DBG: depth', value: DISPLAY_MODE.DEPTH },
+    { label: 'DBG: normals', value: DISPLAY_MODE.NORMALS },
+    { label: 'DBG: ao', value: DISPLAY_MODE.AO },
+  ]);
+  const modeCtrl = gui
+    .add(modeDummy, 'displayMode', modeDummy.values)
+    .name('Display mode');
+
   // folders
   addHairRenderFolder(gui);
   addHairMaterialFolder(gui);
@@ -55,19 +69,6 @@ export function initializeGUI(
     const dir = gui.addFolder('Hair render');
     dir.open();
 
-    // display mode
-    const modeDummy = createDummy(cfg, 'displayMode', [
-      { label: 'Final', value: DISPLAY_MODE.FINAL },
-      { label: 'DBG: tiles', value: DISPLAY_MODE.TILES },
-      { label: 'DBG: slices cnt', value: DISPLAY_MODE.USED_SLICES },
-      { label: 'DBG: hw-render', value: DISPLAY_MODE.HW_RENDER },
-      { label: 'DBG: depth', value: DISPLAY_MODE.DEPTH },
-      { label: 'DBG: normals', value: DISPLAY_MODE.NORMALS },
-    ]);
-    const modeCtrl = dir
-      .add(modeDummy, 'displayMode', modeDummy.values)
-      .name('Display mode');
-
     dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
     dir.add(cfg, 'fiberRadius', 0.0001, 0.01).name('Radius');
     const tileSegmentsCtrl = dir
@@ -84,7 +85,7 @@ export function initializeGUI(
     modeCtrl.onFinishChange(onDisplayModeChange);
 
     function onDisplayModeChange() {
-      const mode = cfg.displayMode;
+      const mode = CONFIG.displayMode;
       setVisible(tileSegmentsCtrl, mode === DISPLAY_MODE.TILES);
       setVisible(slicesCtrl, mode === DISPLAY_MODE.USED_SLICES);
       setVisible(showTilesCtrl, mode === DISPLAY_MODE.FINAL);

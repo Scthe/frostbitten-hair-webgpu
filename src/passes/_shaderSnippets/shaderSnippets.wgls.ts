@@ -61,6 +61,7 @@ fn decodeOctahedronNormal(f_: vec2f) -> vec3f {
 export const GENERIC_UTILS = /* wgsl */ `
 
 const PI: f32 = ${Math.PI};
+const HALF_PI: f32 = ${0.5 * Math.PI};
 const TWO_PI: f32 = ${2 * Math.PI};
 const ONE_OVER_PI: f32 = ${1.0 / Math.PI};
 const FLOAT_EPSILON: f32 = 1e-7;

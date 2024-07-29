@@ -12,6 +12,7 @@ export const SHADER_PARAMS = {
     resultHDR_Texture: 1,
     depthTexture: 2,
     normalsTexture: 3,
+    aoTexture: 4,
   },
 };
 
@@ -37,9 +38,11 @@ var _resultHDR_Texture: texture_2d<f32>;
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
 
-
 @group(0) @binding(${b.normalsTexture})
 var _normalsTexture: texture_2d<f32>;
+
+@group(0) @binding(${b.aoTexture})
+var _aoTexture: texture_2d<f32>;
 
 
 @vertex
@@ -83,10 +86,18 @@ fn main_fs(
     let rescale = vec2f(0.002, 0.01);
     c = mapRange(rescale.x, rescale.y, 0., 1., c);
     color = vec3f(c);
+  
   } else if (displayMode == DISPLAY_MODE_NORMALS) {
     let normalsOct: vec2f = textureLoad(_normalsTexture, fragPositionPx, 0).xy;
     let normal = decodeOctahedronNormal(normalsOct);
     color = vec3f(abs(normal.xyz));
+
+  } else if (displayMode == DISPLAY_MODE_AO) {
+    let aoTexSize = textureDimensions(_aoTexture);
+    let t = positionPxF32.xy / vec2f(_uniforms.viewport.xy);
+    let aoSamplePx = vec2i(vec2f(aoTexSize) * t);
+    let ao: f32 = textureLoad(_aoTexture, aoSamplePx, 0).r;
+    color = vec3f(ao);
   }
 
   return vec4(color.xyz, 1.0);

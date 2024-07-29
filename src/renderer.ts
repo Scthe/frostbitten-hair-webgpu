@@ -3,6 +3,7 @@ import { RenderUniformsBuffer } from './passes/renderUniformsBuffer.ts';
 import { Dimensions, debounce } from './utils/index.ts';
 import Input from './sys_web/input.ts';
 import {
+  AO_TEX_FORMAT,
   CONFIG,
   DEPTH_FORMAT,
   DISPLAY_MODE,
@@ -27,6 +28,7 @@ import { HairCombinePass } from './passes/hairCombine/hairCombinePass.ts';
 import { HairFinePass } from './passes/swHair/hairFinePass.ts';
 import { HairShadingPass } from './passes/hairShadingPass/hairShadingPass.ts';
 import { ShadowMapPass } from './passes/shadowMapPass/shadowMapPass.ts';
+import { AoPass } from './passes/aoPass/aoPass.ts';
 
 export class Renderer {
   private readonly renderUniformBuffer: RenderUniformsBuffer;
@@ -43,10 +45,13 @@ export class Renderer {
   private hdrRenderTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
   private normalsTexture: GPUTexture = undefined!; // see this.handleViewportResize()
   private normalsTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
+  private aoTexture: GPUTexture = undefined!; // see this.handleViewportResize()
+  private aoTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
 
   // passes
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
   private readonly shadowMapPass: ShadowMapPass;
+  private readonly aoPass: AoPass;
   private readonly drawMeshesPass: DrawMeshesPass;
   private readonly hwHairPass: HwHairPass;
   private readonly hairTilesPass: HairTilesPass;
@@ -74,6 +79,7 @@ export class Renderer {
       HDR_RENDER_TEX_FORMAT
     );
     this.shadowMapPass = new ShadowMapPass(device);
+    this.aoPass = new AoPass(device, AO_TEX_FORMAT);
     this.drawMeshesPass = new DrawMeshesPass(
       device,
       HDR_RENDER_TEX_FORMAT,
@@ -114,6 +120,7 @@ export class Renderer {
       scene,
       hdrRenderTexture: this.hdrRenderTextureView,
       normalsTexture: this.normalsTextureView,
+      aoTexture: this.aoTextureView,
       profiler: this.profiler,
       viewMatrix,
       vpMatrix,
@@ -144,12 +151,14 @@ export class Renderer {
 
     this.drawMeshesPass.cmdDrawMeshes(ctx);
 
-    const { displayMode } = CONFIG.hairRender;
+    const { displayMode } = CONFIG;
     if (
       displayMode === DISPLAY_MODE.HW_RENDER ||
-      displayMode === DISPLAY_MODE.DEPTH // better frametimes
+      displayMode === DISPLAY_MODE.DEPTH || // TODO
+      displayMode === DISPLAY_MODE.AO // TODO
     ) {
       this.hwHairPass.cmdDrawHair(ctx);
+      this.aoPass.cmdCalcAo(ctx); // TODO
       return;
     }
 
@@ -177,6 +186,18 @@ export class Renderer {
       viewportSize
     );
 
+    this.recreateTextures(viewportSize);
+
+    // reset bindings that used texture
+    this.presentPass.onViewportResize();
+    this.drawBackgroundGradientPass.onViewportResize();
+    this.hairTilesPass.onViewportResize(this.device, viewportSize);
+    this.hairFinePass.onViewportResize(this.device, viewportSize);
+    this.hairCombinePass.onViewportResize();
+    this.aoPass.onViewportResize();
+  };
+
+  private recreateTextures(viewportSize: Dimensions) {
     if (this.depthTexture) {
       this.depthTexture.destroy();
     }
@@ -185,6 +206,9 @@ export class Renderer {
     }
     if (this.normalsTexture) {
       this.normalsTexture.destroy();
+    }
+    if (this.aoTexture) {
+      this.aoTexture.destroy();
     }
 
     const vpStr = `${viewportSize.width}x${viewportSize.height}`;
@@ -215,13 +239,19 @@ export class Renderer {
     });
     this.depthTextureView = this.depthTexture.createView();
 
-    // reset bindings that used texture
-    this.presentPass.onViewportResize();
-    this.drawBackgroundGradientPass.onViewportResize();
-    this.hairTilesPass.onViewportResize(this.device, viewportSize);
-    this.hairFinePass.onViewportResize(this.device, viewportSize);
-    this.hairCombinePass.onViewportResize();
-  };
+    const aoSizeMul = CONFIG.ao.textureSizeMul;
+    const aoSize: Dimensions = {
+      width: Math.ceil(viewportSize.width * aoSizeMul),
+      height: Math.ceil(viewportSize.height * aoSizeMul),
+    };
+    this.aoTexture = this.device.createTexture({
+      label: `ao-texture-${vpStr}`,
+      size: [aoSize.width, aoSize.height],
+      format: AO_TEX_FORMAT,
+      usage: renderTargetUsages,
+    });
+    this.aoTextureView = this.aoTexture.createView();
+  }
 
   onCanvasResize = debounce(this.handleViewportResize, 500);
 }

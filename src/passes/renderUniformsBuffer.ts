@@ -36,6 +36,7 @@ export class RenderUniformsBuffer {
     const DISPLAY_MODE_USED_SLICES = ${DISPLAY_MODE.USED_SLICES}u;
     const DISPLAY_MODE_DEPTH = ${DISPLAY_MODE.DEPTH}u;
     const DISPLAY_MODE_NORMALS = ${DISPLAY_MODE.NORMALS}u;
+    const DISPLAY_MODE_AO = ${DISPLAY_MODE.AO}u;
 
     struct Light {
       position: vec4f, // [x, y, z, 0.0]
@@ -279,18 +280,19 @@ export class RenderUniformsBuffer {
   }
 
   private encodeDebugMode() {
+    const c = CONFIG;
     const hr = CONFIG.hairRender;
     let extraData = 0;
 
-    if (hr.displayMode === DISPLAY_MODE.TILES) {
+    if (c.displayMode === DISPLAY_MODE.TILES) {
       extraData = hr.dbgTileModeMaxSegments;
-    } else if (hr.displayMode === DISPLAY_MODE.USED_SLICES) {
+    } else if (c.displayMode === DISPLAY_MODE.USED_SLICES) {
       extraData = hr.dbgSlicesModeMaxSlices;
-    } else if (hr.displayMode === DISPLAY_MODE.FINAL) {
+    } else if (c.displayMode === DISPLAY_MODE.FINAL) {
       extraData = hr.dbgShowTiles ? 1 : 0;
     }
 
-    return hr.displayMode | (extraData << 8);
+    return c.displayMode | (extraData << 8);
   }
 }
 

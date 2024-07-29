@@ -33,6 +33,7 @@ export const DEPTH_FORMAT: GPUTextureFormat = 'depth24plus';
 // Not 'rgba32float' Cause: "Color state [0] is invalid: Format Rgba32Float is not blendable"
 export const HDR_RENDER_TEX_FORMAT: GPUTextureFormat = 'rgba16float';
 export const NORMALS_TEX_FORMAT: GPUTextureFormat = 'rg16float';
+export const AO_TEX_FORMAT: GPUTextureFormat = 'r16float';
 
 export const AXIS_Y = [0, 1, 0];
 
@@ -52,6 +53,7 @@ export const DISPLAY_MODE = {
   USED_SLICES: 3,
   DEPTH: 4,
   NORMALS: 5,
+  AO: 6,
 };
 
 export type HairFile =
@@ -74,11 +76,13 @@ export const CONFIG = {
     createTextureFromFile: createTextureFromFile_Web,
   },
   increaseStorageMemoryLimits: false, // TODO [CRITICAL] final release?
+  displayMode: DISPLAY_MODE.FINAL,
 
   ///////////////
   /// GENERIC/SCENE STUFF
   clearColor: [0.2, 0.2, 0.2, 0.0] as ClearColor,
   clearNormals: [0.0, 0.0, 0.0, 0.0] as ClearColor, // it's octahedron encoded btw.
+  clearAo: [0.0, 0.0, 0.0, 0.0] as ClearColor,
 
   ///////////////
   /// CAMERA
@@ -101,7 +105,7 @@ export const CONFIG = {
   },
 
   ///////////////
-  /// LIGHTS AND SHADOWS
+  /// LIGHTS + SHADOWS + AO
   lightAmbient: { color: [1, 1, 1], energy: 0.05 },
   lights: [
     { posPhi: 60.0, posTheta: 20.0, color: [1, 0.95, 0.8], energy: 0.8 },
@@ -131,12 +135,16 @@ export const CONFIG = {
     },
   },
 
+  /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L146 */
+  ao: {
+    textureSizeMul: 0.5, // half/quater-res, wrt. MSAA
+  },
+
   ///////////////
   /// HAIR
   hairFile: 'SintelHairOriginal-sintel_hair.16points.tfx' as HairFile,
 
   hairRender: {
-    displayMode: DISPLAY_MODE.FINAL,
     fiberRadius: 0.0002,
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 370,

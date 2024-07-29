@@ -111,6 +111,7 @@ export class PresentPass {
       hdrRenderTexture,
       normalsTexture,
       depthTexture,
+      aoTexture,
     } = ctx;
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(hdrRenderTexture);
@@ -120,6 +121,7 @@ export class PresentPass {
       { binding: b.resultHDR_Texture, resource: hdrRenderTexture },
       { binding: b.depthTexture, resource: depthTexture },
       { binding: b.normalsTexture, resource: normalsTexture },
+      { binding: b.aoTexture, resource: aoTexture },
     ]);
   };
 
