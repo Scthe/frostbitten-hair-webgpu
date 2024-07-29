@@ -1,5 +1,6 @@
 import { SNIPPET_SHADING_PBR } from '../_shaderSnippets/pbr.wgsl.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
+import { TEXTURE_AO } from '../aoPass/shared/textureAo.wgsl.ts';
 import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import { SAMPLE_SHADOW_MAP } from '../shadowMapPass/shared/sampleShadows.wgsl.ts';
 
@@ -8,6 +9,7 @@ export const SHADER_PARAMS = {
     renderUniforms: 0,
     shadowMapTexture: 1,
     shadowMapSampler: 2,
+    aoTexture: 3,
   },
 };
 
@@ -29,6 +31,7 @@ ${SNIPPET_SHADING_PBR}
 ${SAMPLE_SHADOW_MAP}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
+${TEXTURE_AO(b.aoTexture)}
 
 
 @group(0) @binding(${b.shadowMapTexture})
@@ -104,12 +107,19 @@ fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
     _uniforms.shadows.PCF_Radius,
     _uniforms.shadows.bias
   );
+  var c = material.shadow;
+
+  // ao (not on first frame)
+  let ao = sampleAo(vec2f(_uniforms.viewport.xy), fragIn.position.xy);
+  material.ao = mix(1.0, ao, _uniforms.ao.strength);
+  // c = material.ao;
 
   // shading
   let color = doShading(material);
 
   var result: FragmentOutput;
-  result.color = vec4f(color.xyz, 1.0); // vec4(shadow, shadow, shadow, 1.0);
+  result.color = vec4f(color.xyz, 1.0);
+  // result.color = vec4f(c,c,c, 1.0); // dbg
   result.normals = encodeOctahedronNormal(material.normal);
   return result;
 }

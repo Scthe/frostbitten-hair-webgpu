@@ -1,4 +1,5 @@
 import { CONFIG, VERTS_IN_TRIANGLE } from '../../constants.ts';
+import { getHairTriangleCount } from '../../scene/hair/hairIndexBuffer.ts';
 import { HairObject } from '../../scene/hair/hairObject.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
@@ -10,6 +11,7 @@ import {
   PIPELINE_DEPTH_ON,
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
+import { HairTilesPass } from '../swHair/hairTilesPass.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hwHairPass.wgsl.ts';
 
 export class HwHairPass {
@@ -18,14 +20,34 @@ export class HwHairPass {
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();
 
-  constructor(device: GPUDevice, outTextureFormat: GPUTextureFormat) {
+  constructor(
+    device: GPUDevice,
+    outTextureFormat: GPUTextureFormat,
+    normalsTextureFormat: GPUTextureFormat
+  ) {
     const shaderModule = device.createShaderModule({
       label: labelShader(HwHairPass),
       code: SHADER_CODE(),
     });
 
     const pipelineDesc = HwHairPass.createPipelineDesc(shaderModule);
-    pipelineDesc.fragment?.targets.push({ format: outTextureFormat });
+    pipelineDesc.fragment?.targets.push(
+      {
+        format: outTextureFormat,
+        // used to control color write from shader. Cause sometimes we use this pass only for normals and depth
+        blend: {
+          color: {
+            srcFactor: 'src-alpha',
+            dstFactor: 'one-minus-src-alpha',
+          },
+          alpha: {
+            srcFactor: 'src-alpha',
+            dstFactor: 'one-minus-src-alpha',
+          },
+        },
+      },
+      { format: normalsTextureFormat }
+    );
     this.pipeline = device.createRenderPipeline(pipelineDesc);
   }
 
@@ -55,13 +77,21 @@ export class HwHairPass {
   }
 
   cmdDrawHair(ctx: PassCtx) {
-    const { cmdBuf, profiler, depthTexture, hdrRenderTexture, scene } = ctx;
+    const {
+      cmdBuf,
+      profiler,
+      depthTexture,
+      hdrRenderTexture,
+      normalsTexture,
+      scene,
+    } = ctx;
 
     // https://developer.mozilla.org/en-US/docs/Web/API/GPUCommandEncoder/beginRenderPass
     const renderPass = cmdBuf.beginRenderPass({
       label: HwHairPass.NAME,
       colorAttachments: [
         useColorAttachment(hdrRenderTexture, CONFIG.clearColor, 'load'),
+        useColorAttachment(normalsTexture, CONFIG.clearNormals, 'load'),
       ],
       depthStencilAttachment: useDepthStencilAttachment(depthTexture, 'load'),
       timestampWrites: profiler?.createScopeGpu(HwHairPass.NAME),
@@ -88,8 +118,16 @@ export class HwHairPass {
   ) {
     object.bindIndexBuffer(renderPass);
 
-    const vertexCount =
-      object.buffers.indicesData.triangleCount * VERTS_IN_TRIANGLE;
+    // render full hair
+    // const { triangleCount } = object.buffers.indicesData;
+    // render with LOD
+    const renderedStrandCnt = HairTilesPass.getRenderedStrandCount(object);
+    const triangleCount = getHairTriangleCount(
+      renderedStrandCnt,
+      object.pointsPerStrand
+    );
+
+    const vertexCount = triangleCount * VERTS_IN_TRIANGLE;
     renderPass.drawIndexed(
       vertexCount,
       1, // instance count

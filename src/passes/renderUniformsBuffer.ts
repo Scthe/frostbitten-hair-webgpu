@@ -2,6 +2,7 @@ import { Mat4, mat4, vec3 } from 'wgpu-matrix';
 import {
   BYTES_F32,
   BYTES_MAT4,
+  BYTES_UVEC4,
   BYTES_VEC4,
   CONFIG,
   DISPLAY_MODE,
@@ -56,6 +57,18 @@ export class RenderUniformsBuffer {
     }
     fn getShadowFiberRadius() -> f32 { return _uniforms.shadows.sourcePosition.w; }
 
+    struct AmbientOcclusion {
+      radius: f32, // in world space
+      directionOffset: f32,
+      falloffStart2: f32,
+      falloffEnd2: f32,
+      // vec4f end, start vec4u
+      numDirections: u32,
+      numSteps: u32,
+      strength: f32,
+      padding0: f32,
+    }
+
     struct HairMaterialParams {
       color: vec3f,
       specular: f32,
@@ -83,6 +96,7 @@ export class RenderUniformsBuffer {
       light1: Light,
       light2: Light,
       shadows: Shadows,
+      ao: AmbientOcclusion,
       hairMaterial: HairMaterialParams,
       fiberRadius: f32,
       dbgShadowMapPreviewSize: f32,
@@ -111,6 +125,7 @@ export class RenderUniformsBuffer {
     BYTES_MAT4 + // mvpShadowSourceMatrix
     BYTES_VEC4 + // shadowSourcePosition;
     BYTES_VEC4; // flags + settings
+  private static AO_SIZE = BYTES_VEC4 + BYTES_UVEC4;
 
   private static BUFFER_SIZE =
     BYTES_MAT4 + // vpMatrix
@@ -126,7 +141,8 @@ export class RenderUniformsBuffer {
     BYTES_VEC4 + // color mgmt
     BYTES_VEC4 + // lightAmbient
     3 * RenderUniformsBuffer.LIGHT_SIZE + // lights
-    RenderUniformsBuffer.SHADOWS_SIZE +
+    RenderUniformsBuffer.SHADOWS_SIZE + // ahadows
+    RenderUniformsBuffer.AO_SIZE + // ao
     2 * BYTES_VEC4 + // hairMaterial
     4 * BYTES_F32; // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
 
@@ -202,6 +218,8 @@ export class RenderUniformsBuffer {
     this.writeLight(c.lights[2]);
     // shadows
     this.writeShadows(scene, modelMatrix);
+    // ao
+    this.writeAo(ctx);
     // hair material
     this.writeHairMaterial();
     // misc
@@ -264,6 +282,21 @@ export class RenderUniformsBuffer {
     this.dataView.writeU32(c.PCF_Radius); // PCF_Radius: u32,
     this.dataView.writeF32(c.bias); // bias: f32,
     this.dataView.writeF32(c.strength); // strength: f32,
+  }
+
+  private writeAo(ctx: PassCtx) {
+    const c = CONFIG.ao;
+
+    this.dataView.writeF32(c.radius);
+    this.dataView.writeF32(c.directionOffset);
+    this.dataView.writeF32(c.falloffStart2);
+    this.dataView.writeF32(c.falloffEnd2);
+
+    this.dataView.writeU32(c.numDirections);
+    this.dataView.writeU32(c.numSteps);
+    const str = ctx.frameIdx == 0 ? 0.0 : c.strength; // no data for first frame
+    this.dataView.writeF32(str);
+    this.dataView.writeU32(0); // padding0: u32,
   }
 
   private writeHairMaterial() {

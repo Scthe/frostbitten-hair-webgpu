@@ -58,6 +58,7 @@ export function initializeGUI(
   addLightFolder(gui, CONFIG.lights[1], 'Light 1');
   addLightFolder(gui, CONFIG.lights[2], 'Light 2');
   addShadowsFolder(gui);
+  addAoFolder(gui);
   addColorMgmt();
   addDbgFolder();
 
@@ -128,7 +129,7 @@ export function initializeGUI(
     // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/UISystem.ts#L170
     const cfg = CONFIG.shadows;
     const dir = gui.addFolder('Shadows');
-    dir.open();
+    // dir.open();
 
     // const techniqueDummy = createDummy(cfg, 'usePCSS', [
     // { label: 'PCF', value: false },
@@ -146,6 +147,21 @@ export function initializeGUI(
     dir.add(cfg.source, 'posPhi', -179, 179).step(1).name('Position phi');
     dir.add(cfg.source, 'posTheta', 15, 165).step(1).name('Position th');
     dir.add(cfg, 'showDebugView').name('Show preview');
+  }
+
+  function addAoFolder(gui: dat.GUI) {
+    // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/UISystem.ts#L170
+    const cfg = CONFIG.ao;
+    const dir = gui.addFolder('Ambient occl.');
+    // dir.open();
+
+    dir.add(cfg, 'strength', 0.0, 1.0).name('Strength');
+    dir.add(cfg, 'radius', 0.001, 2.5).name('Radius');
+    dir.add(cfg, 'numDirections', 0, 128, 1).name('Directions');
+    dir.add(cfg, 'numSteps', 2, 32, 1).name('Steps');
+    dir.add(cfg, 'directionOffset', 0.0, 5).name('Dir. offset');
+    dir.add(cfg, 'falloffStart2', 0.0, 0.5).name('Falloff start');
+    dir.add(cfg, 'falloffEnd2', 1.0, 5.0).name('Falloff end');
   }
 
   function addColorMgmt() {

@@ -8,6 +8,14 @@ import { TfxFileData } from './tfxFileLoader.ts';
 /** Used only for the naive hw hair rendering technique */
 export type HairIndexBuffer = ReturnType<typeof createHairIndexBuffer>;
 
+export const getHairTriangleCount = (
+  numHairStrands: number,
+  numVerticesPerStrand: number
+) => {
+  const iCount = numHairStrands * (numVerticesPerStrand - 1) * 6;
+  return Math.floor(iCount / 3);
+};
+
 /** https://github.com/Scthe/WebFX/blob/master/src/webfx/tfxLoader.ts#L30 */
 export function createHairIndexBuffer(
   device: GPUDevice,

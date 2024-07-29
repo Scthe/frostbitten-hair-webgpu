@@ -125,7 +125,7 @@ export const CONFIG = {
     bias: 0.0005,
     strength: 0.4,
     /** Make hair wider for shadows */
-    hairFiberWidthMultiplier: 3.0,
+    hairFiberWidthMultiplier: 1.0,
     // shadow source
     source: {
       posPhi: 37, // horizontal [dgr]
@@ -138,6 +138,13 @@ export const CONFIG = {
   /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L146 */
   ao: {
     textureSizeMul: 0.5, // half/quater-res, wrt. MSAA
+    radius: 2.0,
+    directionOffset: 0.0,
+    falloffStart2: 0.16,
+    falloffEnd2: 4.0,
+    numDirections: 12,
+    numSteps: 8,
+    strength: 0.4,
   },
 
   ///////////////
@@ -145,7 +152,7 @@ export const CONFIG = {
   hairFile: 'SintelHairOriginal-sintel_hair.16points.tfx' as HairFile,
 
   hairRender: {
-    fiberRadius: 0.0002,
+    fiberRadius: 0.0006,
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 370,
     /** When in 'used_slices' display mode, how much slices are considered full */
@@ -154,12 +161,13 @@ export const CONFIG = {
     dbgShowTiles: false,
 
     material: {
-      color: [0.0, 0.0, 1.0],
-      specular: 2.0, // weight for lobe: R
-      weightTT: 1.0, // weight for lobe: TT
-      weightTRT: 1.0, // weight for lobe: TRT
+      color0: [0.47, 0.17, 0.47],
+      color1: [0.3, 0.0, 1.0],
+      specular: 0.9, // weight for lobe: R
+      weightTT: 0.0, // weight for lobe: TT. It needs depth test as light ignores meshes and affects stuff 'through' them.
+      weightTRT: 1.4, // weight for lobe: TRT
       shift: 0.0,
-      roughness: 0.2,
+      roughness: 0.25,
     },
 
     ////// SHADING

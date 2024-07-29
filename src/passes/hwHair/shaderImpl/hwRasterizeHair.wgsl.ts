@@ -16,6 +16,7 @@ struct HwHairRasterizeParams {
 
 struct HwRasterizedHair {
   position: vec4f,
+  tangentOBJ: vec3f,
 }
 
 /** NOTE: all the comments assume you have 32 verts per strand */
@@ -46,6 +47,7 @@ fn hwRasterizeHair(
   );
   
   result.position = p.projMatrix * hairEdgePosition;
+  result.tangentOBJ = tangentOrg;
   return result;
 }
 

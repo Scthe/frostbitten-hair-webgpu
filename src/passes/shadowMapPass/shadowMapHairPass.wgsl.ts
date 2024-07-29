@@ -2,7 +2,7 @@ import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { BUFFER_HAIR_POINTS_POSITIONS } from '../../scene/hair/hairPointsPositionsBuffer.ts';
 import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
-import { HW_RASTERIZE_HAIR } from '../hwHair/shaderImpl/swRasterizeHair.wgsl.ts';
+import { HW_RASTERIZE_HAIR } from '../hwHair/shaderImpl/hwRasterizeHair.wgsl.ts';
 
 export const SHADER_PARAMS = {
   bindings: {

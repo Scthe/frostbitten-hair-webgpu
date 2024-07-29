@@ -85,7 +85,11 @@ export class Renderer {
       HDR_RENDER_TEX_FORMAT,
       NORMALS_TEX_FORMAT
     );
-    this.hwHairPass = new HwHairPass(device, HDR_RENDER_TEX_FORMAT);
+    this.hwHairPass = new HwHairPass(
+      device,
+      HDR_RENDER_TEX_FORMAT,
+      NORMALS_TEX_FORMAT
+    );
     this.hairTilesPass = new HairTilesPass(device);
     this.hairShadingPass = new HairShadingPass(device);
     this.hairFinePass = new HairFinePass(device);
@@ -154,11 +158,13 @@ export class Renderer {
     const { displayMode } = CONFIG;
     if (
       displayMode === DISPLAY_MODE.HW_RENDER ||
-      displayMode === DISPLAY_MODE.DEPTH || // TODO
-      displayMode === DISPLAY_MODE.AO // TODO
+      // debug modes that can use early-out without sw raster
+      displayMode === DISPLAY_MODE.DEPTH ||
+      displayMode === DISPLAY_MODE.AO ||
+      displayMode === DISPLAY_MODE.NORMALS
     ) {
       this.hwHairPass.cmdDrawHair(ctx);
-      this.aoPass.cmdCalcAo(ctx); // TODO
+      this.aoPass.cmdCalcAo(ctx); // might or might not be used if displayMode is right
       return;
     }
 
@@ -173,6 +179,16 @@ export class Renderer {
       this.hairFinePass.cmdRasterizeSlicesHair(ctx, hairObject);
     }
     this.hairCombinePass.cmdCombineRasterResults(ctx);
+
+    // calculate ao for next frame
+    // we use hardware rasterizer as software one is pain to write the values.
+    // If we had 64bit atomics then sure. But without it, the alternatives are a bit complex.
+    // While depth can just be an atomicMin<u32> during tile pass, the normal/tangent..
+    // In nanite-webpgu I've used 16 bit for depth and 2*u8 oct. encoded normals.
+    // But this is hair, tiny depth imperfections will be visible. Alternatives are.. complex.
+    // And I'm lazy.
+    this.hwHairPass.cmdDrawHair(ctx);
+    this.aoPass.cmdCalcAo(ctx);
   }
 
   private handleViewportResize = (viewportSize: Dimensions) => {

@@ -5,6 +5,7 @@ import { LINEAR_DEPTH } from '../_shaderSnippets/linearDepth.wgsl.ts';
 import { GENERIC_UTILS } from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
+import { TEXTURE_AO } from '../aoPass/shared/textureAo.wgsl.ts';
 
 export const SHADER_PARAMS = {
   bindings: {
@@ -31,6 +32,7 @@ ${GENERIC_UTILS}
 ${SHADER_SNIPPETS.NORMALS_UTILS}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
+${TEXTURE_AO(b.aoTexture)}
 
 @group(0) @binding(${b.resultHDR_Texture})
 var _resultHDR_Texture: texture_2d<f32>;
@@ -40,9 +42,6 @@ var _depthTexture: texture_depth_2d;
 
 @group(0) @binding(${b.normalsTexture})
 var _normalsTexture: texture_2d<f32>;
-
-@group(0) @binding(${b.aoTexture})
-var _aoTexture: texture_2d<f32>;
 
 
 @vertex
@@ -93,11 +92,11 @@ fn main_fs(
     color = vec3f(abs(normal.xyz));
 
   } else if (displayMode == DISPLAY_MODE_AO) {
-    let aoTexSize = textureDimensions(_aoTexture);
-    let t = positionPxF32.xy / vec2f(_uniforms.viewport.xy);
-    let aoSamplePx = vec2i(vec2f(aoTexSize) * t);
-    let ao: f32 = textureLoad(_aoTexture, aoSamplePx, 0).r;
+    let ao = sampleAo(vec2f(_uniforms.viewport.xy), positionPxF32.xy);
     color = vec3f(ao);
+  
+  } else {
+    color = resultColor;
   }
 
   return vec4(color.xyz, 1.0);

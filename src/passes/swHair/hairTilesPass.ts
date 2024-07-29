@@ -84,7 +84,7 @@ export class HairTilesPass {
 
     // dispatch
     const workgroupsX = getItemsPerThread(
-      this.getRenderedStrandCount(hairObject),
+      HairTilesPass.getRenderedStrandCount(hairObject),
       SHADER_PARAMS.workgroupSizeX
     );
     const workgroupsY = getItemsPerThread(
@@ -97,8 +97,8 @@ export class HairTilesPass {
     computePass.end();
   }
 
-  private getRenderedStrandCount(hairObject: HairObject) {
-    const pct = CONFIG.hairRender.lodRenderPercent;
+  public static getRenderedStrandCount(hairObject: HairObject) {
+    const pct = clamp(CONFIG.hairRender.lodRenderPercent, 0, 100);
     const { strandsCount, pointsPerStrand, segmentCount } = hairObject;
     let result = Math.ceil((strandsCount * pct) / 100.0);
     result = clamp(result, 0, strandsCount);

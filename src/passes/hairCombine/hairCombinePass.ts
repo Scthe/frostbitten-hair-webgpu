@@ -7,8 +7,6 @@ import {
   labelShader,
   labelPipeline,
   useColorAttachment,
-  PIPELINE_DEPTH_ON,
-  useDepthStencilAttachment,
   assignResourcesToBindings,
 } from '../_shared/shared.ts';
 import { CONFIG } from '../../constants.ts';
@@ -57,7 +55,7 @@ export class HairCombinePass {
         ],
       },
       primitive: { topology: 'triangle-list' },
-      depthStencil: PIPELINE_DEPTH_ON,
+      // depthStencil: PIPELINE_DEPTH_ON, // done in hair compute shaders
     });
   }
 
@@ -73,7 +71,7 @@ export class HairCombinePass {
         // do not clear!
         useColorAttachment(hdrRenderTexture, CONFIG.clearColor, 'load'),
       ],
-      depthStencilAttachment: useDepthStencilAttachment(depthTexture, 'load'),
+      // depthStencilAttachment: useDepthStencilAttachment(depthTexture, 'load'),  // done in hair compute shaders
       timestampWrites: profiler?.createScopeGpu(HairCombinePass.NAME),
     });
 

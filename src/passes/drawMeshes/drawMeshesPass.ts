@@ -116,11 +116,12 @@ export class DrawMeshesPass {
   }
 
   private createBindings = (
-    { device, globalUniforms, shadowDepthTexture }: PassCtx,
+    { device, globalUniforms, shadowDepthTexture, aoTexture }: PassCtx,
     object: GPUMesh
   ): GPUBindGroup => {
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(shadowDepthTexture);
+    assertIsGPUTextureView(aoTexture);
 
     return assignResourcesToBindings2(
       DrawMeshesPass,
@@ -131,6 +132,7 @@ export class DrawMeshesPass {
         globalUniforms.createBindingDesc(b.renderUniforms),
         { binding: b.shadowMapTexture, resource: shadowDepthTexture },
         { binding: b.shadowMapSampler, resource: this.shadowMapSampler },
+        { binding: b.aoTexture, resource: aoTexture },
       ]
     );
   };

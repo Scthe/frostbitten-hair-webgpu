@@ -15,7 +15,7 @@ import { loadScene } from './scene/loadScene.ts';
   // deno-lint-ignore no-explicit-any
   (globalThis as any)._config = CONFIG;
   // CONFIG.hairRender.lodRenderPercent = 20;
-  console.warn(`Setting hair render% to ${CONFIG.hairRender.lodRenderPercent}`); // prettier-ignore
+  // console.warn(`Setting hair render% to ${CONFIG.hairRender.lodRenderPercent}`); // prettier-ignore
 
   // GPUDevice
   const device = await createGpuDevice();
