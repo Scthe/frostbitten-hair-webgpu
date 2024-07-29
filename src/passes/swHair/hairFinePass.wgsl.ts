@@ -114,7 +114,7 @@ fn main(
 
   while (tileIdx < tileCount) {
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
-    let tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
+    var tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
     
     for (var depthBin = 0u; depthBin < TILE_DEPTH_BINS_COUNT; depthBin += 1u) {
       let allPixelsDone = processTile(
@@ -122,7 +122,7 @@ fn main(
         maxDrawnSegments,
         tileXY,
         depthBin,
-        tileBoundsPx
+        &tileBoundsPx
       );
       if (allPixelsDone) { break; }
     }
@@ -137,15 +137,12 @@ fn processTile(
   maxDrawnSegments: u32,
   tileXY: vec2u,
   depthBin: u32,
-  tileBoundsPx: vec4u
+  tileBoundsPx: ptr<function,vec4u>
 ) -> bool {
-  // let MAX_PROCESSED_SEGMENTS = 0u; // just in case
-  // let MAX_PROCESSED_SEGMENTS = 1u; // just in case
-  // let MAX_PROCESSED_SEGMENTS = 32u; // just in case (the profiled case)
-  // let MAX_PROCESSED_SEGMENTS = 128u; // just in case
   let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
   
   let tileDepth = _getTileDepth(p.viewportSizeU32, tileXY, depthBin);
+  if (tileDepth.y == 0.0) { return false; } // no depth written means empty tile
   var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
@@ -159,7 +156,7 @@ fn processTile(
     if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
       let writtenSliceDataCount = processHairSegment(
         p,
-        tileBoundsPx, tileDepth,
+        (*tileBoundsPx), tileDepth,
         sliceDataOffset,
         &fiberRadiusPx,
         segmentData.x, segmentData.y // strandIdx, segmentIdx

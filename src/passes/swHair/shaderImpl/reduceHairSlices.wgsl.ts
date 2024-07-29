@@ -11,13 +11,15 @@ fn reduceHairSlices(
   processorId: u32,
   viewportSizeU32: vec2u,
   dbgSlicesModeMaxSlices: u32,
-  tileBoundsPx: vec4u
+  tileBoundsPx: ptr<function, vec4u>
 ) -> bool {
   let isDbgSliceCnt = dbgSlicesModeMaxSlices != 0u;
   var sliceData: SliceData;
   var allPixelsDone = true;
-  let boundRectMax = vec2u(tileBoundsPx.zw);
-  let boundRectMin = vec2u(tileBoundsPx.xy);
+  let boundRectMax = vec2u((*tileBoundsPx).zw);
+  let boundRectMin = vec2u((*tileBoundsPx).xy);
+  // further depth bins will not have to process pixels that they have no chance to affect.
+  var noFinishedPixelsRect = vec4u(*tileBoundsPx);
 
   for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y += 1u) {
   for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x += 1u) {
@@ -28,10 +30,11 @@ fn reduceHairSlices(
     var sliceCount = select(0u, u32(finalColor.r * f32(dbgSlicesModeMaxSlices)), isDbgSliceCnt); // debug value
     
     // START: ITERATE SLICES (front to back)
+    // TODO is it faster if we get start/end values from 'processHairSegment'? ATM it's loop on consts, so might be quite fast. And only 4 iters with current settings..
     var s: u32 = 0u;
     for (; s < SLICES_PER_PIXEL; s += 1u) {
       if (isPixelDone(finalColor) && !isDbgSliceCnt) {
-        // finalColor = vec4f(1., 0., 0., 1.);
+        // finalColor = vec4f(1., 0., 0., 1.); // dbg: highlight early out
         break;
       }
 
@@ -57,7 +60,7 @@ fn reduceHairSlices(
       }
     } // END: ITERATE SLICES
     
-    // finish remaining iterations if we break; early
+    // finish remaining iterations if we "break;" early
     for(; s < SLICES_PER_PIXEL; s += 1u) {
       _clearSliceHeadPtr(processorId, pxInTile, s);
     }
@@ -69,7 +72,13 @@ fn reduceHairSlices(
       finalColor.a = 1.0;
     }*/
 
-    allPixelsDone = allPixelsDone && isPixelDone(finalColor);
+    if (!isPixelDone(finalColor)) {
+      allPixelsDone = false;
+      noFinishedPixelsRect.x = min(noFinishedPixelsRect.x, px.x);
+      noFinishedPixelsRect.y = min(noFinishedPixelsRect.y, px.y);
+      noFinishedPixelsRect.z = max(noFinishedPixelsRect.z, px.x);
+      noFinishedPixelsRect.w = max(noFinishedPixelsRect.w, px.y);
+    }
     
     // final write
     if (isDbgSliceCnt) { // debug value
@@ -78,6 +87,12 @@ fn reduceHairSlices(
     }
     _setRasterizerResult(viewportSizeU32, px, finalColor);
   }}
+
+  (*tileBoundsPx) = noFinishedPixelsRect;
+  allPixelsDone = (allPixelsDone ||
+    noFinishedPixelsRect.x >= noFinishedPixelsRect.z ||
+    noFinishedPixelsRect.y >= noFinishedPixelsRect.w
+  );
 
   return allPixelsDone;
 }

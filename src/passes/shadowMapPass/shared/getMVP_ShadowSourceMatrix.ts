@@ -17,10 +17,12 @@ export function getShadowSourceWorldPosition() {
   return pos;
 }
 
-export function getShadowSourceViewMatrix() {
+export function getShadowSourceViewMatrix(modelMatrix: Mat4) {
   const pos = getShadowSourceWorldPosition();
   const src = CONFIG.shadows.source;
-  return mat4.lookAt(pos, src.target, AXIS_Y, TMP_VIEW);
+  // transform by model matrix so we can handle when object moves
+  const target = projectPoint(modelMatrix, src.target, TMP_VEC4);
+  return mat4.lookAt(pos, target, AXIS_Y, TMP_VIEW);
 }
 
 const SAFETY_MARGIN = 1.05;

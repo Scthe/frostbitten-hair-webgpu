@@ -228,7 +228,7 @@ export class RenderUniformsBuffer {
 
   private writeShadows(scene: Scene, modelMatrix: Mat4) {
     const c = CONFIG.shadows;
-    const viewMat = getShadowSourceViewMatrix();
+    const viewMat = getShadowSourceViewMatrix(modelMatrix);
     const projMat = getShadowSourceProjectionMatrix(
       modelMatrix,
       viewMat,
