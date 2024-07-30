@@ -29,6 +29,7 @@ import { HairFinePass } from './passes/swHair/hairFinePass.ts';
 import { HairShadingPass } from './passes/hairShadingPass/hairShadingPass.ts';
 import { ShadowMapPass } from './passes/shadowMapPass/shadowMapPass.ts';
 import { AoPass } from './passes/aoPass/aoPass.ts';
+import { HairObject } from './scene/hair/hairObject.ts';
 
 export class Renderer {
   private readonly renderUniformBuffer: RenderUniformsBuffer;
@@ -103,50 +104,45 @@ export class Renderer {
     this.cameraCtrl.update(deltaTime, input);
   }
 
+  /** Update stuff before first frame. Usually things that depend on depth/normals */
+  beforeFirstFrame(scene: Scene) {
+    const cmdBuf = this.device.createCommandEncoder({
+      label: 'renderer--before-first-frame',
+    });
+
+    const ctx: PassCtx = this.createPassCtx(cmdBuf, scene);
+
+    // update GPU uniforms
+    this.renderUniformBuffer.update(ctx);
+
+    // init stuff for first frame
+    this.drawMeshesPass.cmdDrawMeshes(ctx);
+
+    const { hairObject } = ctx.scene;
+    this.updateResourcesForNextFrame(ctx, hairObject);
+
+    this.device.queue.submit([cmdBuf.finish()]);
+  }
+
   cmdRender(
     cmdBuf: GPUCommandEncoder,
     scene: Scene,
     screenTexture: GPUTextureView
   ) {
     assertIsGPUTextureView(screenTexture);
+    const ctx: PassCtx = this.createPassCtx(cmdBuf, scene);
 
-    const viewMatrix = this.cameraCtrl.viewMatrix;
-    const vpMatrix = getViewProjectionMatrix(
-      viewMatrix,
-      this.projectionMat,
-      this._viewMatrix
-    );
-    const ctx: PassCtx = {
-      frameIdx: this.frameIdx,
-      device: this.device,
-      cmdBuf,
-      viewport: this.viewportSize,
-      scene,
-      hdrRenderTexture: this.hdrRenderTextureView,
-      normalsTexture: this.normalsTextureView,
-      aoTexture: this.aoTextureView,
-      profiler: this.profiler,
-      viewMatrix,
-      vpMatrix,
-      projMatrix: this.projectionMat,
-      cameraPositionWorldSpace: this.cameraCtrl.positionWorldSpace,
-      depthTexture: this.depthTextureView,
-      shadowDepthTexture: this.shadowMapPass.shadowDepthTextureView,
-      globalUniforms: this.renderUniformBuffer,
-      // hair:
-      hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
-      hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,
-      hairRasterizerResultsBuffer:
-        this.hairFinePass.hairRasterizerResultsBuffer,
-    };
-
+    // update GPU uniforms
     this.renderUniformBuffer.update(ctx);
 
-    this.drawBackgroundGradientPass.cmdDraw(ctx, 'load');
+    // draws
+    this.drawBackgroundGradientPass.cmdDraw(ctx);
     this.cmdDrawScene(ctx);
 
+    // present: draw to final render texture
     this.presentPass.cmdDraw(ctx, screenTexture, 'load');
 
+    // done
     this.frameIdx += 1;
   }
 
@@ -175,20 +171,56 @@ export class Renderer {
 
     this.hairTilesPass.cmdDrawHairToTiles(ctx, hairObject);
     if (displayMode !== DISPLAY_MODE.TILES) {
-      this.hairShadingPass.cmdComputeShadingPoints(ctx, hairObject);
       this.hairFinePass.cmdRasterizeSlicesHair(ctx, hairObject);
     }
     this.hairCombinePass.cmdCombineRasterResults(ctx);
 
-    // calculate ao for next frame
+    this.updateResourcesForNextFrame(ctx, hairObject);
+  }
+
+  private updateResourcesForNextFrame(ctx: PassCtx, hairObject: HairObject) {
     // we use hardware rasterizer as software one is pain to write the values.
     // If we had 64bit atomics then sure. But without it, the alternatives are a bit complex.
     // While depth can just be an atomicMin<u32> during tile pass, the normal/tangent..
     // In nanite-webpgu I've used 16 bit for depth and 2*u8 oct. encoded normals.
     // But this is hair, tiny depth imperfections will be visible. Alternatives are.. complex.
     // And I'm lazy.
-    this.hwHairPass.cmdDrawHair(ctx);
-    this.aoPass.cmdCalcAo(ctx);
+    this.hwHairPass.cmdDrawHair(ctx); // writes hair to depth+normal buffer
+    this.aoPass.cmdCalcAo(ctx); // requires depth+normals
+    this.hairShadingPass.cmdComputeShadingPoints(ctx, hairObject); // requires depth
+  }
+
+  private createPassCtx(cmdBuf: GPUCommandEncoder, scene: Scene): PassCtx {
+    const viewMatrix = this.cameraCtrl.viewMatrix;
+    const vpMatrix = getViewProjectionMatrix(
+      viewMatrix,
+      this.projectionMat,
+      this._viewMatrix
+    );
+    return {
+      frameIdx: this.frameIdx,
+      device: this.device,
+      cmdBuf,
+      viewport: this.viewportSize,
+      scene,
+      hdrRenderTexture: this.hdrRenderTextureView,
+      normalsTexture: this.normalsTextureView,
+      aoTexture: this.aoTextureView,
+      profiler: this.profiler,
+      viewMatrix,
+      vpMatrix,
+      projMatrix: this.projectionMat,
+      cameraPositionWorldSpace: this.cameraCtrl.positionWorldSpace,
+      depthTexture: this.depthTextureView,
+      shadowDepthTexture: this.shadowMapPass.shadowDepthTextureView,
+      shadowMapSampler: this.shadowMapPass.shadowMapSampler,
+      globalUniforms: this.renderUniformBuffer,
+      // hair:
+      hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
+      hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,
+      hairRasterizerResultsBuffer:
+        this.hairFinePass.hairRasterizerResultsBuffer,
+    };
   }
 
   private handleViewportResize = (viewportSize: Dimensions) => {

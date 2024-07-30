@@ -56,7 +56,16 @@ import { loadScene } from './scene/loadScene.ts';
   let done = false;
 
   // init ended, report errors
-  const lastError = await errorSystem.reportErrorScopeAsync();
+  let lastError = await errorSystem.reportErrorScopeAsync();
+  if (lastError) {
+    showErrorMessage(lastError);
+    return;
+  }
+
+  // stuff before first frame
+  errorSystem.startErrorScope('beforeFirstFrame');
+  renderer.beforeFirstFrame(scene);
+  lastError = await errorSystem.reportErrorScopeAsync();
   if (lastError) {
     showErrorMessage(lastError);
     return;

@@ -1,5 +1,15 @@
 /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/shaders/_shadows.glsl */
-export const SAMPLE_SHADOW_MAP = /* wgsl */ `
+export const SAMPLE_SHADOW_MAP = (b: {
+  bindingTexture: number;
+  bindingSampler: number;
+}) => /* wgsl */ `
+
+@group(0) @binding(${b.bindingTexture})
+var _shadowMapTexture: texture_depth_2d;
+
+@group(0) @binding(${b.bindingSampler})
+// var _shadowMapSampler: sampler_comparison;
+var _shadowMapSampler: sampler;
 
 const IN_SHADOW = 1.0;
 const NOT_IN_SHADOW = 0.0;
@@ -7,6 +17,21 @@ const NOT_IN_SHADOW = 0.0;
 // settings
 const PCSS_PENUMBRA_WIDTH = 10.0;
 const PCSS_PENUMBRA_BASE: i32 = 1; // we want at least some blur
+
+fn projectToShadowSpace(
+  mvpShadowSourceMatrix: mat4x4f,
+  positionWS: vec4f
+) -> vec3f {
+  // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/shaders/sintel.vert.glsl
+  // XY is in (-1, 1) space, Z is in (0, 1) space
+  let posFromLight = mvpShadowSourceMatrix * positionWS;
+  // Convert XY to (0, 1)
+  return vec3f(
+    posFromLight.x * 0.5 + 0.5,
+    1.0 - (posFromLight.y * 0.5 + 0.5), // Y is flipped because texture coords are Y-down.
+    posFromLight.z
+  );
+}
 
 /*
 --- MINIMAL IMPLEMENTATION ---
@@ -94,11 +119,17 @@ fn _sampleShadowMap(sampleRadius: i32, lightPosProj: vec3f, bias: f32) -> f32 {
     );
     shadow += shadowMapDepth;*/
 
-    let shadowMapDepth: f32 = textureSample(
+    /*let shadowMapDepth: f32 = textureSample(
+      _shadowMapTexture,
+      _shadowMapSampler,
+      lightPosProj.xy + offset
+    );*/
+    let shadowMapDepth4 = textureGather(
       _shadowMapTexture,
       _shadowMapSampler,
       lightPosProj.xy + offset
     );
+    let shadowMapDepth = (shadowMapDepth4.x + shadowMapDepth4.y + shadowMapDepth4.z + shadowMapDepth4.w) / 4.0;
     let isInShadow = fragmentDepth - bias > shadowMapDepth;
     shadow += select(NOT_IN_SHADOW, IN_SHADOW, isInShadow);
   }
@@ -126,3 +157,10 @@ fn _isValidShadowSample(postionShadowSourceSpace: vec3f) -> bool {
 }
 
 `;
+
+export function createShadowSampler(device: GPUDevice) {
+  return device.createSampler({
+    label: 'shadow-map-sampler',
+    // compare: 'less',
+  });
+}

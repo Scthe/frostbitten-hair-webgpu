@@ -68,11 +68,13 @@ async function renderSceneToFile(
 
   // init ended, report errors
   console.log('Checking async WebGPU errors after init()..');
-  const lastError = await errorSystem.reportErrorScopeAsync();
-  if (lastError) {
-    console.error(lastError);
-    Deno.exit(1);
-  }
+  await assertNoWebGPUErrorsAsync();
+
+  // stuff before first frame
+  console.log('Setting stuff before first frame');
+  errorSystem.startErrorScope('beforeFirstFrame');
+  renderer.beforeFirstFrame(scene);
+  await assertNoWebGPUErrorsAsync();
   console.log('Init OK!');
 
   const mainCmdBufDesc: GPUCommandEncoderDescriptor = {
@@ -102,10 +104,7 @@ async function renderSceneToFile(
   console.log('Frame submitted, checking errors..');
 
   // frame end
-  await errorSystem.reportErrorScopeAsync((lastError) => {
-    console.error(lastError);
-    throw new Error(lastError);
-  });
+  await assertNoWebGPUErrorsAsync();
 
   // write output
   await writePngFromGPUBuffer(outputBuffer, VIEWPORT_SIZE, outputPath);
@@ -147,4 +146,12 @@ function reportProfiler(result: GpuProfilerResult) {
     console.log(`%c - %c${name}:`, '', 'color: green', `${timeMs}ms`);
   });
   console.log(']');
+}
+
+async function assertNoWebGPUErrorsAsync() {
+  const lastError = await errorSystem.reportErrorScopeAsync();
+  if (lastError) {
+    console.error(lastError);
+    Deno.exit(1);
+  }
 }

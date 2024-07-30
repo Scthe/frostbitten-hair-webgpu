@@ -10,7 +10,6 @@ import {
   useDepthStencilAttachment,
   assignResourcesToBindings2,
   PIPELINE_DEPTH_ON,
-  createLabel,
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawMeshesPass.wgsl.ts';
@@ -20,7 +19,6 @@ export class DrawMeshesPass {
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();
-  private readonly shadowMapSampler: GPUSampler;
 
   constructor(
     device: GPUDevice,
@@ -50,11 +48,6 @@ export class DrawMeshesPass {
       },
       primitive: PIPELINE_PRIMITIVE_TRIANGLE_LIST,
       depthStencil: PIPELINE_DEPTH_ON,
-    });
-
-    this.shadowMapSampler = device.createSampler({
-      label: createLabel(DrawMeshesPass, 'shadow-map-sampler'),
-      // compare: 'less',
     });
   }
 
@@ -115,10 +108,14 @@ export class DrawMeshesPass {
     );
   }
 
-  private createBindings = (
-    { device, globalUniforms, shadowDepthTexture, aoTexture }: PassCtx,
-    object: GPUMesh
-  ): GPUBindGroup => {
+  private createBindings = (ctx: PassCtx, object: GPUMesh): GPUBindGroup => {
+    const {
+      device,
+      globalUniforms,
+      shadowDepthTexture,
+      shadowMapSampler,
+      aoTexture,
+    } = ctx;
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(shadowDepthTexture);
     assertIsGPUTextureView(aoTexture);
@@ -131,7 +128,7 @@ export class DrawMeshesPass {
       [
         globalUniforms.createBindingDesc(b.renderUniforms),
         { binding: b.shadowMapTexture, resource: shadowDepthTexture },
-        { binding: b.shadowMapSampler, resource: this.shadowMapSampler },
+        { binding: b.shadowMapSampler, resource: shadowMapSampler },
         { binding: b.aoTexture, resource: aoTexture },
       ]
     );

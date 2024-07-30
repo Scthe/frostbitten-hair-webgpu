@@ -123,7 +123,7 @@ export const CONFIG = {
     usePCSS: false, // TODO implement. Restore in GUI
     PCF_Radius: 3, // in pixels
     bias: 0.0005,
-    strength: 0.4,
+    strength: 0.4, // only for meshes. For hair, see 'hairRender'
     /** Make hair wider for shadows */
     hairFiberWidthMultiplier: 1.0,
     // shadow source
@@ -167,7 +167,11 @@ export const CONFIG = {
       weightTT: 0.0, // weight for lobe: TT. It needs depth test as light ignores meshes and affects stuff 'through' them.
       weightTRT: 1.4, // weight for lobe: TRT
       shift: 0.0,
-      roughness: 0.25,
+      roughness: 0.3,
+      colorRng: 0.1, // [0 .. 1]
+      lumaRng: 0.1, //
+      attenuation: 30.0,
+      shadows: 0.5,
     },
 
     ////// SHADING

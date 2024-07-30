@@ -28,18 +28,13 @@ ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
 ${SHADER_SNIPPETS.NORMALS_UTILS}
 ${SNIPPET_SHADING_PBR}
-${SAMPLE_SHADOW_MAP}
+${SAMPLE_SHADOW_MAP({
+  bindingTexture: b.shadowMapTexture,
+  bindingSampler: b.shadowMapSampler,
+})}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${TEXTURE_AO(b.aoTexture)}
-
-
-@group(0) @binding(${b.shadowMapTexture})
-var _shadowMapTexture: texture_depth_2d;
-
-@group(0) @binding(${b.shadowMapSampler})
-// var _shadowMapSampler: sampler_comparison;
-var _shadowMapSampler: sampler;
 
 
 struct VertexOutput {
@@ -68,15 +63,8 @@ fn main_vs(
   result.positionWS = vertexPos;
   result.normalWS = transformNormalToWorldSpace(modelMat, inNormal);
   result.uv = inUV;
-
-  // https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/shaders/sintel.vert.glsl
-  // XY is in (-1, 1) space, Z is in (0, 1) space
-  let posFromLight = mvpShadowSourceMatrix * vertexPos;
-  // Convert XY to (0, 1)
-  result.positionShadowSpace = vec3f(
-    posFromLight.x * 0.5 + 0.5,
-    1.0 - (posFromLight.y * 0.5 + 0.5), // Y is flipped because texture coords are Y-down.
-    posFromLight.z
+  result.positionShadowSpace = projectToShadowSpace(
+    mvpShadowSourceMatrix, vertexPos
   );
 
   return result;
@@ -109,7 +97,7 @@ fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
   );
   var c = material.shadow;
 
-  // ao (not on first frame)
+  // ao
   let ao = sampleAo(vec2f(_uniforms.viewport.xy), fragIn.position.xy);
   material.ao = mix(1.0, ao, _uniforms.ao.strength);
   // c = material.ao;

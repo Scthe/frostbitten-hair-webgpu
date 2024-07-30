@@ -92,6 +92,7 @@ export const createMockPassCtx = (
     normalsTexture: undefined!,
     aoTexture: undefined!,
     shadowDepthTexture: undefined!,
+    shadowMapSampler: undefined!,
     globalUniforms: undefined!,
     hairRasterizerResultsBuffer: undefined!,
     hairTilesBuffer: undefined!,

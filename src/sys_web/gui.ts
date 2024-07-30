@@ -71,7 +71,7 @@ export function initializeGUI(
     dir.open();
 
     dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
-    dir.add(cfg, 'fiberRadius', 0.0001, 0.01).name('Radius');
+    dir.add(cfg, 'fiberRadius', 0.0001, 0.002).name('Radius');
     const tileSegmentsCtrl = dir
       .add(cfg, 'dbgTileModeMaxSegments', 1, 512)
       .step(1)
@@ -99,12 +99,17 @@ export function initializeGUI(
     // dir.open();
 
     // TODO tune ranges
-    addColorController(dir, cfg, 'color', 'Color');
+    addColorController(dir, cfg, 'color0', 'Color root');
+    addColorController(dir, cfg, 'color1', 'Color tip');
+    dir.add(cfg, 'colorRng', 0.0, 1.0).name('Color RNG');
+    dir.add(cfg, 'lumaRng', 0.0, 1.0).name('Luma RNG');
     dir.add(cfg, 'specular', 0.0, 3.0, 0.01).name('Specular');
     dir.add(cfg, 'weightTT', 0.0, 2.0, 0.01).name('Weight TT');
     dir.add(cfg, 'weightTRT', 0.0, 2.0, 0.01).name('Weight TRT');
     dir.add(cfg, 'shift', -1.0, 1.0, 0.01).name('Shift');
     dir.add(cfg, 'roughness', 0.0, 1.0, 0.01).name('Roughness');
+    dir.add(cfg, 'attenuation', 0.0, 40.0).name('Attenuation');
+    dir.add(cfg, 'shadows', 0.0, 1.0).name('Shadows');
   }
 
   function addAmbientLightFolder(gui: dat.GUI) {

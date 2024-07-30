@@ -7,6 +7,10 @@ import { BUFFER_HAIR_SHADING } from '../../scene/hair/hairShadingBuffer.ts';
 import { SNIPPET_SHADING_PBR_UTILS } from '../_shaderSnippets/pbr.wgsl.ts';
 import { SHADER_CODE_MARSCHNER } from './marschner.wgsl.ts';
 import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
+import { SNIPPET_NOISE } from '../_shaderSnippets/noise.wgsl.ts';
+import { SAMPLE_SHADOW_MAP } from '../shadowMapPass/shared/sampleShadows.wgsl.ts';
+import { TEXTURE_AO } from '../aoPass/shared/textureAo.wgsl.ts';
+import { LINEAR_DEPTH } from '../_shaderSnippets/linearDepth.wgsl.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 1, // TODO [LOW] adjust
@@ -17,6 +21,10 @@ export const SHADER_PARAMS = {
     hairPositions: 2,
     hairTangents: 3,
     hairShading: 4,
+    shadowMapTexture: 5,
+    shadowMapSampler: 6,
+    aoTexture: 7,
+    depthTexture: 8,
   },
 };
 
@@ -32,13 +40,22 @@ ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
 ${SNIPPET_SHADING_PBR_UTILS}
 ${SHADER_CODE_MARSCHNER}
+${SNIPPET_NOISE}
+${SAMPLE_SHADOW_MAP({
+  bindingTexture: b.shadowMapTexture,
+  bindingSampler: b.shadowMapSampler,
+})}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_DATA(b.hairData)}
 ${BUFFER_HAIR_POINTS_POSITIONS(b.hairPositions)}
 ${BUFFER_HAIR_TANGENTS(b.hairTangents)}
 ${BUFFER_HAIR_SHADING(b.hairShading, 'read_write')}
+${TEXTURE_AO(b.aoTexture)}
+${LINEAR_DEPTH}
 
+@group(0) @binding(${b.depthTexture})
+var _depthTexture: texture_depth_2d;
 
 
 @compute
@@ -50,7 +67,9 @@ fn main(
   let shadingPointId = global_id.y;
   let SHADING_POINTS_f32 = f32(SHADING_POINTS);
   let cameraPositionWS = _uniforms.cameraPosition.xyz;
+  let viewport = vec2f(_uniforms.viewport.xy);
   let modelMatrix = _uniforms.modelMatrix;
+  let vpMatrix = _uniforms.vpMatrix;
   let pointsPerStrand = _hairData.pointsPerStrand;
 
   var color = vec4f(0., 0., 0., 1.);
@@ -74,26 +93,72 @@ fn main(
   let tangentOBJ = mix(tangent0_obj, tangent1_obj, tInSegment);
   let positionWS = modelMatrix * vec4f(positionOBJ, 1.0);
   let tangentWS = modelMatrix * vec4f(tangentOBJ, 1.0);
+  let positionProj = projectVertex(vpMatrix, positionWS);
+  let positionPx_0_1 = vec2f( // range: [0, 1]
+    (positionProj.x * 0.5 + 0.5),
+    (positionProj.y * 0.5 + 0.5),
+  );
+  // let positionPx = viewport * positionPx_0_1; // range: [0.,  viewportPixels.xy]
+  let positionTexSamplePx = viewport * vec2f(positionPx_0_1.x, 1.0 - positionPx_0_1.y); // range: [0.,  viewportPixels.xy]
+
+
+  // base color
+  let baseColor0 = _uniforms.hairMaterial.color0;
+  let baseColor1 = _uniforms.hairMaterial.color1;
+  var baseColor = mix(baseColor0, baseColor1, t);
+  let randStrandColor = randomRGB(strandIdx, 1.0);
+  // let randStrandColor = vec3f(0., 1., 0.);
+  baseColor = mix(baseColor, randStrandColor, _uniforms.hairMaterial.colorRng);
+  let rngBrightness = fract(f32(strandIdx) / 255.0);
+  baseColor = mix(baseColor, baseColor * rngBrightness, _uniforms.hairMaterial.lumaRng);
+  // baseColor = vec3f(rngBrightness);
 
   let toCamera: vec3f = normalize(cameraPositionWS - positionWS.xyz);
   let params = MarschnerParams(
-    _uniforms.hairMaterial.color, // vec3f(0., 0., 1.0), // baseColor
+    baseColor,
     _uniforms.hairMaterial.specular, // (weight for .r)
     _uniforms.hairMaterial.weightTT,
     _uniforms.hairMaterial.weightTRT,
     _uniforms.hairMaterial.shift,
     _uniforms.hairMaterial.roughness,
   );
+
+  // shadow
+  let maxShadowStr = _uniforms.hairMaterial.shadows;
+  let mvpShadowSourceMatrix = _uniforms.shadows.sourceMVP_Matrix;
+  var shadow = getShadow(
+    mvpShadowSourceMatrix,
+    positionWS,
+    tangentWS.xyz,
+  );
+  shadow = clamp(shadow, 1.0 - maxShadowStr, 1.0);
+  // baseColor = vec3f(shadow); // dbg
+
+  // ao
+  var ao = sampleAo(vec2f(viewport.xy), positionTexSamplePx);
+  ao = 1.0 - mix(1.0, ao, _uniforms.ao.strength); // 0-unoccluded, 1-occluded
+  // baseColor = vec3f(ao); // dbg
+
+  // attenuation
+  let attenuation = getAttenuation(
+    positionProj,
+    positionTexSamplePx,
+    _uniforms.hairMaterial.attenuation,
+  );
+  ao = saturate(ao + attenuation);
+
   
+  // start light/material calc.
   let ambient = _uniforms.lightAmbient.rgb * _uniforms.lightAmbient.a;
   var radianceSum = vec3(0.0);
 
-  radianceSum += hairShading(params, _uniforms.light0, toCamera, tangentWS, positionWS);
-  radianceSum += hairShading(params, _uniforms.light1, toCamera, tangentWS, positionWS);
-  radianceSum += hairShading(params, _uniforms.light2, toCamera, tangentWS, positionWS);
+  radianceSum += hairShading(params, _uniforms.light0, toCamera, tangentWS, positionWS, shadow, ao);
+  radianceSum += hairShading(params, _uniforms.light1, toCamera, tangentWS, positionWS, shadow, ao);
+  radianceSum += hairShading(params, _uniforms.light2, toCamera, tangentWS, positionWS, shadow, ao);
 
-  color = vec4f(radianceSum, 1.0); // TODO add alpha?
+  color = vec4f(radianceSum, 1.0); // TODO add alpha [0.8 .. 1.0]?
   _setShadingPoint(strandIdx, shadingPointId, color);
+  // _setShadingPoint(strandIdx, shadingPointId, vec4f(baseColor, 1.0)); // dbg
 }
 
 fn hairShading(
@@ -102,11 +167,10 @@ fn hairShading(
   toCamera: vec3f,
   tangentWS: vec4f,
   positionWS: vec4f,
+  shadow: f32,
+  aoTerm: f32, // 0-unoccluded, 1-occluded
 ) -> vec3f {
   let toLight: vec3f = normalize(light.position.xyz - positionWS.xyz);
-  // TODO add ambient occlusion and shadows
-  let shadow = 0.0;
-  let aoTerm = 0.0; // 0-unoccluded, 1-occluded
 
   let diffuse = KajiyaKayDiffuse(p.baseColor, toLight, tangentWS.xyz);
   let multipleScatter = fakeMultipleScattering(
@@ -116,7 +180,9 @@ fn hairShading(
     p.baseColor,
     shadow
   );
-  let diffuseTotal = diffuse * multipleScatter * saturate(dot(tangentWS.xyz, toLight));
+  var diffuseTotal = diffuse * multipleScatter * saturate(dot(tangentWS.xyz, toLight));
+  // diffuseTotal *= shadow;
+  // return diffuseTotal;
 
   let marschnerSpec = hairSpecularMarschner(
     p,
@@ -162,6 +228,54 @@ fn fakeMultipleScattering(
 
   // combine
   return sqrt(baseColor) * diffuseScatter * tint;
+}
+
+fn getShadow(
+  mvpShadowSourceMatrix: mat4x4f,
+  positionWS: vec4f,
+  normalWS: vec3f,
+) -> f32 {
+  let shadowSourcePositionWS = _uniforms.shadows.sourcePosition.xyz;
+  let positionShadowSpace = projectToShadowSpace(
+    mvpShadowSourceMatrix, positionWS
+  );
+  return 1.0 - calculateDirectionalShadow(
+    _uniforms.shadows.usePCSS > 0u,
+    shadowSourcePositionWS,
+    positionWS.xyz,
+    normalWS,
+    positionShadowSpace,
+    _uniforms.shadows.PCF_Radius,
+    _uniforms.shadows.bias
+  );
+}
+
+/**
+ * Fake attenuation mimicking https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law
+ * 
+*/
+fn getAttenuation(
+  positionProj: vec3f,
+  positionTexSamplePx: vec2f,
+  attenuationFactor: f32,
+) -> f32 {
+  let myDepth = linearizeDepth(positionProj.z); // [zNear, zFar]
+  let zBufferDepthProj = textureLoad(_depthTexture, vec2u(positionTexSamplePx), 0);
+  let zBufferDepth = linearizeDepth(zBufferDepthProj); // [zNear, zFar]
+  let depthDiff = abs(myDepth - zBufferDepth); // small value means near front. Bigger values further back
+  return depthDiff * attenuationFactor;
+
+  // dbg
+  // baseColor = vec3f(depthDiff * 10.0); // dbg
+  // var c: f32; let rescale = vec2f(0.002, 0.01); // dbg
+  // c = depthDiff * 10.0;
+  // c = mapRange(rescale.x, rescale.y, 0., 1., myDepth / (100.0 - 0.1));
+  // c = mapRange(rescale.x, rescale.y, 0., 1., zBufferDepth / (100.0 - 0.1));
+  // c = positionPx.y / viewport.y;
+  // c = mapRange(.2, .4, 0., 1., c);
+  // c = select(0., 1., c > .5);
+  // baseColor = vec3f(c); // dbg
+  // baseColor = vec3f(attenuation); // dbg
 }
 
 `;

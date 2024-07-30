@@ -41,4 +41,12 @@ fn fractalNoise(p: vec2f, scale: f32) -> f32 {
       f += 0.0625 * noise(uv); uv = m * uv;
   return f;
 }
+
+fn randomRGB(v: u32, brightnessMod: f32) -> vec3f {
+  return saturate(vec3f(
+    fract(f32(v) * 1.73) * brightnessMod,
+    fract(f32(v) * 1.17) * brightnessMod,
+    fract(f32(v) * 1.31) * brightnessMod,
+  ));
+}
 `;

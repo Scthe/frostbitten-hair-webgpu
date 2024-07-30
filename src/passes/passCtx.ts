@@ -20,6 +20,7 @@ export interface PassCtx {
   normalsTexture: GPUTextureView;
   aoTexture: GPUTextureView;
   shadowDepthTexture: GPUTextureView;
+  shadowMapSampler: GPUSampler;
   globalUniforms: RenderUniformsBuffer;
   // hair:
   hairTilesBuffer: GPUBuffer;

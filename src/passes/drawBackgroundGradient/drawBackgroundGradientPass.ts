@@ -45,7 +45,7 @@ export class DrawBackgroundGradientPass {
 
   onViewportResize = () => this.bindingsCache.clear();
 
-  cmdDraw(ctx: PassCtx, loadOp: GPULoadOp) {
+  cmdDraw(ctx: PassCtx) {
     const { cmdBuf, profiler, hdrRenderTexture } = ctx;
     assertIsGPUTextureView(hdrRenderTexture);
 
@@ -53,7 +53,7 @@ export class DrawBackgroundGradientPass {
       label: DrawBackgroundGradientPass.NAME,
       colorAttachments: [
         // TBH no need for clear as we override every pixel
-        useColorAttachment(hdrRenderTexture, CONFIG.clearColor, loadOp),
+        useColorAttachment(hdrRenderTexture, CONFIG.clearColor, 'load'),
       ],
       timestampWrites: profiler?.createScopeGpu(
         DrawBackgroundGradientPass.NAME

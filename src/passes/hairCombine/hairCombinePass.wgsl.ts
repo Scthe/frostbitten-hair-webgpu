@@ -41,7 +41,7 @@ fn main_vs(
 }
 
 struct FragmentOutput {
-  @builtin(frag_depth) fragDepth: f32,
+  // @builtin(frag_depth) fragDepth: f32,
   @location(0) color: vec4<f32>,
 };
 

@@ -15,6 +15,7 @@ import { HwHairPass } from '../hwHair/hwHairPass.ts';
 import { PassCtx } from '../passCtx.ts';
 import * as SHADER_MESHES from './shadowMapPass.wgsl.ts';
 import * as SHADER_HAIR from './shadowMapHairPass.wgsl.ts';
+import { createShadowSampler } from './shared/sampleShadows.wgsl.ts';
 
 /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/webfx/passes/ShadowPass.ts */
 export class ShadowMapPass {
@@ -23,11 +24,14 @@ export class ShadowMapPass {
   private readonly pipelineMeshes: GPURenderPipeline;
   private readonly pipelineHair: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();
+  public readonly shadowMapSampler: GPUSampler;
   // render targets:
   private readonly shadowDepthTexture: GPUTexture;
   public readonly shadowDepthTextureView: GPUTextureView;
 
   constructor(device: GPUDevice) {
+    this.shadowMapSampler = createShadowSampler(device);
+
     // meshes
     const shaderModuleMeshes = device.createShaderModule({
       label: labelShader(ShadowMapPass),

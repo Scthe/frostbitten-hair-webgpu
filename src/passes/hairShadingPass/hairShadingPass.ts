@@ -63,10 +63,15 @@ export class HairShadingPass {
     computePass.end();
   }
 
-  private createBindings = (
-    { device, globalUniforms, depthTexture }: PassCtx,
-    object: HairObject
-  ): GPUBindGroup => {
+  private createBindings = (ctx: PassCtx, object: HairObject): GPUBindGroup => {
+    const {
+      device,
+      globalUniforms,
+      shadowDepthTexture,
+      shadowMapSampler,
+      depthTexture,
+      aoTexture,
+    } = ctx;
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(depthTexture);
 
@@ -81,6 +86,10 @@ export class HairShadingPass {
         object.bindPointsPositions(b.hairPositions),
         object.bindTangents(b.hairTangents),
         object.bindShading(b.hairShading),
+        { binding: b.shadowMapTexture, resource: shadowDepthTexture },
+        { binding: b.shadowMapSampler, resource: shadowMapSampler },
+        { binding: b.aoTexture, resource: aoTexture },
+        { binding: b.depthTexture, resource: depthTexture },
       ]
     );
   };

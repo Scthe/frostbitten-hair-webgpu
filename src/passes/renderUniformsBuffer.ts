@@ -70,13 +70,22 @@ export class RenderUniformsBuffer {
     }
 
     struct HairMaterialParams {
-      color: vec3f,
+      // 1 * vec4f
+      color0: vec3f,
       specular: f32,
-      // 4 * f32 alignment end
+      // 1 * vec4f
+      color1: vec3f,
+      shadows: f32,
+      // 4 * f32
       weightTT: f32,
       weightTRT: f32,
       shift: f32,
       roughness: f32,
+      // 4 * f32
+      colorRng: f32,
+      lumaRng: f32,
+      attenuation: f32,
+      padding1: f32,
     }
 
     struct Uniforms {
@@ -143,7 +152,7 @@ export class RenderUniformsBuffer {
     3 * RenderUniformsBuffer.LIGHT_SIZE + // lights
     RenderUniformsBuffer.SHADOWS_SIZE + // ahadows
     RenderUniformsBuffer.AO_SIZE + // ao
-    2 * BYTES_VEC4 + // hairMaterial
+    4 * BYTES_VEC4 + // hairMaterial
     4 * BYTES_F32; // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
 
   private readonly gpuBuffer: GPUBuffer;
@@ -219,7 +228,7 @@ export class RenderUniformsBuffer {
     // shadows
     this.writeShadows(scene, modelMatrix);
     // ao
-    this.writeAo(ctx);
+    this.writeAo();
     // hair material
     this.writeHairMaterial();
     // misc
@@ -284,7 +293,7 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(c.strength); // strength: f32,
   }
 
-  private writeAo(ctx: PassCtx) {
+  private writeAo() {
     const c = CONFIG.ao;
 
     this.dataView.writeF32(c.radius);
@@ -294,22 +303,33 @@ export class RenderUniformsBuffer {
 
     this.dataView.writeU32(c.numDirections);
     this.dataView.writeU32(c.numSteps);
-    const str = ctx.frameIdx == 0 ? 0.0 : c.strength; // no data for first frame
+    const str = c.strength;
     this.dataView.writeF32(str);
     this.dataView.writeU32(0); // padding0: u32,
   }
 
   private writeHairMaterial() {
     const m = CONFIG.hairRender.material;
-    this.dataView.writeF32(m.color[0]);
-    this.dataView.writeF32(m.color[1]);
-    this.dataView.writeF32(m.color[2]);
+
+    this.dataView.writeF32(m.color0[0]);
+    this.dataView.writeF32(m.color0[1]);
+    this.dataView.writeF32(m.color0[2]);
     this.dataView.writeF32(m.specular);
+
+    this.dataView.writeF32(m.color1[0]);
+    this.dataView.writeF32(m.color1[1]);
+    this.dataView.writeF32(m.color1[2]);
+    this.dataView.writeF32(m.shadows);
 
     this.dataView.writeF32(m.weightTT);
     this.dataView.writeF32(m.weightTRT);
     this.dataView.writeF32(m.shift);
     this.dataView.writeF32(m.roughness);
+
+    this.dataView.writeF32(m.colorRng);
+    this.dataView.writeF32(m.lumaRng);
+    this.dataView.writeF32(m.attenuation);
+    this.dataView.writeF32(0.0);
   }
 
   private encodeDebugMode() {
