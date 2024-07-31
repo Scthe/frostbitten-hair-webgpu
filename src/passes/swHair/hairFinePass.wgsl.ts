@@ -151,7 +151,6 @@ fn processTile(
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var processedSegmentCnt = 0u;
   var sliceDataOffset = 0u;
-  var fiberRadiusPx = -1.0; // negative as it will cause recalc on first segment
 
   // for each segment:
   //    iterate over tile's pixels and write color to appropriate depth-slice
@@ -161,7 +160,6 @@ fn processTile(
         p,
         (*tileBoundsPx), tileDepth,
         sliceDataOffset,
-        &fiberRadiusPx,
         segmentData.x, segmentData.y // strandIdx, segmentIdx
       );
       sliceDataOffset = sliceDataOffset + writtenSliceDataCount;

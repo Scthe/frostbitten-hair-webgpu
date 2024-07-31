@@ -98,7 +98,6 @@ export function initializeGUI(
     const dir = gui.addFolder('Hair material');
     // dir.open();
 
-    // TODO tune ranges
     addColorController(dir, cfg, 'color0', 'Color root');
     addColorController(dir, cfg, 'color1', 'Color tip');
     dir.add(cfg, 'colorRng', 0.0, 1.0).name('Color RNG');
@@ -136,11 +135,11 @@ export function initializeGUI(
     const dir = gui.addFolder('Shadows');
     // dir.open();
 
-    // const techniqueDummy = createDummy(cfg, 'usePCSS', [
-    // { label: 'PCF', value: false },
-    // { label: 'PCSS', value: true },
-    // ]);
-    // dir.add(techniqueDummy, 'usePCSS', techniqueDummy.values).name('Technique');
+    const techniqueDummy = createDummy(cfg, 'usePCSS', [
+      { label: 'PCF', value: false },
+      { label: 'PCSS', value: true },
+    ]);
+    dir.add(techniqueDummy, 'usePCSS', techniqueDummy.values).name('Technique');
     dir.add(cfg, 'strength', 0.0, 1.0).name('Strength');
     dir.add(cfg, 'PCF_Radius', [0, 1, 2, 3, 4]).name('PCF radius');
     dir.add(cfg, 'bias', 0.0001, 0.005).name('Bias');
@@ -179,14 +178,18 @@ export function initializeGUI(
   }
 
   function addDbgFolder() {
-    const dir = gui.addFolder('DEBUG');
-    dir.open();
-
-    // bg
-    addColorController(dir, CONFIG, 'clearColor', 'Bg color');
+    const dir = gui.addFolder('Misc');
+    // dir.open();
+    const bg = CONFIG.background;
 
     // camera reset
     dir.add(dummyObject, 'resetCamera').name('Reset camera');
+
+    // bg
+    addColorController(dir, bg, 'color0', 'Bg color 0');
+    addColorController(dir, bg, 'color1', 'Bg color 1');
+    dir.add(bg, 'noiseScale', 0.0, 10.0).name('Bg noise scale');
+    dir.add(bg, 'gradientStrength', 0.0, 1.0).name('Bg gradient');
   }
 
   //////////////

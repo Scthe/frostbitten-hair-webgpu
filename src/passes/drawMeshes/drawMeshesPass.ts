@@ -51,6 +51,10 @@ export class DrawMeshesPass {
     });
   }
 
+  onViewportResize = () => {
+    this.bindingsCache.clear();
+  };
+
   cmdDrawMeshes(ctx: PassCtx) {
     const {
       cmdBuf,

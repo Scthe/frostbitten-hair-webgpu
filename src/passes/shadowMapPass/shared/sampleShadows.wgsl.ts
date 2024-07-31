@@ -59,26 +59,20 @@ fn calculateDirectionalShadow(
   let toShadowSource = normalize(shadowSourcePositionWS - positionWS);
   let actualBias: f32 = max(abs(bias) * (1.0 - dot(normalWS, toShadowSource)), 0.0005);
 
-  
   var actualSampleRadius: i32 = i32(sampleRadiusPCF); // PCF
 
-  /*if (usePcss) {
-    // TODO finish. Variable radius triggers nonuniform flow analysis error: 
-    // https://github.com/gpuweb/gpuweb/issues/3479
-    // https://github.com/gpuweb/gpuweb/issues/2321
-    // https://github.com/gpuweb/gpuweb/issues/3554
-    // https://forum.babylonjs.com/t/texture-sampler-and-non-uniform-control-flow/46084
-    //  /* disable_uniformity_analysis */
+  if (usePcss) {
     // PCSS
     let fragmentDepth = postionShadowSourceSpace.z;
-    let shadowMapDepth: f32 = textureSample( // sample center
+    let shadowMapDepth4 = textureGather(
       _shadowMapTexture,
       _shadowMapSampler,
       postionShadowSourceSpace.xy
     );
+    let shadowMapDepth = (shadowMapDepth4.x + shadowMapDepth4.y + shadowMapDepth4.z + shadowMapDepth4.w) / 4.0;
     let depthDiff = max(fragmentDepth - shadowMapDepth, 0.0);
     actualSampleRadius = PCSS_PENUMBRA_BASE + i32(depthDiff / shadowMapDepth * PCSS_PENUMBRA_WIDTH);
-  }*/
+  }
 
   let result = _sampleShadowMap(actualSampleRadius, postionShadowSourceSpace, actualBias);
   
@@ -110,6 +104,8 @@ fn _sampleShadowMap(sampleRadius: i32, lightPosProj: vec3f, bias: f32) -> f32 {
   for (var x: i32 = -sampleRadius; x <= sampleRadius; x++) {
   for (var y: i32 = -sampleRadius; y <= sampleRadius; y++) {
     let offset = vec2f(f32(x), f32(y)) * texelSize;
+    
+    // Btw. PCSS has variable radius, which can trigger: "Variable radius triggers nonuniform flow analysis error"
     /* // The docs for this fn are even worse than for OpenGL. And that's saying something..
     let shadowMapDepth = textureSampleCompare(
       _shadowMapTexture,
@@ -119,11 +115,8 @@ fn _sampleShadowMap(sampleRadius: i32, lightPosProj: vec3f, bias: f32) -> f32 {
     );
     shadow += shadowMapDepth;*/
 
-    /*let shadowMapDepth: f32 = textureSample(
-      _shadowMapTexture,
-      _shadowMapSampler,
-      lightPosProj.xy + offset
-    );*/
+    // textureSample() - only fragment shaders. No compute?
+    // let shadowMapDepth: f32 = textureSample(_shadowMapTexture, _shadowMapSampler, lightPosProj.xy + offset);
     let shadowMapDepth4 = textureGather(
       _shadowMapTexture,
       _shadowMapSampler,

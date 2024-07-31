@@ -34,6 +34,10 @@ export class HairShadingPass {
     });
   }
 
+  onViewportResize = () => {
+    this.bindingsCache.clear();
+  };
+
   cmdComputeShadingPoints(ctx: PassCtx, hairObject: HairObject) {
     const { cmdBuf, profiler } = ctx;
 

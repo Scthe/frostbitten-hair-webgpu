@@ -45,6 +45,7 @@ if (SLICES_PER_TILE_DEPTH_BIN !== DEPTH_SLICES / TILE_DEPTH_BINS) {
 }
 
 export type ClearColor = [number, number, number, number];
+type RGBColor = [number, number, number];
 
 export const DISPLAY_MODE = {
   FINAL: 0,
@@ -83,6 +84,12 @@ export const CONFIG = {
   clearColor: [0.2, 0.2, 0.2, 0.0] as ClearColor,
   clearNormals: [0.0, 0.0, 0.0, 0.0] as ClearColor, // it's octahedron encoded btw.
   clearAo: [0.0, 0.0, 0.0, 0.0] as ClearColor,
+  background: {
+    color0: col(22, 162, 188),
+    color1: col(14, 103, 120),
+    noiseScale: 5.0,
+    gradientStrength: 0.5,
+  },
 
   ///////////////
   /// CAMERA
@@ -108,19 +115,19 @@ export const CONFIG = {
   /// LIGHTS + SHADOWS + AO
   lightAmbient: { color: [1, 1, 1], energy: 0.05 },
   lights: [
-    { posPhi: 60.0, posTheta: 20.0, color: [1, 0.95, 0.8], energy: 0.8 },
-    { posPhi: 100.0, posTheta: 75.0, color: [0.8, 0.98, 1.0], energy: 0.8 },
-    { posPhi: -90.0, posTheta: 30.0, color: [1, 0.95, 0.8], energy: 0.8 },
+    { posPhi:  60.0, posTheta: 20.0, color: col(255, 244, 204), energy: 0.8 }, // prettier-ignore
+    { posPhi: 100.0, posTheta: 75.0, color: col(204, 249, 255), energy: 0.8 }, // prettier-ignore
+    { posPhi: -90.0, posTheta: 30.0, color: col(255, 242, 204), energy: 0.8 }, // prettier-ignore
   ] as LightCfg[],
 
   /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L79 */
   shadows: {
     showDebugView: false,
-    debugViewPosition: [250, 0],
+    debugViewPosition: IS_DENO ? [0, 0] : [250, 0],
     depthFormat: 'depth24plus' as GPUTextureFormat,
     textureSize: 1024 * 2,
     // runtime settings
-    usePCSS: false, // TODO implement. Restore in GUI
+    usePCSS: false,
     PCF_Radius: 3, // in pixels
     bias: 0.0005,
     strength: 0.4, // only for meshes. For hair, see 'hairRender'
@@ -161,8 +168,8 @@ export const CONFIG = {
     dbgShowTiles: false,
 
     material: {
-      color0: [0.47, 0.17, 0.47],
-      color1: [0.3, 0.0, 1.0],
+      color0: col(119, 43, 119),
+      color1: col(76, 0, 255),
       specular: 0.9, // weight for lobe: R
       weightTT: 0.0, // weight for lobe: TT. It needs depth test as light ignores meshes and affects stuff 'through' them.
       weightTRT: 1.4, // weight for lobe: TRT
@@ -213,6 +220,15 @@ export type CameraProjection = (typeof CONFIG)['camera']['projection'];
 export type LightCfg = {
   posPhi: number;
   posTheta: number;
-  color: [number, number, number];
+  color: RGBColor;
   energy: number;
 };
+
+/** Takes color expressed as 0-255 (copied from GUI) and turns into 0.0-1.0 */
+function col(...colorU8: number[]): RGBColor {
+  if (colorU8.length !== 3) {
+    throw new Error(`Config color value ${JSON.stringify(colorU8)} is invalid`);
+  }
+  // deno-lint-ignore no-explicit-any
+  return colorU8.map((b: number) => b / 255.0) as any;
+}

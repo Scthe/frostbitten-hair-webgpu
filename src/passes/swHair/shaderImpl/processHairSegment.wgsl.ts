@@ -15,7 +15,6 @@ fn processHairSegment(
   p: FineRasterParams,
   tileBoundsPx: vec4u, tileDepth: vec2f,
   sliceDataOffset: u32,
-  fiberRadiusPx: ptr<function, f32>, // TODO remove?
   strandIdx: u32, segmentIdx: u32
 ) -> u32 {
   var writtenSliceDataCount: u32 = 0u;

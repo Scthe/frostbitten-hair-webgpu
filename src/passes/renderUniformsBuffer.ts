@@ -88,6 +88,13 @@ export class RenderUniformsBuffer {
       padding1: f32,
     }
 
+    struct Background {
+      color0: vec3f,
+      noiseScale: f32,
+      color1: vec3f,
+      gradientStrength: f32,
+    }
+
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
       vpMatrixInv: mat4x4<f32>,
@@ -107,10 +114,13 @@ export class RenderUniformsBuffer {
       shadows: Shadows,
       ao: AmbientOcclusion,
       hairMaterial: HairMaterialParams,
+      // START: misc vec4f
       fiberRadius: f32,
       dbgShadowMapPreviewSize: f32,
       maxDrawnHairSegments: u32,
       displayMode: u32, // display mode + some of it's settings
+      // back to proper align
+      background: Background,
     };
     @binding(0) @group(${group})
     var<uniform> _uniforms: Uniforms;
@@ -135,6 +145,7 @@ export class RenderUniformsBuffer {
     BYTES_VEC4 + // shadowSourcePosition;
     BYTES_VEC4; // flags + settings
   private static AO_SIZE = BYTES_VEC4 + BYTES_UVEC4;
+  private static BACKGROUND_SIZE = 2 * BYTES_VEC4;
 
   private static BUFFER_SIZE =
     BYTES_MAT4 + // vpMatrix
@@ -153,7 +164,8 @@ export class RenderUniformsBuffer {
     RenderUniformsBuffer.SHADOWS_SIZE + // ahadows
     RenderUniformsBuffer.AO_SIZE + // ao
     4 * BYTES_VEC4 + // hairMaterial
-    4 * BYTES_F32; // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
+    4 * BYTES_F32 + // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
+    RenderUniformsBuffer.BACKGROUND_SIZE;
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(RenderUniformsBuffer.BUFFER_SIZE);
@@ -236,6 +248,8 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(getShadowMapPreviewSize(viewport));
     this.dataView.writeU32(getLengthOfHairTileSegmentsBuffer(viewport));
     this.dataView.writeU32(this.encodeDebugMode());
+    // bg
+    this.writeBackground();
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);
@@ -330,6 +344,19 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(m.lumaRng);
     this.dataView.writeF32(m.attenuation);
     this.dataView.writeF32(0.0);
+  }
+
+  private writeBackground() {
+    const bg = CONFIG.background;
+    this.dataView.writeF32(bg.color0[0]);
+    this.dataView.writeF32(bg.color0[1]);
+    this.dataView.writeF32(bg.color0[2]);
+    this.dataView.writeF32(bg.noiseScale);
+
+    this.dataView.writeF32(bg.color1[0]);
+    this.dataView.writeF32(bg.color1[1]);
+    this.dataView.writeF32(bg.color1[2]);
+    this.dataView.writeF32(bg.gradientStrength);
   }
 
   private encodeDebugMode() {

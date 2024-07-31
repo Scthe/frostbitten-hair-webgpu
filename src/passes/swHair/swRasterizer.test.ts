@@ -216,9 +216,14 @@ fn main(
     segmentIdx
   );
 
+  // hair segment bounds
+  let bounds4f = getRasterizedHairBounds(sw, viewportSize);
+  let boundRectMin = bounds4f.xy;
+  let boundRectMax = bounds4f.zw;
+
   // iterate row-by-row
-  for (var y: f32 = sw.boundRectMin.y; y < sw.boundRectMax.y; y+=1.0) {
-  for (var x: f32 = sw.boundRectMin.x; x < sw.boundRectMax.x; x+=1.0) {
+  for (var y: f32 = boundRectMin.y; y < boundRectMax.y; y += 1.0) {
+  for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x += 1.0) {
     let p = vec2f(x, y);
     let C0 = edgeFunction(sw.v01, sw.v00, p);
     let C1 = edgeFunction(sw.v11, sw.v01, p);

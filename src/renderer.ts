@@ -243,6 +243,8 @@ export class Renderer {
     this.hairFinePass.onViewportResize(this.device, viewportSize);
     this.hairCombinePass.onViewportResize();
     this.aoPass.onViewportResize();
+    this.hairShadingPass.onViewportResize();
+    this.drawMeshesPass.onViewportResize();
   };
 
   private recreateTextures(viewportSize: Dimensions) {

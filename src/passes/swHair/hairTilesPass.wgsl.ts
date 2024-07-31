@@ -86,8 +86,13 @@ fn main(
 
   let hairDepthBoundsVS = getHairDepthBoundsVS(mvMatrix);
 
-  let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(sw.boundRectMin));
-  let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(sw.boundRectMax));
+  // get segment bounds and convert to tiles
+  let bounds4f = getRasterizedHairBounds(sw, viewportSize);
+  let boundRectMin = bounds4f.xy;
+  let boundRectMax = bounds4f.zw;
+  let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMin));
+  let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMax));
+
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {
   for (var tileX: u32 = tileMinXY.x; tileX <= tileMaxXY.x; tileX += 1u) {
     processTile(

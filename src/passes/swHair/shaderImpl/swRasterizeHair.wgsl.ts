@@ -34,8 +34,6 @@ struct SwRasterizedHair {
   v10: vec2f,
   v11: vec2f,
   depthsProj: vec4f,
-  boundRectMax: vec2f,
-  boundRectMin: vec2f,
 }
 
 /** NOTE: all the comments assume you have 32 verts per strand */
@@ -70,17 +68,22 @@ fn swRasterizeHair(
   r.v11 = ndc2viewportPx(p.viewportSize.xy, v11_NDC); // in pixels
   r.depthsProj = vec4f(v00_NDC.z, v01_NDC.z, v10_NDC.z, v11_NDC.z);
 
-  // TODO split into separate fn?
-  // get bounding box XY points. All values in pixels as f32
-  // MAX: top right on screen, but remember Y is inverted!
-  r.boundRectMax = ceil(max(max(r.v00, r.v01), max(r.v10, r.v11)));
-  // MIN: bottom left on screen, but remember Y is inverted!
-  r.boundRectMin = floor(min(min(r.v00, r.v01), min(r.v10, r.v11)));
-  // scissor
-  r.boundRectMax = min(r.boundRectMax, p.viewportSize.xy);
-  r.boundRectMin = max(r.boundRectMin, vec2f(0.0, 0.0));
-
   return r;
+}
+
+/** Get bounding box XY points. All values in pixels as f32 */
+fn getRasterizedHairBounds(
+  r: SwRasterizedHair,
+  viewportSize: vec2f,
+) -> vec4f {
+  // MAX: top right on screen, but remember Y is inverted!
+  var boundRectMax = ceil(max(max(r.v00, r.v01), max(r.v10, r.v11)));
+  // MIN: bottom left on screen, but remember Y is inverted!
+  var boundRectMin = floor(min(min(r.v00, r.v01), min(r.v10, r.v11)));
+  // scissor
+  boundRectMax = min(boundRectMax, viewportSize.xy);
+  boundRectMin = max(boundRectMin, vec2f(0.0, 0.0));
+  return vec4f(boundRectMin, boundRectMax);
 }
 
 
