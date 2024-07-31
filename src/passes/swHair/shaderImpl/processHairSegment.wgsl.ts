@@ -41,7 +41,22 @@ fn processHairSegment(
   let boundRectMax = vec2f(tileBoundsPx.zw);
   let boundRectMin = vec2f(tileBoundsPx.xy);
 
+  // edgeFunction() as series of additions
+  let CC0 = edgeC(sw.v01, sw.v00);
+  let CC1 = edgeC(sw.v11, sw.v01);
+  let CC2 = edgeC(sw.v10, sw.v11);
+  let CC3 = edgeC(sw.v00, sw.v10);
+  var CY0 = boundRectMin.x * CC0.A + boundRectMin.y * CC0.B + CC0.C;
+  var CY1 = boundRectMin.x * CC1.A + boundRectMin.y * CC1.B + CC1.C;
+  var CY2 = boundRectMin.x * CC2.A + boundRectMin.y * CC2.B + CC2.C;
+  var CY3 = boundRectMin.x * CC3.A + boundRectMin.y * CC3.B + CC3.C;
+
+  // for each pixel in tile
   for (var y: f32 = boundRectMin.y; y < boundRectMax.y; y += 1.0) {
+    var CX0 = CY0;
+    var CX1 = CY1;
+    var CX2 = CY2;
+    var CX3 = CY3;
   for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x += 1.0) {
     // stop if there is no space inside processor's sliceData linked list.
     let nextSliceDataPtr: u32 = sliceDataOffset + writtenSliceDataCount; 
@@ -52,12 +67,13 @@ fn processHairSegment(
     let px_u32 = vec2u(u32(x), u32(y));
     let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
 
-    let C0 = edgeFunction(sw.v01, sw.v00, px);
-    let C1 = edgeFunction(sw.v11, sw.v01, px);
-    let C2 = edgeFunction(sw.v10, sw.v11, px);
-    let C3 = edgeFunction(sw.v00, sw.v10, px);
+    let isOutside = CX0 < 0 || CX1 < 0 || CX2 < 0 || CX3 < 0;
+    CX0 += CC0.A;
+    CX1 += CC1.A;
+    CX2 += CC2.A;
+    CX3 += CC3.A;
 
-    if (C0 < 0 || C1 < 0 || C2 < 0 || C3 < 0) {
+    if (isOutside) {
       continue;
     }
 
@@ -86,7 +102,12 @@ fn processHairSegment(
     let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
     _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
     writtenSliceDataCount += 1u;
-  }}
+  }
+  CY0 += CC0.B;
+  CY1 += CC1.B;
+  CY2 += CC2.B;
+  CY3 += CC3.B;
+  }
 
 
   // END

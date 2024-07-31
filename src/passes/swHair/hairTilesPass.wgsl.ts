@@ -93,6 +93,7 @@ fn main(
   let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMin));
   let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMax));
 
+  // for each affected tile
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {
   for (var tileX: u32 = tileMinXY.x; tileX <= tileMaxXY.x; tileX += 1u) {
     processTile(
@@ -124,7 +125,20 @@ fn processTile(
   var depthMax = -999.0; // in proj. space, so *A BIT* overkill
   var depthBin = TILE_DEPTH_BINS_COUNT;
 
+  /*// edgeFunction() as series of additions
+  // TODO For some reasom this is SLOWER than repeated calling of edgeFunction()?!
+  let CC0 = edgeC(sw.v01, sw.v00);
+  let CC1 = edgeC(sw.v11, sw.v01);
+  let CC2 = edgeC(sw.v10, sw.v11);
+  let CC3 = edgeC(sw.v00, sw.v10);
+  var CY0 = f32(boundsMin.x) * CC0.A + f32(boundsMin.y) * CC0.B + CC0.C;
+  var CY1 = f32(boundsMin.x) * CC1.A + f32(boundsMin.y) * CC1.B + CC1.C;
+  var CY2 = f32(boundsMin.x) * CC2.A + f32(boundsMin.y) * CC2.B + CC2.C;
+  var CY3 = f32(boundsMin.x) * CC3.A + f32(boundsMin.y) * CC3.B + CC3.C;*/
+
+  // iterate over all pixels in the tile
   for (var y: u32 = boundsMin.y; y < boundsMax.y; y += 1u) {
+  // var CX0 = CY0; var CX1 = CY1; var CX2 = CY2; var CX3 = CY3;
   for (var x: u32 = boundsMin.x; x < boundsMax.x; x += 1u) {
       let p = vec2f(f32(x), f32(y));
       let C0 = edgeFunction(sw.v01, sw.v00, p);
@@ -160,7 +174,12 @@ fn processTile(
         depthMax = max(depthMax, hairDepth);
         depthBin = min(depthBin, hairDepthBin); // closest bin
       }
-  }} // end xy-iter
+
+      // move to next pixel
+      // CX0 += CC0.A; CX1 += CC1.A; CX2 += CC2.A; CX3 += CC3.A;
+  }
+  // CY0 += CC0.B; CY1 += CC1.B; CY2 += CC2.B; CY3 += CC3.B;
+  } // end xy-iter
 
   // no tile px passes
   if (depthMin > 1.0) {

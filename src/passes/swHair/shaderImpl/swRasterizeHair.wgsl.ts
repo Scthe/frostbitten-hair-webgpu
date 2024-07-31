@@ -92,6 +92,19 @@ fn edgeFunction(v0: vec2f, v1: vec2f, p: vec2f) -> f32 {
 }
 
 
+struct EdgeC{ A: f32, B: f32, C: f32 }
+
+fn edgeC(v0: vec2f, v1: vec2f) -> EdgeC{
+  // from edgeFunction() formula we extract: A * p.x + B * p.y + C.
+  // This way, when we iterate over x-axis, we can just add A for
+  // next pixel, as the "B * p.y + C" part does not change
+  var result: EdgeC;
+  result.A = v1.y - v0.y; // for p.x
+  result.B = -v1.x + v0.x; // for p.y
+  result.C = -v0.x * v1.y + v0.y * v1.x; // rest
+  return result;
+}
+
 ////////////////
 /// Some additional util functions below
 
