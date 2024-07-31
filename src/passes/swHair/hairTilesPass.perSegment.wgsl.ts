@@ -12,9 +12,11 @@ import {
   TILE_PASSES_SHARED,
 } from './shaderImpl/tilePassesShared.wgsl.ts';
 
+// TODO try workgroup shared for positions and tangents?
+
 export const SHADER_PARAMS = {
-  workgroupSizeX: 1, // TODO [LOW] set better values
-  workgroupSizeY: 32,
+  workgroupSizeX: 4, // TODO [LOW] set even better values? Current seem OK.
+  workgroupSizeY: 32, // A bit inefficient if strand has less points. But it's not THAT inefficient suprisingly?
   bindings: TILE_PASSES_BINDINGS,
 };
 

@@ -52,7 +52,7 @@ fn processTile(
       let C2 = edgeFunction(sw.v10, sw.v11, p);
       let C3 = edgeFunction(sw.v00, sw.v10, p);
 
-      if (C0 >= 0 && C1 >= 0 && C2 >= 0 && C3 >= 0) {
+      if (C0 >= 0 && C1 >= 0 && C2 >= 0 && C3 >= 0) { // if (CX0 >= 0 && CX1 >= 0 && CX2 >= 0 && CX3 >= 0) {
         let p_u32 = vec2u(x, y);
         let interpW = interpolateQuad(sw, p);
         // let value = 0xffff00ffu;

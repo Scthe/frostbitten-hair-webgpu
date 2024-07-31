@@ -12,6 +12,8 @@ import {
   TILE_PASSES_SHARED,
 } from './shaderImpl/tilePassesShared.wgsl.ts';
 
+// TODO remove this impl? It is actually quite slow
+
 export const SHADER_PARAMS = {
   workgroupSizeX: 32, // TODO [LOW] set better values
   bindings: TILE_PASSES_BINDINGS,

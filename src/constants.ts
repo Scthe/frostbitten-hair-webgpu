@@ -197,7 +197,7 @@ export const CONFIG = {
     avgFragmentsPerSlice: 16,
     processorCount: 64 * 8,
     finePassWorkgroupSizeX: 1,
-    sliceHeadsMemory: 'global' as SliceHeadsMemory,
+    sliceHeadsMemory: 'workgroup' as SliceHeadsMemory,
 
     ////// LOD
     lodRenderPercent: 100, // range [0..100]
