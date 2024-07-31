@@ -16,9 +16,12 @@ import {
   assignResourcesToBindings2,
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
-import { SHADER_CODE, SHADER_PARAMS } from './hairTilesPass.wgsl.ts';
+import * as SHADER_PER_SEGMENT from './hairTilesPass.perSegment.wgsl.ts';
+import * as SHADER_PER_STRAND from './hairTilesPass.perStrand.wgsl.ts';
 import { createHairTileSegmentsBuffer } from './shared/hairTileSegmentsBuffer.ts';
 import { createHairTilesResultBuffer } from './shared/hairTilesResultBuffer.ts';
+
+const DISPATCH_TYPE = CONFIG.hairRender.tileShaderDispatch;
 
 export class HairTilesPass {
   public static NAME: string = HairTilesPass.name;
@@ -31,9 +34,14 @@ export class HairTilesPass {
   public hairTileSegmentsBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
 
   constructor(device: GPUDevice) {
+    const shaderCode =
+      DISPATCH_TYPE === 'perSegment'
+        ? SHADER_PER_SEGMENT.SHADER_CODE()
+        : SHADER_PER_STRAND.SHADER_CODE();
+
     const shaderModule = device.createShaderModule({
       label: labelShader(HairTilesPass),
-      code: SHADER_CODE(),
+      code: shaderCode,
     });
     this.pipeline = device.createComputePipeline({
       label: labelPipeline(HairTilesPass),
@@ -83,18 +91,46 @@ export class HairTilesPass {
     computePass.setBindGroup(0, bindings);
 
     // dispatch
+    if (DISPATCH_TYPE == 'perSegment') {
+      this.cmdDispatchPerSegment(computePass, hairObject);
+    } else {
+      this.cmdDispatchPerStrand(computePass, hairObject);
+    }
+
+    computePass.end();
+  }
+
+  private cmdDispatchPerSegment(
+    computePass: GPUComputePassEncoder,
+    hairObject: HairObject
+  ) {
+    const params = SHADER_PER_SEGMENT.SHADER_PARAMS;
+
     const workgroupsX = getItemsPerThread(
       HairTilesPass.getRenderedStrandCount(hairObject),
-      SHADER_PARAMS.workgroupSizeX
+      params.workgroupSizeX
     );
     const workgroupsY = getItemsPerThread(
       hairObject.pointsPerStrand,
-      SHADER_PARAMS.workgroupSizeY
+      params.workgroupSizeY
     );
     // console.log(`${HairTilesPass.NAME}.dispatch(${workgroupsX}, ${workgroupsY}, 1)`); // prettier-ignore
     computePass.dispatchWorkgroups(workgroupsX, workgroupsY, 1);
+  }
 
-    computePass.end();
+  private cmdDispatchPerStrand(
+    computePass: GPUComputePassEncoder,
+    hairObject: HairObject
+  ) {
+    const params = SHADER_PER_STRAND.SHADER_PARAMS;
+
+    const workgroupsX = getItemsPerThread(
+      HairTilesPass.getRenderedStrandCount(hairObject),
+      params.workgroupSizeX
+    );
+
+    // console.log(`${HairTilesPass.NAME}.dispatch(${workgroupsX}, 1, 1)`); // prettier-ignore
+    computePass.dispatchWorkgroups(workgroupsX, 1, 1);
   }
 
   public static getRenderedStrandCount(hairObject: HairObject) {
@@ -119,7 +155,10 @@ export class HairTilesPass {
     { device, globalUniforms, depthTexture }: PassCtx,
     object: HairObject
   ): GPUBindGroup => {
-    const b = SHADER_PARAMS.bindings;
+    const b =
+      DISPATCH_TYPE == 'perSegment'
+        ? SHADER_PER_SEGMENT.SHADER_PARAMS.bindings
+        : SHADER_PER_STRAND.SHADER_PARAMS.bindings;
     assertIsGPUTextureView(depthTexture);
 
     return assignResourcesToBindings2(

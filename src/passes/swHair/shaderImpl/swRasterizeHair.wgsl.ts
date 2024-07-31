@@ -21,8 +21,8 @@ const COLOR_WHITE: u32 = 0xffffffffu;
 struct SwHairRasterizeParams {
   viewModelMat: mat4x4f,
   projMat: mat4x4f,
-  viewportSizeU32: vec2u, // u32's first
-  strandsCount: u32,
+  viewportSizeU32: vec2u, // u32's first, TODO unused
+  strandsCount: u32, //  TODO unused
   pointsPerStrand: u32,
   viewportSize: vec2f, // f32's (AWKWARD!)
   fiberRadius: f32,
@@ -69,6 +69,33 @@ fn swRasterizeHair(
   r.depthsProj = vec4f(v00_NDC.z, v01_NDC.z, v10_NDC.z, v11_NDC.z);
 
   return r;
+}
+
+/** NOTE: all the comments assume you have 32 verts per strand
+ * 
+ * Same as swRasterizeHair(), but only for a single point, instead of both start and end points.
+ * TODO Use inside swRasterizeHair()?
+*/
+fn swRasterizeHairPoint(
+  p: SwHairRasterizeParams,
+  strandIdx: u32,
+  pointIdx: u32, // [0...31], we later discard 31
+  v0: ptr<function, vec2f>, v1: ptr<function, vec2f>,
+  depthsProj: ptr<function, vec2f>,
+) {
+  let p0_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0);
+  let t0_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.,);
+  // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
+  let right0: vec3f = safeNormalize3(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
+
+  // Vertex positions
+  let v0_VS = vec4f(p0_VS.xyz - right0, 1.0);
+  let v1_VS = vec4f(p0_VS.xyz + right0, 1.0);
+  let v0_NDC: vec3f = projectVertex(p.projMat, v0_VS);
+  let v1_NDC: vec3f = projectVertex(p.projMat, v1_VS);
+  (*v0) = ndc2viewportPx(p.viewportSize.xy, v0_NDC); // in pixels
+  (*v1) = ndc2viewportPx(p.viewportSize.xy, v1_NDC); // in pixels
+  (*depthsProj) = vec2f(v0_NDC.z, v1_NDC.z);
 }
 
 /** Get bounding box XY points. All values in pixels as f32 */

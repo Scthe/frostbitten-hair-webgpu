@@ -65,6 +65,7 @@ export type HairFile =
   | 'SintelHairOriginal-sintel_hair.8points.tfx';
 
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
+export type TilePassDispatch = 'perStrand' | 'perSegment';
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -188,6 +189,7 @@ export const CONFIG = {
     tileSize: 16,
     tileDepthBins: TILE_DEPTH_BINS,
     avgSegmentsPerTile: 512,
+    tileShaderDispatch: 'perSegment' as TilePassDispatch,
 
     ////// FINE PASS
     // TODO find better values.
