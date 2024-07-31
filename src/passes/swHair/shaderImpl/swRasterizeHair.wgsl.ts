@@ -70,6 +70,7 @@ fn swRasterizeHair(
   r.v11 = ndc2viewportPx(p.viewportSize.xy, v11_NDC); // in pixels
   r.depthsProj = vec4f(v00_NDC.z, v01_NDC.z, v10_NDC.z, v11_NDC.z);
 
+  // TODO split into separate fn?
   // get bounding box XY points. All values in pixels as f32
   // MAX: top right on screen, but remember Y is inverted!
   r.boundRectMax = ceil(max(max(r.v00, r.v01), max(r.v10, r.v11)));

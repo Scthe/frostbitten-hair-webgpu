@@ -119,6 +119,7 @@ export class HairFinePass {
       bindBuffer(b.rasterizerResult, this.hairRasterizerResultsBuffer),
       object.bindHairData(b.hairData),
       object.bindPointsPositions(b.hairPositions),
+      object.bindTangents(b.hairTangents),
       object.bindShading(b.hairShading),
       { binding: b.depthTexture, resource: depthTexture },
     ];

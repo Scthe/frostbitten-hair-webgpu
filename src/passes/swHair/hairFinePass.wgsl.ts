@@ -12,6 +12,8 @@ import { SHADER_IMPL_PROCESS_HAIR_SEGMENT } from './shaderImpl/processHairSegmen
 import { SHADER_IMPL_REDUCE_HAIR_SLICES } from './shaderImpl/reduceHairSlices.wgsl.ts';
 import { BUFFER_HAIR_SHADING } from '../../scene/hair/hairShadingBuffer.ts';
 import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
+import { SW_RASTERIZE_HAIR } from './shaderImpl/swRasterizeHair.wgsl.ts';
+import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: CONFIG.hairRender.finePassWorkgroupSizeX,
@@ -26,6 +28,7 @@ export const SHADER_PARAMS = {
     rasterizerResult: 7,
     depthTexture: 8,
     hairShading: 9,
+    hairTangents: 10,
   },
 };
 
@@ -46,10 +49,12 @@ const ALPHA_CUTOFF = 0.999;
 ${SHADER_SNIPPETS.GET_MVP_MAT}
 ${SHADER_SNIPPETS.GENERIC_UTILS}
 ${SHADER_TILE_UTILS}
+${SW_RASTERIZE_HAIR}
 
 ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_DATA(b.hairData)}
 ${BUFFER_HAIR_POINTS_POSITIONS(b.hairPositions)}
+${BUFFER_HAIR_TANGENTS(b.hairTangents)}
 ${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read')}
 ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read')}
 ${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizerResult, 'read_write')}
@@ -62,9 +67,8 @@ var _depthTexture: texture_depth_2d;
 
 
 struct FineRasterParams {
-  modelViewMat: mat4x4f,
+  viewModelMat: mat4x4f,
   projMat: mat4x4f,
-  mvpMat: mat4x4f,
   // START: vec4u
   strandsCount: u32, // u32's first
   pointsPerStrand: u32,
@@ -95,7 +99,6 @@ fn main(
   let params = FineRasterParams(
     _uniforms.modelViewMat,
     _uniforms.projMatrix,
-    _uniforms.mvpMatrix,
     strandsCount,
     pointsPerStrand,
     vec2u(viewportSize),

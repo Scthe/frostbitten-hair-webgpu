@@ -35,6 +35,7 @@ export async function createGpuDevice() {
       // 16Kb is the default limit on Chrome, provided to cover for undefined default limit
       adapter.limits.maxComputeWorkgroupStorageSize || getBytes(16, 'KB')
     );
+    requiredLimits.maxStorageBuffersPerShaderStage = 9;
 
     // create device
     const device = await adapter?.requestDevice({
