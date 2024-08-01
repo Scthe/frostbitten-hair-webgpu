@@ -30,9 +30,10 @@ import { HairShadingPass } from './passes/hairShadingPass/hairShadingPass.ts';
 import { ShadowMapPass } from './passes/shadowMapPass/shadowMapPass.ts';
 import { AoPass } from './passes/aoPass/aoPass.ts';
 import { HairObject } from './scene/hair/hairObject.ts';
+import { SimulationUniformsBuffer } from './passes/simulation/simulationUniformsBuffer.ts';
+import { HairSimIntegrationPass } from './passes/simulation/hairSimIntegrationPass.ts';
 
 export class Renderer {
-  private readonly renderUniformBuffer: RenderUniformsBuffer;
   public readonly cameraCtrl: Camera;
   private projectionMat: Mat4;
   private readonly _viewMatrix = mat4.identity(); // cached to prevent allocs.
@@ -49,6 +50,8 @@ export class Renderer {
   private aoTexture: GPUTexture = undefined!; // see this.handleViewportResize()
   private aoTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
 
+  // rendering
+  private readonly renderUniformBuffer: RenderUniformsBuffer;
   // passes
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
   private readonly shadowMapPass: ShadowMapPass;
@@ -60,6 +63,11 @@ export class Renderer {
   private readonly hairFinePass: HairFinePass;
   private readonly hairCombinePass: HairCombinePass;
   private readonly presentPass: PresentPass;
+
+  // simulation
+  private readonly simulationUniformsBuffer: SimulationUniformsBuffer;
+  // passes
+  private readonly hairSimIntegrationPass: HairSimIntegrationPass;
 
   constructor(
     private readonly device: GPUDevice,
@@ -96,6 +104,10 @@ export class Renderer {
     this.hairFinePass = new HairFinePass(device);
     this.hairCombinePass = new HairCombinePass(device, HDR_RENDER_TEX_FORMAT);
     this.presentPass = new PresentPass(device, preferredCanvasFormat);
+
+    // simulation
+    this.simulationUniformsBuffer = new SimulationUniformsBuffer(device);
+    this.hairSimIntegrationPass = new HairSimIntegrationPass(device);
 
     this.handleViewportResize(viewportSize);
   }
@@ -134,6 +146,15 @@ export class Renderer {
 
     // update GPU uniforms
     this.renderUniformBuffer.update(ctx);
+    this.simulationUniformsBuffer.update(ctx);
+
+    // simulation
+    if (CONFIG.hairSimulation.enabled) {
+      this.hairSimIntegrationPass.cmdSimulateHairPositions(
+        ctx,
+        scene.hairObject
+      );
+    }
 
     // draws
     this.drawBackgroundGradientPass.cmdDraw(ctx);
@@ -215,6 +236,7 @@ export class Renderer {
       shadowDepthTexture: this.shadowMapPass.shadowDepthTextureView,
       shadowMapSampler: this.shadowMapPass.shadowMapSampler,
       globalUniforms: this.renderUniformBuffer,
+      simulationUniforms: this.simulationUniformsBuffer,
       // hair:
       hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
       hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,

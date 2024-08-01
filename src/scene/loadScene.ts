@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-unused-ignore
 import { mat4 } from 'wgpu-matrix';
 import { CONFIG, HairFile, MODELS_DIR } from '../constants.ts';
 import { STATS } from '../stats.ts';
@@ -17,6 +18,8 @@ import { loadObjFile } from './objLoader.ts';
 import { Scene } from './scene.ts';
 import { dgr2rad } from '../utils/index.ts';
 import { createHairShadingBuffer } from './hair/hairShadingBuffer.ts';
+import { createHairSegmentLengthsBuffer } from './hair/hairSegmentLengthsBuffer.ts';
+import { createArray } from '../utils/arrays.ts';
 
 const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
@@ -62,17 +65,27 @@ export function createHairObject(
     box: bBox,
     sphere: calcBoundingSphere(bBox),
   };
-  console.log('Bounds', bounds.sphere);
+  console.log('Hair bounds', bounds.sphere);
 
   const dataBuffer = createHairDataBuffer(device, name, tfxFile, bounds.sphere);
-  const pointsPositionsBuffer = createHairPointsPositionsBuffer(
-    device,
-    name,
-    tfxFile.vertexPositions
-  );
   const tangentsBuffer = createHairTangentsBuffer(device, name, tfxFile);
   const shadingBuffer = createHairShadingBuffer(device, name, tfxFile);
   const indicesData = createHairIndexBuffer(device, name, tfxFile);
+  const initialSegmentLengthsBuffer = createHairSegmentLengthsBuffer(
+    device,
+    name,
+    tfxFile.header.numVerticesPerStrand,
+    tfxFile.vertexPositions
+  );
+
+  const createPosBuffer = (name: string) =>
+    createHairPointsPositionsBuffer(device, name, tfxFile.vertexPositions);
+
+  const initialPointsPositionsBuffer = createPosBuffer(
+    `${name}-points-positions-initial`
+  );
+  const pointsPositionsBuffer_0 = createPosBuffer(`${name}-points-positions-0`);
+  const pointsPositionsBuffer_1 = createPosBuffer(`${name}-points-positions-1`);
 
   return new HairObject(
     name,
@@ -82,13 +95,17 @@ export function createHairObject(
     {
       dataBuffer,
       indicesData,
-      pointsPositionsBuffer,
+      initialPointsPositionsBuffer,
+      initialSegmentLengthsBuffer,
+      pointsPositionsBuffer_0,
+      pointsPositionsBuffer_1,
       shadingBuffer,
       tangentsBuffer,
     }
   );
 }
 
+// deno-lint-ignore no-unused-vars
 async function loadTfxFile(
   fileName: HairFile,
   scale = 1.0
@@ -100,31 +117,41 @@ async function loadTfxFile(
   return parseTfxFile(fileBytes, scale);
 }
 
+// deno-lint-ignore no-unused-vars
 export function mockTfxFile(): TfxFileData {
-  const x = 0,
-    y = 0,
-    z = 0,
-    w = 1;
-  const dy = 1;
+  CONFIG.hairRender.fiberRadius = 0.005;
+  const centerX = 0;
+  const startY = 1.524;
+  const startZ = 0.15;
+  const dx = 0.015;
+  const dy = 0.01;
+  const pointsPerStrand = 8;
+  const numHairStrands = 32;
+
+  const createStrand = (x: number) =>
+    createArray(pointsPerStrand)
+      .map((_, i) => [
+        x,
+        startY - i * dy, // goes down
+        startZ,
+        i === 0 ? 0 : 1, // .w is 0 for root, 1 otherwise
+      ])
+      .flat();
+
+  const startX = centerX - ((numHairStrands - 1) * dx) / 2.0;
+  const strandXs = createArray(numHairStrands).map((_, i) => startX + dx * i);
 
   return {
     header: {
       version: 1,
-      numHairStrands: 1,
-      numVerticesPerStrand: 4,
+      numHairStrands,
+      numVerticesPerStrand: pointsPerStrand,
       offsetVertexPosition: 0,
       offsetStrandUV: 0,
       offsetVertexUV: 0,
       offsetStrandThickness: 0,
       offsetVertexColor: 0,
     },
-    vertexPositions: new Float32Array(
-      [
-        [x, y + 0 * dy, z, w],
-        [x, y + 1 * dy, z, w],
-        [x, y + 2 * dy, z, w],
-        [x, y + 3 * dy, z, w],
-      ].flat()
-    ),
+    vertexPositions: new Float32Array([...strandXs.map(createStrand).flat()]),
   };
 }

@@ -3,6 +3,7 @@ import { GpuProfiler } from '../gpuProfiler.ts';
 import { Dimensions } from '../utils/index.ts';
 import { Scene } from '../scene/scene.ts';
 import { RenderUniformsBuffer } from './renderUniformsBuffer.ts';
+import { SimulationUniformsBuffer } from './simulation/simulationUniformsBuffer.ts';
 
 export interface PassCtx {
   frameIdx: number;
@@ -22,6 +23,7 @@ export interface PassCtx {
   shadowDepthTexture: GPUTextureView;
   shadowMapSampler: GPUSampler;
   globalUniforms: RenderUniformsBuffer;
+  simulationUniforms: SimulationUniformsBuffer;
   // hair:
   hairTilesBuffer: GPUBuffer;
   hairTileSegmentsBuffer: GPUBuffer;

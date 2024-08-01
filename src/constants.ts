@@ -203,6 +203,10 @@ export const CONFIG = {
     lodRenderPercent: 100, // range [0..100]
   },
 
+  hairSimulation: {
+    enabled: true,
+  },
+
   ///////////////
   /// POSTFX-LIKE EFFECTS (dither, tonemapping, exposure, gamma etc.)
   colors: {

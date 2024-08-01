@@ -24,7 +24,7 @@ import { Scene } from '../scene/scene.ts';
 const TMP_MAT4 = mat4.create(); // prealloc
 
 export class RenderUniformsBuffer {
-  public static SHADER_SNIPPET = (group: number) => /* wgsl */ `
+  public static SHADER_SNIPPET = (bindingIdx: number) => /* wgsl */ `
     const b11 = 3u; // binary 0b11
     const b111 = 7u; // binary 0b111
     const b1111 = 15u; // binary 0b1111
@@ -122,7 +122,7 @@ export class RenderUniformsBuffer {
       // back to proper align
       background: Background,
     };
-    @binding(0) @group(${group})
+    @group(0) @binding(${bindingIdx})
     var<uniform> _uniforms: Uniforms;
 
     fn getDisplayMode() -> u32 { return _uniforms.displayMode & 0xff; }

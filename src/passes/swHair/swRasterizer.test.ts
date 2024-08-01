@@ -55,8 +55,6 @@ const SHADER_PARAMS = {
 };
 
 Deno.test('swRasterizeHair_util', async () => {
-  CONFIG.hairRender.fiberRadius = 0.1;
-
   const [device, reportWebGPUErrAsync] = await createGpuDevice_TESTS();
 
   const uniforms = new RenderUniformsBuffer(device);
@@ -74,6 +72,7 @@ Deno.test('swRasterizeHair_util', async () => {
     ].flat()
   );
   const hairObject = createHairObject(device, OBJ_NAME, tfxFile);
+  CONFIG.hairRender.fiberRadius = 0.1;
 
   // pass
   const shaderCode = testSoftwareRasteriserShader();
