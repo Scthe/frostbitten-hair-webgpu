@@ -66,6 +66,7 @@ export type HairFile =
 
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
 export type TilePassDispatch = 'perStrand' | 'perSegment';
+export type SdfPreviewAxis = 'axis-x' | 'axis-y' | 'axis-z';
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -205,6 +206,13 @@ export const CONFIG = {
 
   hairSimulation: {
     enabled: true,
+    sdf: {
+      dims: 64, // TODO use
+      showDebugView: true, // TODO switch to false
+      // debugAxis: 'axis-z' as SdfPreviewAxis, // TODO implement
+      debugSlice: 0.5,
+      debugSemitransparent: true,
+    },
   },
 
   ///////////////

@@ -20,6 +20,7 @@ import {
 } from './shadowMapPass/shared/getMVP_ShadowSourceMatrix.ts';
 import { getShadowMapPreviewSize } from './shadowMapPass/shared/getShadowMapPreviewSize.ts';
 import { Scene } from '../scene/scene.ts';
+import { SDFCollider } from '../scene/sdfCollider/sdfCollider.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
 
@@ -95,6 +96,8 @@ export class RenderUniformsBuffer {
       gradientStrength: f32,
     }
 
+    ${SDFCollider.SDF_DATA_SNIPPET}
+
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
       vpMatrixInv: mat4x4<f32>,
@@ -114,6 +117,7 @@ export class RenderUniformsBuffer {
       shadows: Shadows,
       ao: AmbientOcclusion,
       hairMaterial: HairMaterialParams,
+      sdf: SDFCollider,
       // START: misc vec4f
       fiberRadius: f32,
       dbgShadowMapPreviewSize: f32,
@@ -164,6 +168,7 @@ export class RenderUniformsBuffer {
     RenderUniformsBuffer.SHADOWS_SIZE + // ahadows
     RenderUniformsBuffer.AO_SIZE + // ao
     4 * BYTES_VEC4 + // hairMaterial
+    SDFCollider.BUFFER_SIZE + // sdf
     4 * BYTES_F32 + // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
     RenderUniformsBuffer.BACKGROUND_SIZE;
 
@@ -243,6 +248,8 @@ export class RenderUniformsBuffer {
     this.writeAo();
     // hair material
     this.writeHairMaterial();
+    // sdf
+    ctx.scene.sdfCollider.writeToDataView(this.dataView);
     // misc
     this.dataView.writeF32(c.hairRender.fiberRadius);
     this.dataView.writeF32(getShadowMapPreviewSize(viewport));

@@ -32,6 +32,7 @@ import { AoPass } from './passes/aoPass/aoPass.ts';
 import { HairObject } from './scene/hair/hairObject.ts';
 import { SimulationUniformsBuffer } from './passes/simulation/simulationUniformsBuffer.ts';
 import { HairSimIntegrationPass } from './passes/simulation/hairSimIntegrationPass.ts';
+import { DrawSdfColliderPass } from './passes/drawSdfCollider/drawSdfColliderPass.ts';
 
 export class Renderer {
   public readonly cameraCtrl: Camera;
@@ -68,6 +69,7 @@ export class Renderer {
   private readonly simulationUniformsBuffer: SimulationUniformsBuffer;
   // passes
   private readonly hairSimIntegrationPass: HairSimIntegrationPass;
+  private readonly drawSdfColliderPass: DrawSdfColliderPass;
 
   constructor(
     private readonly device: GPUDevice,
@@ -108,6 +110,10 @@ export class Renderer {
     // simulation
     this.simulationUniformsBuffer = new SimulationUniformsBuffer(device);
     this.hairSimIntegrationPass = new HairSimIntegrationPass(device);
+    this.drawSdfColliderPass = new DrawSdfColliderPass(
+      device,
+      HDR_RENDER_TEX_FORMAT
+    );
 
     this.handleViewportResize(viewportSize);
   }
@@ -159,6 +165,11 @@ export class Renderer {
     // draws
     this.drawBackgroundGradientPass.cmdDraw(ctx);
     this.cmdDrawScene(ctx);
+
+    // dbg
+    if (CONFIG.hairSimulation.sdf.showDebugView) {
+      this.drawSdfColliderPass.cmdDrawSdf(ctx);
+    }
 
     // present: draw to final render texture
     this.presentPass.cmdDraw(ctx, screenTexture, 'load');

@@ -20,7 +20,7 @@ export async function createGpuDevice() {
     }
 
     const canTimestamp = adapter.features.has('timestamp-query');
-    const requiredFeatures: GPUFeatureName[] = [];
+    const requiredFeatures: GPUFeatureName[] = ['float32-filterable'];
     if (canTimestamp) {
       requiredFeatures.push('timestamp-query');
     }

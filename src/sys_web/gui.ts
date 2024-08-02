@@ -53,6 +53,7 @@ export function initializeGUI(
   // folders
   addHairRenderFolder(gui);
   addHairMaterialFolder(gui);
+  addHairSimulationFolder(gui);
   addAmbientLightFolder(gui);
   addLightFolder(gui, CONFIG.lights[0], 'Light 0');
   addLightFolder(gui, CONFIG.lights[1], 'Light 1');
@@ -109,6 +110,22 @@ export function initializeGUI(
     dir.add(cfg, 'roughness', 0.0, 1.0, 0.01).name('Roughness');
     dir.add(cfg, 'attenuation', 0.0, 40.0).name('Attenuation');
     dir.add(cfg, 'shadows', 0.0, 1.0).name('Shadows');
+  }
+
+  function addHairSimulationFolder(gui: dat.GUI) {
+    const cfg = CONFIG.hairSimulation;
+    const dir = gui.addFolder('Hair simulation');
+    dir.open();
+
+    dir.add(cfg, 'enabled').name('Enabled');
+    // dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
+
+    const sdf = cfg.sdf;
+    const sdfDir = dir.addFolder('SDF preview');
+    sdfDir.open();
+    dir.add(sdf, 'showDebugView').name('Enabled');
+    dir.add(sdf, 'debugSemitransparent').name('Semitransparent');
+    dir.add(sdf, 'debugSlice', 0.0, 1.0).name('Slice');
   }
 
   function addAmbientLightFolder(gui: dat.GUI) {

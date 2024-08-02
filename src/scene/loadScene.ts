@@ -20,6 +20,7 @@ import { dgr2rad } from '../utils/index.ts';
 import { createHairShadingBuffer } from './hair/hairShadingBuffer.ts';
 import { createHairSegmentLengthsBuffer } from './hair/hairSegmentLengthsBuffer.ts';
 import { createArray } from '../utils/arrays.ts';
+import { createSdfCollider } from './sdfCollider/createSdfCollider.ts';
 
 const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
@@ -31,6 +32,7 @@ const OBJECTS = [
 export async function loadScene(device: GPUDevice): Promise<Scene> {
   const objects: Scene['objects'] = [];
 
+  // load meshes
   for (const objDef of OBJECTS) {
     console.groupCollapsed(objDef.name);
 
@@ -42,6 +44,7 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
     console.groupEnd();
   }
 
+  // load hair
   const tfxFile = await loadTfxFile(CONFIG.hairFile, 1.0);
   // const tfxFile = mockTfxFile();
   const hairObject = await createHairObject(device, 'sintelHair', tfxFile);
@@ -49,10 +52,19 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
   STATS.update('Points per strand', hairObject.pointsPerStrand);
   STATS.update('Segments', formatNumber(hairObject.segmentCount, 0));
 
+  // SDF collider
+  const sintelObj = objects.find((o) => o.name === 'sintel')!;
+  const sdfCollider = createSdfCollider(device, 'sintel-sdf', {
+    bounds: sintelObj.bounds.box,
+    padding: 1.1,
+    dims: CONFIG.hairSimulation.sdf.dims,
+  });
+
+  // model matrix
   const modelMatrix = mat4.identity();
   mat4.rotateY(modelMatrix, dgr2rad(0), modelMatrix);
 
-  return { objects, hairObject, modelMatrix };
+  return { objects, hairObject, sdfCollider, modelMatrix };
 }
 
 export function createHairObject(

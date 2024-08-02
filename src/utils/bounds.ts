@@ -16,7 +16,7 @@ export function calculateBounds(
   return { box, sphere: calcBoundingSphere(box) };
 }
 
-type BoundingBoxPoint = [number, number, number];
+export type BoundingBoxPoint = [number, number, number];
 export type BoundingBox = [BoundingBoxPoint, BoundingBoxPoint];
 
 type VertexCb = (v: [number, number, number]) => void;
