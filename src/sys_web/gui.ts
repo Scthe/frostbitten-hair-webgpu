@@ -114,13 +114,14 @@ export function initializeGUI(
 
   function addHairSimulationFolder(gui: dat.GUI) {
     const cfg = CONFIG.hairSimulation;
+    const sdf = cfg.sdf;
     const dir = gui.addFolder('Hair simulation');
     dir.open();
 
     dir.add(cfg, 'enabled').name('Enabled');
     // dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
+    dir.add(sdf, 'distanceOffset', -0.03, 0.3).name('SDF offset');
 
-    const sdf = cfg.sdf;
     const sdfDir = dir.addFolder('SDF preview');
     sdfDir.open();
     dir.add(sdf, 'showDebugView').name('Enabled');

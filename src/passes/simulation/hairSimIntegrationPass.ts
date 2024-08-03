@@ -63,8 +63,9 @@ export class HairSimIntegrationPass {
     ctx: PassCtx,
     hairObject: HairObject
   ): GPUBindGroup => {
-    const { device, simulationUniforms } = ctx;
+    const { device, simulationUniforms, scene } = ctx;
     const b = SHADER_PARAMS.bindings;
+    const sdf = scene.sdfCollider;
 
     return assignResourcesToBindings2(
       HairSimIntegrationPass,
@@ -77,6 +78,8 @@ export class HairSimIntegrationPass {
         hairObject.bindInitialSegmentLengths(b.segmentLengths),
         hairObject.bindPointsPositions_PREV(b.positionsPrev),
         hairObject.bindPointsPositions(b.positionsNow),
+        sdf.bindTexture(b.sdfTexture),
+        sdf.bindSampler(b.sdfSampler),
       ]
     );
   };

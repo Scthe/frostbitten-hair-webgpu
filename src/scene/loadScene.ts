@@ -143,8 +143,10 @@ async function loadTfxFile(
 export function mockTfxFile(): TfxFileData {
   CONFIG.hairRender.fiberRadius = 0.005;
   const centerX = 0;
-  const startY = 1.524;
-  const startZ = 0.15;
+  // const startY = 1.524; // dbg: in front of the scene
+  // const startZ = 0.15; // dbg: in front of the scene
+  const startY = 1.624; // dbg: on top of the head
+  const startZ = 0.09; // dbg: on top of the head
   const dx = 0.015;
   const dy = 0.01;
   const pointsPerStrand = 8;

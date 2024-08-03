@@ -4,6 +4,7 @@ import {
   BUFFER_HAIR_POINTS_POSITIONS_RW,
 } from '../../scene/hair/hairPointsPositionsBuffer.ts';
 import { BUFFER_HAIR_SEGMENT_LENGTHS } from '../../scene/hair/hairSegmentLengthsBuffer.ts';
+import { SDFCollider } from '../../scene/sdfCollider/sdfCollider.ts';
 import { GENERIC_UTILS } from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { HAIR_SIM_IMPL_COLLISIONS } from './shaderImpl/collisions.wgsl.ts';
 import { HAIR_SIM_IMPL_CONSTRANTS } from './shaderImpl/constraints.wgsl.ts';
@@ -21,6 +22,8 @@ export const SHADER_PARAMS = {
     positionsPrev: 2,
     positionsNow: 3,
     segmentLengths: 4,
+    sdfTexture: 5,
+    sdfSampler: 6,
   },
 };
 
@@ -38,6 +41,7 @@ ${HAIR_SIM_IMPL_INTEGRATION}
 ${HAIR_SIM_IMPL_COLLISIONS}
 
 ${SimulationUniformsBuffer.SHADER_SNIPPET(b.simulationUniforms)}
+${SDFCollider.TEXTURE_SDF(b.sdfTexture, b.sdfSampler)}
 ${BUFFER_HAIR_DATA(b.hairData)}
 ${BUFFER_HAIR_POINTS_POSITIONS_RW(b.positionsPrev, {
   bufferName: '_hairPointPositionsPrev',
@@ -69,12 +73,15 @@ fn main(
   let segmentCount: u32 = pointsPerStrand - 1u; // 31
 
   let dt = 1. / 120.; // TODO uniform
-  let constraintIterations = 10u; // TODO uniform
+  let constraintIterations = 4u; // TODO uniform
   let stiffness = 1.0; // 0.01; // TODO uniform
   let collisionSphere = vec4f(0.0, 1.454, 0.15, 0.06); // TODO uniform
   let gravity = 1.0; // 9.81; // TODO uniform
   let windStrength = 1.; // TODO uniform
   let frameIdx = _uniforms.frameIdx;
+  let sdfBoundsMin = _uniforms.sdf.boundsMin.xyz;
+  let sdfBoundsMax = _uniforms.sdf.boundsMax.xyz;
+  let sdfOffset = getSDF_Offset();
 
   let strandIdx = global_id.x;
   // if (strandIdx >= strandsCount) { return; } // "uniform control flow" error
@@ -127,11 +134,22 @@ fn main(
     // collisions (skip root)
     for (var j = 1u; j < pointsPerStrand; j += 1u) { // from 0 to 30 (inclusive)
       var pos = _positionsWkGrp[wkGrpOffset + j];
+      // sphere
       applyCollisionsSphere(
         stiffnessIter,
         collisionSphere,
         &pos
       );
+
+      // SDF
+      applyCollisionsSdf(
+        stiffnessIter,
+        sdfBoundsMin,
+        sdfBoundsMax,
+        sdfOffset,
+        &pos
+      );
+
       _positionsWkGrp[wkGrpOffset + j] = pos;
     }
   }

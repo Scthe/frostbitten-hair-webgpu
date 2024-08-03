@@ -2,6 +2,7 @@ import { BYTES_VEC4, CONFIG } from '../../constants.ts';
 import { TypedArrayView } from '../../utils/typedArrayView.ts';
 import { BoundingBox, BoundingBoxPoint } from '../../utils/bounds.ts';
 import { assertIsGPUTextureView } from '../../utils/webgpu.ts';
+import { vec3 } from 'wgpu-matrix';
 
 export type SdfPoint3D = BoundingBoxPoint;
 
@@ -18,6 +19,7 @@ export class SDFCollider {
       return s;
     }
     fn isSdfDebugSemiTransparent() -> bool { return _uniforms.sdf.boundsMin.w > 1.0; }
+    fn getSDF_Offset() -> f32 { return _uniforms.sdf.boundsMax.w; }
   `;
   public static BUFFER_SIZE = 2 * BYTES_VEC4;
 
@@ -53,6 +55,11 @@ export class SDFCollider {
     if (!CONFIG.isTest) {
       assertIsGPUTextureView(textureView);
     }
+
+    const [boundsMin, boundsMax] = bounds;
+    const size = vec3.subtract(boundsMax, boundsMin);
+    const cellSize = vec3.scale(size, 1 / (dims - 1));
+    console.log(`SDF collider '${name}' (dims=${dims}, cellSize=${cellSize}), bounds:`, bounds); // prettier-ignore
   }
 
   bindTexture = (bindingIdx: number): GPUBindGroupEntry => ({
@@ -78,6 +85,6 @@ export class SDFCollider {
     dataView.writeF32(boundsMax[0]);
     dataView.writeF32(boundsMax[1]);
     dataView.writeF32(boundsMax[2]);
-    dataView.writeF32(0.0);
+    dataView.writeF32(c.distanceOffset);
   }
 }
