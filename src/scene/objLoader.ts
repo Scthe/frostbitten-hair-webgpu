@@ -102,32 +102,3 @@ function cleanupRawOBJData(mesh: ObjMesh, scale: number) {
     }
   }
 }
-
-/** split optimized vertex buffer into per-attribute copies */
-export function splitVerticesWithAttributesIntoSeparateLists(
-  verticesNew: Float32Array,
-  strideF32: number = 8
-) {
-  const newVertexCount = verticesNew.length / strideF32;
-  const positionsF32 = new Float32Array(newVertexCount * 3);
-  const normalsF32 = new Float32Array(newVertexCount * 3);
-  const uvF32 = new Float32Array(newVertexCount * 2);
-  for (let vertIdx = 0; vertIdx < newVertexCount; vertIdx++) {
-    const offset = vertIdx * strideF32;
-    positionsF32[3 * vertIdx + 0] = verticesNew[offset + 0];
-    positionsF32[3 * vertIdx + 1] = verticesNew[offset + 1];
-    positionsF32[3 * vertIdx + 2] = verticesNew[offset + 2];
-    normalsF32[3 * vertIdx + 0] = verticesNew[offset + 3];
-    normalsF32[3 * vertIdx + 1] = verticesNew[offset + 4];
-    normalsF32[3 * vertIdx + 2] = verticesNew[offset + 5];
-    uvF32[2 * vertIdx + 0] = verticesNew[offset + 6];
-    uvF32[2 * vertIdx + 1] = verticesNew[offset + 7];
-  }
-
-  return {
-    vertexCount: newVertexCount,
-    positions: positionsF32,
-    normals: normalsF32,
-    uv: uvF32,
-  };
-}

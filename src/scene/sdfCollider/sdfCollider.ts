@@ -1,7 +1,9 @@
 import { BYTES_VEC4, CONFIG } from '../../constants.ts';
 import { TypedArrayView } from '../../utils/typedArrayView.ts';
-import { BoundingBox } from '../../utils/bounds.ts';
+import { BoundingBox, BoundingBoxPoint } from '../../utils/bounds.ts';
 import { assertIsGPUTextureView } from '../../utils/webgpu.ts';
+
+export type SdfPoint3D = BoundingBoxPoint;
 
 export class SDFCollider {
   public static SDF_DATA_SNIPPET = /* wgsl */ `
@@ -34,21 +36,23 @@ export class SDFCollider {
       var t: vec3f = saturate(
         (p - sdfBoundsMin) / (sdfBoundsMax - sdfBoundsMin)
       );
-      t.y = 1.0 - t.y; // WebGPU reverted Y-axis
-      t.z = 1.0 - t.z; // WebGPU reverted Z-axis (I guess?)
+      // t.y = 1.0 - t.y; // WebGPU reverted Y-axis
+      // t.z = 1.0 - t.z; // WebGPU reverted Z-axis (I guess?)
       return textureSampleLevel(_sdfTexture, _sdfSampler, t, 0.0).x;
     }
   `;
 
   constructor(
     public readonly name: string,
-    private readonly bounds: BoundingBox,
-    private readonly dims: number,
+    public readonly bounds: BoundingBox,
+    public readonly dims: number,
     private readonly texture: GPUTexture,
     private readonly textureView: GPUTextureView,
     private readonly sampler: GPUSampler
   ) {
-    assertIsGPUTextureView(textureView);
+    if (!CONFIG.isTest) {
+      assertIsGPUTextureView(textureView);
+    }
   }
 
   bindTexture = (bindingIdx: number): GPUBindGroupEntry => ({

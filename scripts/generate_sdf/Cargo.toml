@@ -1,0 +1,13 @@
+[package]
+name = "generate_sdf"
+version = "0.0.0-dev"
+edition = "2021"
+description = "Generate SDF"
+homepage = "https://scthe.github.io/frostbitten-hair-webgpu"
+repository = "https://github.com/Scthe/frostbitten-hair-webgpu"
+license = "MIT"
+
+[dependencies]
+tobj = "3.2"
+mesh_to_sdf = "0.2.1"
+

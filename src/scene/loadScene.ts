@@ -20,14 +20,17 @@ import { dgr2rad } from '../utils/index.ts';
 import { createHairShadingBuffer } from './hair/hairShadingBuffer.ts';
 import { createHairSegmentLengthsBuffer } from './hair/hairSegmentLengthsBuffer.ts';
 import { createArray } from '../utils/arrays.ts';
-import { createSdfCollider } from './sdfCollider/createSdfCollider.ts';
+import { createSdfColliderFromBinary } from './sdfCollider/createSdfColliderFromBinary.ts';
 
 const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
   { name: 'sintel', file: 'sintel.obj' },
   { name: 'sintelEyes', file: 'sintel-eyes.obj' },
   // { name: 'sintelEyelashes', file: 'sintel-eyelashes.obj' },
+  // { name: 'sintel-collider', file: 'sintel-collider.obj' },
+  // { name: 'sdf-test', file: 'sdf-test.obj' },
 ];
+const SDF_COLLIDER_BIN = { name: 'sintel-sdf', file: 'sintel-sdf.bin' };
 
 export async function loadScene(device: GPUDevice): Promise<Scene> {
   const objects: Scene['objects'] = [];
@@ -53,12 +56,19 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
   STATS.update('Segments', formatNumber(hairObject.segmentCount, 0));
 
   // SDF collider
-  const sintelObj = objects.find((o) => o.name === 'sintel')!;
-  const sdfCollider = createSdfCollider(device, 'sintel-sdf', {
+  /*const sintelObj = objects.find((o) => o.name === 'sintel')!;
+  const sdfCollider = createMockSdfCollider(device, 'sintel-sdf', {
     bounds: sintelObj.bounds.box,
-    padding: 1.1,
-    dims: CONFIG.hairSimulation.sdf.dims,
-  });
+    dims: 16,
+  });*/
+  const sdfFileBin = await CONFIG.loaders.binaryFileReader(
+    `${MODELS_DIR}/${SDF_COLLIDER_BIN.file}`
+  );
+  const sdfCollider = createSdfColliderFromBinary(
+    device,
+    SDF_COLLIDER_BIN.name,
+    sdfFileBin
+  );
 
   // model matrix
   const modelMatrix = mat4.identity();

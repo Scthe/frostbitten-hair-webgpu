@@ -207,9 +207,8 @@ export const CONFIG = {
   hairSimulation: {
     enabled: true,
     sdf: {
-      dims: 64, // TODO use
+      distanceOffset: 0.0, // TODO negative pushes the SDF outwards making it bigger. This increases collision range. Positive moves inwards, making SDF smaller.
       showDebugView: true, // TODO switch to false
-      // debugAxis: 'axis-z' as SdfPreviewAxis, // TODO implement
       debugSlice: 0.5,
       debugSemitransparent: true,
     },

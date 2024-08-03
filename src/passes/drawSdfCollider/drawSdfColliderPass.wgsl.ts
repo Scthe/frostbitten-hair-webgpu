@@ -66,18 +66,20 @@ fn main_fs(
   let boundsMin = _uniforms.sdf.boundsMin.xyz;
   let boundsMax = _uniforms.sdf.boundsMax.xyz;
   let depthSlice = getSdfDebugDepthSlice();
-  let opacity = select(1.0, 0.95, isSdfDebugSemiTransparent());
+  let opacity = select(1.0, 0.75, isSdfDebugSemiTransparent());
 
   var color = vec3f(0., 0., 0.);
   
-  // let samplePos = vec3f(fragIn.uv, depthSlice);
-  // color.r = textureSampleLevel(_sdfTexture, _sdfSampler, samplePos, 0.0).x;
+  let samplePos = vec3f(fragIn.uv, depthSlice);
+  // let value = textureSampleLevel(_sdfTexture, _sdfSampler, samplePos, 0.0).x;
   
   let positionWS = fragIn.positionWS.xyz;
   let value = sampleSDFCollider(boundsMin, boundsMax, positionWS);
   if (value > 0.) { // outside
+    color.r = value;
     color.r = 1.;
   } else {
+    color.b = value;
     color.b = 1.;
   }
   
