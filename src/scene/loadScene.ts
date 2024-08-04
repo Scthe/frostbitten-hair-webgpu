@@ -21,6 +21,7 @@ import { createHairShadingBuffer } from './hair/hairShadingBuffer.ts';
 import { createHairSegmentLengthsBuffer } from './hair/hairSegmentLengthsBuffer.ts';
 import { createArray } from '../utils/arrays.ts';
 import { createSdfColliderFromBinary } from './sdfCollider/createSdfColliderFromBinary.ts';
+import { GridData } from '../passes/simulation/grids/gridData.ts';
 
 const OBJECTS = [
   // { name: 'cube', file: 'cube.obj' },
@@ -70,11 +71,18 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
     sdfFileBin
   );
 
+  // physics grid
+  const physicsGrid = new GridData(
+    device,
+    'grid-density-velocity',
+    hairObject.bounds.box
+  );
+
   // model matrix
   const modelMatrix = mat4.identity();
   mat4.rotateY(modelMatrix, dgr2rad(0), modelMatrix);
 
-  return { objects, hairObject, sdfCollider, modelMatrix };
+  return { objects, hairObject, sdfCollider, modelMatrix, physicsGrid };
 }
 
 export function createHairObject(

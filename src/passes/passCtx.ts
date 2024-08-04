@@ -4,6 +4,7 @@ import { Dimensions } from '../utils/index.ts';
 import { Scene } from '../scene/scene.ts';
 import { RenderUniformsBuffer } from './renderUniformsBuffer.ts';
 import { SimulationUniformsBuffer } from './simulation/simulationUniformsBuffer.ts';
+import { GridData } from './simulation/grids/gridData.ts';
 
 export interface PassCtx {
   frameIdx: number;
@@ -24,6 +25,7 @@ export interface PassCtx {
   shadowMapSampler: GPUSampler;
   globalUniforms: RenderUniformsBuffer;
   simulationUniforms: SimulationUniformsBuffer;
+  densityVelocityGrid: GridData;
   // hair:
   hairTilesBuffer: GPUBuffer;
   hairTileSegmentsBuffer: GPUBuffer;

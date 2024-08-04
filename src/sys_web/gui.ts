@@ -115,6 +115,7 @@ export function initializeGUI(
   function addHairSimulationFolder(gui: dat.GUI) {
     const cfg = CONFIG.hairSimulation;
     const sdf = cfg.sdf;
+    const grid = cfg.densityVelocityGrid;
     const dir = gui.addFolder('Hair simulation');
     dir.open();
 
@@ -122,11 +123,18 @@ export function initializeGUI(
     // dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
     dir.add(sdf, 'distanceOffset', -0.03, 0.3).name('SDF offset');
 
-    const sdfDir = dir.addFolder('SDF preview');
-    sdfDir.open();
+    // SDF
+    const _sdfDir = dir.addFolder('SDF preview');
+    // _sdfDir.open();
     dir.add(sdf, 'showDebugView').name('Enabled');
     dir.add(sdf, 'debugSemitransparent').name('Semitransparent');
-    dir.add(sdf, 'debugSlice', 0.0, 1.0).name('Slice');
+    dir.add(sdf, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
+
+    // SDF
+    const _gridDir = dir.addFolder('Grids preview');
+    _gridDir.open();
+    dir.add(grid, 'showDebugView').name('Enabled');
+    dir.add(grid, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
   }
 
   function addAmbientLightFolder(gui: dat.GUI) {

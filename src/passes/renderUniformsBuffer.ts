@@ -21,6 +21,7 @@ import {
 import { getShadowMapPreviewSize } from './shadowMapPass/shared/getShadowMapPreviewSize.ts';
 import { Scene } from '../scene/scene.ts';
 import { SDFCollider } from '../scene/sdfCollider/sdfCollider.ts';
+import { GridData } from './simulation/grids/gridData.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
 
@@ -97,6 +98,7 @@ export class RenderUniformsBuffer {
     }
 
     ${SDFCollider.SDF_DATA_SNIPPET}
+    ${GridData.GRID_DATA_SNIPPET}
 
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
@@ -118,6 +120,7 @@ export class RenderUniformsBuffer {
       ao: AmbientOcclusion,
       hairMaterial: HairMaterialParams,
       sdf: SDFCollider,
+      gridData: GridData,
       // START: misc vec4f
       fiberRadius: f32,
       dbgShadowMapPreviewSize: f32,
@@ -169,6 +172,7 @@ export class RenderUniformsBuffer {
     RenderUniformsBuffer.AO_SIZE + // ao
     4 * BYTES_VEC4 + // hairMaterial
     SDFCollider.BUFFER_SIZE + // sdf
+    GridData.BUFFER_SIZE + // grids
     4 * BYTES_F32 + // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
     RenderUniformsBuffer.BACKGROUND_SIZE;
 
@@ -248,8 +252,9 @@ export class RenderUniformsBuffer {
     this.writeAo();
     // hair material
     this.writeHairMaterial();
-    // sdf
+    // sdf + grids
     ctx.scene.sdfCollider.writeToDataView(this.dataView);
+    ctx.scene.physicsGrid.writeToDataView(this.dataView);
     // misc
     this.dataView.writeF32(c.hairRender.fiberRadius);
     this.dataView.writeF32(getShadowMapPreviewSize(viewport));

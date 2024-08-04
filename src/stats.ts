@@ -31,6 +31,7 @@ const AvailableStats = {
   ' \\ Per processor': {} as StatOpts, // memory for each fine pass processor
   'Slices data': {} as StatOpts, // hair slices color data
   'Hair FBO': {} as StatOpts, // final color framebuffer
+  'Physics grid': {} as StatOpts, // grid forces grid
   // render
   s1: { categoryName: 'Render' } as StatOpts,
   'Rendered strands': {} as StatOpts,

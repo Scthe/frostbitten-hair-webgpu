@@ -11,11 +11,8 @@ import { HAIR_SIM_IMPL_CONSTRANTS } from './shaderImpl/constraints.wgsl.ts';
 import { HAIR_SIM_IMPL_INTEGRATION } from './shaderImpl/integration.wgsl.ts';
 import { SimulationUniformsBuffer } from './simulationUniformsBuffer.ts';
 
-// TODO update density/velocity grids (dispatch per strand). But we have to clear them first..
-// TODO the aero grid - I assume it dispatches over the grid dims? Calculates density gradients at the same time?
-
 export const SHADER_PARAMS = {
-  workgroupSizeX: 1, // TODO [LOW] set better values
+  workgroupSizeX: 1, // TODO [CRITICAL] set better values
   bindings: {
     simulationUniforms: 0,
     hairData: 1,
@@ -97,7 +94,7 @@ fn main(
       let posPrev = _getHairPointPositionPrev(pointsPerStrand, strandIdx, i);
       let posNow = _getHairPointPositionNow(pointsPerStrand, strandIdx, i);
       
-      // TODO: Add forces from grids. If they are velocity, just scale by dt or smth
+      // TODO: Add forces from grids. If they are velocity, just scale by dt (and density to average the value) or smth
       let wind = normalize(vec3f(-1., -1., 0.)) * fract(f32(frameIdx) * 0.73) * windStrength;
       let force = gravityForce + wind;
       

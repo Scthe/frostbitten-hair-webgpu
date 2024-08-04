@@ -4,6 +4,7 @@ import { PassCtx } from '../passCtx.ts';
 import { TypedArrayView } from '../../utils/typedArrayView.ts';
 import { WEBGPU_MINIMAL_BUFFER_SIZE } from '../../utils/webgpu.ts';
 import { SDFCollider } from '../../scene/sdfCollider/sdfCollider.ts';
+import { GridData } from './grids/gridData.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
 
@@ -11,6 +12,7 @@ export class SimulationUniformsBuffer {
   public static SHADER_SNIPPET = (bindingIdx: number) => /* wgsl */ `
 
     ${SDFCollider.SDF_DATA_SNIPPET}
+    ${GridData.GRID_DATA_SNIPPET}
 
     struct SimulationUniforms {
       modelMatrix: mat4x4<f32>,
@@ -18,6 +20,7 @@ export class SimulationUniformsBuffer {
       collisionSphere: vec4f, // in OBJECT space!!!
       wind: vec4f, // in OBJECT space!!!
       sdf: SDFCollider,
+      gridData: GridData,
       // START: misc: vec4f
       deltaTime: f32,
       gravity: f32,
@@ -34,6 +37,7 @@ export class SimulationUniformsBuffer {
     BYTES_VEC4 + // collisionSphere
     BYTES_VEC4 + // wind
     SDFCollider.BUFFER_SIZE + // sdf
+    GridData.BUFFER_SIZE + // grids
     BYTES_VEC4; // misc
 
   private readonly gpuBuffer: GPUBuffer;
@@ -77,8 +81,9 @@ export class SimulationUniformsBuffer {
     this.dataView.writeF32(0.0);
     this.dataView.writeF32(0.0);
     this.dataView.writeF32(0.0);
-    // sdf
+    // sdf + grids
     ctx.scene.sdfCollider.writeToDataView(this.dataView);
+    ctx.scene.physicsGrid.writeToDataView(this.dataView);
     // misc
     this.dataView.writeF32(0.0); // deltaTime: f32
     this.dataView.writeF32(0.0); // gravity: f32,

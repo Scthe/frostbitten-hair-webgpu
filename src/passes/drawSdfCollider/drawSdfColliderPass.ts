@@ -1,13 +1,14 @@
-import { CONFIG, VERTS_IN_TRIANGLE } from '../../constants.ts';
 import { SDFCollider } from '../../scene/sdfCollider/sdfCollider.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
   labelShader,
   labelPipeline,
-  PIPELINE_PRIMITIVE_TRIANGLE_LIST,
-  useColorAttachment,
   assignResourcesToBindings,
 } from '../_shared/shared.ts';
+import {
+  createDebugVolumePipeline,
+  cmdDrawDbgVolumeQuad,
+} from '../_shared/volumeDebug.ts';
 import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawSdfColliderPass.wgsl.ts';
 
@@ -22,80 +23,21 @@ export class DrawSdfColliderPass {
       label: labelShader(DrawSdfColliderPass),
       code: SHADER_CODE(),
     });
-
-    this.pipeline = device.createRenderPipeline({
-      label: labelPipeline(DrawSdfColliderPass),
-      layout: 'auto',
-      vertex: {
-        module: shaderModule,
-        entryPoint: 'main_vs',
-        buffers: [],
-      },
-      fragment: {
-        module: shaderModule,
-        entryPoint: 'main_fs',
-        targets: [
-          {
-            format: outTextureFormat,
-            blend: {
-              // color is based on the alpha from the shader's output.
-              color: {
-                srcFactor: 'src-alpha',
-                dstFactor: 'one-minus-src-alpha',
-                operation: 'add',
-              },
-              alpha: {
-                srcFactor: 'one',
-                dstFactor: 'one',
-                operation: 'add',
-              },
-            },
-          },
-        ],
-      },
-      primitive: {
-        ...PIPELINE_PRIMITIVE_TRIANGLE_LIST,
-        cullMode: 'none',
-      },
-    });
+    this.pipeline = createDebugVolumePipeline(
+      device,
+      shaderModule,
+      outTextureFormat,
+      labelPipeline(DrawSdfColliderPass)
+    );
   }
 
-  onViewportResize = () => {
-    this.bindingsCache.clear();
-  };
-
   cmdDrawSdf(ctx: PassCtx) {
-    const { cmdBuf, profiler, hdrRenderTexture } = ctx;
-
-    const renderPass = cmdBuf.beginRenderPass({
-      label: DrawSdfColliderPass.NAME,
-      colorAttachments: [
-        useColorAttachment(hdrRenderTexture, CONFIG.clearColor, 'load'),
-      ],
-      timestampWrites: profiler?.createScopeGpu(DrawSdfColliderPass.NAME),
-    });
-
-    // set render pass data
-    renderPass.setPipeline(this.pipeline);
-
-    // uniforms
     const sdf = ctx.scene.sdfCollider;
     const bindings = this.bindingsCache.getBindings(sdf.name, () =>
       this.createBindings(ctx, sdf)
     );
-    renderPass.setBindGroup(0, bindings);
 
-    // draw
-    const vertexCount = 2 * VERTS_IN_TRIANGLE;
-    renderPass.draw(
-      vertexCount,
-      1, // instance count
-      0, // first index
-      0 // first instance
-    );
-
-    // fin
-    renderPass.end();
+    cmdDrawDbgVolumeQuad(ctx, DrawSdfColliderPass, this.pipeline, bindings);
   }
 
   private createBindings = (ctx: PassCtx, sdf: SDFCollider): GPUBindGroup => {

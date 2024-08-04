@@ -206,10 +206,19 @@ export const CONFIG = {
 
   hairSimulation: {
     enabled: true,
+    densityVelocityGrid: {
+      dims: 64, // 8x8x8 grid etc.
+      enableUpdates: true,
+      scale: 2.0, // twice the size of the initial hair
+      // DEBUG:
+      showDebugView: true, // TODO false
+      debugSlice: 0.5,
+    },
     sdf: {
       /** - **Negative value** pushes the SDF outwards making it bigger. This increases collision range.
        *  - **Positive value** moves inwards, making SDF smaller. */
       distanceOffset: -0.01,
+      // DEBUG:
       showDebugView: false,
       debugSlice: 0.5,
       debugSemitransparent: true,

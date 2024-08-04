@@ -109,10 +109,11 @@ export function createGPU_IndexBuffer(
 export function createGPU_StorageBuffer(
   device: GPUDevice,
   label: string,
-  data: Uint32Array | Float32Array
+  data: Uint32Array | Float32Array | Int32Array
 ) {
   const clName = getClassName(data);
-  if (clName !== Uint32Array.name && clName !== Float32Array.name) {
+  const allowedClasses = [Uint32Array.name, Float32Array.name, Int32Array.name];
+  if (!allowedClasses.includes(clName)) {
     throw new Error(`Invalid data provided to createGPU_StorageBuffer(). Expected TypedArray, got ${clName}`) // prettier-ignore
   }
 
@@ -128,6 +129,9 @@ export const getItemsPerThread = divideCeil;
 
 export const u32_type = (access: 'read_write' | 'read') =>
   access === 'read_write' ? 'atomic<u32>' : 'u32';
+
+export const i32_type = (access: 'read_write' | 'read') =>
+  access === 'read_write' ? 'atomic<i32>' : 'i32';
 
 export const bindBuffer = (
   idx: number,
