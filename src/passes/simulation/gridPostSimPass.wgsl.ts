@@ -1,4 +1,3 @@
-import { CONFIG } from '../../constants.ts';
 import { BUFFER_HAIR_DATA } from '../../scene/hair/hairDataBuffer.ts';
 import { BUFFER_HAIR_POINTS_POSITIONS_R } from '../../scene/hair/hairPointsPositionsBuffer.ts';
 import { GENERIC_UTILS } from '../_shaderSnippets/shaderSnippets.wgls.ts';
@@ -26,7 +25,7 @@ const b = SHADER_PARAMS.bindings;
 export const SHADER_CODE = () => /* wgsl */ `
 
 ${GENERIC_UTILS}
-${GRID_UTILS(CONFIG.hairSimulation.densityVelocityGrid.dims)}
+${GRID_UTILS}
 
 ${SimulationUniformsBuffer.SHADER_SNIPPET(b.simulationUniforms)}
 ${BUFFER_GRID_DENSITY_VELOCITY(b.gridBuffer, 'read_write')}
@@ -63,7 +62,7 @@ fn main(
     let posNow  = _getHairPointPositionNow (pointsPerStrand, strandIdx, i).xyz;
     let velocity = posNow - posPrev; // we can div. by velocity during integration
 
-    // density is just a 'I am here' counter. Weighted by triliner interpolation..
+    // density is just a 'I am here' counter. Weighted by triliner interpolation
     _addGridDensityVelocity(
       boundsMin, boundsMax,
       posNow,

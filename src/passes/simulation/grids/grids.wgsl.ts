@@ -1,6 +1,10 @@
+import { CONFIG } from '../../../constants.ts';
+
 export const GRID_FLOAT_TO_U32_MUL = 1000000.0;
 
-export const GRID_UTILS = (dims: number) => /* wgsl */ `
+export const GRID_UTILS = /* wgsl */ `
+
+const GRID_DIMS: u32 = ${CONFIG.hairSimulation.physicsForcesGrid.dims}u;
 
 // There are no float atomics in WGSL. Convert to i32
 const GRID_FLOAT_TO_U32_MUL: f32 = ${GRID_FLOAT_TO_U32_MUL};
@@ -9,12 +13,38 @@ fn gridDecodeValue(v: i32) -> f32 { return f32(v) / GRID_FLOAT_TO_U32_MUL; }
 
 
 fn _getGridIdx(p: vec3u) -> u32 {
-  let GRID_DIMS: u32 = ${dims}u;
   return (
     clamp(p.z, 0u, GRID_DIMS - 1u) * GRID_DIMS * GRID_DIMS +
     clamp(p.y, 0u, GRID_DIMS - 1u) * GRID_DIMS +
     clamp(p.x, 0u, GRID_DIMS - 1u)
   );
+}
+
+fn getGridCellSize(gridBoundsMin: vec3f, gridBoundsMax: vec3f) -> vec3f {
+  let size = gridBoundsMax - gridBoundsMin;
+  return size / f32(GRID_DIMS - 1u);
+}
+
+/** Take (0,1,4) grid point and turn into vec3f coords */
+fn getGridPointPositionWS(
+  gridBoundsMin: vec3f,
+  gridBoundsMax: vec3f,
+  p: vec3u
+) -> vec3f {
+  let cellSize = getGridCellSize(gridBoundsMin, gridBoundsMax);
+  return gridBoundsMin + cellSize * vec3f(p);
+}
+
+fn getClosestGridPoint(
+  gridBoundsMin: vec3f,
+  gridBoundsMax: vec3f,
+  p: vec3f
+) -> vec3u {
+  var t: vec3f = saturate(
+    (p - gridBoundsMin) / (gridBoundsMax - gridBoundsMin)
+  );
+  var r: GridCoordinates;
+  return vec3u(round(t * f32(GRID_DIMS - 1u)));
 }
 
 struct GridCoordinates {
@@ -33,7 +63,6 @@ fn _getGridCell(
   gridBoundsMax: vec3f,
   p: vec3f,
 ) -> GridCoordinates {
-  let GRID_DIMS: u32 = ${dims}u;
   var t: vec3f = saturate(
     (p - gridBoundsMin) / (gridBoundsMax - gridBoundsMin)
   );
@@ -54,4 +83,11 @@ fn _getGridCellWeights(
   return vec3f(w_x, w_y, w_z);
 }
 
+/** 
+ * Compress '_getGridCellWeights()' into a single value. Used when stored value is not a vector.
+ * Not amazing, but..
+*/
+fn _getGridCellWeight(cellW: vec3f) -> f32 {
+  return length(cellW);
+}
 `;

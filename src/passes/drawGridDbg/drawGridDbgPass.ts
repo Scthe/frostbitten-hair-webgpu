@@ -39,12 +39,13 @@ export class DrawGridDbgPass {
   }
 
   private createBindings = (ctx: PassCtx): GPUBindGroup => {
-    const { device, globalUniforms, densityVelocityGrid } = ctx;
+    const { device, globalUniforms, physicsForcesGrid } = ctx;
     const b = SHADER_PARAMS.bindings;
 
     return assignResourcesToBindings(DrawGridDbgPass, device, this.pipeline, [
       globalUniforms.createBindingDesc(b.renderUniforms),
-      densityVelocityGrid.bindDensityVelocityBuffer(b.gridBuffer),
+      physicsForcesGrid.bindDensityVelocityBuffer(b.densityVelocityBuffer),
+      physicsForcesGrid.bindDensityGradAndWindBuffer(b.densityGradWindBuffer),
     ]);
   };
 }

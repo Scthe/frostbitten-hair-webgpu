@@ -72,11 +72,7 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
   );
 
   // physics grid
-  const physicsGrid = new GridData(
-    device,
-    'grid-density-velocity',
-    hairObject.bounds.box
-  );
+  const physicsGrid = new GridData(device, hairObject.bounds.box);
 
   // model matrix
   const modelMatrix = mat4.identity();

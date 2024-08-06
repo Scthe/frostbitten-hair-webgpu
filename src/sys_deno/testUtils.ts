@@ -110,7 +110,7 @@ export const createMockPassCtx = (
     shadowMapSampler: undefined!,
     globalUniforms: undefined!,
     simulationUniforms: undefined!,
-    densityVelocityGrid: undefined!,
+    physicsForcesGrid: undefined!,
     hairRasterizerResultsBuffer: undefined!,
     hairTilesBuffer: undefined!,
     hairTileSegmentsBuffer: undefined!,

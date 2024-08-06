@@ -1,6 +1,11 @@
 // @deno-types="npm:@types/dat.gui@0.7.9"
 import * as dat from 'dat.gui';
-import { CONFIG, DISPLAY_MODE, LightCfg } from '../constants.ts';
+import {
+  CONFIG,
+  DISPLAY_MODE,
+  GridDebugValue,
+  LightCfg,
+} from '../constants.ts';
 import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
@@ -115,7 +120,7 @@ export function initializeGUI(
   function addHairSimulationFolder(gui: dat.GUI) {
     const cfg = CONFIG.hairSimulation;
     const sdf = cfg.sdf;
-    const grid = cfg.densityVelocityGrid;
+    const grid = cfg.physicsForcesGrid;
     const dir = gui.addFolder('Hair simulation');
     dir.open();
 
@@ -130,10 +135,18 @@ export function initializeGUI(
     dir.add(sdf, 'debugSemitransparent').name('Semitransparent');
     dir.add(sdf, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
 
-    // SDF
+    // Grids
     const _gridDir = dir.addFolder('Grids preview');
     _gridDir.open();
     dir.add(grid, 'showDebugView').name('Enabled');
+    const gridValueDummy = createDummy(grid, 'debugValue', [
+      { label: 'Density', value: GridDebugValue.DENSITY },
+      { label: 'Density Grad', value: GridDebugValue.DENSITY_GRADIENT },
+      { label: 'Velocity', value: GridDebugValue.VELOCITY },
+      { label: 'Wind', value: GridDebugValue.WIND },
+    ]);
+    dir.add(gridValueDummy, 'debugValue', gridValueDummy.values).name('Value');
+    dir.add(grid, 'debugAbsValue').name('Vector abs');
     dir.add(grid, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
   }
 

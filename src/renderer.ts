@@ -35,6 +35,7 @@ import { HairSimIntegrationPass } from './passes/simulation/hairSimIntegrationPa
 import { DrawSdfColliderPass } from './passes/drawSdfCollider/drawSdfColliderPass.ts';
 import { DrawGridDbgPass } from './passes/drawGridDbg/drawGridDbgPass.ts';
 import { GridPostSimPass } from './passes/simulation/gridPostSimPass.ts';
+import { GridPreSimPass } from './passes/simulation/gridPreSimPass.ts';
 
 export class Renderer {
   public readonly cameraCtrl: Camera;
@@ -71,6 +72,7 @@ export class Renderer {
   private readonly simulationUniformsBuffer: SimulationUniformsBuffer;
   // passes
   private readonly hairSimIntegrationPass: HairSimIntegrationPass;
+  private readonly gridPreSimPass: GridPreSimPass;
   private readonly gridPostSimPass: GridPostSimPass;
   private readonly drawSdfColliderPass: DrawSdfColliderPass;
   private readonly drawGridDbgPass: DrawGridDbgPass;
@@ -114,6 +116,7 @@ export class Renderer {
     // simulation
     this.simulationUniformsBuffer = new SimulationUniformsBuffer(device);
     this.hairSimIntegrationPass = new HairSimIntegrationPass(device);
+    this.gridPreSimPass = new GridPreSimPass(device);
     this.gridPostSimPass = new GridPostSimPass(device);
     this.drawSdfColliderPass = new DrawSdfColliderPass(
       device,
@@ -134,10 +137,17 @@ export class Renderer {
       label: 'renderer--before-first-frame',
     });
 
+    const hairSimCfg = CONFIG.hairSimulation;
     const ctx: PassCtx = this.createPassCtx(cmdBuf, scene);
 
     // update GPU uniforms
     this.renderUniformBuffer.update(ctx);
+    this.simulationUniformsBuffer.update(ctx);
+
+    // send the initial strand positions into the grid for density grad
+    if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+      this.gridPostSimPass.cmdUpdateGridsAfterSim(ctx, scene.hairObject);
+    }
 
     // init stuff for first frame
     this.drawMeshesPass.cmdDrawMeshes(ctx);
@@ -163,11 +173,14 @@ export class Renderer {
 
     // simulation
     if (hairSimCfg.enabled) {
+      if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+        this.gridPreSimPass.cmdUpdateGridsBeforeSim(ctx, scene.hairObject);
+      }
       this.hairSimIntegrationPass.cmdSimulateHairPositions(
         ctx,
         scene.hairObject
       );
-      if (hairSimCfg.densityVelocityGrid.enableUpdates) {
+      if (hairSimCfg.physicsForcesGrid.enableUpdates) {
         this.gridPostSimPass.cmdUpdateGridsAfterSim(ctx, scene.hairObject);
       }
     }
@@ -179,7 +192,7 @@ export class Renderer {
     // dbg
     if (hairSimCfg.sdf.showDebugView) {
       this.drawSdfColliderPass.cmdDrawSdf(ctx);
-    } else if (hairSimCfg.densityVelocityGrid.showDebugView) {
+    } else if (hairSimCfg.physicsForcesGrid.showDebugView) {
       this.drawGridDbgPass.cmdDrawGridDbg(ctx);
     }
 
@@ -260,7 +273,7 @@ export class Renderer {
       shadowMapSampler: this.shadowMapPass.shadowMapSampler,
       globalUniforms: this.renderUniformBuffer,
       simulationUniforms: this.simulationUniformsBuffer,
-      densityVelocityGrid: scene.physicsGrid,
+      physicsForcesGrid: scene.physicsGrid,
       // hair:
       hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
       hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,

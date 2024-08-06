@@ -67,6 +67,12 @@ export type HairFile =
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
 export type TilePassDispatch = 'perStrand' | 'perSegment';
 export type SdfPreviewAxis = 'axis-x' | 'axis-y' | 'axis-z';
+export const GridDebugValue = {
+  DENSITY: 0,
+  DENSITY_GRADIENT: 1,
+  VELOCITY: 2,
+  WIND: 3,
+};
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -206,14 +212,18 @@ export const CONFIG = {
 
   hairSimulation: {
     enabled: true,
-    densityVelocityGrid: {
+
+    physicsForcesGrid: {
       dims: 64, // 8x8x8 grid etc.
       enableUpdates: true,
       scale: 2.0, // twice the size of the initial hair
       // DEBUG:
       showDebugView: true, // TODO false
       debugSlice: 0.5,
+      debugValue: GridDebugValue.WIND,
+      debugAbsValue: true,
     },
+
     sdf: {
       /** - **Negative value** pushes the SDF outwards making it bigger. This increases collision range.
        *  - **Positive value** moves inwards, making SDF smaller. */

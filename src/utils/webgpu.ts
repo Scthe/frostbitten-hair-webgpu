@@ -127,10 +127,12 @@ export function createGPU_StorageBuffer(
 
 export const getItemsPerThread = divideCeil;
 
-export const u32_type = (access: 'read_write' | 'read') =>
+export type StorageAccess = 'read_write' | 'read';
+
+export const u32_type = (access: StorageAccess) =>
   access === 'read_write' ? 'atomic<u32>' : 'u32';
 
-export const i32_type = (access: 'read_write' | 'read') =>
+export const i32_type = (access: StorageAccess) =>
   access === 'read_write' ? 'atomic<i32>' : 'i32';
 
 export const bindBuffer = (

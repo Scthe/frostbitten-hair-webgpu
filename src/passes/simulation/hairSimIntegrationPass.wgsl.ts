@@ -90,7 +90,7 @@ fn main(
   // verlet integration. Also adds forces from grids.
   // Skips root point cause it never moves.
   _positionsWkGrp[wkGrpOffset + 0] = _getHairPointPositionNow(pointsPerStrand, strandIdx, 0u); // root
-  for (var i = 1u; i < pointsPerStrand; i += 1u) {
+  for (var i = 1u; i < pointsPerStrand && !isInvalidDispatch; i += 1u) {
       let posPrev = _getHairPointPositionPrev(pointsPerStrand, strandIdx, i);
       let posNow = _getHairPointPositionNow(pointsPerStrand, strandIdx, i);
       
@@ -106,7 +106,7 @@ fn main(
 
 
   // solve constraints through iterations
-  for (var i = 0u; i < constraintIterations; i += 1u) {
+  for (var i = 0u; i < constraintIterations && !isInvalidDispatch; i += 1u) {
     let stiffnessIter = stiffness / f32(constraintIterations); // TODO something better?
 
     // strech/length constraint

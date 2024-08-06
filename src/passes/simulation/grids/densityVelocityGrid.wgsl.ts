@@ -17,10 +17,6 @@ var<storage, ${access}> _gridDensityVelocity: array<DensityVelocityI32>;
 
 ${access === 'read' ? gridRead() : gridWrite()}
 
-fn _getDensityWeight(cellW: vec3f) -> f32 {
-  return length(cellW);
-}
-
 `;
 
 function gridRead() {
@@ -46,15 +42,12 @@ function gridRead() {
     for (var y = co.cellMin.y; y <= co.cellMax.y; y += 1u) {
     for (var x = co.cellMin.x; x <= co.cellMax.x; x += 1u) {
       let cellCorner = vec3u(x, y, z);
-      let idx = _getGridIdx(cellCorner);
       let cornerWeights = _getGridCellWeights(cellCorner, co.pInGrid);
+      let value = _getGridDensityVelocityAtPoint(cellCorner);
   
       // load
-      let value = _gridDensityVelocity[idx];
-      result.velocity.x += cornerWeights.x * gridDecodeValue(value.velocityX);
-      result.velocity.y += cornerWeights.y * gridDecodeValue(value.velocityY);
-      result.velocity.z += cornerWeights.z * gridDecodeValue(value.velocityZ);
-      result.density += _getDensityWeight(cornerWeights) * gridDecodeValue(value.density); // not amazing, but..
+      result.velocity += cornerWeights * value.velocity;
+      result.density  += _getGridCellWeight(cornerWeights) * value.density;
       // result.density += cornerWeights.x * select(0., 1., x == 1u); // dbg:  NOTE: this samples 4 points (see y,z-axis) so the gradient is a bit strong
     }}}
   
@@ -74,6 +67,23 @@ function gridRead() {
     return result;
   }
 
+  
+  fn _getGridDensityVelocityAtPoint(p: vec3u) -> DensityVelocity {
+    var result = DensityVelocity(vec3f(0.0), 0.0);
+    let idx = _getGridIdx(p);
+    let value = _gridDensityVelocity[idx];
+
+    result.velocity.x = gridDecodeValue(value.velocityX);
+    result.velocity.y = gridDecodeValue(value.velocityY);
+    result.velocity.z = gridDecodeValue(value.velocityZ);
+    result.density = gridDecodeValue(value.density);
+    return result;
+  }
+
+  fn _getGridDensityAtPoint(p: vec3u) -> f32 {
+    let idx = _getGridIdx(p);
+    return gridDecodeValue(_gridDensityVelocity[idx].density);
+  }
   `;
 }
 
@@ -107,7 +117,7 @@ function gridWrite() {
       value = gridEncodeValue(cellVelocity.z);
       atomicAdd(&_gridDensityVelocity[idx].velocityZ, value);
       // density
-      let density = _getDensityWeight(cornerWeights);
+      let density = _getGridCellWeight(cornerWeights);
       value = gridEncodeValue(density);
       atomicAdd(&_gridDensityVelocity[idx].density, value);
     }}}

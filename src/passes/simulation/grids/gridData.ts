@@ -1,5 +1,5 @@
 import { vec3 } from 'wgpu-matrix';
-import { BYTES_VEC4, CONFIG } from '../../../constants.ts';
+import { BYTES_VEC4, CONFIG, GridDebugValue } from '../../../constants.ts';
 import { BoundingBox, scaleBoundingBox } from '../../../utils/bounds.ts';
 import {
   WEBGPU_MINIMAL_BUFFER_SIZE,
@@ -16,7 +16,8 @@ export class GridData {
 
   struct GridData {
     boundsMin: vec4f,
-    boundsMax: vec4f,
+    boundsMax: vec3f,
+    debugDisplayValue: u32, // also encodes if abs the value
   }
   
   fn getGridDebugDepthSlice() -> f32 {
@@ -27,25 +28,31 @@ export class GridData {
   public static BUFFER_SIZE = 2 * BYTES_VEC4;
 
   private readonly densityVelocityBuffer: GPUBuffer;
+  private readonly densityGradAndWindBuffer: GPUBuffer;
   public readonly bounds: BoundingBox;
 
-  constructor(
-    device: GPUDevice,
-    public readonly name: string,
-    bounds_: BoundingBox
-  ) {
+  constructor(device: GPUDevice, bounds_: BoundingBox) {
     this.bounds = scaleBoundingBox(
       bounds_,
-      CONFIG.hairSimulation.densityVelocityGrid.scale
+      CONFIG.hairSimulation.physicsForcesGrid.scale
     );
-    const dims = CONFIG.hairSimulation.densityVelocityGrid.dims;
+    const dims = CONFIG.hairSimulation.physicsForcesGrid.dims;
     const [boundsMin, boundsMax] = this.bounds;
     const size = vec3.subtract(boundsMax, boundsMin);
     const cellSize = vec3.scale(size, 1 / (dims - 1));
     const cellCount = dims * dims * dims;
-    console.log(`Physics grid '${name}' (dims=${dims}x${dims}x${dims}, ${cellCount} points, cellSize=${cellSize}), bounds:`, this.bounds); // prettier-ignore
+    console.log(`Physics grid (dims=${dims}x${dims}x${dims}, ${cellCount} points, cellSize=${cellSize}), bounds:`, this.bounds); // prettier-ignore
 
-    this.densityVelocityBuffer = createDensityVelocityGrid(device, name, dims);
+    this.densityVelocityBuffer = createPhysicsForcesBuffer(
+      device,
+      'grid-density-velocity',
+      dims
+    );
+    this.densityGradAndWindBuffer = createPhysicsForcesBuffer(
+      device,
+      'grid-density-grad-and-wind',
+      dims
+    );
   }
 
   clearDensityVelocityBuffer(cmdBuf: GPUCommandEncoder) {
@@ -56,11 +63,29 @@ export class GridData {
     );
   }
 
+  clearDensityGradAndWindBuffer(cmdBuf: GPUCommandEncoder) {
+    cmdBuf.clearBuffer(
+      this.densityGradAndWindBuffer,
+      0,
+      this.densityGradAndWindBuffer.size
+    );
+  }
+
   bindDensityVelocityBuffer = (bindingIdx: number) =>
     bindBuffer(bindingIdx, this.densityVelocityBuffer);
 
+  bindDensityGradAndWindBuffer = (bindingIdx: number) =>
+    bindBuffer(bindingIdx, this.densityGradAndWindBuffer);
+
+  getDebuggedGridBuffer() {
+    const v = CONFIG.hairSimulation.physicsForcesGrid.debugValue;
+    return v == GridDebugValue.WIND || v == GridDebugValue.DENSITY_GRADIENT
+      ? this.densityGradAndWindBuffer
+      : this.densityVelocityBuffer;
+  }
+
   writeToDataView(dataView: TypedArrayView) {
-    const c = CONFIG.hairSimulation.densityVelocityGrid;
+    const c = CONFIG.hairSimulation.physicsForcesGrid;
     const [boundsMin, boundsMax] = this.bounds;
 
     dataView.writeF32(boundsMin[0]);
@@ -71,11 +96,11 @@ export class GridData {
     dataView.writeF32(boundsMax[0]);
     dataView.writeF32(boundsMax[1]);
     dataView.writeF32(boundsMax[2]);
-    dataView.writeF32(0.0);
+    dataView.writeU32(c.debugValue + (c.debugAbsValue ? 16 : 0));
   }
 }
 
-function createDensityVelocityGrid(
+function createPhysicsForcesBuffer(
   device: GPUDevice,
   name: string,
   dims: number
@@ -114,6 +139,6 @@ function createDensityVelocityGrid(
   // console.log(data);
 
   const result = createGPU_StorageBuffer(device, name, data);
-  STATS.update('Physics grid', formatBytes(result.size));
+  STATS.update('Physics grid', '2 * ' + formatBytes(result.size));
   return result;
 }

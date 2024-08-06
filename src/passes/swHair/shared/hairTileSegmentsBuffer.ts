@@ -1,5 +1,9 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
-import { WEBGPU_MINIMAL_BUFFER_SIZE, u32_type } from '../../../utils/webgpu.ts';
+import {
+  StorageAccess,
+  WEBGPU_MINIMAL_BUFFER_SIZE,
+  u32_type,
+} from '../../../utils/webgpu.ts';
 import { getTileCount } from './hairTilesResultBuffer.ts';
 import { Dimensions } from '../../../utils/index.ts';
 import { STATS } from '../../../stats.ts';
@@ -50,7 +54,7 @@ fn _getTileSegment(
  */
 export const BUFFER_HAIR_TILE_SEGMENTS = (
   bindingIdx: number,
-  access: 'read_write' | 'read'
+  access: StorageAccess
 ) => /* wgsl */ `
 
 struct LinkedListElement {

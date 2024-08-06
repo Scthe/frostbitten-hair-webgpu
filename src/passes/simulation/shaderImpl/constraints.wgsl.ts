@@ -1,5 +1,7 @@
 export const HAIR_SIM_IMPL_CONSTRANTS = /* wgsl */ `
 
+// See [Bender15] "Position-Based Simulation Methods in Computer Graphics"
+// Section "5.1. Stretching"
 fn applyConstraint_Length (
   stiffness: f32,
   expectedLength: f32,

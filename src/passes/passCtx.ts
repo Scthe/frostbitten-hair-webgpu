@@ -25,7 +25,7 @@ export interface PassCtx {
   shadowMapSampler: GPUSampler;
   globalUniforms: RenderUniformsBuffer;
   simulationUniforms: SimulationUniformsBuffer;
-  densityVelocityGrid: GridData;
+  physicsForcesGrid: GridData;
   // hair:
   hairTilesBuffer: GPUBuffer;
   hairTileSegmentsBuffer: GPUBuffer;
