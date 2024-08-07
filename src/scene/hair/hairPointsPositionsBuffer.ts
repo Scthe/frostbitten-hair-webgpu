@@ -70,8 +70,14 @@ fn ${opts.setterName}(
 export function createHairPointsPositionsBuffer(
   device: GPUDevice,
   name: string,
-  positions: Float32Array
+  positions: Float32Array,
+  extraUsage: GPUBufferUsageFlags
 ): GPUBuffer {
   // console.log('POSITIONS', typedArr2str(positions, 4));
-  return createGPU_StorageBuffer(device, `${name}-points-positions`, positions);
+  return createGPU_StorageBuffer(
+    device,
+    `${name}-points-positions`,
+    positions,
+    extraUsage
+  );
 }

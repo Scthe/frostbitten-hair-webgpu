@@ -44,6 +44,32 @@ export class HairObject {
     return this._currentPositionsBuffer;
   }
 
+  resetSimulation(device: GPUDevice) {
+    const cmdBuf = device.createCommandEncoder();
+    const {
+      initialPointsPositionsBuffer,
+      pointsPositionsBuffer_0,
+      pointsPositionsBuffer_1,
+    } = this.buffers;
+    const size = initialPointsPositionsBuffer.size;
+
+    cmdBuf.copyBufferToBuffer(
+      initialPointsPositionsBuffer,
+      0,
+      pointsPositionsBuffer_0,
+      0,
+      size
+    );
+    cmdBuf.copyBufferToBuffer(
+      initialPointsPositionsBuffer,
+      0,
+      pointsPositionsBuffer_1,
+      0,
+      size
+    );
+    device.queue.submit([cmdBuf.finish()]);
+  }
+
   /**
    * Example at the start of the frame for `$currentPositionsBuffer='1'`:
    *  - `positionsBuffer_0` - previous positions

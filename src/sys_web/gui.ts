@@ -17,6 +17,7 @@ import { showHtmlEl } from '../sys_web/htmlUtils.ts';
 type GuiCtrl = dat.GUIController<Record<string, unknown>>;
 
 export function initializeGUI(
+  device: GPUDevice,
   profiler: GpuProfiler,
   scene: Scene,
   camera: Camera
@@ -32,6 +33,9 @@ export function initializeGUI(
     },
     resetCamera: () => {
       camera.resetPosition();
+    },
+    resetSimulation: () => {
+      scene.hairObject.resetSimulation(device);
     },
   };
 
@@ -121,23 +125,47 @@ export function initializeGUI(
     const cfg = CONFIG.hairSimulation;
     const sdf = cfg.sdf;
     const grid = cfg.physicsForcesGrid;
-    const dir = gui.addFolder('Hair simulation');
+    const constr = cfg.constraints;
+    const wind = cfg.wind;
+
+    const simDir = gui.addFolder('Hair simulation');
+    let dir = simDir;
     dir.open();
 
+    dir.add(dummyObject, 'resetSimulation').name('Reset simulation');
     dir.add(cfg, 'enabled').name('Enabled');
-    // dir.add(cfg, 'lodRenderPercent', 0, 100).step(1).name('Render %');
-    dir.add(sdf, 'distanceOffset', -0.03, 0.3).name('SDF offset');
+    dir.add(cfg, 'gravity', 0.0, 0.001).name('Gravity');
+    dir.add(cfg, 'friction', 0.0, 1.0).name('Friction');
+    dir.add(cfg, 'volumePreservation', 0.0, 0.00001).name('Vol. Preserv.');
 
-    // SDF
-    const _sdfDir = dir.addFolder('SDF preview');
+    // constraints
+    dir = simDir.addFolder('Constraints');
+    dir.open();
+    dir.add(constr, 'constraintIterations', 1, 10).step(1).name('Iterations');
+    dir.add(constr, 'stiffnessLengthConstr', 0.0, 1.0).name('Stiff. len');
+    dir.add(constr, 'stiffnessCollisions', 0.0, 1.0).name('Stiff. collisions');
+    dir.add(constr, 'stiffnessSDF', 0.0, 1.0).name('Stiff. SDF');
+    dir.add(sdf, 'distanceOffset', -0.003, 0.003).name('SDF offset');
+
+    // wind
+    dir = simDir.addFolder('Wind');
+    dir.open();
+    dir.add(wind, 'dirPhi', -179, 179).step(1).name('Dir phi');
+    dir.add(wind, 'dirTheta', 15, 165).step(1).name('Dir th');
+    dir.add(wind, 'strength', 0.0, 0.00001).name('Strength');
+    dir.add(wind, 'lullStrengthMul', 0.0, 1.0).name('Lull strength');
+    dir.add(wind, 'colisionTraceOffset', 1.0, 5.0).name('Collision offset');
+
+    // SDF preview
+    dir = simDir.addFolder('SDF preview');
     // _sdfDir.open();
     dir.add(sdf, 'showDebugView').name('Enabled');
     dir.add(sdf, 'debugSemitransparent').name('Semitransparent');
     dir.add(sdf, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
 
     // Grids
-    const _gridDir = dir.addFolder('Grids preview');
-    _gridDir.open();
+    dir = simDir.addFolder('Grids preview');
+    // dir.open();
     dir.add(grid, 'showDebugView').name('Enabled');
     const gridValueDummy = createDummy(grid, 'debugValue', [
       { label: 'Density', value: GridDebugValue.DENSITY },

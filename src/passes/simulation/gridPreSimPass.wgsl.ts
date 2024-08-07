@@ -43,11 +43,11 @@ fn main(
   let boundsMin = _uniforms.gridData.boundsMin.xyz;
   let boundsMax = _uniforms.gridData.boundsMax.xyz;
   let totalGridPoints = GRID_DIMS * GRID_DIMS * GRID_DIMS;
-  let windOrigin = vec3f(-1., 0., 0.,); // TODO uniform
   
+  // TBH. we could also skip if density near the point is 0
   if (global_id.x >= totalGridPoints) { return; }
 
-  // get (0,1,4) grid point
+  // get grid point e.g. (0,1,4)
   let gridPoint = deconstructId(global_id.x);
   // if (gridPoint.z < (GRID_DIMS / 2u)) { // dbg
     // _gridDensityGradAndWindVelocity[global_id.x].windStrength = gridEncodeValue(1.);
@@ -60,8 +60,7 @@ fn main(
   // }
 
   // wind
-  // TODO randomize
-  let windStrength = getWindStrength(windOrigin, position);
+  let windStrength = getWindStrength(position);
   
   // density gradient
   let densityGrad = getDensityGradient(boundsMin, boundsMax, gridPoint);
@@ -83,15 +82,15 @@ fn deconstructId(id: u32) -> vec3u {
   return vec3u(x, y, z);
 }
 
-const WIND_ORIGIN_DISTANCE = 1000.;
+const WIND_LULL = 0.0;
+const WIND_HALF = 0.5;
+const WIND_FULL = 1.0;
 
-fn getWindStrength(windOrigin: vec3f, p: vec3f) -> f32 {
+fn getWindStrength(p: vec3f) -> f32 {
   let sdfBoundsMin = _uniforms.sdf.boundsMin.xyz;
   let sdfBoundsMax = _uniforms.sdf.boundsMax.xyz;
-  let windLullCorrection = 1.5; // TODO uniform
-  let WIND_LULL = 0.0; // TODO uniform
-  let WIND_FULL = 1.0;
-  let WIND_HALF = mix(WIND_LULL, WIND_FULL, 0.5);
+  let windDirection = _uniforms.wind.xyz;
+  let windColisionTraceOffset = _uniforms.windColisionTraceOffset;
 
   // ignore sdfOffset, as it would create big lull zone around the object
   let sdfDistance = sampleSDFCollider(sdfBoundsMin, sdfBoundsMax, p);
@@ -99,16 +98,16 @@ fn getWindStrength(windOrigin: vec3f, p: vec3f) -> f32 {
 
   // check if there is a collider between the point and the wind origin.
   // TBH. You could make a fancy fluid sim here.
-  let windOrigin2 = windOrigin * WIND_ORIGIN_DISTANCE;
-  let towardWind = normalize(windOrigin2 - p);
-  // toward wind hoping to hit a mesh. Enlarge by correction in case there is a slight angle
-  let rayTraceTowardWindPos = p + towardWind * sdfDistance * windLullCorrection;
+  let towardWindDir = -normalize(windDirection);
+  // trace into the wind hoping to hit a mesh. Enlarge step by correction
+  let rayTraceTowardWindPos = p + towardWindDir * sdfDistance * windColisionTraceOffset;
   let sdfDistance2 = sampleSDFCollider(sdfBoundsMin, sdfBoundsMax, rayTraceTowardWindPos);
   if (sdfDistance2 < 0.) { return WIND_HALF; }
 
   return WIND_FULL;
 }
 
+// https://youtu.be/XmzBREkK8kY?si=fzOcQi_47D9roJKY&t=644
 fn getDensityGradient(
   gridBoundsMin: vec3f,
   gridBoundsMax: vec3f,
@@ -155,7 +154,7 @@ fn getDensityGradientFromDirection(
   // densityDiff POSITIVE: original point 'p' has MORE particles near than the 'pOther'.
   //                       Move particles toward 'pOther'.
   let densityDiff = density0 - densityOther;
-  return max(densityDiff, 0.) * vec3f(offset);
+  return max(densityDiff, 0.) * vec3f(offset); // I though we should negate here, but it works if we don't?
   // return vec3f(0., 0., 1.); // dbg
 }
 

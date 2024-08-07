@@ -109,7 +109,8 @@ export function createGPU_IndexBuffer(
 export function createGPU_StorageBuffer(
   device: GPUDevice,
   label: string,
-  data: Uint32Array | Float32Array | Int32Array
+  data: Uint32Array | Float32Array | Int32Array,
+  extraUsage: GPUBufferUsageFlags = 0
 ) {
   const clName = getClassName(data);
   const allowedClasses = [Uint32Array.name, Float32Array.name, Int32Array.name];
@@ -120,7 +121,7 @@ export function createGPU_StorageBuffer(
   return createGPUBuffer(
     device,
     label,
-    GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | extraUsage,
     data
   );
 }

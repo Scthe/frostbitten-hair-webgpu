@@ -6,6 +6,9 @@ import {
 import { BUFFER_HAIR_SEGMENT_LENGTHS } from '../../scene/hair/hairSegmentLengthsBuffer.ts';
 import { SDFCollider } from '../../scene/sdfCollider/sdfCollider.ts';
 import { GENERIC_UTILS } from '../_shaderSnippets/shaderSnippets.wgls.ts';
+import { BUFFER_GRID_DENSITY_GRADIENT_AND_WIND } from './grids/densityGradAndWindGrid.wgsl.ts';
+import { BUFFER_GRID_DENSITY_VELOCITY } from './grids/densityVelocityGrid.wgsl.ts';
+import { GRID_UTILS } from './grids/grids.wgsl.ts';
 import { HAIR_SIM_IMPL_COLLISIONS } from './shaderImpl/collisions.wgsl.ts';
 import { HAIR_SIM_IMPL_CONSTRANTS } from './shaderImpl/constraints.wgsl.ts';
 import { HAIR_SIM_IMPL_INTEGRATION } from './shaderImpl/integration.wgsl.ts';
@@ -21,6 +24,8 @@ export const SHADER_PARAMS = {
     segmentLengths: 4,
     sdfTexture: 5,
     sdfSampler: 6,
+    densityVelocityBuffer: 7,
+    densityGradWindBuffer: 8,
   },
 };
 
@@ -33,12 +38,15 @@ const b = SHADER_PARAMS.bindings;
 export const SHADER_CODE = () => /* wgsl */ `
 
 ${GENERIC_UTILS}
+${GRID_UTILS}
 ${HAIR_SIM_IMPL_CONSTRANTS}
 ${HAIR_SIM_IMPL_INTEGRATION}
 ${HAIR_SIM_IMPL_COLLISIONS}
 
 ${SimulationUniformsBuffer.SHADER_SNIPPET(b.simulationUniforms)}
 ${SDFCollider.TEXTURE_SDF(b.sdfTexture, b.sdfSampler)}
+${BUFFER_GRID_DENSITY_VELOCITY(b.densityVelocityBuffer, 'read')}
+${BUFFER_GRID_DENSITY_GRADIENT_AND_WIND(b.densityGradWindBuffer, 'read')}
 ${BUFFER_HAIR_DATA(b.hairData)}
 ${BUFFER_HAIR_POINTS_POSITIONS_RW(b.positionsPrev, {
   bufferName: '_hairPointPositionsPrev',
@@ -69,13 +77,20 @@ fn main(
   let pointsPerStrand: u32 = _hairData.pointsPerStrand; // 32
   let segmentCount: u32 = pointsPerStrand - 1u; // 31
 
-  let dt = 1. / 120.; // TODO uniform
-  let constraintIterations = 4u; // TODO uniform
-  let stiffness = 1.0; // 0.01; // TODO uniform
+  let dt = _uniforms.deltaTime;
+  let constraintIterations = _uniforms.constraintIterations;
+  let stiffnessLengthConstr = _uniforms.stiffnessLengthConstr;
+  let stiffnessCollisions = _uniforms.stiffnessCollisions;
+  let stiffnessSDF = _uniforms.stiffnessSDF;
   let collisionSphere = vec4f(0.0, 1.454, 0.15, 0.06); // TODO uniform
-  let gravity = 1.0; // 9.81; // TODO uniform
-  let windStrength = 1.; // TODO uniform
+  let gravity = _uniforms.gravity;
+  let gravityForce = vec3f(0., -gravity, 0.);
+  let wind = _uniforms.wind;
+  let windLullStrengthMul = _uniforms.windLullStrengthMul;
+  let volumePreservation = _uniforms.volumePreservation;
   let frameIdx = _uniforms.frameIdx;
+  let gridBoundsMin = _uniforms.gridData.boundsMin.xyz;
+  let gridBoundsMax = _uniforms.gridData.boundsMax.xyz;
   let sdfBoundsMin = _uniforms.sdf.boundsMin.xyz;
   let sdfBoundsMax = _uniforms.sdf.boundsMax.xyz;
   let sdfOffset = getSDF_Offset();
@@ -84,7 +99,6 @@ fn main(
   // if (strandIdx >= strandsCount) { return; } // "uniform control flow" error
   let isInvalidDispatch = strandIdx >= strandsCount; // some memory accesses will return garbage. It's OK as long as we don't try to override real data?
 
-  let gravityForce = vec3f(0., -gravity, 0.);
 
 
   // verlet integration. Also adds forces from grids.
@@ -93,12 +107,32 @@ fn main(
   for (var i = 1u; i < pointsPerStrand && !isInvalidDispatch; i += 1u) {
       let posPrev = _getHairPointPositionPrev(pointsPerStrand, strandIdx, i);
       let posNow = _getHairPointPositionNow(pointsPerStrand, strandIdx, i);
+      var force = gravityForce;
+      let densityGradAndWind = _getGridDensityGradAndWind(gridBoundsMin, gridBoundsMax, posNow.xyz);
+      let densityVelocity = _getGridDensityVelocity(gridBoundsMin, gridBoundsMax, posNow.xyz);
+
+      // wind
+      // TODO randomize. Like Unity's jitter
+      // let windJitter = fract(f32(frameIdx) * 0.73);
+      let windCellStr = mix(windLullStrengthMul, 1.0, densityGradAndWind.windStrength);
+      force += wind.xyz * wind.w * windCellStr;
       
-      // TODO: Add forces from grids. If they are velocity, just scale by dt (and density to average the value) or smth
-      let wind = normalize(vec3f(-1., -1., 0.)) * fract(f32(frameIdx) * 0.73) * windStrength;
-      let force = gravityForce + wind;
+      // density gradient
+      // This is just an averaged direction to neighbouring cell - based on density difference.
+      // No need to normalize by density, as it's a difference. But it's a value from grid,
+      // so we have to use FLIP.
+      force += densityGradAndWind.densityGrad * volumePreservation;
       
-      _positionsWkGrp[wkGrpOffset + i] = verletIntegration(dt, posPrev, posNow, force);
+      // Velocity. Divide by density to get *average* value.
+      // https://youtu.be/ool2E8SQPGU?si=yKgmYF6Wjbu6HXsF&t=815
+      let gridDisp = densityVelocity.velocity / densityVelocity.density;
+
+      _positionsWkGrp[wkGrpOffset + i] = verletIntegration(
+        dt,
+        posPrev, posNow,
+        gridDisp,
+        force
+      );
       // _positionsWkGrp[wkGrpOffset + i] = posNow; // dbg: skip integration
   }
 
@@ -107,16 +141,21 @@ fn main(
 
   // solve constraints through iterations
   for (var i = 0u; i < constraintIterations && !isInvalidDispatch; i += 1u) {
-    let stiffnessIter = stiffness / f32(constraintIterations); // TODO something better?
+    // NOTE: we could better manipulate stiffness between iters.
+    // E.g.  First few iters affect more and last ones just nudge
+    //       toward slightly better solutions.
+    // E.g2. First few iters affect less to put strands in stable,
+    //       solvable positions before bigger changes in later iters.
 
     // strech/length constraint
+    let stiffnessLen_i = stiffnessLengthConstr / f32(constraintIterations);
     var posSegmentStart = _positionsWkGrp[wkGrpOffset + 0u];
     for (var j = 0u; j < segmentCount; j += 1u) { // from 0 to 30 (inclusive)
       var posSegmentEnd = _positionsWkGrp[wkGrpOffset + j + 1u];
       // let expectedLength0 = length(posSegmentEnd.xyz - posSegmentStart.xyz);
       let expectedLength1: f32 = _getHairSegmentLength(pointsPerStrand, strandIdx, j);
       applyConstraint_Length(
-        stiffnessIter, expectedLength1,
+        stiffnessLen_i, expectedLength1,
         &posSegmentStart, &posSegmentEnd
       );
       _positionsWkGrp[wkGrpOffset + j + 0u] = posSegmentStart;
@@ -129,18 +168,20 @@ fn main(
     // TODO add global length (FTL) constraint
     
     // collisions (skip root)
+    let stiffnessColl_i = stiffnessCollisions / f32(constraintIterations);
+    let stiffnessSDF_i = stiffnessSDF / f32(constraintIterations);
     for (var j = 1u; j < pointsPerStrand; j += 1u) { // from 0 to 30 (inclusive)
       var pos = _positionsWkGrp[wkGrpOffset + j];
       // sphere
       applyCollisionsSphere(
-        stiffnessIter,
+        stiffnessColl_i,
         collisionSphere,
         &pos
       );
 
       // SDF
       applyCollisionsSdf(
-        stiffnessIter,
+        stiffnessSDF_i,
         sdfBoundsMin,
         sdfBoundsMax,
         sdfOffset,

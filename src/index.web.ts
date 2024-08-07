@@ -51,7 +51,7 @@ import { loadScene } from './scene/loadScene.ts';
   );
   canvasResizeSystem.addListener(renderer.onCanvasResize);
 
-  initializeGUI(profiler, scene, renderer.cameraCtrl);
+  initializeGUI(device, profiler, scene, renderer.cameraCtrl);
   STATS.show();
   let done = false;
 

@@ -104,11 +104,17 @@ export function createHairObject(
     tfxFile.vertexPositions
   );
 
-  const createPosBuffer = (name: string) =>
-    createHairPointsPositionsBuffer(device, name, tfxFile.vertexPositions);
+  const createPosBuffer = (name: string, extraUsage: GPUBufferUsageFlags = 0) =>
+    createHairPointsPositionsBuffer(
+      device,
+      name,
+      tfxFile.vertexPositions,
+      extraUsage
+    );
 
   const initialPointsPositionsBuffer = createPosBuffer(
-    `${name}-points-positions-initial`
+    `${name}-points-positions-initial`,
+    GPUBufferUsage.COPY_SRC
   );
   const pointsPositionsBuffer_0 = createPosBuffer(`${name}-points-positions-0`);
   const pointsPositionsBuffer_1 = createPosBuffer(`${name}-points-positions-1`);
