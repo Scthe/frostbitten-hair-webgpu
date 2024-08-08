@@ -212,18 +212,22 @@ export const CONFIG = {
 
   hairSimulation: {
     enabled: true,
-    gravity: 0.0,
+    gravity: 0.03,
     // 0.0 - use particle position change in verlet integration
     // 1.0 - use averaged particle position changes in grid to drive verlet integration
     // https://youtu.be/ool2E8SQPGU?si=yKgmYF6Wjbu6HXsF&t=815
-    friction: 0.0,
+    friction: 0.3,
     // 0.0 - do not use density gradient as external force. Hair can "squish" together
     // >0.0 - move hair strands so from densely oocupied grid cells into ones that are more "free"
-    volumePreservation: 0.0,
+    volumePreservation: 0.00003,
 
     constraints: {
       constraintIterations: 4,
       stiffnessLengthConstr: 1.0,
+      stiffnessGlobalConstr: 0.2, // this constraint is stronger near root and fades toward the tip
+      globalExtent: 0.1, // full global constraint stiffness
+      globalFade: 0.75, // partial global constraint stiffness
+      stiffnessLocalConstr: 0.3,
       stiffnessCollisions: 1.0,
       stiffnessSDF: 1.0,
     },
@@ -232,7 +236,10 @@ export const CONFIG = {
       dirPhi: 18, // horizontal [dgr]
       dirTheta: 91, // verical [dgr]
       strength: 0.0,
-      lullStrengthMul: 0.3,
+      lullStrengthMul: 0.75,
+      strengthFrequency: 1.8,
+      strengthJitter: 0.7,
+      phaseOffset: 0.45,
       colisionTraceOffset: 1.5,
     },
 
@@ -250,7 +257,7 @@ export const CONFIG = {
     sdf: {
       /** - **Negative value** pushes the SDF outwards making it bigger. This increases collision range.
        *  - **Positive value** moves inwards, making SDF smaller. */
-      distanceOffset: 0.0015,
+      distanceOffset: -0.0015,
       // DEBUG:
       showDebugView: false,
       debugSlice: 0.5,

@@ -37,7 +37,17 @@ export class SimulationUniformsBuffer {
       stiffnessSDF: f32,
       volumePreservation: f32,
       friction: f32,
+      stiffnessGlobalConstr: f32,
+      // START: misc4: vec4f
+      globalConstrExtent: f32,
+      globalConstrFade: f32,
+      stiffnessLocalConstr: f32,
+      windPhaseOffset: f32,
+      // START: misc5: vec4f
+      windStrengthFrequency: f32,
+      windStrengthJitter: f32,
       padding0: f32,
+      padding1: f32,
     };
     @group(0) @binding(${bindingIdx})
     var<uniform> _uniforms: SimulationUniforms;
@@ -50,7 +60,7 @@ export class SimulationUniformsBuffer {
     BYTES_VEC4 + // wind
     SDFCollider.BUFFER_SIZE + // sdf
     GridData.BUFFER_SIZE + // grids
-    3 * BYTES_VEC4; // misc
+    5 * BYTES_VEC4; // misc
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(SimulationUniformsBuffer.BUFFER_SIZE);
@@ -116,7 +126,17 @@ export class SimulationUniformsBuffer {
     this.dataView.writeF32(c.constraints.stiffnessSDF); // stiffnessSDF: f32,
     this.dataView.writeF32(c.volumePreservation); // volumePreservation: f32
     this.dataView.writeF32(c.friction); // friction: f32
-    this.dataView.writeF32(0.0); // padding2: f32,
+    this.dataView.writeF32(c.constraints.stiffnessGlobalConstr); // stiffnessGlobalConstr: f32,
+    // misc 4
+    this.dataView.writeF32(c.constraints.globalExtent); // globalConstrExtent: f32,
+    this.dataView.writeF32(c.constraints.globalFade); // globalConstrFade: f32,
+    this.dataView.writeF32(c.constraints.stiffnessLocalConstr); // stiffnessLocalConstr: f32,
+    this.dataView.writeF32(c.wind.phaseOffset); // windPhaseOffset: f32,
+    // START: misc5: vec4f
+    this.dataView.writeF32(c.wind.strengthFrequency); // windStrengthFrequency: f32,
+    this.dataView.writeF32(c.wind.strengthJitter); // windStrengthJitter: f32,
+    this.dataView.writeF32(0.0); // padding0: f32,
+    this.dataView.writeF32(0.0); // padding1: f32,
 
     // final write
     this.dataView.assertWrittenBytes(SimulationUniformsBuffer.BUFFER_SIZE);
@@ -130,6 +150,8 @@ export class SimulationUniformsBuffer {
    * TODO Ofc. we should still scale it a bit to prevent physics speed up on 144Hz displays
    */
   private getDeltaTime() {
-    return 1.0 / 120.0;
+    const FPS = 30.0;
+    // return 1.0 / 120.0;
+    return 1.0 / FPS;
   }
 }

@@ -78,6 +78,7 @@ export class HairSimIntegrationPass {
         hairObject.bindInitialSegmentLengths(b.segmentLengths),
         hairObject.bindPointsPositions_PREV(b.positionsPrev),
         hairObject.bindPointsPositions(b.positionsNow),
+        hairObject.bindPointsPositions_INITIAL(b.positionsInitial),
         sdf.bindTexture(b.sdfTexture),
         sdf.bindSampler(b.sdfSampler),
         physicsForcesGrid.bindDensityVelocityBuffer(b.densityVelocityBuffer),

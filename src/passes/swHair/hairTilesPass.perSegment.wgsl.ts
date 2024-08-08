@@ -91,6 +91,9 @@ fn main(
   let boundRectMax = bounds4f.zw;
   let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMin));
   let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMax));
+  // reject degenerate strands from physics simulation
+  let tileSize = (tileMaxXY - tileMinXY) + vec2u(1u, 1u);
+  if (tileSize.x * tileSize.y >= 10u) { return; } // number tuned for Sintel's front hair lock
 
   // for each affected tile
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {

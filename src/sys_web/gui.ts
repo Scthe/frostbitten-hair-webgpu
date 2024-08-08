@@ -134,15 +134,20 @@ export function initializeGUI(
 
     dir.add(dummyObject, 'resetSimulation').name('Reset simulation');
     dir.add(cfg, 'enabled').name('Enabled');
-    dir.add(cfg, 'gravity', 0.0, 0.001).name('Gravity');
+    // dir.add(cfg, 'gravity', 0.0, 20.0).name('Gravity');
+    dir.add(cfg, 'gravity', 0.0, 0.1).name('Gravity');
     dir.add(cfg, 'friction', 0.0, 1.0).name('Friction');
-    dir.add(cfg, 'volumePreservation', 0.0, 0.00001).name('Vol. Preserv.');
+    dir.add(cfg, 'volumePreservation', 0.0, 0.00025).name('Vol. Preserv.');
 
     // constraints
     dir = simDir.addFolder('Constraints');
     dir.open();
     dir.add(constr, 'constraintIterations', 1, 10).step(1).name('Iterations');
     dir.add(constr, 'stiffnessLengthConstr', 0.0, 1.0).name('Stiff. len');
+    dir.add(constr, 'stiffnessGlobalConstr', 0.0, 1.0).name('Stiff. global');
+    dir.add(constr, 'globalExtent', 0.0, 1.0).name('Global extent');
+    dir.add(constr, 'globalFade', 0.0, 1.0).name('Global fade');
+    dir.add(constr, 'stiffnessLocalConstr', 0.0, 1.0).name('Stiff. local');
     dir.add(constr, 'stiffnessCollisions', 0.0, 1.0).name('Stiff. collisions');
     dir.add(constr, 'stiffnessSDF', 0.0, 1.0).name('Stiff. SDF');
     dir.add(sdf, 'distanceOffset', -0.003, 0.003).name('SDF offset');
@@ -152,8 +157,12 @@ export function initializeGUI(
     dir.open();
     dir.add(wind, 'dirPhi', -179, 179).step(1).name('Dir phi');
     dir.add(wind, 'dirTheta', 15, 165).step(1).name('Dir th');
-    dir.add(wind, 'strength', 0.0, 0.00001).name('Strength');
+    // dir.add(wind, 'strength', 0.0, 0.0001).name('Strength');
+    dir.add(wind, 'strength', 0.0, 1.0).name('Strength');
     dir.add(wind, 'lullStrengthMul', 0.0, 1.0).name('Lull strength');
+    dir.add(wind, 'strengthFrequency', 0.001, 2.0).name('Str. frequency');
+    dir.add(wind, 'strengthJitter', 0.0, 1.0).name('Str. Jitter');
+    dir.add(wind, 'phaseOffset', 0.0, 0.5).name('Phase offset');
     dir.add(wind, 'colisionTraceOffset', 1.0, 5.0).name('Collision offset');
 
     // SDF preview

@@ -26,11 +26,13 @@ export const SHADER_PARAMS = {
     sdfSampler: 6,
     densityVelocityBuffer: 7,
     densityGradWindBuffer: 8,
+    positionsInitial: 9,
   },
 };
 
 ///////////////////////////
 /// SHADER CODE
+/// TODO precompute A LOT of stuff
 ///////////////////////////
 const c = SHADER_PARAMS;
 const b = SHADER_PARAMS.bindings;
@@ -57,6 +59,10 @@ ${BUFFER_HAIR_POINTS_POSITIONS_R(b.positionsNow, {
   bufferName: '_hairPointPositionsNow',
   getterName: '_getHairPointPositionNow',
 })}
+${BUFFER_HAIR_POINTS_POSITIONS_R(b.positionsInitial, {
+  bufferName: '_hairPointPositionsInitial',
+  getterName: '_getHairPointPositionInitial',
+})}
 ${BUFFER_HAIR_SEGMENT_LENGTHS(b.segmentLengths)}
 
 
@@ -80,14 +86,22 @@ fn main(
   let dt = _uniforms.deltaTime;
   let constraintIterations = _uniforms.constraintIterations;
   let stiffnessLengthConstr = _uniforms.stiffnessLengthConstr;
+  let stiffnessGlobalConstr = _uniforms.stiffnessGlobalConstr;
   let stiffnessCollisions = _uniforms.stiffnessCollisions;
+  let globalConstrExtent = _uniforms.globalConstrExtent;
+  let globalConstrFade = _uniforms.globalConstrFade;
+  let stiffnessLocalConstr = _uniforms.stiffnessLocalConstr;
   let stiffnessSDF = _uniforms.stiffnessSDF;
   let collisionSphere = vec4f(0.0, 1.454, 0.15, 0.06); // TODO uniform
   let gravity = _uniforms.gravity;
   let gravityForce = vec3f(0., -gravity, 0.);
   let wind = _uniforms.wind;
   let windLullStrengthMul = _uniforms.windLullStrengthMul;
+  let windPhaseOffset = _uniforms.windPhaseOffset;
+  let windStrengthFrequency = _uniforms.windStrengthFrequency;
+  let windStrengthJitter = _uniforms.windStrengthJitter;
   let volumePreservation = _uniforms.volumePreservation;
+  let friction = _uniforms.friction;
   let frameIdx = _uniforms.frameIdx;
   let gridBoundsMin = _uniforms.gridData.boundsMin.xyz;
   let gridBoundsMax = _uniforms.gridData.boundsMax.xyz;
@@ -112,10 +126,13 @@ fn main(
       let densityVelocity = _getGridDensityVelocity(gridBoundsMin, gridBoundsMax, posNow.xyz);
 
       // wind
-      // TODO randomize. Like Unity's jitter
-      // let windJitter = fract(f32(frameIdx) * 0.73);
+      let timer = f32(frameIdx) * 0.73 + windPhaseOffset * f32(strandIdx);
+      let windJitter = fract(timer * windStrengthFrequency);
+      let jitterDelta = mix(-0.5 * windStrengthJitter, 0.5 * windStrengthJitter, windJitter); // e.g. [-0.5 .. 0.5] when windStrengthJitter is 1.0
+      // let jitterStr = mix(1.0 - windStrengthJitter, 1.0, windJitter); // TODO make jitter -0.5..+0.5, instead of 0..1
+      let jitterStr = 1.0 + jitterDelta; // e.g. [0.5 .. 1.5] when windStrengthJitter is 1.0
       let windCellStr = mix(windLullStrengthMul, 1.0, densityGradAndWind.windStrength);
-      force += wind.xyz * wind.w * windCellStr;
+      force += wind.xyz * abs(wind.w * jitterStr * windCellStr);
       
       // density gradient
       // This is just an averaged direction to neighbouring cell - based on density difference.
@@ -130,7 +147,7 @@ fn main(
       _positionsWkGrp[wkGrpOffset + i] = verletIntegration(
         dt,
         posPrev, posNow,
-        gridDisp,
+        gridDisp, friction,
         force
       );
       // _positionsWkGrp[wkGrpOffset + i] = posNow; // dbg: skip integration
@@ -164,7 +181,39 @@ fn main(
       posSegmentStart = posSegmentEnd;
     }
 
-    // TODO add local shape constraint
+    // global shape constraint
+    let stiffnessGlobalShape_i = stiffnessGlobalConstr / f32(constraintIterations);
+    for (var j = 1u; j < pointsPerStrand; j += 1u) { // from 0 to 30 (inclusive)
+      let attenuation = globalConstraintAttenuation(
+        globalConstrExtent, globalConstrFade,
+        pointsPerStrand, j
+      );
+      let posInitial = _getHairPointPositionInitial(pointsPerStrand, strandIdx, j);
+      applyConstraint_GlobalShape(
+        stiffnessGlobalShape_i * attenuation,
+        posInitial.xyz,
+        j
+      );
+    }
+
+    // local shape constraint
+    let stiffnessLocalShape_i = stiffnessLocalConstr / f32(constraintIterations);
+    var jj = 0u;
+    for (; jj < pointsPerStrand - 3; jj += 1u) { // from 0 to 30 (inclusive)
+      applyConstraint_LocalShape(
+        pointsPerStrand, strandIdx,
+        stiffnessLocalShape_i,
+        jj
+      );
+    }
+    for (; jj < pointsPerStrand; jj += 1u) { // from 0 to 30 (inclusive)
+      applyConstraint_matchTangent(
+        pointsPerStrand, strandIdx,
+        stiffnessLocalShape_i,
+        jj
+      );
+    }
+
     // TODO add global length (FTL) constraint
     
     // collisions (skip root)
@@ -180,13 +229,15 @@ fn main(
       );
 
       // SDF
-      applyCollisionsSdf(
-        stiffnessSDF_i,
-        sdfBoundsMin,
-        sdfBoundsMax,
-        sdfOffset,
-        &pos
-      );
+      if (j > 2u) { // TODO skip for more?
+        applyCollisionsSdf(
+          stiffnessSDF_i,
+          sdfBoundsMin,
+          sdfBoundsMax,
+          sdfOffset,
+          &pos
+        );
+      }
 
       _positionsWkGrp[wkGrpOffset + j] = pos;
     }

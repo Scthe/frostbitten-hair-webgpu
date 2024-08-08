@@ -1,4 +1,5 @@
 import { Bounds3d } from '../../utils/bounds.ts';
+import { bindBuffer } from '../../utils/webgpu.ts';
 import { HairIndexBuffer } from './hairIndexBuffer.ts';
 
 /** This objects exists so we don't have a constructor with X GPUBuffer arguments. So we don't accidently provide them in wrong order */
@@ -54,19 +55,13 @@ export class HairObject {
     const size = initialPointsPositionsBuffer.size;
 
     cmdBuf.copyBufferToBuffer(
-      initialPointsPositionsBuffer,
-      0,
-      pointsPositionsBuffer_0,
-      0,
-      size
-    );
+      initialPointsPositionsBuffer, 0,
+      pointsPositionsBuffer_0, 0, size
+    ); // prettier-ignore
     cmdBuf.copyBufferToBuffer(
-      initialPointsPositionsBuffer,
-      0,
-      pointsPositionsBuffer_1,
-      0,
-      size
-    );
+      initialPointsPositionsBuffer, 0,
+      pointsPositionsBuffer_1, 0, size
+    ); // prettier-ignore
     device.queue.submit([cmdBuf.finish()]);
   }
 
@@ -111,25 +106,20 @@ export class HairObject {
     return { binding: bindingIdx, resource: { buffer } };
   };
 
-  bindTangents = (bindingIdx: number): GPUBindGroupEntry => ({
-    binding: bindingIdx,
-    resource: { buffer: this.buffers.tangentsBuffer },
-  });
+  bindTangents = (bindingIdx: number): GPUBindGroupEntry =>
+    bindBuffer(bindingIdx, this.buffers.tangentsBuffer);
 
-  bindInitialSegmentLengths = (bindingIdx: number): GPUBindGroupEntry => ({
-    binding: bindingIdx,
-    resource: { buffer: this.buffers.initialSegmentLengthsBuffer },
-  });
+  bindPointsPositions_INITIAL = (bindingIdx: number): GPUBindGroupEntry =>
+    bindBuffer(bindingIdx, this.buffers.initialPointsPositionsBuffer);
 
-  bindHairData = (bindingIdx: number): GPUBindGroupEntry => ({
-    binding: bindingIdx,
-    resource: { buffer: this.buffers.dataBuffer },
-  });
+  bindInitialSegmentLengths = (bindingIdx: number): GPUBindGroupEntry =>
+    bindBuffer(bindingIdx, this.buffers.initialSegmentLengthsBuffer);
 
-  bindShading = (bindingIdx: number): GPUBindGroupEntry => ({
-    binding: bindingIdx,
-    resource: { buffer: this.buffers.shadingBuffer },
-  });
+  bindHairData = (bindingIdx: number): GPUBindGroupEntry =>
+    bindBuffer(bindingIdx, this.buffers.dataBuffer);
+
+  bindShading = (bindingIdx: number): GPUBindGroupEntry =>
+    bindBuffer(bindingIdx, this.buffers.shadingBuffer);
 
   bindIndexBuffer(renderPass: GPURenderPassEncoder) {
     renderPass.setIndexBuffer(
