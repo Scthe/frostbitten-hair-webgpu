@@ -212,6 +212,7 @@ export const CONFIG = {
 
   hairSimulation: {
     enabled: true,
+    nextFrameResetSimulation: false,
     gravity: 0.03,
     // 0.0 - use particle position change in verlet integration
     // 1.0 - use averaged particle position changes in grid to drive verlet integration

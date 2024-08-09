@@ -45,8 +45,7 @@ export class HairObject {
     return this._currentPositionsBuffer;
   }
 
-  resetSimulation(device: GPUDevice) {
-    const cmdBuf = device.createCommandEncoder();
+  resetSimulation(cmdBuf: GPUCommandEncoder) {
     const {
       initialPointsPositionsBuffer,
       pointsPositionsBuffer_0,
@@ -62,7 +61,6 @@ export class HairObject {
       initialPointsPositionsBuffer, 0,
       pointsPositionsBuffer_1, 0, size
     ); // prettier-ignore
-    device.queue.submit([cmdBuf.finish()]);
   }
 
   /**

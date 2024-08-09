@@ -35,7 +35,7 @@ export function initializeGUI(
       camera.resetPosition();
     },
     resetSimulation: () => {
-      scene.hairObject.resetSimulation(device);
+      CONFIG.hairSimulation.nextFrameResetSimulation = true;
     },
   };
 

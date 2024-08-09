@@ -142,7 +142,11 @@ fn main(
       
       // Velocity. Divide by density to get *average* value.
       // https://youtu.be/ool2E8SQPGU?si=yKgmYF6Wjbu6HXsF&t=815
-      let gridDisp = densityVelocity.velocity / densityVelocity.density;
+      let gridDisp = select(
+        vec3f(0.0),
+        densityVelocity.velocity / densityVelocity.density,
+        densityVelocity.density > 0 // happens on simulation reset
+      );
 
       _positionsWkGrp[wkGrpOffset + i] = verletIntegration(
         dt,

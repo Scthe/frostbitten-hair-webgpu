@@ -172,18 +172,7 @@ export class Renderer {
     this.simulationUniformsBuffer.update(ctx);
 
     // simulation
-    if (hairSimCfg.enabled) {
-      if (hairSimCfg.physicsForcesGrid.enableUpdates) {
-        this.gridPreSimPass.cmdUpdateGridsBeforeSim(ctx, scene.hairObject);
-      }
-      this.hairSimIntegrationPass.cmdSimulateHairPositions(
-        ctx,
-        scene.hairObject
-      );
-      if (hairSimCfg.physicsForcesGrid.enableUpdates) {
-        this.gridPostSimPass.cmdUpdateGridsAfterSim(ctx, scene.hairObject);
-      }
-    }
+    this.simulateHair(ctx, scene.hairObject);
 
     // draws
     this.drawBackgroundGradientPass.cmdDraw(ctx);
@@ -201,6 +190,36 @@ export class Renderer {
 
     // done
     this.frameIdx += 1;
+  }
+
+  private simulateHair(ctx: PassCtx, hairObject: HairObject) {
+    const { cmdBuf, physicsForcesGrid } = ctx;
+    const hairSimCfg = CONFIG.hairSimulation;
+
+    if (hairSimCfg.nextFrameResetSimulation) {
+      hairObject.resetSimulation(cmdBuf);
+      physicsForcesGrid.clearDensityGradAndWindBuffer(cmdBuf);
+      physicsForcesGrid.clearDensityVelocityBuffer(cmdBuf);
+
+      hairSimCfg.nextFrameResetSimulation = false;
+      return;
+    }
+
+    if (!hairSimCfg.enabled) {
+      physicsForcesGrid.clearDensityGradAndWindBuffer(cmdBuf);
+      physicsForcesGrid.clearDensityVelocityBuffer(cmdBuf);
+      return;
+    }
+
+    if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+      this.gridPreSimPass.cmdUpdateGridsBeforeSim(ctx, hairObject);
+    }
+
+    this.hairSimIntegrationPass.cmdSimulateHairPositions(ctx, hairObject);
+
+    if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+      this.gridPostSimPass.cmdUpdateGridsAfterSim(ctx, hairObject);
+    }
   }
 
   private cmdDrawScene(ctx: PassCtx) {
