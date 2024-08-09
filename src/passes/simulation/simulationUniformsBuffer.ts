@@ -1,4 +1,4 @@
-import { mat4, vec3 } from 'wgpu-matrix';
+import { mat4, vec4 } from 'wgpu-matrix';
 import { BYTES_MAT4, BYTES_VEC4, CONFIG } from '../../constants.ts';
 import { PassCtx } from '../passCtx.ts';
 import { TypedArrayView } from '../../utils/typedArrayView.ts';
@@ -7,8 +7,8 @@ import { SDFCollider } from '../../scene/sdfCollider/sdfCollider.ts';
 import { GridData } from './grids/gridData.ts';
 import { sphericalToCartesian } from '../../utils/index.ts';
 
-const TMP_MAT4 = mat4.create(); // prealloc
-const TMP_VEC3 = vec3.create(); // prealloc
+const TMP_MODEL_MAT4_INV = mat4.create(); // prealloc
+const TMP_VEC4 = vec4.create(); // prealloc
 
 export class SimulationUniformsBuffer {
   public static SHADER_SNIPPET = (bindingIdx: number) => /* wgsl */ `
@@ -91,27 +91,34 @@ export class SimulationUniformsBuffer {
     this.dataView.resetCursor();
     // model matrix
     this.dataView.writeMat4(modelMatrix);
-    this.dataView.writeMat4(mat4.invert(modelMatrix, TMP_MAT4));
+    const modelMatInv = mat4.invert(modelMatrix, TMP_MODEL_MAT4_INV);
+    this.dataView.writeMat4(modelMatInv);
+
     // collisionSphere
-    // TODO transform by modelMatrixInv into object space!
-    this.dataView.writeF32(0.0);
-    this.dataView.writeF32(0.0);
-    this.dataView.writeF32(0.0);
-    this.dataView.writeF32(0.0);
+    const colSph = CONFIG.hairSimulation.collisionSphere;
+    const colSphPosWS = vec4.set(colSph[0], colSph[1], colSph[2], 1.0, TMP_VEC4); // prettier-ignore
+    const colSphPosOS = vec4.transformMat4(colSphPosWS, modelMatInv, TMP_VEC4); // prettier-ignore
+    this.dataView.writeF32(colSphPosOS[0]);
+    this.dataView.writeF32(colSphPosOS[1]);
+    this.dataView.writeF32(colSphPosOS[2]);
+    this.dataView.writeF32(colSph[3]); // radius
+
     // wind direction (.xyz), strength (.w)
     const windDir = sphericalToCartesian(
       c.wind.dirPhi,
       c.wind.dirTheta,
       'dgr',
-      TMP_VEC3
+      TMP_VEC4
     );
     this.dataView.writeF32(windDir[0]);
     this.dataView.writeF32(windDir[1]);
     this.dataView.writeF32(windDir[2]);
     this.dataView.writeF32(c.wind.strength);
+
     // sdf + grids
     ctx.scene.sdfCollider.writeToDataView(this.dataView);
     ctx.scene.physicsGrid.writeToDataView(this.dataView);
+
     // misc
     this.dataView.writeF32(this.getDeltaTime()); // deltaTime: f32
     this.dataView.writeF32(c.gravity); // gravity: f32,
@@ -132,7 +139,7 @@ export class SimulationUniformsBuffer {
     this.dataView.writeF32(c.constraints.globalFade); // globalConstrFade: f32,
     this.dataView.writeF32(c.constraints.stiffnessLocalConstr); // stiffnessLocalConstr: f32,
     this.dataView.writeF32(c.wind.phaseOffset); // windPhaseOffset: f32,
-    // START: misc5: vec4f
+    // misc 5
     this.dataView.writeF32(c.wind.strengthFrequency); // windStrengthFrequency: f32,
     this.dataView.writeF32(c.wind.strengthJitter); // windStrengthJitter: f32,
     this.dataView.writeF32(0.0); // padding0: f32,

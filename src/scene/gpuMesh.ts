@@ -11,6 +11,8 @@ export interface GPUMesh {
   uvBuffer: GPUBuffer;
   indexBuffer: GPUBuffer;
   bounds: Bounds3d;
+  /** Object rendered just to show where collider is */
+  isColliderPreview: boolean;
 }
 
 export const VERTEX_ATTRIBUTE_POSITION: GPUVertexBufferLayout = {

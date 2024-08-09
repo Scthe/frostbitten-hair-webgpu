@@ -64,6 +64,7 @@ export function loadObjFile(
     uvBuffer,
     indexBuffer,
     bounds,
+    isColliderPreview: false,
   };
 }
 

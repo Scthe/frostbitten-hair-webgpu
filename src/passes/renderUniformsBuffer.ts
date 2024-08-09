@@ -109,6 +109,7 @@ export class RenderUniformsBuffer {
       modelMatrix: mat4x4<f32>,
       modelViewMat: mat4x4<f32>,
       mvpMatrix: mat4x4<f32>,
+      collisionSphereModelMatrix: mat4x4<f32>,
       viewport: vec4f,
       cameraPosition: vec4f,
       colorMgmt: vec4f,
@@ -163,6 +164,7 @@ export class RenderUniformsBuffer {
     BYTES_MAT4 + // modelMat
     BYTES_MAT4 + // modelViewMat
     BYTES_MAT4 + // mvpMat
+    BYTES_MAT4 + // collisionSphereModelMatrix
     BYTES_VEC4 + // viewport
     BYTES_VEC4 + // cameraPosition
     BYTES_VEC4 + // color mgmt
@@ -222,6 +224,12 @@ export class RenderUniformsBuffer {
     // model-view-projection matrix
     getModelViewProjectionMatrix(modelMatrix, viewMatrix, projMatrix, TMP_MAT4);
     this.dataView.writeMat4(TMP_MAT4);
+    // collisionSphereModelMatrix
+    const colSph = CONFIG.hairSimulation.collisionSphere;
+    const r = colSph[3] * 0.95; // make it a bit smaller, so it's easier to see
+    const traMat = mat4.translation(colSph);
+    const colSphMat = mat4.scale(traMat, [r, r, r], TMP_MAT4);
+    this.dataView.writeMat4(colSphMat);
 
     // viewport
     this.dataView.writeF32(viewport.width);

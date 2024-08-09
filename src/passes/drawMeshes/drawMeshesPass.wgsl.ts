@@ -5,6 +5,10 @@ import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 import { SAMPLE_SHADOW_MAP } from '../shadowMapPass/shared/sampleShadows.wgsl.ts';
 
 export const SHADER_PARAMS = {
+  firstInstance: {
+    sintel: 0,
+    colliderPreview: 1,
+  },
   bindings: {
     renderUniforms: 0,
     shadowMapTexture: 1,
@@ -20,6 +24,7 @@ export const DEFAULT_COLOR: [number, number, number] = [0.9, 0.9, 0.9];
 ///
 /// https://github.com/Scthe/WebFX/blob/master/src/shaders/sintel.frag.glsl#L135
 ///////////////////////////
+const c = SHADER_PARAMS;
 const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
@@ -44,19 +49,28 @@ struct VertexOutput {
   @location(2) uv: vec2f,
   // vertex transformed by shadow source's MVP matrix
   @location(3) positionShadowSpace: vec3f,
+  @location(4) @interpolate(flat) isColliderPreview: u32,
 };
 
 
 @vertex
 fn main_vs(
+  @builtin(instance_index) instanceIdx: u32,
   @location(0) inWorldPos : vec3f,
   @location(1) inNormal : vec3f,
   @location(2) inUV : vec2f,
 ) -> VertexOutput {
   var result: VertexOutput;
-  let mvpMatrix = _uniforms.mvpMatrix;
-  let modelMat = _uniforms.modelMatrix;
-  let mvpShadowSourceMatrix = _uniforms.shadows.sourceMVP_Matrix;
+  var mvpMatrix = _uniforms.mvpMatrix;
+  var mvpShadowSourceMatrix = _uniforms.shadows.sourceMVP_Matrix;
+  var modelMat = _uniforms.modelMatrix;
+  
+  if (instanceIdx == ${c.firstInstance.colliderPreview}u) {
+    modelMat = _uniforms.collisionSphereModelMatrix;
+    mvpMatrix = getMVP_Mat(modelMat, _uniforms.viewMatrix, _uniforms.projMatrix);
+    mvpShadowSourceMatrix = mat4x4<f32>();
+    result.isColliderPreview = 1u;
+  }
 
   let vertexPos = vec4<f32>(inWorldPos.xyz, 1.0);
   result.position = mvpMatrix * vertexPos;
@@ -101,6 +115,15 @@ fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
   let ao = sampleAo(vec2f(_uniforms.viewport.xy), fragIn.position.xy);
   material.ao = mix(1.0, ao, _uniforms.ao.strength);
   // c = material.ao;
+
+  // collider
+  if (fragIn.isColliderPreview > 0u) {
+    material.albedo = vec3f(0.3, 0.3, 0.0);
+    material.shadow = 1.0;
+    material.ao = 1.0;
+    material.roughness = 1.0;
+    material.isMetallic = 0.0;
+  }
 
   // shading
   let color = doShading(material);

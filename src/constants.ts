@@ -221,6 +221,7 @@ export const CONFIG = {
     // 0.0 - do not use density gradient as external force. Hair can "squish" together
     // >0.0 - move hair strands so from densely oocupied grid cells into ones that are more "free"
     volumePreservation: 0.00003,
+    collisionSphere: [0.0, 1.454, 0.15, 0.06],
 
     constraints: {
       constraintIterations: 4,

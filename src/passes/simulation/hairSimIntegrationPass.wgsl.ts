@@ -92,7 +92,7 @@ fn main(
   let globalConstrFade = _uniforms.globalConstrFade;
   let stiffnessLocalConstr = _uniforms.stiffnessLocalConstr;
   let stiffnessSDF = _uniforms.stiffnessSDF;
-  let collisionSphere = vec4f(0.0, 1.454, 0.15, 0.06); // TODO uniform
+  let collisionSphere = _uniforms.collisionSphere;
   let gravity = _uniforms.gravity;
   let gravityForce = vec3f(0., -gravity, 0.);
   let wind = _uniforms.wind;

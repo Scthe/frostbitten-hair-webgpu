@@ -103,12 +103,15 @@ export class DrawMeshesPass {
     renderPass.setIndexBuffer(object.indexBuffer, 'uint32');
 
     const vertexCount = object.triangleCount * VERTS_IN_TRIANGLE;
+    const firstInstance = object.isColliderPreview
+      ? SHADER_PARAMS.firstInstance.colliderPreview
+      : SHADER_PARAMS.firstInstance.sintel;
     renderPass.drawIndexed(
       vertexCount,
       1, // instance count
       0, // first index
       0, // base vertex
-      0 // first instance
+      firstInstance // first instance
     );
   }
 

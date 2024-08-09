@@ -30,6 +30,10 @@ const OBJECTS = [
   // { name: 'sintelEyelashes', file: 'sintel-eyelashes.obj' },
   // { name: 'sintel-collider', file: 'sintel-collider.obj' },
   // { name: 'sdf-test', file: 'sdf-test.obj' },
+  /** Preview for sphere collider. I could just render a plane and turn into sphere in fragment shader.
+   * Or manually construct it in code. Or.. I could just reuse everything I've already written.
+   */
+  { name: 'sphereCollider', file: 'sphere.obj', isColliderPreview: true },
 ];
 const SDF_COLLIDER_BIN = { name: 'sintel-sdf', file: 'sintel-sdf.bin' };
 
@@ -44,6 +48,7 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
       `${MODELS_DIR}/${objDef.file}`
     );
     const result = loadObjFile(device, objDef.name, objTextFile);
+    result.isColliderPreview = Boolean(objDef.isColliderPreview);
     objects.push(result);
     console.groupEnd();
   }

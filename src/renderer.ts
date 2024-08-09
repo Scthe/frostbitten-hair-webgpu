@@ -36,6 +36,7 @@ import { DrawSdfColliderPass } from './passes/drawSdfCollider/drawSdfColliderPas
 import { DrawGridDbgPass } from './passes/drawGridDbg/drawGridDbgPass.ts';
 import { GridPostSimPass } from './passes/simulation/gridPostSimPass.ts';
 import { GridPreSimPass } from './passes/simulation/gridPreSimPass.ts';
+import { DrawGizmoPass } from './passes/drawGizmo/drawGizmoPass.ts';
 
 export class Renderer {
   public readonly cameraCtrl: Camera;
@@ -61,6 +62,7 @@ export class Renderer {
   private readonly shadowMapPass: ShadowMapPass;
   private readonly aoPass: AoPass;
   private readonly drawMeshesPass: DrawMeshesPass;
+  private readonly drawGizmoPass: DrawGizmoPass;
   private readonly hwHairPass: HwHairPass;
   private readonly hairTilesPass: HairTilesPass;
   private readonly hairShadingPass: HairShadingPass;
@@ -102,6 +104,7 @@ export class Renderer {
       HDR_RENDER_TEX_FORMAT,
       NORMALS_TEX_FORMAT
     );
+    this.drawGizmoPass = new DrawGizmoPass(device, HDR_RENDER_TEX_FORMAT);
     this.hwHairPass = new HwHairPass(
       device,
       HDR_RENDER_TEX_FORMAT,
@@ -166,6 +169,7 @@ export class Renderer {
     assertIsGPUTextureView(screenTexture);
     const hairSimCfg = CONFIG.hairSimulation;
     const ctx: PassCtx = this.createPassCtx(cmdBuf, scene);
+    const { displayMode } = CONFIG;
 
     // update GPU uniforms
     this.renderUniformBuffer.update(ctx);
@@ -177,6 +181,12 @@ export class Renderer {
     // draws
     this.drawBackgroundGradientPass.cmdDraw(ctx);
     this.cmdDrawScene(ctx);
+    if (
+      displayMode === DISPLAY_MODE.HW_RENDER ||
+      displayMode === DISPLAY_MODE.FINAL
+    ) {
+      this.drawGizmoPass.cmdDrawGizmo(ctx);
+    }
 
     // dbg
     if (hairSimCfg.sdf.showDebugView) {
