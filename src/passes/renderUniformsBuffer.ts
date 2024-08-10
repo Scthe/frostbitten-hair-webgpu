@@ -129,6 +129,9 @@ export class RenderUniformsBuffer {
       displayMode: u32, // display mode + some of it's settings
       // back to proper align
       background: Background,
+      // collider sphere vec4f
+      collisionSpherePosition: vec3f,
+      gizmoActiveState: u32,
     };
     @group(0) @binding(${bindingIdx})
     var<uniform> _uniforms: Uniforms;
@@ -176,7 +179,8 @@ export class RenderUniformsBuffer {
     SDFCollider.BUFFER_SIZE + // sdf
     GridData.BUFFER_SIZE + // grids
     4 * BYTES_F32 + // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
-    RenderUniformsBuffer.BACKGROUND_SIZE;
+    RenderUniformsBuffer.BACKGROUND_SIZE + // bg
+    BYTES_VEC4; // collider sphere vec4f
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(RenderUniformsBuffer.BUFFER_SIZE);
@@ -270,6 +274,11 @@ export class RenderUniformsBuffer {
     this.dataView.writeU32(this.encodeDebugMode());
     // bg
     this.writeBackground();
+    // collider sphere vec4f
+    this.dataView.writeF32(colSph[0]); // collisionSpherePosition: vec3f,
+    this.dataView.writeF32(colSph[1]);
+    this.dataView.writeF32(colSph[2]);
+    this.dataView.writeU32(CONFIG.colliderGizmo.hoverState); // gizmoActiveState: u32,
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);

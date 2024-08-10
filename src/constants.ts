@@ -67,6 +67,12 @@ export type HairFile =
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
 export type TilePassDispatch = 'perStrand' | 'perSegment';
 export type SdfPreviewAxis = 'axis-x' | 'axis-y' | 'axis-z';
+export const GizmoHoverState = {
+  AXIS_X: 0,
+  AXIS_Y: 1,
+  AXIS_Z: 2,
+  NONE: 3,
+};
 export const GridDebugValue = {
   DENSITY: 0,
   DENSITY_GRADIENT: 1,
@@ -97,6 +103,12 @@ export const CONFIG = {
     color1: col(14, 103, 120),
     noiseScale: 5.0,
     gradientStrength: 0.5,
+  },
+  colliderGizmo: {
+    lineLength: 0.04,
+    lineWidth: 0.002,
+    hoverPadding: 1.5, // Better accessibility. Not visible in render.
+    hoverState: GizmoHoverState.NONE,
   },
 
   ///////////////

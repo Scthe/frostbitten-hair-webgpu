@@ -45,3 +45,13 @@ export function projectPoint(mvpMatrix: Mat4, p: Vec4 | Vec3, result?: Vec4) {
   }
   return vec4.transformMat4(v, mvpMatrix, result);
 }
+
+export function projectPointWithPerspDiv(
+  mvpMatrix: Mat4,
+  p: Vec4 | Vec3,
+  result?: Vec4
+) {
+  const result2 = projectPoint(mvpMatrix, p, result);
+  vec4.divScalar(result2, result2[3], result2);
+  return result2;
+}

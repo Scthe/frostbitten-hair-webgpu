@@ -1,3 +1,4 @@
+import { CONFIG } from '../../constants.ts';
 import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { RenderUniformsBuffer } from '../renderUniformsBuffer.ts';
 
@@ -28,22 +29,22 @@ const AXIS_X = 0u;
 const AXIS_Y = 1u;
 const AXIS_Z = 2u;
 
+const LINE_LENGTH = ${CONFIG.colliderGizmo.lineLength};
+const LINE_WIDTH = ${CONFIG.colliderGizmo.lineWidth};
 
 @vertex
 fn main_vs(
   @builtin(instance_index) inInstanceIdx: u32,
   @builtin(vertex_index) inVertexIndex : u32
 ) -> VertexOutput {
-  let colSphereWS = vec4f(0.05, 1.48, 0.01, 0.06); // TODO uniforms
-  let lineLength = 0.1;
-  let lineWidth = 0.004;
+  let colSphereWS = _uniforms.collisionSpherePosition;
   let viewMatrix = _uniforms.viewMatrix;
   let projMatrix = _uniforms.projMatrix;
 
   let axisVec = getAxisVector(inInstanceIdx);
 
-  let lineStartWS = vec4f(colSphereWS.xyz, 1.0);
-  let lineEndWS   = vec4f(lineStartWS.xyz + axisVec * lineLength, 1.0);
+  let lineStartWS = vec4f(colSphereWS.xyz + axisVec * LINE_WIDTH, 1.0);
+  let lineEndWS   = vec4f(lineStartWS.xyz + axisVec * LINE_LENGTH, 1.0);
   let lineStartVS = viewMatrix * lineStartWS;
   let lineEndVS = viewMatrix * lineEndWS;
   let tangentVS = lineEndVS.xyz - lineStartVS.xyz;
@@ -51,7 +52,7 @@ fn main_vs(
 
   let linePointVS = select(lineEndVS, lineStartVS, (inVertexIndex & 0x01u) == 0u);
   let deltaSign: f32 = select(1.0, -1.0, inVertexIndex == 2u || inVertexIndex == 3u || inVertexIndex == 4u);
-  let positionVs = linePointVS.xyz + deltaSign * up * lineWidth;
+  let positionVs = linePointVS.xyz + deltaSign * up * LINE_WIDTH;
 
   var result: VertexOutput;
   result.position = projMatrix * vec4f(positionVs, 1.0);
@@ -66,7 +67,11 @@ fn main_fs(
 ) -> @location(0) vec4f {
   // return vec4f(1.0, 0.0, 0.0, 1.0);
   let axisVec = getAxisVector(fragIn.axisIdx);
-  return vec4f(axisVec.rgb, 1.0);
+  
+  let isActive = fragIn.axisIdx == _uniforms.gizmoActiveState;
+  let stateMod: f32 = select(0.5, 1.0, isActive);
+  
+  return vec4f(axisVec.rgb * stateMod, 1.0);
 }
 
 

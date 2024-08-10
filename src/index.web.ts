@@ -10,6 +10,7 @@ import { createErrorSystem } from './utils/errors.ts';
 import { showHtmlEl, hideHtmlEl } from './sys_web/htmlUtils.ts';
 import { Scene } from './scene/scene.ts';
 import { loadScene } from './scene/loadScene.ts';
+import { checkMouseGizmo } from './sys_web/gizmo.ts';
 
 (async function () {
   // deno-lint-ignore no-explicit-any
@@ -87,6 +88,12 @@ import { loadScene } from './scene/loadScene.ts';
     canvasResizeSystem.revalidateCanvasSize();
 
     const inputState = getInputState();
+    checkMouseGizmo(
+      inputState,
+      canvasResizeSystem.getViewportSize(),
+      renderer.viewMatrix,
+      renderer.projectionMat
+    );
     renderer.updateCamera(deltaTime, inputState);
 
     // record commands

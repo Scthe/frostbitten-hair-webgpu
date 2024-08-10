@@ -40,8 +40,8 @@ import { DrawGizmoPass } from './passes/drawGizmo/drawGizmoPass.ts';
 
 export class Renderer {
   public readonly cameraCtrl: Camera;
-  private projectionMat: Mat4;
-  private readonly _viewMatrix = mat4.identity(); // cached to prevent allocs.
+  public projectionMat: Mat4;
+  private readonly _viewProjectionMatrix = mat4.identity(); // cached to prevent allocs.
   private readonly viewportSize: Dimensions = { width: 0, height: 0 };
   private frameIdx = 0;
 
@@ -276,12 +276,15 @@ export class Renderer {
     this.hairShadingPass.cmdComputeShadingPoints(ctx, hairObject); // requires depth
   }
 
+  public get viewMatrix() {
+    return this.cameraCtrl.viewMatrix;
+  }
+
   private createPassCtx(cmdBuf: GPUCommandEncoder, scene: Scene): PassCtx {
-    const viewMatrix = this.cameraCtrl.viewMatrix;
     const vpMatrix = getViewProjectionMatrix(
-      viewMatrix,
+      this.viewMatrix,
       this.projectionMat,
-      this._viewMatrix
+      this._viewProjectionMatrix
     );
     return {
       frameIdx: this.frameIdx,
@@ -293,7 +296,7 @@ export class Renderer {
       normalsTexture: this.normalsTextureView,
       aoTexture: this.aoTextureView,
       profiler: this.profiler,
-      viewMatrix,
+      viewMatrix: this.viewMatrix,
       vpMatrix,
       projMatrix: this.projectionMat,
       cameraPositionWorldSpace: this.cameraCtrl.positionWorldSpace,
