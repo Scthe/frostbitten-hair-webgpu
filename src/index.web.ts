@@ -10,7 +10,7 @@ import { createErrorSystem } from './utils/errors.ts';
 import { showHtmlEl, hideHtmlEl } from './sys_web/htmlUtils.ts';
 import { Scene } from './scene/scene.ts';
 import { loadScene } from './scene/loadScene.ts';
-import { checkMouseGizmo } from './sys_web/gizmo.ts';
+import { createGizmoController } from './sys_web/gizmo.ts';
 
 (async function () {
   // deno-lint-ignore no-explicit-any
@@ -53,6 +53,7 @@ import { checkMouseGizmo } from './sys_web/gizmo.ts';
   canvasResizeSystem.addListener(renderer.onCanvasResize);
 
   initializeGUI(device, profiler, scene, renderer.cameraCtrl);
+  const gizmoCtrl = createGizmoController();
   STATS.show();
   let done = false;
 
@@ -88,13 +89,15 @@ import { checkMouseGizmo } from './sys_web/gizmo.ts';
     canvasResizeSystem.revalidateCanvasSize();
 
     const inputState = getInputState();
-    checkMouseGizmo(
+    const inputHandled = gizmoCtrl(
       inputState,
       canvasResizeSystem.getViewportSize(),
       renderer.viewMatrix,
       renderer.projectionMat
     );
-    renderer.updateCamera(deltaTime, inputState);
+    if (!inputHandled) {
+      renderer.updateCamera(deltaTime, inputState);
+    }
 
     // record commands
     const cmdBuf = device.createCommandEncoder(mainCmdBufDesc);

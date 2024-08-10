@@ -278,7 +278,7 @@ export class RenderUniformsBuffer {
     this.dataView.writeF32(colSph[0]); // collisionSpherePosition: vec3f,
     this.dataView.writeF32(colSph[1]);
     this.dataView.writeF32(colSph[2]);
-    this.dataView.writeU32(CONFIG.colliderGizmo.hoverState); // gizmoActiveState: u32,
+    this.dataView.writeU32(CONFIG.colliderGizmo.activeAxis); // gizmoActiveState: u32,
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);

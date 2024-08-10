@@ -1,4 +1,5 @@
-import { CONFIG } from '../../constants.ts';
+import { CONFIG, GizmoAxis } from '../../constants.ts';
+import { GizmoAxisIdx } from '../../sys_web/gizmo.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
   labelShader,
@@ -61,15 +62,41 @@ export class DrawGizmoPass {
     );
     renderPass.setPipeline(this.pipeline);
     renderPass.setBindGroup(0, bindings);
+
+    const cfg = CONFIG.colliderGizmo;
+    if (cfg.isDragging) {
+      // deno-lint-ignore no-explicit-any
+      this.cmdDrawSingleAxis(renderPass, cfg.activeAxis as any);
+    } else {
+      this.cmdDrawAllAxis(renderPass);
+    }
+
+    // fin
+    renderPass.end();
+  }
+
+  private cmdDrawAllAxis(renderPass: GPURenderPassEncoder) {
     renderPass.draw(
       6, // vertex count
       3, // instance count
       0, // first index
       0 // first instance
     );
+  }
 
-    // fin
-    renderPass.end();
+  private cmdDrawSingleAxis(
+    renderPass: GPURenderPassEncoder,
+    axisIdx: GizmoAxisIdx
+  ) {
+    if (axisIdx === GizmoAxis.NONE) {
+      return;
+    }
+    renderPass.draw(
+      6, // vertex count
+      1, // instance count
+      0, // first index
+      axisIdx // first instance
+    );
   }
 
   private createBindings = (ctx: PassCtx): GPUBindGroup => {

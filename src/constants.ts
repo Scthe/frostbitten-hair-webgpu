@@ -67,18 +67,18 @@ export type HairFile =
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
 export type TilePassDispatch = 'perStrand' | 'perSegment';
 export type SdfPreviewAxis = 'axis-x' | 'axis-y' | 'axis-z';
-export const GizmoHoverState = {
+export const GizmoAxis = {
   AXIS_X: 0,
   AXIS_Y: 1,
   AXIS_Z: 2,
   NONE: 3,
-};
+} as const;
 export const GridDebugValue = {
   DENSITY: 0,
   DENSITY_GRADIENT: 1,
   VELOCITY: 2,
   WIND: 3,
-};
+} as const;
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -108,7 +108,9 @@ export const CONFIG = {
     lineLength: 0.04,
     lineWidth: 0.002,
     hoverPadding: 1.5, // Better accessibility. Not visible in render.
-    hoverState: GizmoHoverState.NONE,
+    /** Either hovered over or dragged. Use 'isDragging' to determine which */
+    activeAxis: GizmoAxis.NONE as number,
+    isDragging: false,
   },
 
   ///////////////
@@ -233,7 +235,8 @@ export const CONFIG = {
     // 0.0 - do not use density gradient as external force. Hair can "squish" together
     // >0.0 - move hair strands so from densely oocupied grid cells into ones that are more "free"
     volumePreservation: 0.00003,
-    collisionSphere: [0.0, 1.454, 0.15, 0.06],
+    // collisionSphere: [0.0, 1.454, 0.15, 0.06],
+    collisionSphere: [0.05, 1.48, 0.01, 0.06],
 
     constraints: {
       constraintIterations: 4,
