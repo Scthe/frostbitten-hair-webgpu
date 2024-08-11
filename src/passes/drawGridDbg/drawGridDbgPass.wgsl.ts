@@ -31,7 +31,7 @@ ${BUFFER_GRID_DENSITY_GRADIENT_AND_WIND(b.densityGradWindBuffer, 'read')}
 
 struct VertexOutput {
   @builtin(position) position: vec4<f32>,
-  @location(0) positionWS: vec4f,
+  @location(0) positionOS: vec4f,
   @location(1) uv: vec2f,
 };
 
@@ -55,13 +55,13 @@ fn main_vs(
 
   // TODO [LOW] same as SDF. Move to shared lib
   ${assignValueFromConstArray('uv: vec2f', 'POSITIONS', 6, 'inVertexIndex')}
-  var positionWS = mix(boundsMin, boundsMax, vec3f(uv, depthSlice));
+  var positionOS = mix(boundsMin, boundsMax, vec3f(uv, depthSlice));
 
   var result: VertexOutput;
-  let vpMatrix = _uniforms.vpMatrix;
+  let mvpMatrix = _uniforms.mvpMatrix;
 
-  result.position = vpMatrix * vec4f(positionWS, 1.0);
-  result.positionWS = vec4f(positionWS, 1.0);
+  result.position = mvpMatrix * vec4f(positionOS, 1.0);
+  result.positionOS = vec4f(positionOS, 1.0);
   result.uv = uv;
   return result;
 }
@@ -79,19 +79,18 @@ fn main_fs(
   let absTheVector: bool = displayMode >= 16u;
   displayMode = select(displayMode, displayMode - 16u, absTheVector);
   
-  // TODO [LOW] this is world space, while grid is object space. Tho it's just a debug view, so..
-  let positionWS = fragIn.positionWS.xyz;
+  let positionOS = fragIn.positionOS.xyz;
 
   var color = vec3f(0., 0., 0.);
   let densityVelocity = _getGridDensityVelocity(
     boundsMin,
     boundsMax,
-    positionWS
+    positionOS
   );
   let gridPoint = getClosestGridPoint(
     boundsMin,
     boundsMax,
-    positionWS
+    positionOS
   );
   let densityGradAndWind = _getGridDensityGradAndWindAtPoint(gridPoint);
 

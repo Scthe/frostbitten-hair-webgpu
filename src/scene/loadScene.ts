@@ -1,5 +1,5 @@
 // deno-lint-ignore-file ban-unused-ignore
-import { mat4 } from 'wgpu-matrix';
+import { mat4, vec4 } from 'wgpu-matrix';
 import { CONFIG, HairFile, MODELS_DIR } from '../constants.ts';
 import { STATS } from '../stats.ts';
 import {
@@ -52,11 +52,16 @@ export async function loadScene(device: GPUDevice): Promise<Scene> {
     objects.push(result);
     console.groupEnd();
   }
+  vec4.copy(
+    CONFIG.hairSimulation.collisionSphere,
+    CONFIG.hairSimulation.collisionSphereInitial
+  );
 
   // load hair
   const tfxFile = await loadTfxFile(CONFIG.hairFile, 1.0);
   // const tfxFile = mockTfxFile();
   const hairObject = await createHairObject(device, 'sintelHair', tfxFile);
+  CONFIG.pointsPerStrand = hairObject.pointsPerStrand;
   STATS.update('Strands', formatNumber(hairObject.strandsCount, 1));
   STATS.update('Points per strand', hairObject.pointsPerStrand);
   STATS.update('Segments', formatNumber(hairObject.segmentCount, 0));

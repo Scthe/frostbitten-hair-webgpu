@@ -1,3 +1,4 @@
+import { CONFIG } from '../../constants.ts';
 import { BUFFER_HAIR_DATA } from '../../scene/hair/hairDataBuffer.ts';
 import {
   BUFFER_HAIR_POINTS_POSITIONS_R,
@@ -14,8 +15,12 @@ import { HAIR_SIM_IMPL_CONSTRANTS } from './shaderImpl/constraints.wgsl.ts';
 import { HAIR_SIM_IMPL_INTEGRATION } from './shaderImpl/integration.wgsl.ts';
 import { SimulationUniformsBuffer } from './simulationUniformsBuffer.ts';
 
+const STRANDS_PER_WORKGROUP = 8;
+const POINTS_PER_WORKGROUP = () =>
+  STRANDS_PER_WORKGROUP * CONFIG.pointsPerStrand;
+
 export const SHADER_PARAMS = {
-  workgroupSizeX: 1, // TODO [CRITICAL] set better values
+  workgroupSizeX: STRANDS_PER_WORKGROUP, // TODO [LOW] set better values
   bindings: {
     simulationUniforms: 0,
     hairData: 1,
@@ -32,7 +37,6 @@ export const SHADER_PARAMS = {
 
 ///////////////////////////
 /// SHADER CODE
-/// TODO precompute A LOT of stuff
 ///////////////////////////
 const c = SHADER_PARAMS;
 const b = SHADER_PARAMS.bindings;
@@ -66,10 +70,8 @@ ${BUFFER_HAIR_POINTS_POSITIONS_R(b.positionsInitial, {
 ${BUFFER_HAIR_SEGMENT_LENGTHS(b.segmentLengths)}
 
 
-// TODO change size, paralelize etc.
 /** Temporary position storage for duration of the shader */
-var<workgroup> _positionsWkGrp: array<vec4f, 32u>;
-const wkGrpOffset = 0u;
+var<workgroup> _positionsWkGrp: array<vec4f, ${POINTS_PER_WORKGROUP()}u>;
 
 
 // Everything is in object space (unless noted otherwise).
@@ -78,10 +80,13 @@ const wkGrpOffset = 0u;
 @workgroup_size(${c.workgroupSizeX}, 1, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
+  // id of the thread inside the workgroup
+  @builtin(local_invocation_index) local_invocation_index: u32,
 ) {
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand; // 32
   let segmentCount: u32 = pointsPerStrand - 1u; // 31
+  let wkGrpOffset = pointsPerStrand * local_invocation_index;
 
   let dt = _uniforms.deltaTime;
   let constraintIterations = _uniforms.constraintIterations;
@@ -96,7 +101,7 @@ fn main(
   let gravity = _uniforms.gravity;
   let gravityForce = vec3f(0., -gravity, 0.);
   let wind = _uniforms.wind;
-  let windLullStrengthMul = _uniforms.windLullStrengthMul;
+  let windStrengthLull = _uniforms.windStrengthLull;
   let windPhaseOffset = _uniforms.windPhaseOffset;
   let windStrengthFrequency = _uniforms.windStrengthFrequency;
   let windStrengthJitter = _uniforms.windStrengthJitter;
@@ -129,9 +134,8 @@ fn main(
       let timer = f32(frameIdx) * 0.73 + windPhaseOffset * f32(strandIdx);
       let windJitter = fract(timer * windStrengthFrequency);
       let jitterDelta = mix(-0.5 * windStrengthJitter, 0.5 * windStrengthJitter, windJitter); // e.g. [-0.5 .. 0.5] when windStrengthJitter is 1.0
-      // let jitterStr = mix(1.0 - windStrengthJitter, 1.0, windJitter); // TODO make jitter -0.5..+0.5, instead of 0..1
       let jitterStr = 1.0 + jitterDelta; // e.g. [0.5 .. 1.5] when windStrengthJitter is 1.0
-      let windCellStr = mix(windLullStrengthMul, 1.0, densityGradAndWind.windStrength);
+      let windCellStr = saturate(mix(windStrengthLull, 1.0, densityGradAndWind.windStrength));
       force += wind.xyz * abs(wind.w * jitterStr * windCellStr);
       
       // density gradient
@@ -194,6 +198,7 @@ fn main(
       );
       let posInitial = _getHairPointPositionInitial(pointsPerStrand, strandIdx, j);
       applyConstraint_GlobalShape(
+        wkGrpOffset,
         stiffnessGlobalShape_i * attenuation,
         posInitial.xyz,
         j
@@ -203,22 +208,30 @@ fn main(
     // local shape constraint
     let stiffnessLocalShape_i = stiffnessLocalConstr / f32(constraintIterations);
     var jj = 0u;
+    var lastTangent: vec3f;
     for (; jj < pointsPerStrand - 3; jj += 1u) { // from 0 to 30 (inclusive)
-      applyConstraint_LocalShape(
+      lastTangent = applyConstraint_LocalShape(
+        wkGrpOffset,
         pointsPerStrand, strandIdx,
         stiffnessLocalShape_i,
         jj
       );
     }
-    for (; jj < pointsPerStrand; jj += 1u) { // from 0 to 30 (inclusive)
-      applyConstraint_matchTangent(
+    for (; jj < pointsPerStrand; jj += 1u) { // last remaining points
+      applyConstraint_matchInitialTangent(
+        wkGrpOffset,
         pointsPerStrand, strandIdx,
         stiffnessLocalShape_i,
         jj
       );
+      /*applyConstraint_matchTangent(
+        stiffnessLocalShape_i,
+        wkGrpOffset, jj,
+        lastTangent
+      );*/
     }
 
-    // TODO add global length (FTL) constraint
+    // TODO [SKIP] add global length (FTL) constraint
     
     // collisions (skip root)
     let stiffnessColl_i = stiffnessCollisions / f32(constraintIterations);
@@ -232,8 +245,9 @@ fn main(
         &pos
       );
 
-      // SDF
-      if (j > 2u) { // TODO skip for more?
+      // SDF. Skip for points close to root as they are going to be naturally close to mesh.
+      // Hardcoding can be a problem for lower pointsPerStrand count.
+      if (j > 2u) {
         applyCollisionsSdf(
           stiffnessSDF_i,
           sdfBoundsMin,

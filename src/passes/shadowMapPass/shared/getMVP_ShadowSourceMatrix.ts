@@ -3,6 +3,7 @@ import { AXIS_Y, CONFIG } from '../../../constants.ts';
 import { sphericalToCartesian } from '../../../utils/index.ts';
 import { Scene } from '../../../scene/scene.ts';
 import { projectPoint } from '../../../utils/matrices.ts';
+import { BoundingSphere } from '../../../utils/bounds.ts';
 
 const TMP_PROJ = mat4.create();
 const TMP_VIEW = mat4.create();
@@ -35,11 +36,7 @@ export function getShadowSourceProjectionMatrix(
   scene: Scene
 ) {
   const mvMat = mat4.multiply(viewMatrix, modelMatrix, TMP_MODEL_VIEW);
-  // TODO remove memory allocation
-  const bs = [
-    scene.hairObject.bounds.sphere,
-    ...scene.objects.map((o) => o.bounds.sphere),
-  ];
+
   let left = BIG_NUMBER;
   let right = -BIG_NUMBER;
   let bottom = BIG_NUMBER;
@@ -47,7 +44,7 @@ export function getShadowSourceProjectionMatrix(
   const near = 0.1; // I won't bother with view space calcs..
   const far = 20;
 
-  bs.forEach((s) => {
+  const addBoundSphere = (s: BoundingSphere) => {
     const spOBJ = vec4.set(
       s.center[0],
       s.center[1],
@@ -60,7 +57,15 @@ export function getShadowSourceProjectionMatrix(
     right = Math.max(right, sphVP[0] + s.radius);
     bottom = Math.min(bottom, sphVP[1] - s.radius);
     top = Math.max(top, sphVP[1] + s.radius);
-  });
+  };
+
+  addBoundSphere(scene.hairObject.bounds.sphere);
+
+  for (const o of scene.objects) {
+    if (!o.isColliderPreview) {
+      addBoundSphere(o.bounds.sphere);
+    }
+  }
 
   return mat4.ortho(
     left * SAFETY_MARGIN,

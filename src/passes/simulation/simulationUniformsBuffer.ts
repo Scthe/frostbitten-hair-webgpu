@@ -29,7 +29,7 @@ export class SimulationUniformsBuffer {
       constraintIterations: u32,
       frameIdx: u32,
       // START: misc2: vec4f
-      windLullStrengthMul: f32,
+      windStrengthLull: f32,
       windColisionTraceOffset: f32,
       stiffnessLengthConstr: f32,
       stiffnessCollisions: f32,
@@ -104,15 +104,16 @@ export class SimulationUniformsBuffer {
     this.dataView.writeF32(colSph[3]); // radius
 
     // wind direction (.xyz), strength (.w)
-    const windDir = sphericalToCartesian(
+    const windDirWS = sphericalToCartesian(
       c.wind.dirPhi,
       c.wind.dirTheta,
       'dgr',
       TMP_VEC4
     );
-    this.dataView.writeF32(windDir[0]);
-    this.dataView.writeF32(windDir[1]);
-    this.dataView.writeF32(windDir[2]);
+    const windDirOS = vec4.transformMat4(windDirWS, modelMatInv, TMP_VEC4); // prettier-ignore
+    this.dataView.writeF32(windDirOS[0]);
+    this.dataView.writeF32(windDirOS[1]);
+    this.dataView.writeF32(windDirOS[2]);
     this.dataView.writeF32(c.wind.strength);
 
     // sdf + grids
@@ -125,7 +126,7 @@ export class SimulationUniformsBuffer {
     this.dataView.writeU32(c.constraints.constraintIterations); // constraintIterations: u32,
     this.dataView.writeU32(ctx.frameIdx); // frameIdx: u32,
     // misc 2
-    this.dataView.writeF32(c.wind.lullStrengthMul); // windLullStrengthMul: f32,
+    this.dataView.writeF32(c.wind.strengthLull); // windStrengthLull: f32,
     this.dataView.writeF32(c.wind.colisionTraceOffset); // windColisionTraceOffset: f32,
     this.dataView.writeF32(c.constraints.stiffnessLengthConstr); // stiffnessLengthConstr: f32,
     this.dataView.writeF32(c.constraints.stiffnessCollisions); // stiffnessCollisions: f32,
@@ -154,11 +155,10 @@ export class SimulationUniformsBuffer {
    * Hair physics is not essential. It never drives a gameplay behaviour.
    * It's fine to hardcode delta time. It guarantees stability, which is more important.
    * We are also VSYNCed in the browser.
-   * TODO Ofc. we should still scale it a bit to prevent physics speed up on 144Hz displays
+   * TODO [IGNORE] Ofc. we should still scale it a bit to prevent physics speed up on 144Hz displays
    */
   private getDeltaTime() {
     const FPS = 30.0;
-    // return 1.0 / 120.0;
     return 1.0 / FPS;
   }
 }

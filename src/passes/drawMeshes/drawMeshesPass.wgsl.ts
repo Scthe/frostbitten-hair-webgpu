@@ -117,16 +117,20 @@ fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
   // c = material.ao;
 
   // collider
-  if (fragIn.isColliderPreview > 0u) {
-    material.albedo = vec3f(0.3, 0.3, 0.0);
+  let isColliderPreview = fragIn.isColliderPreview > 0u;
+  if (isColliderPreview) {
+    material.albedo = vec3f(1., 1., 1.);
     material.shadow = 1.0;
     material.ao = 1.0;
     material.roughness = 1.0;
-    material.isMetallic = 0.0;
+    material.isMetallic = 0.4;
   }
 
   // shading
-  let color = doShading(material);
+  var color = doShading(material);
+  if (isColliderPreview) {
+    color = mix(color, vec3f(1., 1., 0.0), 0.5);
+  }
 
   var result: FragmentOutput;
   result.color = vec4f(color.xyz, 1.0);

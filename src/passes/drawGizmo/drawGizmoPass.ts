@@ -1,5 +1,4 @@
-import { CONFIG, GizmoAxis } from '../../constants.ts';
-import { GizmoAxisIdx } from '../../sys_web/gizmo.ts';
+import { CONFIG, GizmoAxis, GizmoAxisIdx } from '../../constants.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
 import {
   labelShader,

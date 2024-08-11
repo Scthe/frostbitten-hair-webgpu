@@ -128,5 +128,6 @@ export function scaleBoundingBox(bb: BoundingBox, scale: number): BoundingBox {
   return [
     vec3.subtract(center, scaledV), //
     vec3.add(center, scaledV),
-  ];
+    // deno-lint-ignore no-explicit-any
+  ] as any; // Vec3 vs [number, number, number]
 }

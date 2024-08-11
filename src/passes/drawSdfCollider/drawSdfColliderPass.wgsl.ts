@@ -23,7 +23,7 @@ ${SDFCollider.TEXTURE_SDF(b.sdfTexture, b.sdfSampler)}
 
 struct VertexOutput {
   @builtin(position) position: vec4<f32>,
-  @location(0) positionWS: vec4f,
+  @location(0) positionOS: vec4f,
   @location(1) uv: vec2f,
 };
 
@@ -45,13 +45,13 @@ fn main_vs(
   let depthSlice = getSdfDebugDepthSlice();
 
   ${assignValueFromConstArray('uv: vec2f', 'POSITIONS', 6, 'inVertexIndex')}
-  var positionWS = mix(boundsMin, boundsMax, vec3f(uv, depthSlice));
+  var positionOS = mix(boundsMin, boundsMax, vec3f(uv, depthSlice));
 
   var result: VertexOutput;
-  let vpMatrix = _uniforms.vpMatrix;
+  let mvpMatrix = _uniforms.mvpMatrix;
 
-  result.position = vpMatrix * vec4f(positionWS, 1.0);
-  result.positionWS = vec4f(positionWS, 1.0);
+  result.position = mvpMatrix * vec4f(positionOS, 1.0);
+  result.positionOS = vec4f(positionOS, 1.0);
   result.uv = uv;
   return result;
 }
@@ -72,8 +72,8 @@ fn main_fs(
   // let value = textureSampleLevel(_sdfTexture, _sdfSampler, samplePos, 0.0).x;
   
   // TODO [LOW] this is world space, while SDF is object space. Tho it's just a debug view, so..
-  let positionWS = fragIn.positionWS.xyz;
-  let value = sampleSDFCollider(boundsMin, boundsMax, positionWS);
+  let positionOS = fragIn.positionOS.xyz;
+  let value = sampleSDFCollider(boundsMin, boundsMax, positionOS);
   if (value > 0.) { // outside
     color.r = value;
     color.r = 1.;

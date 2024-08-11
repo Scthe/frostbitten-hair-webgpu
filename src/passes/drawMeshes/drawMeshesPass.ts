@@ -92,6 +92,10 @@ export class DrawMeshesPass {
     renderPass: GPURenderPassEncoder,
     object: GPUMesh
   ) {
+    if (object.isColliderPreview && !CONFIG.drawColliders) {
+      return;
+    }
+
     const bindings = this.bindingsCache.getBindings(object.name, () =>
       this.createBindings(ctx, object)
     );

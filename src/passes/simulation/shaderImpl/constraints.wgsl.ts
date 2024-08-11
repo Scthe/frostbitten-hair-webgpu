@@ -38,6 +38,7 @@ fn globalConstraintAttenuation(
 }
 
 fn applyConstraint_GlobalShape(
+  wkGrpOffset: u32,
   stiffness: f32,
   posInitial: vec3f,
   pointIdx: u32
@@ -51,19 +52,22 @@ fn applyConstraint_GlobalShape(
 
 // A Triangle Bending Constraint Model for Position-Based Dynamics
 fn applyConstraint_LocalShape(
+  wkGrpOffset: u32,
   pointsPerStrand: u32, strandIdx: u32,
   stiffness: f32,
   pointIdx: u32
-) {
+) -> vec3f {
+  // TODO [IGNORE] precompute
   let posInitial0 = _getHairPointPositionInitial(pointsPerStrand, strandIdx, pointIdx);
   let posInitial1 = _getHairPointPositionInitial(pointsPerStrand, strandIdx, pointIdx + 1u);
   let posInitial2 = _getHairPointPositionInitial(pointsPerStrand, strandIdx, pointIdx + 2u);
   let cInitial: vec3f = (posInitial0.xyz + posInitial1.xyz + posInitial2.xyz) / 3.;
   let h0 = length(cInitial - posInitial1.xyz);
   
-  let pos0 = _positionsWkGrp[wkGrpOffset + pointIdx];
-  let pos1 = _positionsWkGrp[wkGrpOffset + pointIdx + 1u];
-  let pos2 = _positionsWkGrp[wkGrpOffset + pointIdx + 2u];
+  let wkOffset = wkGrpOffset + pointIdx;
+  let pos0 = _positionsWkGrp[wkOffset];
+  let pos1 = _positionsWkGrp[wkOffset + 1u];
+  let pos2 = _positionsWkGrp[wkOffset + 2u];
   let c: vec3f = (pos0.xyz + pos1.xyz + pos2.xyz) / 3.;
   let hVec = pos1.xyz - c; // from median toward middle point
   let h = length(hVec);
@@ -74,28 +78,45 @@ fn applyConstraint_LocalShape(
   let w2 = posInitial2.w / wTotal *  2.;
 
   let delta = hVec * (1.0 - h0 / h);
-  _positionsWkGrp[wkGrpOffset + pointIdx + 0u] += vec4f(stiffness * w0 * delta, 0.0);
-  _positionsWkGrp[wkGrpOffset + pointIdx + 1u] += vec4f(stiffness * w1 * delta, 0.0);
-  _positionsWkGrp[wkGrpOffset + pointIdx + 2u] += vec4f(stiffness * w2 * delta, 0.0);
+  _positionsWkGrp[wkOffset + 0u] += vec4f(stiffness * w0 * delta, 0.0);
+  _positionsWkGrp[wkOffset + 1u] += vec4f(stiffness * w1 * delta, 0.0);
+  _positionsWkGrp[wkOffset + 2u] += vec4f(stiffness * w2 * delta, 0.0);
+
+  let lastTangent = _positionsWkGrp[wkOffset + 2u] - _positionsWkGrp[wkOffset + 1u];
+  return lastTangent.xyz;
 }
 
 
-fn applyConstraint_matchTangent(
+fn applyConstraint_matchInitialTangent(
+  wkGrpOffset: u32,
   pointsPerStrand: u32, strandIdx: u32,
   stiffness: f32,
   pointIdx: u32
 ) {
+  // a bit wastefull, but ./shrug
   let posInitial0 = _getHairPointPositionInitial(pointsPerStrand, strandIdx, pointIdx - 1u);
   let posInitial1 = _getHairPointPositionInitial(pointsPerStrand, strandIdx, pointIdx);
   let tangentInitial = posInitial1.xyz - posInitial0.xyz;
   
-  let pos0 = _positionsWkGrp[wkGrpOffset + pointIdx - 1u];
-  let pos1 = _positionsWkGrp[wkGrpOffset + pointIdx];
+  applyConstraint_matchTangent(
+    stiffness, wkGrpOffset, pointIdx, tangentInitial
+  );
+}
 
-  let positionProj = pos0.xyz + tangentInitial;
+fn applyConstraint_matchTangent(
+  stiffness: f32,
+  wkGrpOffset: u32,
+  pointIdx: u32,
+  tangent: vec3f
+) {
+  let wkOffset = wkGrpOffset + pointIdx;
+  let pos0 = _positionsWkGrp[wkOffset - 1u];
+  let pos1 = _positionsWkGrp[wkOffset];
+
+  let positionProj = pos0.xyz + tangent;
   let delta = positionProj - pos1.xyz; // now -> projected
-  let w = posInitial1.w;
-  _positionsWkGrp[wkGrpOffset + pointIdx] += vec4f(stiffness * w * delta, 0.0);
+  let w = pos1.w;
+  _positionsWkGrp[wkOffset] += vec4f(stiffness * w * delta, 0.0);
 }
 
 `;

@@ -15,6 +15,7 @@ import { createGpuDevice } from '../utils/webgpu.ts';
 import { HairObject } from '../scene/hair/hairObject.ts';
 import { SDFCollider } from '../scene/sdfCollider/sdfCollider.ts';
 import { Bounds3d } from '../utils/bounds.ts';
+import { GridData } from '../passes/simulation/grids/gridData.ts';
 
 export function absPathFromRepoRoot(filePath: string) {
   const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
@@ -100,7 +101,7 @@ export const createMockPassCtx = (
       hairObject,
       objects: [],
       sdfCollider,
-      physicsGrid: undefined!,
+      physicsGrid: new GridData(device, mockBounds.box),
     },
     depthTexture: undefined!,
     hdrRenderTexture: undefined!,

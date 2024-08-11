@@ -36,6 +36,12 @@ export class GridData {
       bounds_,
       CONFIG.hairSimulation.physicsForcesGrid.scale
     );
+    if (CONFIG.isTest) {
+      this.densityVelocityBuffer = undefined!;
+      this.densityGradAndWindBuffer = undefined!;
+      return;
+    }
+
     const dims = CONFIG.hairSimulation.physicsForcesGrid.dims;
     const [boundsMin, boundsMax] = this.bounds;
     const size = vec3.subtract(boundsMax, boundsMin);

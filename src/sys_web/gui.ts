@@ -10,6 +10,7 @@ import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
 import { showHtmlEl } from '../sys_web/htmlUtils.ts';
+import { vec4 } from 'wgpu-matrix';
 
 // https://github.com/Scthe/WebFX/blob/master/src/UISystem.ts#L13
 // https://github.com/Scthe/gaussian-splatting-webgpu/blob/master/src/web/gui.ts
@@ -36,6 +37,12 @@ export function initializeGUI(
     },
     resetSimulation: () => {
       CONFIG.hairSimulation.nextFrameResetSimulation = true;
+    },
+    resetBall: () => {
+      vec4.copy(
+        CONFIG.hairSimulation.collisionSphereInitial,
+        CONFIG.hairSimulation.collisionSphere
+      );
     },
   };
 
@@ -138,6 +145,8 @@ export function initializeGUI(
     dir.add(cfg, 'gravity', 0.0, 0.1).name('Gravity');
     dir.add(cfg, 'friction', 0.0, 1.0).name('Friction');
     dir.add(cfg, 'volumePreservation', 0.0, 0.00025).name('Vol. Preserv.');
+    dir.add(dummyObject, 'resetBall').name('Reset ball'); // below, so user does press by accident
+    dir.add(CONFIG, 'drawColliders').name('Draw ball');
 
     // constraints
     dir = simDir.addFolder('Constraints');
@@ -159,7 +168,7 @@ export function initializeGUI(
     dir.add(wind, 'dirTheta', 15, 165).step(1).name('Dir th');
     // dir.add(wind, 'strength', 0.0, 0.0001).name('Strength');
     dir.add(wind, 'strength', 0.0, 1.0).name('Strength');
-    dir.add(wind, 'lullStrengthMul', 0.0, 1.0).name('Lull strength');
+    dir.add(wind, 'strengthLull', 0.0, 1.0).name('Lull strength');
     dir.add(wind, 'strengthFrequency', 0.001, 2.0).name('Str. frequency');
     dir.add(wind, 'strengthJitter', 0.0, 1.0).name('Str. Jitter');
     dir.add(wind, 'phaseOffset', 0.0, 0.5).name('Phase offset');

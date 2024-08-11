@@ -16,6 +16,7 @@ import {
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 4, // TODO [LOW] set even better values? Current seem OK.
+  // TODO [CRITICAL] use CONFIG.pointsPerStrand
   workgroupSizeY: 32, // A bit inefficient if strand has less points. But it's not THAT inefficient suprisingly?
   bindings: TILE_PASSES_BINDINGS,
 };

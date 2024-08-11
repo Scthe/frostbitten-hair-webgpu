@@ -1,6 +1,6 @@
 import { Mat4, Vec3, vec3, vec4 } from 'wgpu-matrix';
 import { getViewProjectionMatrix } from '../utils/matrices.ts';
-import { Dimensions, ValueOf } from '../utils/index.ts';
+import { Dimensions } from '../utils/index.ts';
 import Input from './input.ts';
 import {
   Ray,
@@ -9,14 +9,12 @@ import {
   pointToRayDistance,
   projectPointOntoRay,
 } from '../utils/raycast.ts';
-import { CONFIG, GizmoAxis } from '../constants.ts';
+import { CONFIG, GizmoAxis, GizmoAxisIdx } from '../constants.ts';
 import { Plane, planeRayIntersection } from '../utils/raycast.plane.ts';
 
 /*
 WARNING: THIS FILE CONTAINS VERY PROFESSIONAL CODE. DO NOT BE AWED (TOO MUCH)!
 */
-
-export type GizmoAxisIdx = ValueOf<typeof GizmoAxis>;
 
 const AXIS_VEC_X = vec3.create(1, 0, 0);
 const AXIS_VEC_Y = vec3.create(0, 1, 0);
