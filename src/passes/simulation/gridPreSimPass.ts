@@ -11,7 +11,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './gridPreSimPass.wgsl.ts';
 
 export class GridPreSimPass {
-  public static NAME: string = GridPreSimPass.name;
+  public static NAME: string = 'GridPreSimPass';
 
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();

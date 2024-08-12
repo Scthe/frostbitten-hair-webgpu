@@ -11,11 +11,10 @@ import {
   PIPELINE_DEPTH_ON,
 } from '../_shared/shared.ts';
 import { PassCtx } from '../passCtx.ts';
-import { HairTilesPass } from '../swHair/hairTilesPass.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hwHairPass.wgsl.ts';
 
 export class HwHairPass {
-  public static NAME: string = HwHairPass.name;
+  public static NAME: string = 'HwHairPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();
@@ -110,21 +109,22 @@ export class HwHairPass {
 
     // fin
     renderPass.end();
+    hairObject.reportRenderedStrandCount();
   }
 
   public static cmdRenderHair(
     renderPass: GPURenderPassEncoder,
-    object: HairObject
+    hairObject: HairObject
   ) {
-    object.bindIndexBuffer(renderPass);
+    hairObject.bindIndexBuffer(renderPass);
 
     // render full hair
     // const { triangleCount } = object.buffers.indicesData;
     // render with LOD
-    const renderedStrandCnt = HairTilesPass.getRenderedStrandCount(object);
+    const renderedStrandCnt = hairObject.getRenderedStrandCount();
     const triangleCount = getHairTriangleCount(
       renderedStrandCnt,
-      object.pointsPerStrand
+      hairObject.pointsPerStrand
     );
 
     const vertexCount = triangleCount * VERTS_IN_TRIANGLE;
@@ -152,6 +152,8 @@ export class HwHairPass {
         globalUniforms.createBindingDesc(b.renderUniforms),
         object.bindPointsPositions(b.hairPositions),
         object.bindTangents(b.hairTangents),
+        object.bindHairData(b.hairData),
+        object.bindShading(b.hairShading),
       ]
     );
   };

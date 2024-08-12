@@ -19,7 +19,7 @@ import { createHairSlicesHeadsBuffer } from './shared/hairSliceHeadsBuffer.ts';
 import { createHairSlicesDataBuffer } from './shared/hairSlicesDataBuffer.ts';
 
 export class HairFinePass {
-  public static NAME: string = HairFinePass.name;
+  public static NAME: string = 'HairFinePass';
 
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();

@@ -15,7 +15,7 @@ import {
 } from './drawBackgroundGradientPass.wgsl.ts';
 
 export class DrawBackgroundGradientPass {
-  public static NAME: string = DrawBackgroundGradientPass.name;
+  public static NAME: string = 'DrawBackgroundGradientPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

@@ -21,10 +21,8 @@ const COLOR_WHITE: u32 = 0xffffffffu;
 struct SwHairRasterizeParams {
   viewModelMat: mat4x4f,
   projMat: mat4x4f,
-  viewportSizeU32: vec2u, // u32's first, TODO unused
-  strandsCount: u32, //  TODO unused
   pointsPerStrand: u32,
-  viewportSize: vec2f, // f32's (AWKWARD!)
+  viewportSize: vec2f,
   fiberRadius: f32,
 }
 
@@ -44,29 +42,26 @@ fn swRasterizeHair(
 ) -> SwRasterizedHair {
   var r: SwRasterizedHair;
 
-  let p0_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.0);
-  let p1_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.0);
-  let t0_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, segmentIdx    ).xyz, 1.,);
-  let t1_VS: vec4f = p.viewModelMat * vec4f(_getHairTangent(p.pointsPerStrand, strandIdx, segmentIdx + 1).xyz, 1.,);
+  var v0: vec2f;
+  var v1: vec2f;
+  var d01: vec2f;
+  swRasterizeHairPoint(
+    p, strandIdx, segmentIdx, 
+    &v0, &v1, &d01
+  );
+  r.v00 = v0;
+  r.v01 = v1;
+  r.depthsProj.x = d01.x;
+  r.depthsProj.y = d01.y;
 
-  // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
-  let right0: vec3f = safeNormalize3(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
-  let right1: vec3f = safeNormalize3(cross(t1_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
-
-  // Vertex positions
-  let v00_VS = vec4f(p0_VS.xyz - right0, 1.0);
-  let v01_VS = vec4f(p0_VS.xyz + right0, 1.0);
-  let v10_VS = vec4f(p1_VS.xyz - right1, 1.0);
-  let v11_VS = vec4f(p1_VS.xyz + right1, 1.0);
-  let v00_NDC: vec3f = projectVertex(p.projMat, v00_VS);
-  let v01_NDC: vec3f = projectVertex(p.projMat, v01_VS);
-  let v10_NDC: vec3f = projectVertex(p.projMat, v10_VS);
-  let v11_NDC: vec3f = projectVertex(p.projMat, v11_VS);
-  r.v00 = ndc2viewportPx(p.viewportSize.xy, v00_NDC); // in pixels
-  r.v01 = ndc2viewportPx(p.viewportSize.xy, v01_NDC); // in pixels
-  r.v10 = ndc2viewportPx(p.viewportSize.xy, v10_NDC); // in pixels
-  r.v11 = ndc2viewportPx(p.viewportSize.xy, v11_NDC); // in pixels
-  r.depthsProj = vec4f(v00_NDC.z, v01_NDC.z, v10_NDC.z, v11_NDC.z);
+  swRasterizeHairPoint(
+    p, strandIdx, segmentIdx + 1, 
+    &v0, &v1, &d01
+  );
+  r.v10 = v0;
+  r.v11 = v1;
+  r.depthsProj.z = d01.x;
+  r.depthsProj.w = d01.y;
 
   return r;
 }
@@ -74,7 +69,6 @@ fn swRasterizeHair(
 /** NOTE: all the comments assume you have 32 verts per strand
  * 
  * Same as swRasterizeHair(), but only for a single point, instead of both start and end points.
- * TODO Use inside swRasterizeHair()?
 */
 fn swRasterizeHairPoint(
   p: SwHairRasterizeParams,

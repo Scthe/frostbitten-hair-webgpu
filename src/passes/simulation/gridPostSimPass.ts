@@ -10,7 +10,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './gridPostSimPass.wgsl.ts';
 
 export class GridPostSimPass {
-  public static NAME: string = GridPostSimPass.name;
+  public static NAME: string = 'GridPostSimPass';
 
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();

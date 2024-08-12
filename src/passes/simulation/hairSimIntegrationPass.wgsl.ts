@@ -231,7 +231,7 @@ fn main(
       );*/
     }
 
-    // TODO [SKIP] add global length (FTL) constraint
+    // TODO [IGNORE] add global length (FTL) constraint
     
     // collisions (skip root)
     let stiffnessColl_i = stiffnessCollisions / f32(constraintIterations);

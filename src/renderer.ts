@@ -233,6 +233,8 @@ export class Renderer {
   }
 
   private cmdDrawScene(ctx: PassCtx) {
+    const { hairObject } = ctx.scene;
+
     this.shadowMapPass.cmdUpdateShadowMap(ctx);
 
     this.drawMeshesPass.cmdDrawMeshes(ctx);
@@ -247,13 +249,12 @@ export class Renderer {
     ) {
       this.hwHairPass.cmdDrawHair(ctx);
       this.aoPass.cmdCalcAo(ctx); // might or might not be used if displayMode is right
+      this.hairShadingPass.cmdComputeShadingPoints(ctx, hairObject); // requires depth
       return;
     }
 
     this.hairTilesPass.clearFramebuffer(ctx);
     this.hairFinePass.clearFramebuffer(ctx);
-
-    const { hairObject } = ctx.scene;
 
     this.hairTilesPass.cmdDrawHairToTiles(ctx, hairObject);
     if (displayMode !== DISPLAY_MODE.TILES) {

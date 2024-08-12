@@ -38,7 +38,9 @@ export function getModelViewProjectionMatrix(
 export function projectPoint(mvpMatrix: Mat4, p: Vec4 | Vec3, result?: Vec4) {
   let v: Vec4;
   if (p.length === 4) {
-    if (p[3] !== 1) throw new Error(`Tried to project a point, but provided Vec4 has .w !== 1`); // prettier-ignore
+    if (p[3] !== 1) {
+      throw new Error(`Tried to project a point, but provided Vec4 has .w !== 1`); // prettier-ignore
+    }
     v = p;
   } else {
     v = vec4.create(p[0], p[1], p[2], 1);

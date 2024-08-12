@@ -95,7 +95,7 @@ export const CONFIG = {
     binaryFileReader: binaryFileReader_Web,
     createTextureFromFile: createTextureFromFile_Web,
   },
-  increaseStorageMemoryLimits: false, // TODO [CRITICAL] final release?
+  increaseStorageMemoryLimits: false,
   displayMode: DISPLAY_MODE.FINAL,
 
   ///////////////
@@ -214,7 +214,7 @@ export const CONFIG = {
     shadingPoints: 64,
 
     ////// TILE PASS
-    tileSize: 16,
+    tileSize: 16, // TODO [CRITICAL] try to set to 8
     tileDepthBins: TILE_DEPTH_BINS,
     avgSegmentsPerTile: 512,
     tileShaderDispatch: 'perSegment' as TilePassDispatch,

@@ -15,7 +15,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawMeshesPass.wgsl.ts';
 
 export class DrawMeshesPass {
-  public static NAME: string = DrawMeshesPass.name;
+  public static NAME: string = 'DrawMeshesPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

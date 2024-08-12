@@ -13,7 +13,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_PARAMS, SHADER_CODE } from './aoPass.wgsl.ts';
 
 export class AoPass {
-  public static NAME: string = AoPass.name;
+  public static NAME: string = 'AoPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

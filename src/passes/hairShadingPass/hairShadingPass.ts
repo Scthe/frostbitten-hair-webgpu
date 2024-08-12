@@ -14,7 +14,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hairShadingPass.wgsl.ts';
 
 export class HairShadingPass {
-  public static NAME: string = HairShadingPass.name;
+  public static NAME: string = 'HairShadingPass';
 
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();

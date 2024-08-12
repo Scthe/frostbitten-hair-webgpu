@@ -12,7 +12,7 @@ import {
   TILE_PASSES_SHARED,
 } from './shaderImpl/tilePassesShared.wgsl.ts';
 
-// TODO try workgroup shared for positions and tangents?
+// TODO [NOW] try workgroup shared for positions and tangents?
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 4, // TODO [LOW] set even better values? Current seem OK.
@@ -72,8 +72,6 @@ fn main(
   let swHairRasterizeParams = SwHairRasterizeParams(
     mvMatrix,
     _uniforms.projMatrix,
-    viewportSizeU32,
-    strandsCount,
     pointsPerStrand,
     viewportSize,
     _uniforms.fiberRadius

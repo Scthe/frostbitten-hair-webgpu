@@ -1,4 +1,4 @@
-import { Mat4, Vec3, vec3, vec4 } from 'wgpu-matrix';
+import { Mat4, Vec3, mat4, vec3, vec4 } from 'wgpu-matrix';
 import { getViewProjectionMatrix } from '../utils/matrices.ts';
 import { Dimensions } from '../utils/index.ts';
 import Input from './input.ts';
@@ -32,6 +32,11 @@ const GIZMO_TO_BALL_DISTANCE = CONFIG.colliderGizmo.lineLength * 0.1;
 // prealloc
 const TMP_LINE_START = vec4.create();
 const TMP_LINE_END = vec4.create();
+const TMP_VIEW_PROJ_MAT = mat4.create();
+const TMP_CAMERA_RAY: Ray = {
+  origin: vec3.create(),
+  dir: vec3.create(),
+};
 
 export const setCursor = (
   cursor: 'default' | 'grab' | 'grabbing' | 'move' | 'pointer'
@@ -52,8 +57,17 @@ export function createGizmoController() {
     let nextIsDragging = inputState.mouse.touching;
 
     const mousePx = [inputState.mouse.x, inputState.mouse.y];
-    const viewProjMat = getViewProjectionMatrix(viewMatrix, projMatrix);
-    const cameraRay = generateRayFromCamera(viewportSize, viewProjMat, mousePx);
+    const viewProjMat = getViewProjectionMatrix(
+      viewMatrix,
+      projMatrix,
+      TMP_VIEW_PROJ_MAT
+    );
+    const cameraRay = generateRayFromCamera(
+      viewportSize,
+      viewProjMat,
+      mousePx,
+      TMP_CAMERA_RAY
+    );
 
     if (cfg.isDragging) {
       applyDragMovement(cameraRay, gizmoClickPosCorrection);
@@ -97,7 +111,7 @@ function applyDragMovement(cameraRay: Ray, gizmoClickPosCorrection: number) {
   // project click ray onto plane
   const posNext_onPlane = planeRayIntersection(cameraRay, plane);
   let posNext = projectPointOntoRay(moveRay, posNext_onPlane);
-  console.log(plane.normal);
+  // console.log(plane.normal);
 
   const correction = gizmoClickPosCorrection;
   posNext = vec3.addScaled(posNext, moveRay.dir, -correction);

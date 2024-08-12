@@ -30,7 +30,7 @@ fn reduceHairSlices(
     var sliceCount = select(0u, u32(finalColor.r * f32(dbgSlicesModeMaxSlices)), isDbgSliceCnt); // debug value
     
     // START: ITERATE SLICES (front to back)
-    // TODO is it faster if we get start/end values from 'processHairSegment'? ATM it's loop on consts, so might be quite fast. And only 4 iters with current settings..
+    // TODO [NOW] is it faster if we get start/end values from 'processHairSegment'? ATM it's loop on consts, so might be quite fast. And only 4 iters with current settings..
     var s: u32 = 0u;
     for (; s < SLICES_PER_PIXEL; s += 1u) {
       if (isPixelDone(finalColor) && !isDbgSliceCnt) {

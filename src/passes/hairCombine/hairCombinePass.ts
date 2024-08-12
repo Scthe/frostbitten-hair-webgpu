@@ -12,7 +12,7 @@ import {
 import { CONFIG } from '../../constants.ts';
 
 export class HairCombinePass {
-  public static NAME: string = HairCombinePass.name;
+  public static NAME: string = 'HairCombinePass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

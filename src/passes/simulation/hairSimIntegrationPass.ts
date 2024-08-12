@@ -10,7 +10,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hairSimIntegrationPass.wgsl.ts';
 
 export class HairSimIntegrationPass {
-  public static NAME: string = HairSimIntegrationPass.name;
+  public static NAME: string = 'HairSimIntegrationPass';
 
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();

@@ -203,8 +203,6 @@ fn main(
   let swHairRasterizeParams = SwHairRasterizeParams(
     _uniforms.viewMatrix,
     _uniforms.projMatrix,
-    viewportSizeU32,
-    strandsCount,
     pointsPerStrand,
     viewportSize,
     _uniforms.fiberRadius

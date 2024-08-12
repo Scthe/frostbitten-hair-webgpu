@@ -10,7 +10,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawGizmoPass.wgsl.ts';
 
 export class DrawGizmoPass {
-  public static NAME: string = DrawGizmoPass.name;
+  public static NAME: string = 'DrawGizmoPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

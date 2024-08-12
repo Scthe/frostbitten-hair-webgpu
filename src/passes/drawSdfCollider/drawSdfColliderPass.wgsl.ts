@@ -71,7 +71,6 @@ fn main_fs(
   // let samplePos = vec3f(fragIn.uv, depthSlice);
   // let value = textureSampleLevel(_sdfTexture, _sdfSampler, samplePos, 0.0).x;
   
-  // TODO [LOW] this is world space, while SDF is object space. Tho it's just a debug view, so..
   let positionOS = fragIn.positionOS.xyz;
   let value = sampleSDFCollider(boundsMin, boundsMax, positionOS);
   if (value > 0.) { // outside

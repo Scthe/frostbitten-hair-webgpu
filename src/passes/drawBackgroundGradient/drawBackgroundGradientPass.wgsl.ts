@@ -29,7 +29,6 @@ fn main_vs(
 }
 
 
-// TODO finish
 @fragment
 fn main_fs(
   @builtin(position) positionPxF32: vec4<f32>
@@ -41,7 +40,7 @@ fn main_fs(
 
   // get noise
   let uv = positionPxF32.xy / _uniforms.viewport.xy;
-  let c = fractalNoise(uv, noiseScale) * 0.5 + 0.5; // TODO oscylate scale between 2 values?
+  let c = fractalNoise(uv, noiseScale) * 0.5 + 0.5;
   
   // mix colors
   var color = mix(color0, color1, c);

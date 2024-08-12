@@ -77,8 +77,9 @@ fn main_fs(
     result.color = color;
 
     // write depth to depth bufer
+    //    > NOPE, done by separate hair hardware raster pass
     // let hairResult = _getTileDepth(viewportSizeU32, tileXY);
-    // result.fragDepth = hairResult.x; // TODO convert depthMin to f32 etc. first this pass has depth test ON!
+    // result.fragDepth = hairResult.x;
   }
 
   return result;

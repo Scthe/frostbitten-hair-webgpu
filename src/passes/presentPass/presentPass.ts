@@ -18,7 +18,7 @@ import { getShadowMapPreviewSize } from '../shadowMapPass/shared/getShadowMapPre
 const LABEL_DBG_SHADOW_MAP = 'dbg-shadow-map';
 
 export class PresentPass {
-  public static NAME: string = PresentPass.name;
+  public static NAME: string = 'PresentPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly pipelineDbgShadowMap: GPURenderPipeline;

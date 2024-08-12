@@ -32,7 +32,7 @@ fn processTile(
   var depthBin = TILE_DEPTH_BINS_COUNT;
 
   /*// edgeFunction() as series of additions
-  // TODO For some reasom this is SLOWER than repeated calling of edgeFunction()?!
+  // For some reason this is SLOWER than repeated calling of edgeFunction()?! I assume too much registers spend on this..
   let CC0 = edgeC(sw.v01, sw.v00);
   let CC1 = edgeC(sw.v11, sw.v01);
   let CC2 = edgeC(sw.v10, sw.v11);

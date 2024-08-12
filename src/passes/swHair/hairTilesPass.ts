@@ -1,9 +1,6 @@
 import { BYTES_U32, CONFIG } from '../../constants.ts';
 import { HairObject } from '../../scene/hair/hairObject.ts';
-import { STATS } from '../../stats.ts';
-import { clamp } from '../../utils/index.ts';
 import { Dimensions } from '../../utils/index.ts';
-import { formatPercentageNumber } from '../../utils/string.ts';
 import {
   assertIsGPUTextureView,
   bindBuffer,
@@ -24,7 +21,7 @@ import { createHairTilesResultBuffer } from './shared/hairTilesResultBuffer.ts';
 const DISPATCH_TYPE = CONFIG.hairRender.tileShaderDispatch;
 
 export class HairTilesPass {
-  public static NAME: string = HairTilesPass.name;
+  public static NAME: string = 'HairTilesPass';
 
   private readonly pipeline: GPUComputePipeline;
   private readonly bindingsCache = new BindingsCache();
@@ -98,6 +95,9 @@ export class HairTilesPass {
     }
 
     computePass.end();
+
+    // stats
+    hairObject.reportRenderedStrandCount();
   }
 
   private cmdDispatchPerSegment(
@@ -107,7 +107,7 @@ export class HairTilesPass {
     const params = SHADER_PER_SEGMENT.SHADER_PARAMS;
 
     const workgroupsX = getItemsPerThread(
-      HairTilesPass.getRenderedStrandCount(hairObject),
+      hairObject.getRenderedStrandCount(),
       params.workgroupSizeX
     );
     const workgroupsY = getItemsPerThread(
@@ -125,30 +125,12 @@ export class HairTilesPass {
     const params = SHADER_PER_STRAND.SHADER_PARAMS;
 
     const workgroupsX = getItemsPerThread(
-      HairTilesPass.getRenderedStrandCount(hairObject),
+      hairObject.getRenderedStrandCount(),
       params.workgroupSizeX
     );
 
     // console.log(`${HairTilesPass.NAME}.dispatch(${workgroupsX}, 1, 1)`); // prettier-ignore
     computePass.dispatchWorkgroups(workgroupsX, 1, 1);
-  }
-
-  public static getRenderedStrandCount(hairObject: HairObject) {
-    const pct = clamp(CONFIG.hairRender.lodRenderPercent, 0, 100);
-    const { strandsCount, pointsPerStrand, segmentCount } = hairObject;
-    let result = Math.ceil((strandsCount * pct) / 100.0);
-    result = clamp(result, 0, strandsCount);
-
-    STATS.update(
-      'Rendered strands',
-      formatPercentageNumber(result, strandsCount, 0)
-    );
-    const segments = result * (pointsPerStrand - 1);
-    STATS.update(
-      'Rendered segments',
-      formatPercentageNumber(segments, segmentCount, 0)
-    );
-    return result;
   }
 
   private createBindings = (

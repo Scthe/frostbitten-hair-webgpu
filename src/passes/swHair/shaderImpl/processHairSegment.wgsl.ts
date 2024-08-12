@@ -20,12 +20,9 @@ fn processHairSegment(
   var writtenSliceDataCount: u32 = 0u;
   let segmentCount = p.pointsPerStrand - 1;
 
-  // TODO optimize params
   let swHairRasterizeParams = SwHairRasterizeParams(
     p.viewModelMat,
     p.projMat,
-    p.viewportSizeU32,
-    p.strandsCount,
     p.pointsPerStrand,
     p.viewportSize,
     p.fiberRadius,
@@ -37,7 +34,7 @@ fn processHairSegment(
   );
 
   // bounds
-  // TODO optimize bounds. Scissor based on segment0_px, segment1_px.
+  // TODO [NOW] optimize bounds. Scissor based on segment0_px, segment1_px.
   let boundRectMax = vec2f(tileBoundsPx.zw);
   let boundRectMin = vec2f(tileBoundsPx.xy);
 
@@ -60,7 +57,9 @@ fn processHairSegment(
   for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x += 1.0) {
     // stop if there is no space inside processor's sliceData linked list.
     let nextSliceDataPtr: u32 = sliceDataOffset + writtenSliceDataCount; 
-    if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; } // TODO this 'optimization' is slow? +0.5ms ..
+    
+    // WARNING: this 'optimization' is slow
+    // if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; }
 
     // get pixel coordinates
     let px = vec2f(x, y); // pixel coordinates wrt. viewport
@@ -80,7 +79,7 @@ fn processHairSegment(
     let interpW = interpolateQuad(sw, px);
     let t = interpW.y; // 0 .. 1
     let hairDepth: f32 = interpolateHairF32(interpW, sw.depthsProj);
-    // TODO instead of linear, have quadratic interp? It makes strands "fatter", so user would provide lower fiber radius. Which is good for us.
+    // TODO [IGNORE] instead of linear, have quadratic interp? It makes strands "fatter", so user would provide lower fiber radius. Which is good for us.
     let alpha = 1.0 - abs(interpW.x * 2. - 1.); // interpW.x is in 0..1. Turn it so strand middle is 1.0 and then 0.0 at edges.
 
     // sample depth buffer, depth test with GL_LESS

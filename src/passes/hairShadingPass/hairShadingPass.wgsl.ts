@@ -156,7 +156,7 @@ fn main(
   radianceSum += hairShading(params, _uniforms.light1, toCamera, tangentWS, positionWS, shadow, ao);
   radianceSum += hairShading(params, _uniforms.light2, toCamera, tangentWS, positionWS, shadow, ao);
 
-  color = vec4f(radianceSum, 1.0); // TODO add alpha [0.8 .. 1.0]?
+  color = vec4f(radianceSum, 1.0); // TODO [IGNORE] add alpha [0.8 .. 1.0]?
   _setShadingPoint(strandIdx, shadingPointId, color);
   // _setShadingPoint(strandIdx, shadingPointId, vec4f(baseColor, 1.0)); // dbg
 }
@@ -191,7 +191,8 @@ fn hairShading(
     tangentWS.xyz,
   );
 
-  // TODO better tune diffuse-specular addition
+  // TODO [IGNORE] better tune diffuse-specular addition, see:
+  //      https://www.fxguide.com/fxfeatured/pixars-renderman-marschner-hair (last section)
   let brdfFinal = diffuseTotal + marschnerSpec;
   // let brdfFinal = pbr_mixDiffuseAndSpecular(material, lambert, specular, F);
   

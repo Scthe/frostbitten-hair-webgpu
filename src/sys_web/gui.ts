@@ -10,7 +10,8 @@ import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
 import { showHtmlEl } from '../sys_web/htmlUtils.ts';
-import { vec4 } from 'wgpu-matrix';
+import { mat4, vec4 } from 'wgpu-matrix';
+import { dgr2rad } from '../utils/index.ts';
 
 // https://github.com/Scthe/WebFX/blob/master/src/UISystem.ts#L13
 // https://github.com/Scthe/gaussian-splatting-webgpu/blob/master/src/web/gui.ts
@@ -44,6 +45,7 @@ export function initializeGUI(
         CONFIG.hairSimulation.collisionSphere
       );
     },
+    modelRotation: 0,
   };
 
   // github
@@ -67,6 +69,7 @@ export function initializeGUI(
     .name('Display mode');
 
   // folders
+  addSceneFolder(gui);
   addHairRenderFolder(gui);
   addHairMaterialFolder(gui);
   addHairSimulationFolder(gui);
@@ -77,10 +80,32 @@ export function initializeGUI(
   addShadowsFolder(gui);
   addAoFolder(gui);
   addColorMgmt();
-  addDbgFolder();
 
   //////////////
   /// subdirs
+
+  function addSceneFolder(gui: dat.GUI) {
+    const dir = gui.addFolder('Scene');
+    const bg = CONFIG.background;
+    // dir.open();
+
+    // camera reset
+    dir.add(dummyObject, 'resetCamera').name('Reset camera');
+
+    dir
+      .add(dummyObject, 'modelRotation', 0.0, 360.0)
+      .step(1)
+      .name('Rotation')
+      .onChange((v) => {
+        mat4.rotationY(dgr2rad(v), scene.modelMatrix);
+      });
+
+    // bg
+    addColorController(dir, bg, 'color0', 'Bg color 0');
+    addColorController(dir, bg, 'color1', 'Bg color 1');
+    dir.add(bg, 'noiseScale', 0.0, 10.0).name('Bg noise scale');
+    dir.add(bg, 'gradientStrength', 0.0, 1.0).name('Bg gradient');
+  }
 
   function addHairRenderFolder(gui: dat.GUI) {
     const cfg = CONFIG.hairRender;
@@ -260,21 +285,6 @@ export function initializeGUI(
     dir.add(cfg, 'gamma', 1.0, 3.0).name('Gamma');
     dir.add(cfg, 'exposure', 0.0, 2.0).name('Exposure');
     dir.add(cfg, 'ditherStrength', 0.0, 2.0).name('Dithering');
-  }
-
-  function addDbgFolder() {
-    const dir = gui.addFolder('Misc');
-    // dir.open();
-    const bg = CONFIG.background;
-
-    // camera reset
-    dir.add(dummyObject, 'resetCamera').name('Reset camera');
-
-    // bg
-    addColorController(dir, bg, 'color0', 'Bg color 0');
-    addColorController(dir, bg, 'color1', 'Bg color 1');
-    dir.add(bg, 'noiseScale', 0.0, 10.0).name('Bg noise scale');
-    dir.add(bg, 'gradientStrength', 0.0, 1.0).name('Bg gradient');
   }
 
   //////////////

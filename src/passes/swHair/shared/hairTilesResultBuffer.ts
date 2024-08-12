@@ -19,7 +19,7 @@ fn _storeTileHead(
   let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
   
   // store depth
-  // TODO low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
+  // TODO [IGNORE] low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
   let depthMax_U32 = u32(depthMax * f32(MAX_U32));
   // WebGPU clears to 0. So atomicMin() is pointless. Use atomicMax() with inverted values instead
   let depthMin_U32 = u32((1.0 - depthMin) * f32(MAX_U32));

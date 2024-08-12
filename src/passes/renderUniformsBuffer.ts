@@ -24,6 +24,7 @@ import { SDFCollider } from '../scene/sdfCollider/sdfCollider.ts';
 import { GridData } from './simulation/grids/gridData.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
+const TMP_MAT4_2 = mat4.create(); // prealloc
 
 export class RenderUniformsBuffer {
   public static SHADER_SNIPPET = (bindingIdx: number) => /* wgsl */ `
@@ -231,7 +232,7 @@ export class RenderUniformsBuffer {
     // collisionSphereModelMatrix
     const colSph = CONFIG.hairSimulation.collisionSphere;
     const r = colSph[3] * 0.95; // make it a bit smaller, so it's easier to see
-    const traMat = mat4.translation(colSph);
+    const traMat = mat4.translation(colSph, TMP_MAT4_2);
     const colSphMat = mat4.scale(traMat, [r, r, r], TMP_MAT4);
     this.dataView.writeMat4(colSphMat);
 

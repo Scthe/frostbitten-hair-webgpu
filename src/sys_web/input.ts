@@ -118,7 +118,7 @@ export function createInputHandler(
     mouse.touching = false;
   });
   canvas.addEventListener('pointermove', (e: PointerEvent) => {
-    mouse.touching = e.pointerType == 'mouse' ? (e.buttons & 1) !== 0 : true;
+    // mouse.touching = e.pointerType == 'mouse' ? (e.buttons & 1) !== 0 : true;
     mouse.x = e.clientX;
     mouse.y = e.clientY;
     if (mouse.touching) {

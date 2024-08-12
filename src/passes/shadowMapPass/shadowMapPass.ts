@@ -19,7 +19,7 @@ import { createShadowSampler } from './shared/sampleShadows.wgsl.ts';
 
 /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/webfx/passes/ShadowPass.ts */
 export class ShadowMapPass {
-  public static NAME: string = ShadowMapPass.name;
+  public static NAME: string = 'ShadowMapPass';
 
   private readonly pipelineMeshes: GPURenderPipeline;
   private readonly pipelineHair: GPURenderPipeline;

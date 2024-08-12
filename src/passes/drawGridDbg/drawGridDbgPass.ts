@@ -12,7 +12,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawGridDbgPass.wgsl.ts';
 
 export class DrawGridDbgPass {
-  public static NAME: string = DrawGridDbgPass.name;
+  public static NAME: string = 'DrawGridDbgPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

@@ -13,7 +13,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './drawSdfColliderPass.wgsl.ts';
 
 export class DrawSdfColliderPass {
-  public static NAME: string = DrawSdfColliderPass.name;
+  public static NAME: string = 'DrawSdfColliderPass';
 
   private readonly pipeline: GPURenderPipeline;
   private readonly bindingsCache = new BindingsCache();

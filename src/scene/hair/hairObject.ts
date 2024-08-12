@@ -1,4 +1,8 @@
+import { CONFIG } from '../../constants.ts';
+import { STATS } from '../../stats.ts';
 import { Bounds3d } from '../../utils/bounds.ts';
+import { clamp } from '../../utils/index.ts';
+import { formatPercentageNumber } from '../../utils/string.ts';
 import { bindBuffer } from '../../utils/webgpu.ts';
 import { HairIndexBuffer } from './hairIndexBuffer.ts';
 
@@ -43,6 +47,29 @@ export class HairObject {
 
   get currentPositionsBufferIdx() {
     return this._currentPositionsBuffer;
+  }
+
+  getRenderedStrandCount() {
+    const pct = clamp(CONFIG.hairRender.lodRenderPercent, 0, 100);
+    const { strandsCount } = this;
+    const result = Math.ceil((strandsCount * pct) / 100.0);
+    return clamp(result, 0, strandsCount);
+  }
+
+  reportRenderedStrandCount() {
+    const { strandsCount, pointsPerStrand, segmentCount } = this;
+    const result = this.getRenderedStrandCount();
+
+    STATS.update(
+      'Rendered strands',
+      formatPercentageNumber(result, strandsCount, 0)
+    );
+    const segments = result * (pointsPerStrand - 1);
+    STATS.update(
+      'Rendered segments',
+      formatPercentageNumber(segments, segmentCount, 0)
+    );
+    return result;
   }
 
   resetSimulation(cmdBuf: GPUCommandEncoder) {

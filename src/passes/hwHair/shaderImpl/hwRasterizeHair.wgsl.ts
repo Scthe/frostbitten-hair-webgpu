@@ -51,4 +51,20 @@ fn hwRasterizeHair(
   return result;
 }
 
+struct HairStrandData {
+  strandIdx: u32,
+  tFullStrand: f32,
+}
+
+fn getHairStrandData(
+  pointsPerStrand: u32,
+  inVertexIndex : u32,
+) -> HairStrandData {
+  let pointIdx = inVertexIndex / 2u;
+  let strandIdx = pointIdx / pointsPerStrand;
+  let pointInStrandIdx = pointIdx % pointsPerStrand;
+  let tFullStrand = f32(pointInStrandIdx) / f32(pointsPerStrand);
+  return HairStrandData(strandIdx, tFullStrand);
+}
+
 `;
