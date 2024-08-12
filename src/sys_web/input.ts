@@ -32,7 +32,8 @@ export default interface Input {
   readonly mouse: {
     x: number;
     y: number;
-    zoom: number;
+    dragX: number;
+    dragY: number;
     touching: boolean;
   };
 }
@@ -50,7 +51,8 @@ export const createMockInputState = (): Input => ({
   mouse: {
     x: 0,
     y: 0,
-    zoom: 0,
+    dragX: 0,
+    dragY: 0,
     touching: false,
   },
 });
@@ -117,33 +119,24 @@ export function createInputHandler(
   });
   canvas.addEventListener('pointermove', (e: PointerEvent) => {
     mouse.touching = e.pointerType == 'mouse' ? (e.buttons & 1) !== 0 : true;
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
     if (mouse.touching) {
-      mouse.x += e.movementX;
-      mouse.y += e.movementY;
+      mouse.dragX += e.movementX;
+      mouse.dragY += e.movementY;
     }
   });
-  canvas.addEventListener(
-    'wheel',
-    (e: WheelEvent) => {
-      mouse.touching = (e.buttons & 1) !== 0;
-      if (mouse.touching) {
-        mouse.zoom += Math.sign(e.deltaY);
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    },
-    { passive: false }
-  );
 
   return () => {
     const out: Input = {
       directions: { ...directions },
       mouse: { ...mouse },
     };
-    // Clear the analog values, as these accumulate.
-    mouse.x = 0;
-    mouse.y = 0;
-    mouse.zoom = 0;
+    // Clear the analog values, as these accumulate between requestAnimationFrame().
+    // If you call check input state every 16ms, we want to accumulate the changes
+    // over that time period.
+    mouse.dragX = 0;
+    mouse.dragY = 0;
     return out;
   };
 }

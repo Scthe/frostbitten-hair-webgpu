@@ -65,8 +65,8 @@ export class Camera {
 
   private applyRotation(deltaTime: number, input: Input) {
     const cfg = CONFIG.camera;
-    const yaw = input.mouse.x * deltaTime * cfg.rotationSpeed;
-    const pitch = input.mouse.y * deltaTime * cfg.rotationSpeed;
+    const yaw = input.mouse.dragX * deltaTime * cfg.rotationSpeed;
+    const pitch = input.mouse.dragY * deltaTime * cfg.rotationSpeed;
 
     this._angles[ANGLE_LEFT_RIGHT] += yaw;
     this._angles[ANGLE_UP_DOWN] += pitch;

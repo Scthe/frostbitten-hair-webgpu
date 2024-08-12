@@ -20,11 +20,13 @@ import {
 } from './shadowMapPass/shared/getMVP_ShadowSourceMatrix.ts';
 import { getShadowMapPreviewSize } from './shadowMapPass/shared/getShadowMapPreviewSize.ts';
 import { Scene } from '../scene/scene.ts';
+import { SDFCollider } from '../scene/sdfCollider/sdfCollider.ts';
+import { GridData } from './simulation/grids/gridData.ts';
 
 const TMP_MAT4 = mat4.create(); // prealloc
 
 export class RenderUniformsBuffer {
-  public static SHADER_SNIPPET = (group: number) => /* wgsl */ `
+  public static SHADER_SNIPPET = (bindingIdx: number) => /* wgsl */ `
     const b11 = 3u; // binary 0b11
     const b111 = 7u; // binary 0b111
     const b1111 = 15u; // binary 0b1111
@@ -95,6 +97,9 @@ export class RenderUniformsBuffer {
       gradientStrength: f32,
     }
 
+    ${SDFCollider.SDF_DATA_SNIPPET}
+    ${GridData.GRID_DATA_SNIPPET}
+
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
       vpMatrixInv: mat4x4<f32>,
@@ -104,6 +109,7 @@ export class RenderUniformsBuffer {
       modelMatrix: mat4x4<f32>,
       modelViewMat: mat4x4<f32>,
       mvpMatrix: mat4x4<f32>,
+      collisionSphereModelMatrix: mat4x4<f32>,
       viewport: vec4f,
       cameraPosition: vec4f,
       colorMgmt: vec4f,
@@ -114,6 +120,8 @@ export class RenderUniformsBuffer {
       shadows: Shadows,
       ao: AmbientOcclusion,
       hairMaterial: HairMaterialParams,
+      sdf: SDFCollider,
+      gridData: GridData,
       // START: misc vec4f
       fiberRadius: f32,
       dbgShadowMapPreviewSize: f32,
@@ -121,8 +129,11 @@ export class RenderUniformsBuffer {
       displayMode: u32, // display mode + some of it's settings
       // back to proper align
       background: Background,
+      // collider sphere vec4f
+      collisionSpherePosition: vec3f,
+      gizmoActiveState: u32,
     };
-    @binding(0) @group(${group})
+    @group(0) @binding(${bindingIdx})
     var<uniform> _uniforms: Uniforms;
 
     fn getDisplayMode() -> u32 { return _uniforms.displayMode & 0xff; }
@@ -156,6 +167,7 @@ export class RenderUniformsBuffer {
     BYTES_MAT4 + // modelMat
     BYTES_MAT4 + // modelViewMat
     BYTES_MAT4 + // mvpMat
+    BYTES_MAT4 + // collisionSphereModelMatrix
     BYTES_VEC4 + // viewport
     BYTES_VEC4 + // cameraPosition
     BYTES_VEC4 + // color mgmt
@@ -164,8 +176,11 @@ export class RenderUniformsBuffer {
     RenderUniformsBuffer.SHADOWS_SIZE + // ahadows
     RenderUniformsBuffer.AO_SIZE + // ao
     4 * BYTES_VEC4 + // hairMaterial
+    SDFCollider.BUFFER_SIZE + // sdf
+    GridData.BUFFER_SIZE + // grids
     4 * BYTES_F32 + // fiberRadius, dbgShadowMapPreviewSize, maxDrawnHairSegments,
-    RenderUniformsBuffer.BACKGROUND_SIZE;
+    RenderUniformsBuffer.BACKGROUND_SIZE + // bg
+    BYTES_VEC4; // collider sphere vec4f
 
   private readonly gpuBuffer: GPUBuffer;
   private readonly data = new ArrayBuffer(RenderUniformsBuffer.BUFFER_SIZE);
@@ -213,6 +228,12 @@ export class RenderUniformsBuffer {
     // model-view-projection matrix
     getModelViewProjectionMatrix(modelMatrix, viewMatrix, projMatrix, TMP_MAT4);
     this.dataView.writeMat4(TMP_MAT4);
+    // collisionSphereModelMatrix
+    const colSph = CONFIG.hairSimulation.collisionSphere;
+    const r = colSph[3] * 0.95; // make it a bit smaller, so it's easier to see
+    const traMat = mat4.translation(colSph);
+    const colSphMat = mat4.scale(traMat, [r, r, r], TMP_MAT4);
+    this.dataView.writeMat4(colSphMat);
 
     // viewport
     this.dataView.writeF32(viewport.width);
@@ -243,6 +264,9 @@ export class RenderUniformsBuffer {
     this.writeAo();
     // hair material
     this.writeHairMaterial();
+    // sdf + grids
+    ctx.scene.sdfCollider.writeToDataView(this.dataView);
+    ctx.scene.physicsGrid.writeToDataView(this.dataView);
     // misc
     this.dataView.writeF32(c.hairRender.fiberRadius);
     this.dataView.writeF32(getShadowMapPreviewSize(viewport));
@@ -250,6 +274,11 @@ export class RenderUniformsBuffer {
     this.dataView.writeU32(this.encodeDebugMode());
     // bg
     this.writeBackground();
+    // collider sphere vec4f
+    this.dataView.writeF32(colSph[0]); // collisionSpherePosition: vec3f,
+    this.dataView.writeF32(colSph[1]);
+    this.dataView.writeF32(colSph[2]);
+    this.dataView.writeU32(CONFIG.colliderGizmo.activeAxis); // gizmoActiveState: u32,
 
     // final write
     this.dataView.assertWrittenBytes(RenderUniformsBuffer.BUFFER_SIZE);

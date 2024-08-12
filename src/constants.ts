@@ -3,6 +3,7 @@ import {
   createTextureFromFile_Web,
   textFileReader_Web,
 } from './sys_web/loadersWeb.ts';
+import { ValueOf } from './utils/index.ts';
 
 export const BYTES_U8 = 1;
 export const BYTES_F32 = 4;
@@ -66,6 +67,23 @@ export type HairFile =
 
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
 export type TilePassDispatch = 'perStrand' | 'perSegment';
+export type SdfPreviewAxis = 'axis-x' | 'axis-y' | 'axis-z';
+
+export const GizmoAxis = {
+  AXIS_X: 0,
+  AXIS_Y: 1,
+  AXIS_Z: 2,
+  NONE: 3,
+} as const;
+export type GizmoAxisIdx = ValueOf<typeof GizmoAxis>;
+
+export const GridDebugValue = {
+  DENSITY: 0,
+  DENSITY_GRADIENT: 1,
+  VELOCITY: 2,
+  WIND: 3,
+} as const;
+export type GridDebugValueNum = ValueOf<typeof GizmoAxis>;
 
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
@@ -91,6 +109,15 @@ export const CONFIG = {
     noiseScale: 5.0,
     gradientStrength: 0.5,
   },
+  colliderGizmo: {
+    lineLength: 0.04,
+    lineWidth: 0.002,
+    hoverPadding: 1.5, // Better accessibility. Not visible in render.
+    /** Either hovered over or dragged. Use 'isDragging' to determine which */
+    activeAxis: GizmoAxis.NONE as GizmoAxisIdx,
+    isDragging: false,
+  },
+  drawColliders: true, // does not hide gizmo
 
   ///////////////
   /// CAMERA
@@ -158,6 +185,7 @@ export const CONFIG = {
   ///////////////
   /// HAIR
   hairFile: 'SintelHairOriginal-sintel_hair.16points.tfx' as HairFile,
+  pointsPerStrand: -1, // will be set at runtime. Added here to have nicer workgroups. Throws if not set
 
   hairRender: {
     fiberRadius: 0.0006,
@@ -201,6 +229,65 @@ export const CONFIG = {
 
     ////// LOD
     lodRenderPercent: 100, // range [0..100]
+  },
+
+  hairSimulation: {
+    enabled: true,
+    nextFrameResetSimulation: false,
+    gravity: 0.03,
+    // 0.0 - use particle position change in verlet integration
+    // 1.0 - use averaged particle position changes in grid to drive verlet integration
+    // https://youtu.be/ool2E8SQPGU?si=yKgmYF6Wjbu6HXsF&t=815
+    friction: 0.3,
+    // 0.0 - do not use density gradient as external force. Hair can "squish" together
+    // >0.0 - move hair strands so from densely oocupied grid cells into ones that are more "free"
+    volumePreservation: 0.00003,
+    // collisionSphere: [0.05, 1.48, 0.01, 0.06], // inside hair
+    collisionSphere: [-0.15, 1.48, 0.01, 0.06],
+    collisionSphereInitial: [0, 0, 0, 0], // will get filled at runtime
+
+    constraints: {
+      constraintIterations: 7,
+      stiffnessLengthConstr: 1.0,
+      stiffnessGlobalConstr: 0.2, // this constraint is stronger near root and fades toward the tip
+      globalExtent: 0.1, // full global constraint stiffness
+      globalFade: 0.75, // partial global constraint stiffness
+      stiffnessLocalConstr: 0.3,
+      stiffnessCollisions: 1.0,
+      stiffnessSDF: 1.0,
+    },
+
+    wind: {
+      dirPhi: 18, // horizontal [dgr]
+      dirTheta: 91, // verical [dgr]
+      strength: 0.0,
+      strengthLull: 0.75,
+      strengthFrequency: 1.8,
+      strengthJitter: 0.7,
+      phaseOffset: 0.45,
+      colisionTraceOffset: 1.5,
+    },
+
+    physicsForcesGrid: {
+      dims: 64, // 8x8x8 grid etc.
+      enableUpdates: true,
+      scale: 2.0, // twice the size of the initial hair. Should be enough to skip edge cases
+      // DEBUG:
+      showDebugView: false,
+      debugSlice: 0.5,
+      debugValue: GridDebugValue.DENSITY_GRADIENT as GridDebugValueNum,
+      debugAbsValue: true,
+    },
+
+    sdf: {
+      /** - **Negative value** pushes the SDF outwards making it bigger. This increases collision range.
+       *  - **Positive value** moves inwards, making SDF smaller. */
+      distanceOffset: -0.0015,
+      // DEBUG:
+      showDebugView: false,
+      debugSlice: 0.5,
+      debugSemitransparent: true,
+    },
   },
 
   ///////////////

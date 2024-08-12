@@ -1,6 +1,6 @@
 import { TfxFileData } from './tfxFileLoader.ts';
 import { CONFIG } from '../../constants.ts';
-import { createGPU_StorageBuffer } from '../../utils/webgpu.ts';
+import { StorageAccess, createGPU_StorageBuffer } from '../../utils/webgpu.ts';
 import { createArray } from '../../utils/arrays.ts';
 
 ///////////////////////////
@@ -18,7 +18,7 @@ fn _setShadingPoint(strandId: u32, pointIdx: u32, color: vec4f) {
 
 export const BUFFER_HAIR_SHADING = (
   bindingIdx: number,
-  access: 'read_write' | 'read'
+  access: StorageAccess
 ) => /* wgsl */ `
 
 const SHADING_POINTS = ${CONFIG.hairRender.shadingPoints}u;

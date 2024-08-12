@@ -16,7 +16,7 @@ export function calculateBounds(
   return { box, sphere: calcBoundingSphere(box) };
 }
 
-type BoundingBoxPoint = [number, number, number];
+export type BoundingBoxPoint = [number, number, number];
 export type BoundingBox = [BoundingBoxPoint, BoundingBoxPoint];
 
 type VertexCb = (v: [number, number, number]) => void;
@@ -115,4 +115,19 @@ export function printBoundingBox(
   const p = (a: number[]) => '[' + a.map((x) => x.toFixed(2)).join(',') + ']';
   console.log(`Bounding box min:`, p(minCo));
   console.log(`Bounding box max:`, p(maxCo));
+}
+
+export function scaleBoundingBox(bb: BoundingBox, scale: number): BoundingBox {
+  if (scale <= 0) {
+    throw new Error(`Invalid scale=${scale}`);
+  }
+  const [boundsMin, boundsMax] = bb;
+  const center = vec3.midpoint(boundsMin, boundsMax);
+  const v = vec3.subtract(boundsMax, center); // center -> bounds max
+  const scaledV = vec3.scale(v, scale);
+  return [
+    vec3.subtract(center, scaledV), //
+    vec3.add(center, scaledV),
+    // deno-lint-ignore no-explicit-any
+  ] as any; // Vec3 vs [number, number, number]
 }

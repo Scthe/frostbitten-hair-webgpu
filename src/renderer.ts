@@ -30,12 +30,18 @@ import { HairShadingPass } from './passes/hairShadingPass/hairShadingPass.ts';
 import { ShadowMapPass } from './passes/shadowMapPass/shadowMapPass.ts';
 import { AoPass } from './passes/aoPass/aoPass.ts';
 import { HairObject } from './scene/hair/hairObject.ts';
+import { SimulationUniformsBuffer } from './passes/simulation/simulationUniformsBuffer.ts';
+import { HairSimIntegrationPass } from './passes/simulation/hairSimIntegrationPass.ts';
+import { DrawSdfColliderPass } from './passes/drawSdfCollider/drawSdfColliderPass.ts';
+import { DrawGridDbgPass } from './passes/drawGridDbg/drawGridDbgPass.ts';
+import { GridPostSimPass } from './passes/simulation/gridPostSimPass.ts';
+import { GridPreSimPass } from './passes/simulation/gridPreSimPass.ts';
+import { DrawGizmoPass } from './passes/drawGizmo/drawGizmoPass.ts';
 
 export class Renderer {
-  private readonly renderUniformBuffer: RenderUniformsBuffer;
   public readonly cameraCtrl: Camera;
-  private projectionMat: Mat4;
-  private readonly _viewMatrix = mat4.identity(); // cached to prevent allocs.
+  public projectionMat: Mat4;
+  private readonly _viewProjectionMatrix = mat4.identity(); // cached to prevent allocs.
   private readonly viewportSize: Dimensions = { width: 0, height: 0 };
   private frameIdx = 0;
 
@@ -49,17 +55,29 @@ export class Renderer {
   private aoTexture: GPUTexture = undefined!; // see this.handleViewportResize()
   private aoTextureView: GPUTextureView = undefined!; // see this.handleViewportResize()
 
+  // rendering
+  private readonly renderUniformBuffer: RenderUniformsBuffer;
   // passes
   private readonly drawBackgroundGradientPass: DrawBackgroundGradientPass;
   private readonly shadowMapPass: ShadowMapPass;
   private readonly aoPass: AoPass;
   private readonly drawMeshesPass: DrawMeshesPass;
+  private readonly drawGizmoPass: DrawGizmoPass;
   private readonly hwHairPass: HwHairPass;
   private readonly hairTilesPass: HairTilesPass;
   private readonly hairShadingPass: HairShadingPass;
   private readonly hairFinePass: HairFinePass;
   private readonly hairCombinePass: HairCombinePass;
   private readonly presentPass: PresentPass;
+
+  // simulation
+  private readonly simulationUniformsBuffer: SimulationUniformsBuffer;
+  // passes
+  private readonly hairSimIntegrationPass: HairSimIntegrationPass;
+  private readonly gridPreSimPass: GridPreSimPass;
+  private readonly gridPostSimPass: GridPostSimPass;
+  private readonly drawSdfColliderPass: DrawSdfColliderPass;
+  private readonly drawGridDbgPass: DrawGridDbgPass;
 
   constructor(
     private readonly device: GPUDevice,
@@ -86,6 +104,7 @@ export class Renderer {
       HDR_RENDER_TEX_FORMAT,
       NORMALS_TEX_FORMAT
     );
+    this.drawGizmoPass = new DrawGizmoPass(device, HDR_RENDER_TEX_FORMAT);
     this.hwHairPass = new HwHairPass(
       device,
       HDR_RENDER_TEX_FORMAT,
@@ -96,6 +115,17 @@ export class Renderer {
     this.hairFinePass = new HairFinePass(device);
     this.hairCombinePass = new HairCombinePass(device, HDR_RENDER_TEX_FORMAT);
     this.presentPass = new PresentPass(device, preferredCanvasFormat);
+
+    // simulation
+    this.simulationUniformsBuffer = new SimulationUniformsBuffer(device);
+    this.hairSimIntegrationPass = new HairSimIntegrationPass(device);
+    this.gridPreSimPass = new GridPreSimPass(device);
+    this.gridPostSimPass = new GridPostSimPass(device);
+    this.drawSdfColliderPass = new DrawSdfColliderPass(
+      device,
+      HDR_RENDER_TEX_FORMAT
+    );
+    this.drawGridDbgPass = new DrawGridDbgPass(device, HDR_RENDER_TEX_FORMAT);
 
     this.handleViewportResize(viewportSize);
   }
@@ -110,10 +140,17 @@ export class Renderer {
       label: 'renderer--before-first-frame',
     });
 
+    const hairSimCfg = CONFIG.hairSimulation;
     const ctx: PassCtx = this.createPassCtx(cmdBuf, scene);
 
     // update GPU uniforms
     this.renderUniformBuffer.update(ctx);
+    this.simulationUniformsBuffer.update(ctx);
+
+    // send the initial strand positions into the grid for density grad
+    if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+      this.gridPostSimPass.cmdUpdateGridsAfterSim(ctx, scene.hairObject);
+    }
 
     // init stuff for first frame
     this.drawMeshesPass.cmdDrawMeshes(ctx);
@@ -130,20 +167,69 @@ export class Renderer {
     screenTexture: GPUTextureView
   ) {
     assertIsGPUTextureView(screenTexture);
+    const hairSimCfg = CONFIG.hairSimulation;
     const ctx: PassCtx = this.createPassCtx(cmdBuf, scene);
+    const { displayMode } = CONFIG;
 
     // update GPU uniforms
     this.renderUniformBuffer.update(ctx);
+    this.simulationUniformsBuffer.update(ctx);
+
+    // simulation
+    this.simulateHair(ctx, scene.hairObject);
 
     // draws
     this.drawBackgroundGradientPass.cmdDraw(ctx);
     this.cmdDrawScene(ctx);
+    if (
+      displayMode === DISPLAY_MODE.HW_RENDER ||
+      displayMode === DISPLAY_MODE.FINAL
+    ) {
+      this.drawGizmoPass.cmdDrawGizmo(ctx);
+    }
+
+    // dbg
+    if (hairSimCfg.sdf.showDebugView) {
+      this.drawSdfColliderPass.cmdDrawSdf(ctx);
+    } else if (hairSimCfg.physicsForcesGrid.showDebugView) {
+      this.drawGridDbgPass.cmdDrawGridDbg(ctx);
+    }
 
     // present: draw to final render texture
     this.presentPass.cmdDraw(ctx, screenTexture, 'load');
 
     // done
     this.frameIdx += 1;
+  }
+
+  private simulateHair(ctx: PassCtx, hairObject: HairObject) {
+    const { cmdBuf, physicsForcesGrid } = ctx;
+    const hairSimCfg = CONFIG.hairSimulation;
+
+    if (hairSimCfg.nextFrameResetSimulation) {
+      hairObject.resetSimulation(cmdBuf);
+      physicsForcesGrid.clearDensityGradAndWindBuffer(cmdBuf);
+      physicsForcesGrid.clearDensityVelocityBuffer(cmdBuf);
+
+      hairSimCfg.nextFrameResetSimulation = false;
+      return;
+    }
+
+    if (!hairSimCfg.enabled) {
+      physicsForcesGrid.clearDensityGradAndWindBuffer(cmdBuf);
+      physicsForcesGrid.clearDensityVelocityBuffer(cmdBuf);
+      return;
+    }
+
+    if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+      this.gridPreSimPass.cmdUpdateGridsBeforeSim(ctx, hairObject);
+    }
+
+    this.hairSimIntegrationPass.cmdSimulateHairPositions(ctx, hairObject);
+
+    if (hairSimCfg.physicsForcesGrid.enableUpdates) {
+      this.gridPostSimPass.cmdUpdateGridsAfterSim(ctx, hairObject);
+    }
   }
 
   private cmdDrawScene(ctx: PassCtx) {
@@ -190,12 +276,15 @@ export class Renderer {
     this.hairShadingPass.cmdComputeShadingPoints(ctx, hairObject); // requires depth
   }
 
+  public get viewMatrix() {
+    return this.cameraCtrl.viewMatrix;
+  }
+
   private createPassCtx(cmdBuf: GPUCommandEncoder, scene: Scene): PassCtx {
-    const viewMatrix = this.cameraCtrl.viewMatrix;
     const vpMatrix = getViewProjectionMatrix(
-      viewMatrix,
+      this.viewMatrix,
       this.projectionMat,
-      this._viewMatrix
+      this._viewProjectionMatrix
     );
     return {
       frameIdx: this.frameIdx,
@@ -207,7 +296,7 @@ export class Renderer {
       normalsTexture: this.normalsTextureView,
       aoTexture: this.aoTextureView,
       profiler: this.profiler,
-      viewMatrix,
+      viewMatrix: this.viewMatrix,
       vpMatrix,
       projMatrix: this.projectionMat,
       cameraPositionWorldSpace: this.cameraCtrl.positionWorldSpace,
@@ -215,6 +304,8 @@ export class Renderer {
       shadowDepthTexture: this.shadowMapPass.shadowDepthTextureView,
       shadowMapSampler: this.shadowMapPass.shadowMapSampler,
       globalUniforms: this.renderUniformBuffer,
+      simulationUniforms: this.simulationUniformsBuffer,
+      physicsForcesGrid: scene.physicsGrid,
       // hair:
       hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
       hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,

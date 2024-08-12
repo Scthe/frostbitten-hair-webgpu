@@ -2,7 +2,7 @@ import { BYTES_VEC4 } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { Dimensions } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
-import { u32_type } from '../../../utils/webgpu.ts';
+import { StorageAccess, u32_type } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
 /// SHADER CODE
@@ -26,7 +26,7 @@ fn _getNextTileIdx() -> u32 {
 
 export const BUFFER_HAIR_RASTERIZER_RESULTS = (
   bindingIdx: number,
-  access: 'read_write' | 'read'
+  access: StorageAccess
 ) => /* wgsl */ `
 
 struct HairRasterResult {

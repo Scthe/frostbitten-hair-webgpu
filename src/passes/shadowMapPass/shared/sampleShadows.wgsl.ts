@@ -115,7 +115,7 @@ fn _sampleShadowMap(sampleRadius: i32, lightPosProj: vec3f, bias: f32) -> f32 {
     );
     shadow += shadowMapDepth;*/
 
-    // textureSample() - only fragment shaders. No compute?
+    // textureSample() - only fragment shaders. No compute? Prob. cause mipmaps. Try textureSampleLevel()
     // let shadowMapDepth: f32 = textureSample(_shadowMapTexture, _shadowMapSampler, lightPosProj.xy + offset);
     let shadowMapDepth4 = textureGather(
       _shadowMapTexture,

@@ -1,10 +1,16 @@
 // @deno-types="npm:@types/dat.gui@0.7.9"
 import * as dat from 'dat.gui';
-import { CONFIG, DISPLAY_MODE, LightCfg } from '../constants.ts';
+import {
+  CONFIG,
+  DISPLAY_MODE,
+  GridDebugValue,
+  LightCfg,
+} from '../constants.ts';
 import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
 import { showHtmlEl } from '../sys_web/htmlUtils.ts';
+import { vec4 } from 'wgpu-matrix';
 
 // https://github.com/Scthe/WebFX/blob/master/src/UISystem.ts#L13
 // https://github.com/Scthe/gaussian-splatting-webgpu/blob/master/src/web/gui.ts
@@ -12,6 +18,7 @@ import { showHtmlEl } from '../sys_web/htmlUtils.ts';
 type GuiCtrl = dat.GUIController<Record<string, unknown>>;
 
 export function initializeGUI(
+  device: GPUDevice,
   profiler: GpuProfiler,
   scene: Scene,
   camera: Camera
@@ -27,6 +34,15 @@ export function initializeGUI(
     },
     resetCamera: () => {
       camera.resetPosition();
+    },
+    resetSimulation: () => {
+      CONFIG.hairSimulation.nextFrameResetSimulation = true;
+    },
+    resetBall: () => {
+      vec4.copy(
+        CONFIG.hairSimulation.collisionSphereInitial,
+        CONFIG.hairSimulation.collisionSphere
+      );
     },
   };
 
@@ -53,6 +69,7 @@ export function initializeGUI(
   // folders
   addHairRenderFolder(gui);
   addHairMaterialFolder(gui);
+  addHairSimulationFolder(gui);
   addAmbientLightFolder(gui);
   addLightFolder(gui, CONFIG.lights[0], 'Light 0');
   addLightFolder(gui, CONFIG.lights[1], 'Light 1');
@@ -109,6 +126,74 @@ export function initializeGUI(
     dir.add(cfg, 'roughness', 0.0, 1.0, 0.01).name('Roughness');
     dir.add(cfg, 'attenuation', 0.0, 40.0).name('Attenuation');
     dir.add(cfg, 'shadows', 0.0, 1.0).name('Shadows');
+  }
+
+  function addHairSimulationFolder(gui: dat.GUI) {
+    const cfg = CONFIG.hairSimulation;
+    const sdf = cfg.sdf;
+    const grid = cfg.physicsForcesGrid;
+    const constr = cfg.constraints;
+    const wind = cfg.wind;
+
+    const simDir = gui.addFolder('Hair simulation');
+    let dir = simDir;
+    dir.open();
+
+    dir.add(dummyObject, 'resetSimulation').name('Reset simulation');
+    dir.add(cfg, 'enabled').name('Enabled');
+    // dir.add(cfg, 'gravity', 0.0, 20.0).name('Gravity');
+    dir.add(cfg, 'gravity', 0.0, 0.1).name('Gravity');
+    dir.add(cfg, 'friction', 0.0, 1.0).name('Friction');
+    dir.add(cfg, 'volumePreservation', 0.0, 0.00025).name('Vol. Preserv.');
+    dir.add(dummyObject, 'resetBall').name('Reset ball'); // below, so user does press by accident
+    dir.add(CONFIG, 'drawColliders').name('Draw ball');
+
+    // constraints
+    dir = simDir.addFolder('Constraints');
+    dir.open();
+    dir.add(constr, 'constraintIterations', 1, 10).step(1).name('Iterations');
+    dir.add(constr, 'stiffnessLengthConstr', 0.0, 1.0).name('Stiff. len');
+    dir.add(constr, 'stiffnessGlobalConstr', 0.0, 1.0).name('Stiff. global');
+    dir.add(constr, 'globalExtent', 0.0, 1.0).name('Global extent');
+    dir.add(constr, 'globalFade', 0.0, 1.0).name('Global fade');
+    dir.add(constr, 'stiffnessLocalConstr', 0.0, 1.0).name('Stiff. local');
+    dir.add(constr, 'stiffnessCollisions', 0.0, 1.0).name('Stiff. collisions');
+    dir.add(constr, 'stiffnessSDF', 0.0, 1.0).name('Stiff. SDF');
+    dir.add(sdf, 'distanceOffset', -0.003, 0.003).name('SDF offset');
+
+    // wind
+    dir = simDir.addFolder('Wind');
+    dir.open();
+    dir.add(wind, 'dirPhi', -179, 179).step(1).name('Dir phi');
+    dir.add(wind, 'dirTheta', 15, 165).step(1).name('Dir th');
+    // dir.add(wind, 'strength', 0.0, 0.0001).name('Strength');
+    dir.add(wind, 'strength', 0.0, 1.0).name('Strength');
+    dir.add(wind, 'strengthLull', 0.0, 1.0).name('Lull strength');
+    dir.add(wind, 'strengthFrequency', 0.001, 2.0).name('Str. frequency');
+    dir.add(wind, 'strengthJitter', 0.0, 1.0).name('Str. Jitter');
+    dir.add(wind, 'phaseOffset', 0.0, 0.5).name('Phase offset');
+    dir.add(wind, 'colisionTraceOffset', 1.0, 5.0).name('Collision offset');
+
+    // SDF preview
+    dir = simDir.addFolder('SDF preview');
+    // _sdfDir.open();
+    dir.add(sdf, 'showDebugView').name('Enabled');
+    dir.add(sdf, 'debugSemitransparent').name('Semitransparent');
+    dir.add(sdf, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
+
+    // Grids
+    dir = simDir.addFolder('Grids preview');
+    // dir.open();
+    dir.add(grid, 'showDebugView').name('Enabled');
+    const gridValueDummy = createDummy(grid, 'debugValue', [
+      { label: 'Density', value: GridDebugValue.DENSITY },
+      { label: 'Density Grad', value: GridDebugValue.DENSITY_GRADIENT },
+      { label: 'Velocity', value: GridDebugValue.VELOCITY },
+      { label: 'Wind', value: GridDebugValue.WIND },
+    ]);
+    dir.add(gridValueDummy, 'debugValue', gridValueDummy.values).name('Value');
+    dir.add(grid, 'debugAbsValue').name('Vector abs');
+    dir.add(grid, 'debugSlice', 0.0, 1.0, 0.01).name('Slice');
   }
 
   function addAmbientLightFolder(gui: dat.GUI) {

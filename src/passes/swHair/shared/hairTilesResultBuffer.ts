@@ -2,7 +2,7 @@ import { BYTES_U32, CONFIG } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { Dimensions, divideCeil } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
-import { u32_type } from '../../../utils/webgpu.ts';
+import { StorageAccess, u32_type } from '../../../utils/webgpu.ts';
 
 ///////////////////////////
 /// SHADER CODE
@@ -67,7 +67,7 @@ fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 
  */
 export const BUFFER_HAIR_TILES_RESULT = (
   bindingIdx: number,
-  access: 'read_write' | 'read'
+  access: StorageAccess
 ) => /* wgsl */ `
 
 const MAX_U32: u32 = 0xffffffffu;

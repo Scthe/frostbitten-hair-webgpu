@@ -20,7 +20,7 @@ export async function createGpuDevice() {
     }
 
     const canTimestamp = adapter.features.has('timestamp-query');
-    const requiredFeatures: GPUFeatureName[] = [];
+    const requiredFeatures: GPUFeatureName[] = ['float32-filterable'];
     if (canTimestamp) {
       requiredFeatures.push('timestamp-query');
     }
@@ -109,25 +109,32 @@ export function createGPU_IndexBuffer(
 export function createGPU_StorageBuffer(
   device: GPUDevice,
   label: string,
-  data: Uint32Array | Float32Array
+  data: Uint32Array | Float32Array | Int32Array,
+  extraUsage: GPUBufferUsageFlags = 0
 ) {
   const clName = getClassName(data);
-  if (clName !== Uint32Array.name && clName !== Float32Array.name) {
+  const allowedClasses = [Uint32Array.name, Float32Array.name, Int32Array.name];
+  if (!allowedClasses.includes(clName)) {
     throw new Error(`Invalid data provided to createGPU_StorageBuffer(). Expected TypedArray, got ${clName}`) // prettier-ignore
   }
 
   return createGPUBuffer(
     device,
     label,
-    GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | extraUsage,
     data
   );
 }
 
 export const getItemsPerThread = divideCeil;
 
-export const u32_type = (access: 'read_write' | 'read') =>
+export type StorageAccess = 'read_write' | 'read';
+
+export const u32_type = (access: StorageAccess) =>
   access === 'read_write' ? 'atomic<u32>' : 'u32';
+
+export const i32_type = (access: StorageAccess) =>
+  access === 'read_write' ? 'atomic<i32>' : 'i32';
 
 export const bindBuffer = (
   idx: number,

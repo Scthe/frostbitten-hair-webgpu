@@ -64,7 +64,9 @@ fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
   let displayMode = getDisplayMode();
 
   var result: FragmentOutput;
-  result.color = vec4f(1.0, 0.0, 0.0, 1.0);
+  // result.color = vec4f(1.0, 0.0, 0.0, 1.0);
+  let c = 0.4;
+  result.color = vec4f(c, c, c, 1.0);
   if (displayMode != DISPLAY_MODE_HW_RENDER) {
     result.color.a = 0.0;
   }

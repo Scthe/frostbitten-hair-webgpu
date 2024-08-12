@@ -13,12 +13,16 @@ import {
 } from '../utils/matrices.ts';
 import { createGpuDevice } from '../utils/webgpu.ts';
 import { HairObject } from '../scene/hair/hairObject.ts';
+import { SDFCollider } from '../scene/sdfCollider/sdfCollider.ts';
+import { Bounds3d } from '../utils/bounds.ts';
+import { GridData } from '../passes/simulation/grids/gridData.ts';
 
 export function absPathFromRepoRoot(filePath: string) {
   const __dirname = path.dirname(path.fromFileUrl(import.meta.url));
   return path.resolve(__dirname, '..', '..', filePath);
 }
 
+/** `const TEST_FILE = relativePath(import.meta, '__test__/invalid-mesh.obj');` */
 export function relativePath(
   importMeta: { dirname?: string },
   filePath: string
@@ -64,13 +68,23 @@ export const createMockPassCtx = (
     projMatrix
   );
 
+  const mockBounds: Bounds3d = {
+    box: [[0, 0, 0], [1, 1, 1]], // prettier-ignore
+    sphere: { center: [0, 0, 0], radius: 1 },
+  };
   const hairObject: HairObject = {
-    bounds: {
-      box: [[0, 0, 0], [1, 1, 1]], // prettier-ignore
-      sphere: { center: [0, 0, 0], radius: 1 },
-    },
+    bounds: mockBounds,
     // deno-lint-ignore no-explicit-any
   } as any;
+
+  const sdfCollider = new SDFCollider(
+    'mock-sdf-collider',
+    mockBounds.box,
+    5,
+    undefined!,
+    undefined!,
+    undefined!
+  );
 
   return {
     frameIdx: 0,
@@ -86,6 +100,8 @@ export const createMockPassCtx = (
       modelMatrix: mat4.identity(),
       hairObject,
       objects: [],
+      sdfCollider,
+      physicsGrid: new GridData(device, mockBounds.box),
     },
     depthTexture: undefined!,
     hdrRenderTexture: undefined!,
@@ -94,6 +110,8 @@ export const createMockPassCtx = (
     shadowDepthTexture: undefined!,
     shadowMapSampler: undefined!,
     globalUniforms: undefined!,
+    simulationUniforms: undefined!,
+    physicsForcesGrid: undefined!,
     hairRasterizerResultsBuffer: undefined!,
     hairTilesBuffer: undefined!,
     hairTileSegmentsBuffer: undefined!,
@@ -122,4 +140,33 @@ export async function assertBinarySnapshot(
     console.log(`Creating new snapshot: '${filepath}'`);
     await Deno.writeFile(filepath, bytesU8);
   }
+}
+
+// deno-lint-ignore no-explicit-any
+export function createSpy(returnVal: any = undefined) {
+  // deno-lint-ignore no-explicit-any
+  const f = (...args: any[]) => {
+    // deno-lint-ignore no-explicit-any
+    (f as any).lastArgs = args;
+    return returnVal;
+  };
+  return f;
+}
+
+export function createMockGpuDevice(): GPUDevice {
+  const mockTexture = { createView: createSpy() };
+  return {
+    createSampler: createSpy(),
+    createTexture: createSpy(mockTexture),
+    queue: { writeTexture: createSpy() },
+    // deno-lint-ignore no-explicit-any
+  } as any;
+}
+
+// deno-lint-ignore no-explicit-any
+export function getLastArgs(f: any): Array<any> {
+  if (f.lastArgs === undefined) {
+    throw new Error('Fn was never called');
+  }
+  return f.lastArgs;
 }

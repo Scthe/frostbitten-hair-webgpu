@@ -118,6 +118,9 @@ export class ShadowMapPass {
   }
 
   private renderMesh(renderPass: GPURenderPassEncoder, object: GPUMesh) {
+    if (object.isColliderPreview) {
+      return;
+    }
     renderPass.setVertexBuffer(0, object.positionsBuffer);
     renderPass.setIndexBuffer(object.indexBuffer, 'uint32');
 

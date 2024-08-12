@@ -1,6 +1,6 @@
 import { getClassName } from './index.ts';
 
-export type TypedArray = Uint32Array | Float32Array;
+export type TypedArray = Uint32Array | Float32Array | Int32Array;
 
 export const createArray = (len: number) => Array(len).fill(0);
 
