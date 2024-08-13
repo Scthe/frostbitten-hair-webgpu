@@ -11,6 +11,7 @@ import {
   TILE_PASSES_BINDINGS,
   TILE_PASSES_SHARED,
 } from './shaderImpl/tilePassesShared.wgsl.ts';
+import { CONFIG } from '../../constants.ts';
 
 // TODO [NOW] try workgroup shared for positions and tangents?
 
@@ -46,6 +47,9 @@ ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read_write')}
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
 
+const INVALID_TILES_PER_SEGMENT_THRESHOLD = ${
+  CONFIG.hairRender.invalidTilesPerSegmentThreshold
+}u;
 
 @compute
 @workgroup_size(${c.workgroupSizeX}, ${c.workgroupSizeY}, 1)
@@ -90,7 +94,10 @@ fn main(
   let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMax));
   // reject degenerate strands from physics simulation
   let tileSize = (tileMaxXY - tileMinXY) + vec2u(1u, 1u);
-  if (tileSize.x * tileSize.y >= 10u) { return; } // number tuned for Sintel's front hair lock
+  // number tuned for Sintel's front hair lock
+  if (tileSize.x * tileSize.y > INVALID_TILES_PER_SEGMENT_THRESHOLD) {
+    return;
+  } 
 
   // for each affected tile
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {

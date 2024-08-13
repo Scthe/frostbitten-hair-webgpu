@@ -38,13 +38,6 @@ export const AO_TEX_FORMAT: GPUTextureFormat = 'r16float';
 
 export const AXIS_Y = [0, 1, 0];
 
-const DEPTH_SLICES = 32;
-const TILE_DEPTH_BINS = 8;
-const SLICES_PER_TILE_DEPTH_BIN = Math.ceil(DEPTH_SLICES / TILE_DEPTH_BINS);
-if (SLICES_PER_TILE_DEPTH_BIN !== DEPTH_SLICES / TILE_DEPTH_BINS) {
-  throw new Error(`Invalid DEPTH_SLICES value ${DEPTH_SLICES}. There are ${TILE_DEPTH_BINS} tile depth bins, and we cannot have ${(DEPTH_SLICES / TILE_DEPTH_BINS).toFixed(1)} slices per depth bin.`); // prettier-ignore
-}
-
 export type ClearColor = [number, number, number, number];
 type RGBColor = [number, number, number];
 
@@ -214,14 +207,18 @@ export const CONFIG = {
     shadingPoints: 64,
 
     ////// TILE PASS
-    tileSize: 16, // TODO [CRITICAL] try to set to 8
-    tileDepthBins: TILE_DEPTH_BINS,
-    avgSegmentsPerTile: 512,
+    /** IF YOU CHANGE TILE SIZE, DO NOT FORGET TO TUNE 'invalidTilesPerSegmentThreshold' */
+    tileSize: 8,
+    tileDepthBins: 32,
+    avgSegmentsPerTile: 128,
+    /** reject degenerate strands from physics simulation */
+    invalidTilesPerSegmentThreshold: 24,
     tileShaderDispatch: 'perSegment' as TilePassDispatch,
 
     ////// FINE PASS
     // TODO find better values.
-    slicesPerPixel: SLICES_PER_TILE_DEPTH_BIN,
+    /** This is like slices per pixel in original frostbite presentation, but the slices are inside each depth bin */
+    slicesPerPixel: 8,
     avgFragmentsPerSlice: 16,
     processorCount: 64 * 8,
     finePassWorkgroupSizeX: 1,
@@ -233,6 +230,13 @@ export const CONFIG = {
 
   hairSimulation: {
     enabled: true,
+    /**
+     * Hair physics is not essential. It never drives a gameplay behaviour.
+     * It's fine to hardcode delta time. It guarantees stability, which is more important.
+     * We are also VSYNCed in the browser.
+     * TODO [IGNORE] Ofc. we should still scale it a bit to prevent physics speed up on 144Hz displays
+     */
+    deltaTime: 1.0 / 30.0,
     nextFrameResetSimulation: false,
     gravity: 0.03,
     // 0.0 - use particle position change in verlet integration

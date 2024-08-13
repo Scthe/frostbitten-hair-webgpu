@@ -29,6 +29,7 @@ export async function createGpuDevice() {
     const requiredLimits: GPUSupportedLimits = {};
     if (CONFIG.increaseStorageMemoryLimits) {
       requiredLimits.maxStorageBufferBindingSize = getBytes(1024, 'MB');
+      requiredLimits.maxBufferSize = getBytes(1024, 'MB');
     }
     requiredLimits.maxComputeWorkgroupStorageSize = Math.max(
       getLocalMemoryRequirements(),

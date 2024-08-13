@@ -140,8 +140,9 @@ function createHairSlicesHeadsBuffer_GLOBAL(device: GPUDevice): GPUBuffer {
 }
 
 function createHairSlicesHeadsBuffer_LOCAL(_device: GPUDevice): undefined {
-  const grSize = CONFIG.hairRender.finePassWorkgroupSizeX;
-  if (grSize !== 1) {
+  const { finePassWorkgroupSizeX: grSize, sliceHeadsMemory } =
+    CONFIG.hairRender;
+  if (grSize !== 1 && sliceHeadsMemory === 'workgroup') {
     throw new Error(`Expected finePassWorkgroupSizeX to be 1, was ${grSize}`);
   }
   calcMemoryReqs();

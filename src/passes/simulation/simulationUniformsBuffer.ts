@@ -155,10 +155,8 @@ export class SimulationUniformsBuffer {
    * Hair physics is not essential. It never drives a gameplay behaviour.
    * It's fine to hardcode delta time. It guarantees stability, which is more important.
    * We are also VSYNCed in the browser.
-   * TODO [IGNORE] Ofc. we should still scale it a bit to prevent physics speed up on 144Hz displays
    */
   private getDeltaTime() {
-    const FPS = 30.0;
-    return 1.0 / FPS;
+    return CONFIG.hairSimulation.deltaTime;
   }
 }
