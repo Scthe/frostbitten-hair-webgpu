@@ -287,6 +287,10 @@ export class RenderUniformsBuffer {
   }
 
   private writeLight(l: LightCfg) {
+    // NOTE: Light positions are calculated with pivot (0, 0, 0).
+    //       But hair is at (0, 1.53, 0). So the light position adjustments
+    //       GUI might not be intuitive. We could make it object space, but..
+    //       I REALLY LIKE CURRENT LOOK AND I AM NOT WILLING TO RECONFIGURE THE SCENE AGAIN!
     const pos = sphericalToCartesian(l.posPhi, l.posTheta, 'dgr', TMP_VEC3);
     const dist = 2.0;
     this.dataView.writeF32(pos[0] * dist);

@@ -2,7 +2,7 @@ import { createGpuDevice } from './utils/webgpu.ts';
 import { createInputHandler } from './sys_web/input.ts';
 import { Renderer } from './renderer.ts';
 import { STATS } from './stats.ts';
-import { initializeGUI, onGpuProfilerResult } from './sys_web/gui.ts';
+import { initializeGUI } from './sys_web/gui.ts';
 import { GpuProfiler } from './gpuProfiler.ts';
 import { initCanvasResizeSystem } from './sys_web/cavasResize.ts';
 import { CONFIG, MILISECONDS_TO_SECONDS } from './constants.ts';
@@ -11,6 +11,7 @@ import { showHtmlEl, hideHtmlEl } from './sys_web/htmlUtils.ts';
 import { Scene } from './scene/scene.ts';
 import { loadScene } from './scene/loadScene.ts';
 import { createGizmoController } from './sys_web/gizmo.ts';
+import { onGpuProfilerResult } from './sys_web/onGpuProfilerResult.ts';
 
 (async function () {
   // deno-lint-ignore no-explicit-any

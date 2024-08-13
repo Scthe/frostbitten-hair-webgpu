@@ -20,7 +20,7 @@ const POINTS_PER_WORKGROUP = () =>
   STRANDS_PER_WORKGROUP * CONFIG.pointsPerStrand;
 
 export const SHADER_PARAMS = {
-  workgroupSizeX: STRANDS_PER_WORKGROUP, // TODO [LOW] set better values
+  workgroupSizeX: STRANDS_PER_WORKGROUP,
   bindings: {
     simulationUniforms: 0,
     hairData: 1,

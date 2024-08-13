@@ -13,12 +13,14 @@ import {
 } from './shaderImpl/tilePassesShared.wgsl.ts';
 import { CONFIG } from '../../constants.ts';
 
-// TODO [NOW] try workgroup shared for positions and tangents?
+// TODO [MEDIUM] try workgroup shared for positions and tangents arrays. Probably after you remove strand-based impl.
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 4, // TODO [LOW] set even better values? Current seem OK.
-  // TODO [CRITICAL] use CONFIG.pointsPerStrand
-  workgroupSizeY: 32, // A bit inefficient if strand has less points. But it's not THAT inefficient suprisingly?
+  // A bit inefficient if strand has less points. But it's not THAT inefficient suprisingly?
+  // A lot of combinations of XY sizes result in 2.2-2.3ms.
+  // TODO [MEDIUM] use CONFIG.pointsPerStrand, though does not matter for current asset.
+  workgroupSizeY: 32,
   bindings: TILE_PASSES_BINDINGS,
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "frostbitten-hair-webgpu",
-  "description": "Reimplementing Frostbite's hair system based on 'Every Strand Counts: Physics and Rendering Behind Frostbite's Hair'.",
+  "description": "Software rasterizing hair strands with analytical AA and OIT. Inspired by Frostbite's hair system: \"Every Strand Counts: Physics and Rendering Behind Frostbite's Hair\".",
   "version": "1.0.0",
   "license": "MIT",
   "author": "Marcin Matuszczyk <marcin1113C@gmail.com>",

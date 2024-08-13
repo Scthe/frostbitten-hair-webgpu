@@ -12,10 +12,16 @@ import {
   TILE_PASSES_SHARED,
 } from './shaderImpl/tilePassesShared.wgsl.ts';
 
-// TODO remove this impl? It is actually quite slow
+/*
+
+This is an alternative implementation. In practise it seems much slower/harder 
+to optimize than the per-segment. Leaving the code cause this fact seems weird.
+
+TODO [IGNORE] remove this impl? It is actually quite slow
+*/
 
 export const SHADER_PARAMS = {
-  workgroupSizeX: 32, // TODO [LOW] set better values
+  workgroupSizeX: 32,
   bindings: TILE_PASSES_BINDINGS,
 };
 

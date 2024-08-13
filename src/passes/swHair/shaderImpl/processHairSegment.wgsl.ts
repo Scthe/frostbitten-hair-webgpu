@@ -32,7 +32,7 @@ fn processHairSegment(
   );
 
   // bounds
-  // TODO [NOW] optimize bounds. Scissor based on segment0_px, segment1_px.
+  // TODO [MEDIUM] optimize bounds. Scissor based on segment0_px, segment1_px.
   let boundRectMax = vec2f(tileBoundsPx.zw);
   let boundRectMin = vec2f(tileBoundsPx.xy);
 

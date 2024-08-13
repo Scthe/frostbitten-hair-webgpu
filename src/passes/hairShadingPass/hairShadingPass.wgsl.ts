@@ -156,7 +156,9 @@ fn main(
   radianceSum += hairShading(params, _uniforms.light1, toCamera, tangentWS, positionWS, shadow, ao);
   radianceSum += hairShading(params, _uniforms.light2, toCamera, tangentWS, positionWS, shadow, ao);
 
-  color = vec4f(radianceSum, 1.0); // TODO [IGNORE] add alpha [0.8 .. 1.0]?
+  // thin-tip alpha.
+  let alpha = select(1.0, 0.0, shadingPointId >= SHADING_POINTS - 1);
+  color = vec4f(radianceSum, alpha); // TODO [IGNORE] add material.alpha [0.8 .. 1.0]?
   _setShadingPoint(strandIdx, shadingPointId, color);
   // _setShadingPoint(strandIdx, shadingPointId, vec4f(baseColor, 1.0)); // dbg
 }
@@ -253,8 +255,7 @@ fn getShadow(
 
 /**
  * Fake attenuation mimicking https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law
- * 
-*/
+ */
 fn getAttenuation(
   positionProj: vec3f,
   positionTexSamplePx: vec2f,

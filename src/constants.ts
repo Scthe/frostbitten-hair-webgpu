@@ -81,7 +81,7 @@ export type GridDebugValueNum = ValueOf<typeof GizmoAxis>;
 export const CONFIG = {
   /** Test env may require GPUBuffers to have extra COPY_* flags to readback results. Or silence console spam. */
   isTest: false,
-  githubRepoLink: 'https://github.com/Scthe/nanite-webgpu',
+  githubRepoLink: 'https://github.com/Scthe/frostbitten-hair-webgpu',
   /** This runtime injection prevents loading Deno's libraries like fs, png, etc. */
   loaders: {
     textFileReader: textFileReader_Web,
@@ -103,14 +103,18 @@ export const CONFIG = {
     gradientStrength: 0.5,
   },
   colliderGizmo: {
+    /** Length of each of 3 drawn axis */
     lineLength: 0.04,
+    /** Width of each of 3 drawn axis */
     lineWidth: 0.002,
-    hoverPadding: 1.5, // Better accessibility. Not visible in render.
+    /** Better accessibility to increase the 'hitbox'. Not visible in render. */
+    hoverPadding: 1.5,
     /** Either hovered over or dragged. Use 'isDragging' to determine which */
     activeAxis: GizmoAxis.NONE as GizmoAxisIdx,
     isDragging: false,
   },
-  drawColliders: true, // does not hide gizmo
+  /** Hide the ball. Does not hide gizmo */
+  drawColliders: true,
 
   ///////////////
   /// CAMERA
@@ -128,7 +132,7 @@ export const CONFIG = {
     rotationSpeed: 1,
     /** Camera movement sensitivity */
     movementSpeed: 0.5,
-    /** Camera movement sensitivity when pressing SPEED BUTTON */
+    /** Camera movement sensitivity when pressing THE SPEED BUTTON */
     movementSpeedFaster: 3,
   },
 
@@ -137,33 +141,33 @@ export const CONFIG = {
   lightAmbient: { color: [1, 1, 1], energy: 0.05 },
   lights: [
     { posPhi:  60.0, posTheta: 20.0, color: col(255, 244, 204), energy: 0.8 }, // prettier-ignore
-    { posPhi: 100.0, posTheta: 75.0, color: col(204, 249, 255), energy: 0.8 }, // prettier-ignore
+    { posPhi: 100.0, posTheta: 97.0, color: col(204, 249, 255), energy: 0.8 }, // prettier-ignore
     { posPhi: -90.0, posTheta: 30.0, color: col(255, 242, 204), energy: 0.8 }, // prettier-ignore
   ] as LightCfg[],
 
   /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L79 */
   shadows: {
     showDebugView: false,
-    debugViewPosition: IS_DENO ? [0, 0] : [250, 0],
+    debugViewPosition: IS_DENO ? [0, 0] : [250, 0], // deno does not render stats window
     depthFormat: 'depth24plus' as GPUTextureFormat,
     textureSize: 1024 * 2,
     // runtime settings
     usePCSS: false,
     PCF_Radius: 3, // in pixels
     bias: 0.0005,
-    strength: 0.4, // only for meshes. For hair, see 'hairRender'
+    strength: 0.4, // Limit how much shadows affect the scene (meshes-only, hair has it's own). Non-physical, but makes things prettier.
     /** Make hair wider for shadows */
     hairFiberWidthMultiplier: 1.0,
     // shadow source
     source: {
       posPhi: 37, // horizontal [dgr]
       posTheta: 45, // verical [dgr]
-      distance: 5.0, // verify with projection box below!!!
+      distance: 5.0,
       target: [0, 2, 0],
     },
   },
 
-  /** https://github.com/Scthe/WebFX/blob/09713a3e7ebaa1484ff53bd8a007908a5340ca8e/src/Config.ts#L146 */
+  /** The usual settings for GTAO etc. BOOOORING */
   ao: {
     textureSizeMul: 0.5, // half/quater-res, wrt. MSAA
     radius: 2.0,
@@ -177,10 +181,12 @@ export const CONFIG = {
 
   ///////////////
   /// HAIR
+  /** Name of the file from "static/models" directory. Each file was exported from Blender using the script from './scripts' */
   hairFile: 'SintelHairOriginal-sintel_hair.16points.tfx' as HairFile,
-  pointsPerStrand: -1, // will be set at runtime. Added here to have nicer workgroups. Throws if not set
+  pointsPerStrand: -1, // will be set at runtime. Added here to have nicer workgroups.
 
   hairRender: {
+    /** Width of the hair */
     fiberRadius: 0.0006,
     /** When in 'tiles' display mode, how much segments are considered full */
     dbgTileModeMaxSegments: 370,
@@ -190,42 +196,63 @@ export const CONFIG = {
     dbgShowTiles: false,
 
     material: {
-      color0: col(119, 43, 119),
-      color1: col(76, 0, 255),
+      color0: col(119, 43, 119), // color root
+      color1: col(76, 0, 255), // color tip
       specular: 0.9, // weight for lobe: R
       weightTT: 0.0, // weight for lobe: TT. It needs depth test as light ignores meshes and affects stuff 'through' them.
       weightTRT: 1.4, // weight for lobe: TRT
-      shift: 0.0,
-      roughness: 0.3,
-      colorRng: 0.1, // [0 .. 1]
-      lumaRng: 0.1, //
-      attenuation: 30.0,
-      shadows: 0.5,
+      shift: 0.0, // Marschner param
+      roughness: 0.3, // Marschner param
+      colorRng: 0.1, // Randomize colors per-strand. Makes them different instead of just a lump of color. [0 .. 1]
+      lumaRng: 0.1, // Randomize luma  per-strand. Makes them different instead of just a lump of color. [0 .. 1]
+      attenuation: 30.0, // Fake attenuation mimicking https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law . Compare how far strand is wrt. depth buffer and make it darker.
+      shadows: 0.5, // Limit how much shadows affect the scene (hair-only, meshes have own param). Non-physical, but makes things prettier.
     },
 
     ////// SHADING
+    /** Warning: last shading point has forced alpha blend to 0 to imitate thin tip. Knowing that, go on. Set this to 2. */
     shadingPoints: 64,
 
     ////// TILE PASS
-    /** IF YOU CHANGE TILE SIZE, DO NOT FORGET TO TUNE 'invalidTilesPerSegmentThreshold' */
+    /** IF YOU CHANGE TILE SIZE, DO NOT FORGET TO TUNE `invalidTilesPerSegmentThreshold`.
+     *
+     * If you get memory limit error, just set `increaseStorageMemoryLimits = true` to allocate more than 128MB.
+     */
     tileSize: 8,
+    /** For each tile, we store data split by depth (wrt. hair object bounding sphere bounds). It's the ponytail optimization from Frostbite's talk. */
     tileDepthBins: 32,
+    /** Allocate memory for PPLL data */
     avgSegmentsPerTile: 128,
-    /** reject degenerate strands from physics simulation */
-    invalidTilesPerSegmentThreshold: 24,
+    /**
+     * > THIS SETTING IS **VERY** IMPORTANT. AND I'M USING A WORD "VERY", SO YOU KNOW IT'S SERIOUS.
+     *
+     * Reject degenerate strands from physics simulation. Imagine hair segment
+     * is launched into stratosphere and somehow (very somehow!) covers 100+ tiles.
+     * This is terrible for performance. Reject such cases on per-segment basis.
+     *
+     * IF YOU SEE MISSING SEGMENTS, INCREASE THIS VALUE. IT'S EITHER THIS
+     * OR THE STRAND IS COLLIDING WITH MESH. BUT YOU WOULD NOT HAVE SUSPECTED
+     * ANYTHING WRONG IF IT WAS A SIMPLE COLLISION (INCREASE SDF OFFSET,
+     * OR HIDE THE BALL IN THAT CASE).
+     */
+    invalidTilesPerSegmentThreshold: 64,
+    /** You can test 2 implementations. */
     tileShaderDispatch: 'perSegment' as TilePassDispatch,
 
     ////// FINE PASS
-    // TODO find better values.
-    /** This is like slices per pixel in original frostbite presentation, but the slices are inside each depth bin */
+    /** This is like slices per pixel in original Frostbite presentation, but the slices are inside each depth bin */
     slicesPerPixel: 8,
+    /** Allocate memory for PPLL data */
     avgFragmentsPerSlice: 16,
+    /** If you have a lot of slices, naive impl. would require `viewport.x * viewport.y * slicesPerPixel * sizeof(u32)` data. This is SIGNIFICANTLY reduced if ponytail optimization is implemented (as I did). Still, to limit memory, we use task queue. Each processor grabs tiles from a queue. We might (?) not even be able to dispatch all processors at once (hw and sliceHeadsMemory dependent). Does not matter cause task queue. */
     processorCount: 64 * 8,
+    /** (1, 1, 1) dispatch. I am not going to comment on this. If you know what that means, that statement is probably enough. Change will decrease performance. Kinda wonder if Frostbite team found a way around this? The divergence is.. it is. */
     finePassWorkgroupSizeX: 1,
+    /** Where to store the PPLL slice heads data */
     sliceHeadsMemory: 'workgroup' as SliceHeadsMemory,
 
     ////// LOD
-    lodRenderPercent: 100, // range [0..100]
+    lodRenderPercent: 100, // LOD %. Fun fact, performance is NOT linear. Range [0..100]
   },
 
   hairSimulation: {
@@ -237,7 +264,7 @@ export const CONFIG = {
      * TODO [IGNORE] Ofc. we should still scale it a bit to prevent physics speed up on 144Hz displays
      */
     deltaTime: 1.0 / 30.0,
-    nextFrameResetSimulation: false,
+    nextFrameResetSimulation: false, // the reset button from GUI
     gravity: 0.03,
     // 0.0 - use particle position change in verlet integration
     // 1.0 - use averaged particle position changes in grid to drive verlet integration
@@ -246,18 +273,27 @@ export const CONFIG = {
     // 0.0 - do not use density gradient as external force. Hair can "squish" together
     // >0.0 - move hair strands so from densely oocupied grid cells into ones that are more "free"
     volumePreservation: 0.00003,
+    // If you set the radius to 0, the ball will disappear. There is a reason for this statement.
     // collisionSphere: [0.05, 1.48, 0.01, 0.06], // inside hair
-    collisionSphere: [-0.15, 1.48, 0.01, 0.06],
-    collisionSphereInitial: [0, 0, 0, 0], // will get filled at runtime
+    collisionSphere: [-0.18, 1.56, 0.06, 0.06], // [x, y, z, radius]
+    collisionSphereInitial: [0, 0, 0, 0], // will get filled at runtime. Used to reset the sphere
 
+    /** It's the usual constraints + stiffness stuff */
     constraints: {
-      constraintIterations: 7,
+      constraintIterations: 7, // more means more stable and expensive
+      // length constraint. Matches current distance between points to the one from the original imported asset.
       stiffnessLengthConstr: 1.0,
+      // global shape constraint. Matches current point positions to the one from the original imported asset. Set this to 1.0 and no change is possible.
       stiffnessGlobalConstr: 0.2, // this constraint is stronger near root and fades toward the tip
-      globalExtent: 0.1, // full global constraint stiffness
-      globalFade: 0.75, // partial global constraint stiffness
+      globalExtent: 0.1, // full global constraint stiffness. 0.2 means that 20% of the near-root strand will be forced to 100% conform to this constraint
+      globalFade: 0.75, // partial global constraint stiffness. 0.4 means that 40% of the strand AFTER EXTENT will be forced to progressively less-conform to this constraint. With extent 0.2 and fade 0.4, the strand between 20-60% will have progresively weaker this constraint.
+      // local shape constraint. Tries to preserve relative angles between 3 consecutive points.
+      // See "A Triangle Bending Constraint Model for Position-Based Dynamics".
+      //        [Kelager10] http://image.diku.dk/kenny/download/kelager.niebe.ea10.pdf
       stiffnessLocalConstr: 0.3,
+      // collisions with the ball
       stiffnessCollisions: 1.0,
+      // collisions with the character face using Signed Distance Fields (SDF).
       stiffnessSDF: 1.0,
     },
 
@@ -265,11 +301,11 @@ export const CONFIG = {
       dirPhi: 18, // horizontal [dgr]
       dirTheta: 91, // verical [dgr]
       strength: 0.0,
-      strengthLull: 0.75,
-      strengthFrequency: 1.8,
-      strengthJitter: 0.7,
-      phaseOffset: 0.45,
-      colisionTraceOffset: 1.5,
+      strengthLull: 0.75, // wind strength for points *inside* the mesh. Points *obscured* by collider (on the other side of the wind) will be affected with average of 'strength' and 'strengthLull'
+      strengthFrequency: 1.8, // how often to flutter
+      strengthJitter: 0.7, // randomize strength per-strand
+      phaseOffset: 0.45, // randomize phase. This way not all strands jitter at the same time
+      colisionTraceOffset: 1.5, // Multiplier for SDF distance used when detecting collisions
     },
 
     physicsForcesGrid: {
@@ -280,7 +316,7 @@ export const CONFIG = {
       showDebugView: false,
       debugSlice: 0.5,
       debugValue: GridDebugValue.DENSITY_GRADIENT as GridDebugValueNum,
-      debugAbsValue: true,
+      debugAbsValue: true, // abs() before showing to the user
     },
 
     sdf: {

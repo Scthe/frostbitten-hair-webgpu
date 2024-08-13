@@ -46,6 +46,13 @@ fn processTile(
   for (var y: u32 = boundsMin.y; y < boundsMax.y; y += 1u) {
   // var CX0 = CY0; var CX1 = CY1; var CX2 = CY2; var CX3 = CY3;
   for (var x: u32 = boundsMin.x; x < boundsMax.x; x += 1u) {
+      // Technically we should add (0.5, 0.5) to sample in the middle of the pixel.
+      // But only connection to hardware rasterizer is the depth buffer.
+      // The offset is strongly recommended, but not 100% required. Technically, also
+      // depends on hardware raster multi-sampling if you want to be 100% correct.
+      // You should NEVER multi-sample hair with software rasterizer. Just make sure
+      // you understand the interaction with hardware rasterizer.
+      // https://www.w3.org/TR/webgpu/#rasterization
       let p = vec2f(f32(x), f32(y));
       let C0 = edgeFunction(sw.v01, sw.v00, p);
       let C1 = edgeFunction(sw.v11, sw.v01, p);

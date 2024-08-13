@@ -79,6 +79,10 @@ fn _clearSliceHeadPtr(
  * For each processor, contains `TILE_SIZE * TILE_SIZE * SLICES_PER_PIXEL`
  * entries. Each entry is a pointer into slices data buffer.
  *
+ * I did try other memory access patterns (memory offsets per processor),
+ * but it wasn't faster. You would also need to implement sorted tile queue
+ * to balance workload for all tiles in a workgroup.
+ *
  * The memory is per-processor, so we do not need atomics.
  */
 const BUFFER_HAIR_SLICES_HEADS_GLOBAL = (

@@ -45,6 +45,7 @@ fn hairSpecularMarschner(
 
 
   // For derivation we are following GPU gems chapter 23.
+  // dot() is used for sin() value. Interesting, but depends on which angle we are calculating the value for?
   let sin_theta_i = dot(tangent, toLight);
   let sin_theta_r = dot(tangent, toCamera);
   // TODO [MEDIUM] does sign of cos matter for us?

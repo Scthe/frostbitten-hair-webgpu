@@ -1,0 +1,2 @@
+run:
+	clear && cargo run

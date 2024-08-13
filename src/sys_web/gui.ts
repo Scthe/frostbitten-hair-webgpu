@@ -6,10 +6,9 @@ import {
   GridDebugValue,
   LightCfg,
 } from '../constants.ts';
-import { GpuProfiler, GpuProfilerResult } from '../gpuProfiler.ts';
+import { GpuProfiler } from '../gpuProfiler.ts';
 import { Scene } from '../scene/scene.ts';
 import { Camera } from '../camera.ts';
-import { showHtmlEl } from '../sys_web/htmlUtils.ts';
 import { mat4, vec4 } from 'wgpu-matrix';
 import { dgr2rad } from '../utils/index.ts';
 
@@ -19,7 +18,7 @@ import { dgr2rad } from '../utils/index.ts';
 type GuiCtrl = dat.GUIController<Record<string, unknown>>;
 
 export function initializeGUI(
-  device: GPUDevice,
+  _device: GPUDevice,
   profiler: GpuProfiler,
   scene: Scene,
   camera: Camera
@@ -96,7 +95,7 @@ export function initializeGUI(
       .add(dummyObject, 'modelRotation', 0.0, 360.0)
       .step(1)
       .name('Rotation')
-      .onChange((v) => {
+      .onChange((v: number) => {
         mat4.rotationY(dgr2rad(v), scene.modelMatrix);
       });
 
@@ -252,7 +251,7 @@ export function initializeGUI(
     dir.add(techniqueDummy, 'usePCSS', techniqueDummy.values).name('Technique');
     dir.add(cfg, 'strength', 0.0, 1.0).name('Strength');
     dir.add(cfg, 'PCF_Radius', [0, 1, 2, 3, 4]).name('PCF radius');
-    dir.add(cfg, 'bias', 0.0001, 0.005).name('Bias');
+    dir.add(cfg, 'bias', 0.0, 0.001).name('Bias');
     // dir.add(cfg, 'blurRadiusTfx', [0, 1, 2, 3, 4]).name('HAIR Blur radius');
     // dir.add(cfg, 'biasHairTfx', 0.001, 0.01).name('HAIR Bias');
     dir.add(cfg, 'hairFiberWidthMultiplier', 0.5, 6.0).name('Hair width mul');
@@ -368,26 +367,3 @@ const createDummy = <V extends Object, K extends keyof V>(
   // deno-lint-ignore no-explicit-any
   return dummy as any;
 };
-
-export function onGpuProfilerResult(result: GpuProfilerResult) {
-  console.log('Profiler:', result);
-  const parentEl = document.getElementById('profiler-results')!;
-  parentEl.innerHTML = '';
-  // deno-lint-ignore no-explicit-any
-  showHtmlEl(parentEl.parentNode as any);
-
-  const mergeByName: Record<string, number> = {};
-  const names = new Set<string>();
-  result.forEach(([name, timeMs]) => {
-    const t = mergeByName[name] || 0;
-    mergeByName[name] = t + timeMs;
-    names.add(name);
-  });
-
-  names.forEach((name) => {
-    const timeMs = mergeByName[name];
-    const li = document.createElement('li');
-    li.innerHTML = `${name}: ${timeMs.toFixed(2)}ms`;
-    parentEl.appendChild(li);
-  });
-}

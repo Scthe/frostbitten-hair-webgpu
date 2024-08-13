@@ -67,6 +67,8 @@ fn swRasterizeHair(
 /** NOTE: all the comments assume you have 32 verts per strand
  * 
  * Same as swRasterizeHair(), but only for a single point, instead of both start and end points.
+ * 
+ * NOTE: This fn should have been called 'projectHairPoint()'
 */
 fn swRasterizeHairPoint(
   p: SwHairRasterizeParams,
@@ -84,7 +86,7 @@ fn swRasterizeHairPoint(
   let p0_WS: vec4f = mMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0);
   let t0_WS: vec4f = mMat * vec4f(      _getHairTangent(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0);
   
-  // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
+  // Calculate bitangent vectors (cross between tangent and to-camera vectors)
   let towardsCamera: vec3f = normalize(cameraPosition.xyz - p0_WS.xyz);
   let right0: vec3f = normalize(cross(t0_WS.xyz, towardsCamera)).xyz * p.fiberRadius;
   let v0_WS = vec4f(p0_WS.xyz - right0, 1.0);
