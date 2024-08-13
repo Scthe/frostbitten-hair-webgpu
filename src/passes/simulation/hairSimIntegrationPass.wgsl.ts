@@ -173,7 +173,7 @@ fn main(
     //       solvable positions before bigger changes in later iters.
 
     // strech/length constraint
-    let stiffnessLen_i = stiffnessLengthConstr / f32(constraintIterations);
+    let stiffnessLen_i = stiffnessLengthConstr; // / f32(constraintIterations);
     var posSegmentStart = _positionsWkGrp[wkGrpOffset + 0u];
     for (var j = 0u; j < segmentCount; j += 1u) { // from 0 to 30 (inclusive)
       var posSegmentEnd = _positionsWkGrp[wkGrpOffset + j + 1u];
