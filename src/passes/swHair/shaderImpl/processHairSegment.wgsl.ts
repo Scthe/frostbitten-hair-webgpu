@@ -21,8 +21,6 @@ fn processHairSegment(
   let segmentCount = p.pointsPerStrand - 1;
 
   let swHairRasterizeParams = SwHairRasterizeParams(
-    p.viewModelMat,
-    p.projMat,
     p.pointsPerStrand,
     p.viewportSize,
     p.fiberRadius,

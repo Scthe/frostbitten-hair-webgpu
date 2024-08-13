@@ -19,8 +19,6 @@ const COLOR_YELLOW: u32 = 0xff00ffffu;
 const COLOR_WHITE: u32 = 0xffffffffu;
 
 struct SwHairRasterizeParams {
-  viewModelMat: mat4x4f,
-  projMat: mat4x4f,
   pointsPerStrand: u32,
   viewportSize: vec2f,
   fiberRadius: f32,
@@ -77,39 +75,16 @@ fn swRasterizeHairPoint(
   v0: ptr<function, vec2f>, v1: ptr<function, vec2f>,
   depthsProj: ptr<function, vec2f>,
 ) {
-  // is this the left-right vertex issue? so the shape is a hourglass
+  // This used to be view-space calculation, but toCamera vector [0, 0, 1]
+  // sometimes has to be [0, 0, -1]. Not sure when. So we do this in world space
   let cameraPosition = _uniforms.cameraPosition;
   let mMat = _uniforms.modelMatrix;
-  let vMat = _uniforms.viewMatrix; // TODO remove
-  let vmMat = p.viewModelMat;
-  let projMat = p.projMat;
   let viewProjMat = _uniforms.vpMatrix;
-
-  /*let p0_VS: vec4f = p.viewModelMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0);
-  let t0_VS: vec4f   = p.viewModelMat * vec4f(      _getHairTangent(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0,);
-  // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
-  // HERE: problem is with toCamera. Is z positive or negative?
-  // let right0: vec3f = safeNormalize3(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
-  var toCamera: vec3f = vec3f(0., 0., 1.);
-  // if (dot(t0_VS.xyz, toCamera) > 0.0) { toCamera.z = -toCamera.z; }
-  // if (t0_VS.z < 0.0) { toCamera.z = -toCamera.z; }
-  var right0: vec3f = normalize(cross(t0_VS.xyz, toCamera)) * p.fiberRadius;
-  if (right0.x < 0.0) {
-    right0 = -right0;
-  }*/
 
   let p0_WS: vec4f = mMat * vec4f(_getHairPointPosition(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0);
   let t0_WS: vec4f = mMat * vec4f(      _getHairTangent(p.pointsPerStrand, strandIdx, pointIdx).xyz, 1.0);
+  
   // Calculate bitangent vectors (cross between view space tangent and to-camera vectors)
-  // HERE: problem is with toCamera. Is z positive or negative?
-  // let right0: vec3f = safeNormalize3(cross(t0_VS.xyz, vec3f(0., 0., 1.))) * p.fiberRadius;
-  // var toCamera: vec3f = vec3f(0., 0., 1.);
-  // if (dot(t0_VS.xyz, toCamera) > 0.0) { toCamera.z = -toCamera.z; }
-  // if (t0_VS.z < 0.0) { toCamera.z = -toCamera.z; }
-  // var right0: vec3f = normalize(cross(t0_VS.xyz, toCamera)) * p.fiberRadius;
-  // if (right0.x < 0.0) {
-    // right0 = -right0;
-  // }
   let towardsCamera: vec3f = normalize(cameraPosition.xyz - p0_WS.xyz);
   let right0: vec3f = normalize(cross(t0_WS.xyz, towardsCamera)).xyz * p.fiberRadius;
   let v0_WS = vec4f(p0_WS.xyz - right0, 1.0);
@@ -117,12 +92,7 @@ fn swRasterizeHairPoint(
   let v0_NDC: vec3f = projectVertex(viewProjMat, v0_WS);
   let v1_NDC: vec3f = projectVertex(viewProjMat, v1_WS);
 
-
   // Vertex positions
-  // let v0_VS = vec4f(p0_VS.xyz - right0, 1.0);
-  // let v1_VS = vec4f(p0_VS.xyz + right0, 1.0);
-  // let v0_NDC: vec3f = projectVertex(projMat, v0_VS);
-  // let v1_NDC: vec3f = projectVertex(projMat, v1_VS);
   (*v0) = ndc2viewportPx(p.viewportSize.xy, v0_NDC); // in pixels
   (*v1) = ndc2viewportPx(p.viewportSize.xy, v1_NDC); // in pixels
   (*depthsProj) = vec2f(v0_NDC.z, v1_NDC.z);
