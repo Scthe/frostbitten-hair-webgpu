@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Frostbitten hair</title>
+    <meta name="description" content="Software rasterizing hair strands with
+    analytical anti-aliasing and order-independent transparency. Inspired by
+    Frostbite's hair system: \"Every Strand Counts: Physics and Rendering Behind
+    Frostbite's Hair\"" />
+
+    <style>
+      :root {
+        background-color: rgb(39, 39, 39);
+      }
+      :root,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        text-align: center;
+        color: rgb(216, 216, 216);
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
+      ul,
+      ul li,
+      ul ul li {
+        margin: 0;
+        padding: 0;
+        text-indent: 0;
+        list-style-type: none;
+      }
+      .panel {
+        display: none;
+        position: fixed;
+        background: #1a1a1a;
+        padding: 10px;
+        color: aliceblue;
+        font-family: monospace;
+      }
+
+      .profiler-window {
+        bottom: 0;
+        left: 0;
+
+        & h2 {
+          text-align: center;
+          margin: 0 0 10px;
+        }
+      }
+      #stats-window {
+        top: 0;
+        left: 0;
+
+        & p {
+          margin: 0;
+        }
+      }
+      .stats-category-name {
+        text-align: center;
+      }
+      #no-webgpu {
+        color: aliceblue;
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        align-items: center;
+        justify-content: center;
+      }
+      #error-msg {
+        max-width: 50%;
+        white-space: pre-line;
+        line-height: 1.7em;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="gpu-canvas" width="1270" height="720"></canvas>
+
+    <!-- FPS display -->
+    <div id="stats-window" class="panel"></div>
+
+    <!-- Profiler -->
+    <div class="panel profiler-window">
+      <h2>Profiler</h2>
+      <ul id="profiler-results"></ul>
+    </div>
+
+    <!-- No webgpu -->
+    <div id="no-webgpu">
+      <pre id="error-msg">No WebGPU available. Please use Chrome.</pre>
+    </div>
+
+    <script src="index.web.js" defer></script>
+  </body>
+</html>
