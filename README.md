@@ -1,14 +1,22 @@
-# Frostbitten hair WebGPU ([Demo](https://github.com/Scthe/frostbitten-hair-webgpu))
+# Frostbitten hair WebGPU ([Demo](https://scthe.github.io/frostbitten-hair-webgpu/))
 
 Software rasterizing hair strands with analytical anti-aliasing and order-independent transparency. Inspired by Frostbite's hair system: ["Every Strand Counts: Physics and Rendering Behind Frostbite's Hair"](https://www.youtube.com/watch?v=ool2E8SQPGU) as presented by Robin Taillandier and Jon Valdes.
 
-Interactive [Demo](https://github.com/Scthe/frostbitten-hair-webgpu). **WebGPU is only available in Chrome!** Use the `[W, S, A, D]` keys to move and `[Z, SPACEBAR]` to fly up or down. `[Shift]` to move faster.  Check [src/constants.ts](src/constants.ts) for full documentation.
+Interactive [Demo](https://scthe.github.io/frostbitten-hair-webgpu/). **WebGPU is only available in Chrome!** Use the `[W, S, A, D]` keys to move and `[Z, SPACEBAR]` to fly up or down. `[Shift]` to move faster.  Check [src/constants.ts](src/constants.ts) for full documentation.
 
 
-`IMAGE 1: Wind + ball collisions`
+
+
+https://github.com/user-attachments/assets/02859b92-a940-42b6-8381-dcac4b81b4d4
+
+
+
 *Nice hair rendering? Yes! Interactive physics? Yes! But is it fun? YES!*
 
-`IMAGE 2: static image to show AA`
+
+![frostbitten-hair-static-img](https://github.com/user-attachments/assets/4deeb2b0-e753-4e6a-acb5-201854214b0d)
+
+
 *A static image of software-rasterized hair. You can zoom in and inspect the anti-aliasing and order-independent transparency techniques.*
 
 ## Features
@@ -24,11 +32,11 @@ Interactive [Demo](https://github.com/Scthe/frostbitten-hair-webgpu). **WebGPU i
         * It uses a task queue internally. Each "processor" grabs the next tile from a list once it's done with the current tile.
 * Separate [strand-space shading calculation](https://youtu.be/ool2E8SQPGU?si=T0YirLDpKp83CjD2&t=1339). Instead of calculating shading for every pixel, I precalculate the values for every strand. You can select how many points are shaded for each strand. The last point always fades to transparency for a nice, thin tip.
     * **Kajiya-Kay diffuse, Marschner specular.** Although I do not calculate depth maps for lights, so TT lobe's weight is 0 by default. I like how the current initial scene looks and reconfiguring lights is booooring!
-    * **Fake multiple scattering** [like in UE5](https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=39).
+    * **Fake multiple scattering** [like in UE5](https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=39). See "Physically based hair shading in Unreal" by Brian Karis slide 39 if SIGGRAPH does not allow link.
     * **Fake attenuation** mimicking [Beer–Lambert law](https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law).
     * It also **casts and receives shadows as well as AO**. You can also randomize some settings for each strand.
 * [LOD](https://youtu.be/ool2E8SQPGU?si=Zv-1N5Y4-nWvlB6v&t=1643) - the user has strand% slider. In a production system, you would automate this and increase hair width with distance. The randomization happens [in my blender exporter](scripts/tfx_exporter.py).
-* Blender exporter for the older Blender hair system. It's actually the same file format as I've used in my TressFX ports ( [1](https://github.com/Scthe/TressFX-OpenGL), [2](https://github.com/Scthe/WebFX), [3](https://github.com/Scthe/Rust-Vulkan-TressFX)).
+* Blender exporter for the older Blender hair system. It's actually the same file format as I've used in my TressFX ports ([1](https://github.com/Scthe/TressFX-OpenGL), [2](https://github.com/Scthe/WebFX), [3](https://github.com/Scthe/Rust-Vulkan-TressFX)).
 * Uses [Sintel Lite 2.57b](http://www.blendswap.com/blends/view/7093) by BenDansie as a 3D model. There were no changes to "make it work" or optimize. Only selecting how many points per each strand.
 
 ### Features: Physics simulation
@@ -163,7 +171,7 @@ WebGPU does not offer access to profilers. Or debuggers. With custom shader lang
     * Just before finishing the project, I noticed a problem when calculating `cross(tangent, toCamera)` in view space. Depending on `toCamera.z` (either 1 or -1), it rendered only some strands. I had to switch to world space calculation. Then all strands rendered fine. Somehow this bugfix decreased HairFinePass time from 30ms to 27ms.
 * Make it easy to check. For me, profiling it's just a button right below the GitHub link. Ofc. mashing the button is not the most scientific approach. But it's the best that the WebGPU can offer.
 * Test it. For triangles, it's a [common optimization](https://fgiesen.wordpress.com/2013/02/10/optimizing-the-basic-rasterizer/) to write the edge function as `Ax + By + C`. You pre-calculate A, B, C. Then, the pixel iteration is a single addition. IIRC from [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu), it was 7% faster for my test scene. For quads, this is not always the case. The `HairTilesPass` is **slower** with this optimization, but the HairFinePass is faster. I assume it hits a register breakpoint?
-* Early returns from for loops can be slower. You think you are doing less work. In [one place](src\passes\swHair\shaderImpl\processHairSegment.wgsl.ts#L59) it increases frame time by 0.4ms.
+* Early returns from for loops can be slower. You think you are doing less work. In [one place](src/passes/swHair/shaderImpl/processHairSegment.wgsl.ts#L59) it increases frame time by 0.4ms.
     * Basically, do not assume you know how to write a for-loop.
 * Don't test things when you have 300+ fps. Set the test scene. If you have <20 FPS and save 5ms you know you did the right thing. You can go line-by-line and find the exact line that contributes to a problem.
 * For this app, frame time can be similar no matter if you render all strands or only half. The number of points in a strand also has a low impact. In foresight, it's not exactly unexpected.
