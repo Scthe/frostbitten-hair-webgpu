@@ -24,6 +24,13 @@ renderdoc.dll
 
 # assets
 static/models/*
+!static/models/sintel-collider.obj
+!static/models/sintel-eyelashes.obj
+!static/models/sintel-eyes.obj
+!static/models/sintel-sdf.bin
+!static/models/sintel.obj
+!static/models/SintelHairOriginal-sintel_hair.16points.tfx
+!static/models/sphere.obj
 
 # ignored test artefacts
 src/passes/swHair/__test__/*.png
@@ -32,5 +39,4 @@ src/passes/swHair/__test__/*.png
 *.code-workspace
 _references
 output*.png
-makefile
 
