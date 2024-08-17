@@ -24,6 +24,7 @@ renderdoc.dll
 
 # assets
 static/models/*
+!static/models/cube.obj
 !static/models/sintel-collider.obj
 !static/models/sintel-eyelashes.obj
 !static/models/sintel-eyes.obj
