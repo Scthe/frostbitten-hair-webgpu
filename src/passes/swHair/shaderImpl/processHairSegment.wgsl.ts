@@ -20,13 +20,13 @@ fn processHairSegment(
   var writtenSliceDataCount: u32 = 0u;
   let segmentCount = p.pointsPerStrand - 1;
 
-  let swHairRasterizeParams = SwHairRasterizeParams(
+  let projParams = ProjectHairParams(
     p.pointsPerStrand,
     p.viewportSize,
     p.fiberRadius,
   );
-  let sw = swRasterizeHair(
-    swHairRasterizeParams,
+  let projSegm = projectHairSegment(
+    projParams,
     strandIdx,
     segmentIdx
   );
@@ -37,10 +37,10 @@ fn processHairSegment(
   let boundRectMin = vec2f(tileBoundsPx.xy);
 
   // edgeFunction() as series of additions
-  let CC0 = edgeC(sw.v01, sw.v00);
-  let CC1 = edgeC(sw.v11, sw.v01);
-  let CC2 = edgeC(sw.v10, sw.v11);
-  let CC3 = edgeC(sw.v00, sw.v10);
+  let CC0 = edgeC(projSegm.v01, projSegm.v00);
+  let CC1 = edgeC(projSegm.v11, projSegm.v01);
+  let CC2 = edgeC(projSegm.v10, projSegm.v11);
+  let CC3 = edgeC(projSegm.v00, projSegm.v10);
   var CY0 = boundRectMin.x * CC0.A + boundRectMin.y * CC0.B + CC0.C;
   var CY1 = boundRectMin.x * CC1.A + boundRectMin.y * CC1.B + CC1.C;
   var CY2 = boundRectMin.x * CC2.A + boundRectMin.y * CC2.B + CC2.C;
@@ -74,9 +74,9 @@ fn processHairSegment(
       continue;
     }
 
-    let interpW = interpolateQuad(sw, px);
+    let interpW = interpolateHairQuad(projSegm, px);
     let t = interpW.y; // 0 .. 1
-    let hairDepth: f32 = interpolateHairF32(interpW, sw.depthsProj);
+    let hairDepth: f32 = interpolateHairF32(interpW, projSegm.depthsProj);
     // TODO [IGNORE] instead of linear, have quadratic interp? It makes strands "fatter", so user would provide lower fiber radius. Which is good for us.
     let alpha = 1.0 - abs(interpW.x * 2. - 1.); // interpW.x is in 0..1. Turn it so strand middle is 1.0 and then 0.0 at edges.
 

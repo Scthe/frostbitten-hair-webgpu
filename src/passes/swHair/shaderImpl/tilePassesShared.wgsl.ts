@@ -15,7 +15,7 @@ export const TILE_PASSES_BINDINGS = {
 export const TILE_PASSES_SHARED = /* wgsl */ `
 
 fn processTile(
-  sw: SwRasterizedHair,
+  projSegm: ProjectedHairSegment,
   viewportSize: vec2u,
   projMatrixInv: mat4x4f,
   maxDrawnSegments: u32,
@@ -33,10 +33,10 @@ fn processTile(
 
   /*// edgeFunction() as series of additions
   // For some reason this is SLOWER than repeated calling of edgeFunction()?! I assume too much registers spend on this..
-  let CC0 = edgeC(sw.v01, sw.v00);
-  let CC1 = edgeC(sw.v11, sw.v01);
-  let CC2 = edgeC(sw.v10, sw.v11);
-  let CC3 = edgeC(sw.v00, sw.v10);
+  let CC0 = edgeC(projSegm.v01, projSegm.v00);
+  let CC1 = edgeC(projSegm.v11, projSegm.v01);
+  let CC2 = edgeC(projSegm.v10, projSegm.v11);
+  let CC3 = edgeC(projSegm.v00, projSegm.v10);
   var CY0 = f32(boundsMin.x) * CC0.A + f32(boundsMin.y) * CC0.B + CC0.C;
   var CY1 = f32(boundsMin.x) * CC1.A + f32(boundsMin.y) * CC1.B + CC1.C;
   var CY2 = f32(boundsMin.x) * CC2.A + f32(boundsMin.y) * CC2.B + CC2.C;
@@ -54,19 +54,19 @@ fn processTile(
       // you understand the interaction with hardware rasterizer.
       // https://www.w3.org/TR/webgpu/#rasterization
       let p = vec2f(f32(x), f32(y));
-      let C0 = edgeFunction(sw.v01, sw.v00, p);
-      let C1 = edgeFunction(sw.v11, sw.v01, p);
-      let C2 = edgeFunction(sw.v10, sw.v11, p);
-      let C3 = edgeFunction(sw.v00, sw.v10, p);
+      let C0 = edgeFunction(projSegm.v01, projSegm.v00, p);
+      let C1 = edgeFunction(projSegm.v11, projSegm.v01, p);
+      let C2 = edgeFunction(projSegm.v10, projSegm.v11, p);
+      let C3 = edgeFunction(projSegm.v00, projSegm.v10, p);
 
       if (C0 >= 0 && C1 >= 0 && C2 >= 0 && C3 >= 0) { // if (CX0 >= 0 && CX1 >= 0 && CX2 >= 0 && CX3 >= 0) {
         let p_u32 = vec2u(x, y);
-        let interpW = interpolateQuad(sw, p);
+        let interpW = interpolateHairQuad(projSegm, p);
         // let value = 0xffff00ffu;
         // let value = debugBarycentric(vec4f(interpW.xy, 0.1, 0.));
         // storeResult(viewportSize, p_u32, value);
         
-        let hairDepth: f32 = interpolateHairF32(interpW, sw.depthsProj);
+        let hairDepth: f32 = interpolateHairF32(interpW, projSegm.depthsProj);
         
         // sample depth buffer
         let depthTextSamplePx: vec2i = vec2i(i32(x), i32(viewportSize.y - y)); // wgpu's naga requiers vec2i..

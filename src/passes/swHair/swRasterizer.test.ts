@@ -200,19 +200,19 @@ fn main(
   if (strandIdx >= strandsCount) { return; }
 
   // get rasterize data
-  let swHairRasterizeParams = SwHairRasterizeParams(
+  let projParams = ProjectHairParams(
     pointsPerStrand,
     viewportSize,
     _uniforms.fiberRadius
   );
-  let sw = swRasterizeHair(
-    swHairRasterizeParams,
+  let projSegm = projectHairSegment(
+    projParams,
     strandIdx,
     segmentIdx
   );
 
   // hair segment bounds
-  let bounds4f = getRasterizedHairBounds(sw, viewportSize);
+  let bounds4f = getRasterizedHairBounds(projSegm, viewportSize);
   let boundRectMin = bounds4f.xy;
   let boundRectMax = bounds4f.zw;
 
@@ -220,13 +220,13 @@ fn main(
   for (var y: f32 = boundRectMin.y; y < boundRectMax.y; y += 1.0) {
   for (var x: f32 = boundRectMin.x; x < boundRectMax.x; x += 1.0) {
     let p = vec2f(x, y);
-    let C0 = edgeFunction(sw.v01, sw.v00, p);
-    let C1 = edgeFunction(sw.v11, sw.v01, p);
-    let C2 = edgeFunction(sw.v10, sw.v11, p);
-    let C3 = edgeFunction(sw.v00, sw.v10, p);
+    let C0 = edgeFunction(projSegm.v01, projSegm.v00, p);
+    let C1 = edgeFunction(projSegm.v11, projSegm.v01, p);
+    let C2 = edgeFunction(projSegm.v10, projSegm.v11, p);
+    let C3 = edgeFunction(projSegm.v00, projSegm.v10, p);
 
     if (C0 >= 0 && C1 >= 0 && C2 >= 0 && C3 >= 0) {
-      let interp = interpolateQuad(sw, p);
+      let interp = interpolateHairQuad(projSegm, p);
       let value = debugBarycentric(vec4f(interp.xy, 0.1, 0.));
       storeResult(viewportSizeU32, vec2u(u32(x), u32(y)), value);
     }

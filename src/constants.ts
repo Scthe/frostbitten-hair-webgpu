@@ -94,7 +94,7 @@ export const CONFIG = {
   ///////////////
   /// GENERIC/SCENE STUFF
   clearColor: [0.2, 0.2, 0.2, 0.0] as ClearColor,
-  clearNormals: [0.0, 0.0, 0.0, 0.0] as ClearColor, // it's octahedron encoded btw.
+  clearNormals: [0.0, 0.0, 0.0, 0.0] as ClearColor,
   clearAo: [0.0, 0.0, 0.0, 0.0] as ClearColor,
   background: {
     color0: col(22, 162, 188),

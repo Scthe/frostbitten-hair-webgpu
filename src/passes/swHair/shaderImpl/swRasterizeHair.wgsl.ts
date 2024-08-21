@@ -18,13 +18,13 @@ const COLOR_PINK: u32 = 0xffff00ffu;
 const COLOR_YELLOW: u32 = 0xff00ffffu;
 const COLOR_WHITE: u32 = 0xffffffffu;
 
-struct SwHairRasterizeParams {
+struct ProjectHairParams {
   pointsPerStrand: u32,
   viewportSize: vec2f,
   fiberRadius: f32,
 }
 
-struct SwRasterizedHair {
+struct ProjectedHairSegment {
   v00: vec2f,
   v01: vec2f,
   v10: vec2f,
@@ -32,19 +32,22 @@ struct SwRasterizedHair {
   depthsProj: vec4f,
 }
 
-/** NOTE: all the comments assume you have 32 verts per strand */
-fn swRasterizeHair(
-  p: SwHairRasterizeParams,
+/**
+ * https://www.sctheblog.com/blog/hair-software-rasterize/#projecting-hair-as-billboards
+ *  
+ * NOTE: all the comments assume you have 32 verts per strand */
+fn projectHairSegment(
+  params: ProjectHairParams,
   strandIdx: u32,
   segmentIdx: u32, // [0...31], we later discard 31
-) -> SwRasterizedHair {
-  var r: SwRasterizedHair;
+) -> ProjectedHairSegment {
+  var r: ProjectedHairSegment;
 
   var v0: vec2f;
   var v1: vec2f;
   var d01: vec2f;
-  swRasterizeHairPoint(
-    p, strandIdx, segmentIdx, 
+  projectHairPoint(
+    params, strandIdx, segmentIdx, 
     &v0, &v1, &d01
   );
   r.v00 = v0;
@@ -52,8 +55,8 @@ fn swRasterizeHair(
   r.depthsProj.x = d01.x;
   r.depthsProj.y = d01.y;
 
-  swRasterizeHairPoint(
-    p, strandIdx, segmentIdx + 1, 
+  projectHairPoint(
+    params, strandIdx, segmentIdx + 1, 
     &v0, &v1, &d01
   );
   r.v10 = v0;
@@ -64,14 +67,15 @@ fn swRasterizeHair(
   return r;
 }
 
-/** NOTE: all the comments assume you have 32 verts per strand
+/**
+ * https://www.sctheblog.com/blog/hair-software-rasterize/#projecting-hair-as-billboards
  * 
- * Same as swRasterizeHair(), but only for a single point, instead of both start and end points.
+ * NOTE: all the comments assume you have 32 verts per strand
  * 
- * NOTE: This fn should have been called 'projectHairPoint()'
+ * Same as projectHairSegment(), but only for a single point, instead of both start and end points.
 */
-fn swRasterizeHairPoint(
-  p: SwHairRasterizeParams,
+fn projectHairPoint(
+  p: ProjectHairParams,
   strandIdx: u32,
   pointIdx: u32, // [0...31], we later discard 31
   v0: ptr<function, vec2f>, v1: ptr<function, vec2f>,
@@ -100,9 +104,12 @@ fn swRasterizeHairPoint(
   (*depthsProj) = vec2f(v0_NDC.z, v1_NDC.z);
 }
 
-/** Get bounding box XY points. All values in pixels as f32 */
+/** Get bounding box XY points. All values in pixels as f32
+ * 
+ * https://www.sctheblog.com/blog/hair-software-rasterize/#using-edge-function-to-rasterize-quads
+ */
 fn getRasterizedHairBounds(
-  r: SwRasterizedHair,
+  r: ProjectedHairSegment,
   viewportSize: vec2f,
 ) -> vec4f {
   // MAX: top right on screen, but remember Y is inverted!
@@ -116,13 +123,16 @@ fn getRasterizedHairBounds(
 }
 
 
+/** https://www.sctheblog.com/blog/hair-software-rasterize/#software-rasterization */
 fn edgeFunction(v0: vec2f, v1: vec2f, p: vec2f) -> f32 {
   return (p.x - v0.x) * (v1.y - v0.y) - (p.y - v0.y) * (v1.x - v0.x);
 }
 
 
+/** https://www.sctheblog.com/blog/hair-software-rasterize/#optimization-or-not */
 struct EdgeC{ A: f32, B: f32, C: f32 }
 
+/** https://www.sctheblog.com/blog/hair-software-rasterize/#optimization-or-not */
 fn edgeC(v0: vec2f, v1: vec2f) -> EdgeC{
   // from edgeFunction() formula we extract: A * p.x + B * p.y + C.
   // This way, when we iterate over x-axis, we can just add A for
@@ -149,17 +159,19 @@ fn debugBarycentric(w: vec4f) -> u32 {
 }
 
 /**
+ * https://www.sctheblog.com/blog/hair-software-rasterize/#segment-space-coordinates
+ * 
  * result[0] - value in 0-1 range along the width of the segment.
  *             0 is on the side edges, 1 is on the other one
  * result[1] - value in 0-1 range along the length of the segment,
  *             0 is near the segment start point,
  *             1 is near the segment end point
  */
-fn interpolateQuad(sw: SwRasterizedHair, c: vec2f) -> vec2f {
-  // vertices for edge at the start of the segment: sw.v00 , sw.v01
-  let startEdgeMidpoint = (sw.v00 + sw.v01) / 2.0;
-  // vertices for edge at the end of the segment: sw.v10 , sw.v11
-  let endEdgeMidpoint = (sw.v10 + sw.v11) / 2.0;
+fn interpolateHairQuad(projSegm: ProjectedHairSegment, c: vec2f) -> vec2f {
+  // vertices for edge at the start of the segment: projSegm.v00 , projSegm.v01
+  let startEdgeMidpoint = (projSegm.v00 + projSegm.v01) / 2.0;
+  // vertices for edge at the end of the segment: projSegm.v10 , projSegm.v11
+  let endEdgeMidpoint = (projSegm.v10 + projSegm.v11) / 2.0;
   
   // project the pixel onto the strand's segment
   // (the center line between 2 original points)
@@ -168,20 +180,20 @@ fn interpolateQuad(sw: SwRasterizedHair, c: vec2f) -> vec2f {
   let d1 = length(cProjected - startEdgeMidpoint) / length(startEdgeMidpoint - endEdgeMidpoint);
   
   // start edge is perpendicular to tangent of the current segment
-  let widthStart = length(sw.v00 - sw.v01);
+  let widthStart = length(projSegm.v00 - projSegm.v01);
   // 'End' edge is at the angle to segment's tangent.
   // It's direction is determined by the NEXT segment's tangent.
   // Project the 'end' edge onto the 'start' edge
   // using the geometric definition of dot product.
-  let widthEnd = widthStart * dot(normalize(sw.v00 - sw.v01), normalize(sw.v10 - sw.v11));
+  let widthEnd = widthStart * dot(normalize(projSegm.v00 - projSegm.v01), normalize(projSegm.v10 - projSegm.v11));
   let expectedWidth = mix(widthStart, widthEnd, d1);
   // project pixel to one of the side edges
-  let e1 = projectPointToLine(sw.v00, sw.v10, c);
+  let e1 = projectPointToLine(projSegm.v00, projSegm.v10, c);
   // distance between pixel and it's projection on the edge.
   // Divided by full width of the strand around that point
   let d0 =  length(c - e1) / expectedWidth;
 
-  return vec2f(d0, d1);
+  return saturate(vec2f(d0, d1));
 }
 
 fn interpolateHairF32(w: vec2f, values: vec4f) -> f32 {

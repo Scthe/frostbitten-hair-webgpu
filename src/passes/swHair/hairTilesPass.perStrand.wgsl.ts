@@ -70,7 +70,7 @@ fn main(
   if (strandIdx >= strandsCount) { return; }
 
   // get rasterize data
-  let swHairRasterizeParams = SwHairRasterizeParams(
+  let projParams = ProjectHairParams(
     pointsPerStrand,
     viewportSize,
     _uniforms.fiberRadius
@@ -83,8 +83,8 @@ fn main(
   var depthsProj1: vec2f;
 
   // strand root
-  swRasterizeHairPoint(
-    swHairRasterizeParams,
+  projectHairPoint(
+    projParams,
     strandIdx, 0u,
     &v00, &v01, &depthsProj0
   );
@@ -92,12 +92,12 @@ fn main(
   
   for (var segmentIdx: u32 = 0u; segmentIdx < pointsPerStrand - 1; segmentIdx += 1u) {
     // raster segment end
-    swRasterizeHairPoint(
-      swHairRasterizeParams,
+    projectHairPoint(
+      projParams,
       strandIdx, segmentIdx + 1u,
       &v10, &v11, &depthsProj1
     );
-    let sw = SwRasterizedHair(
+    let sw = ProjectedHairSegment(
       v00, v01, v10, v11,
       vec4f(depthsProj0, depthsProj1)
     );

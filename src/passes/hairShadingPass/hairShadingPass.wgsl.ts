@@ -265,6 +265,7 @@ fn getAttenuation(
   let zBufferDepthProj = textureLoad(_depthTexture, vec2u(positionTexSamplePx), 0);
   let zBufferDepth = linearizeDepth(zBufferDepthProj); // [zNear, zFar]
   let depthDiff = abs(myDepth - zBufferDepth); // small value means near front. Bigger values further back
+  // If you want, you can call exp() if you want. Not sure this fake impl is "standarized". But it looks nice.
   return depthDiff * attenuationFactor;
 
   // dbg

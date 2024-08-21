@@ -4,7 +4,7 @@ Software rasterizing hair strands with analytical anti-aliasing and order-indepe
 
 Interactive [Demo](https://scthe.github.io/frostbitten-hair-webgpu/). **WebGPU is only available in Chrome!** Use the `[W, S, A, D]` keys to move and `[Z, SPACEBAR]` to fly up or down. `[Shift]` to move faster.  Check [src/constants.ts](src/constants.ts) for full documentation.
 
-
+> If you are curious about the basics for rendering hair using compute shaders, I've written an article: ["Software rasterizing hair"](https://www.sctheblog.com/blog/hair-software-rasterize/). It's a good introduction if you've never worked in this domain.
 
 
 https://github.com/user-attachments/assets/02859b92-a940-42b6-8381-dcac4b81b4d4

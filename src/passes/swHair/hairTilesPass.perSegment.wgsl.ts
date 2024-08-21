@@ -75,13 +75,13 @@ fn main(
   if (strandIdx >= strandsCount) { return; }
 
   // get rasterize data
-  let swHairRasterizeParams = SwHairRasterizeParams(
+  let projParams = ProjectHairParams(
     pointsPerStrand,
     viewportSize,
     _uniforms.fiberRadius
   );
-  let sw = swRasterizeHair(
-    swHairRasterizeParams,
+  let projSegm = projectHairSegment(
+    projParams,
     strandIdx,
     segmentIdx
   );
@@ -89,7 +89,7 @@ fn main(
   let hairDepthBoundsVS = getHairDepthBoundsVS(mvMatrix);
 
   // get segment bounds and convert to tiles
-  let bounds4f = getRasterizedHairBounds(sw, viewportSize);
+  let bounds4f = getRasterizedHairBounds(projSegm, viewportSize);
   let boundRectMin = bounds4f.xy;
   let boundRectMax = bounds4f.zw;
   let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMin));
@@ -105,7 +105,7 @@ fn main(
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {
   for (var tileX: u32 = tileMinXY.x; tileX <= tileMaxXY.x; tileX += 1u) {
     processTile(
-      sw,
+      projSegm,
       viewportSizeU32,
       projMatrixInv,
       maxDrawnSegments,
