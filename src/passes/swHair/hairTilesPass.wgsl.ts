@@ -13,6 +13,9 @@ import {
 } from './shaderImpl/tilePassesShared.wgsl.ts';
 import { CONFIG } from '../../constants.ts';
 
+// I've also tested per-strand dispatch version - https://github.com/Scthe/frostbitten-hair-webgpu/blob/d6306a69ab1cde4ef1321fc98c2040fd64ccac37/src/passes/swHair/hairTilesPass.perStrand.wgsl.ts .
+// It is slower and harder to optimize. Not sure why.
+
 // TODO [MEDIUM] try workgroup shared for positions and tangents arrays. Probably after you remove strand-based impl.
 
 export const SHADER_PARAMS = {

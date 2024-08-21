@@ -59,7 +59,6 @@ export type HairFile =
   | 'SintelHairOriginal-sintel_hair.8points.tfx';
 
 export type SliceHeadsMemory = 'global' | 'workgroup' | 'registers';
-export type TilePassDispatch = 'perStrand' | 'perSegment';
 export type SdfPreviewAxis = 'axis-x' | 'axis-y' | 'axis-z';
 
 export const GizmoAxis = {
@@ -236,8 +235,6 @@ export const CONFIG = {
      * OR HIDE THE BALL IN THAT CASE).
      */
     invalidTilesPerSegmentThreshold: 64,
-    /** You can test 2 implementations. */
-    tileShaderDispatch: 'perSegment' as TilePassDispatch,
 
     ////// FINE PASS
     /** This is like slices per pixel in original Frostbite presentation, but the slices are inside each depth bin */
