@@ -110,7 +110,7 @@ Or `yarn build` for prod build.
 Node.js does not support WebGPU. Deno does (since [version 1.39](https://deno.com/blog/v1.39), December 14, 2023 - 8 months ago). Internally, it uses Firefox's [wgpu](https://github.com/gfx-rs/wgpu).
 
 1. Download the `.zip` file from [deno/releases](https://github.com/denoland/deno/releases).
-2. Your code editor might automatically install libs from `deno.json`. Or you might have to do it manually.
+2. `"<path-to-unzipped-deno>/deno.exe" cache "src/index.deno.ts"`. Download the dependencies.
 3. Run unit tests:
     1. `"<path-to-unzipped-deno>/deno.exe" task test`.
 4. Render to `./output.png`:
@@ -171,16 +171,16 @@ WebGPU does not offer access to profilers. Or debuggers. With custom shader lang
     * Just before finishing the project, I noticed a problem when calculating `cross(tangent, toCamera)` in view space. Depending on `toCamera.z` (either 1 or -1), it rendered only some strands. I had to switch to world space calculation. Then all strands rendered fine. Somehow this bugfix decreased HairFinePass time from 30ms to 27ms.
 * Make it easy to check. For me, profiling it's just a button right below the GitHub link. Ofc. mashing the button is not the most scientific approach. But it's the best that the WebGPU can offer.
 * Test it. For triangles, it's a [common optimization](https://fgiesen.wordpress.com/2013/02/10/optimizing-the-basic-rasterizer/) to write the edge function as `Ax + By + C`. You pre-calculate A, B, C. Then, the pixel iteration is a single addition. IIRC from [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu), it was 7% faster for my test scene. For quads, this is not always the case. The `HairTilesPass` is **slower** with this optimization, but the HairFinePass is faster. I assume it hits a register breakpoint?
-* Early returns from for loops can be slower. You think you are doing less work. In [one place](src/passes/swHair/shaderImpl/processHairSegment.wgsl.ts#L59) it increases frame time by 0.4ms.
+* Early returns from for loops can be slower. You think you are doing less work. In [one place](//github.com/Scthe/frostbitten-hair-webgpu/blob/c8479faf026676758e5f21e5f08784fdda628831/src/passes/swHair/shaderImpl/processHairSegment.wgsl.ts#L59) it increases frame time by 0.4ms.
     * Basically, do not assume you know how to write a for-loop.
 * Don't test things when you have 300+ fps. Set the test scene. If you have <20 FPS and save 5ms you know you did the right thing. You can go line-by-line and find the exact line that contributes to a problem.
 * For this app, frame time can be similar no matter if you render all strands or only half. The number of points in a strand also has a low impact. In foresight, it's not exactly unexpected.
 * Algorithms are one thing, but config is the other. Switching from tile size 16px to 8px decreases HairFinePass time from ~19ms to ~10ms. Some workgroup sizes matter, and some do not. For some reason, the `HairTilesPass` has a lot of irrational workgroup sizes that are only marginally slower than the prod values.
-* A lot of experiments. A lot of [throwaway code](src/passes/swHair/hairTilesPass.perStrand.wgsl.ts).
+* A lot of experiments. A lot of [throwaway code](//github.com/Scthe/frostbitten-hair-webgpu/blob/d6306a69ab1cde4ef1321fc98c2040fd64ccac37/src/passes/swHair/hairTilesPass.perStrand.wgsl.ts).
 * Have a quick, reproducible environment. I can write `make run` and compare what Deno spews out to check if it seems OK.
 * Decide if it's worth it. This app is a side project. Performance is often a matter of staring at something long enough. Works fine (<16ms) on my RTX3060.
 
-After merging the `physics` branch into `master` I was able to bring the HairFinePass from 30ms to 10ms. Mostly done by fixing a bug, which allowed for a much more aggressive config. E.g. half the tile size to 8px, smaller memory allocations, etc. I suspect there are a few low-hanging fruits still left. I just wish I had a profiler to know what is actually going on.
+In two days after merging the `physics` branch into `master` I was able to bring the HairFinePass from 30ms to 10ms. Mostly done by fixing a bug, which allowed for a much more aggressive config. E.g. half the tile size to 8px, smaller memory allocations, etc. I suspect there are a few low-hanging fruits still left. I just wish I had a profiler to know what is actually going on.
 
 I also wonder if Frostbite's team were able to have a more optimal HairFinePass workgroup size than `(1, 1, 1)` (99.9% sure they did). There is a lot of thread divergence. Usually, GPU task queues have a single task representing SIMD. E.g. it assigns a separate game object to each workgroup thread. And taking a task is a simple atomic counter increase op. But HairFinePass operates on tiles. Taking a single task would mean each of the workgroup threads would receive its own tile. Even with Frostbite's pre-sorted tile list, this could run into issues. You would also have to change memory access patterns (tried this and it by itself does nothing). I'd say this is the no. 1 priority in the codebase, as the findings would be interesting. There is not much info on the internet on GPU task queues. I know UE5's Nanite uses one. They have heterogeneous tasks, but each is easier to SIMD-ify.
 

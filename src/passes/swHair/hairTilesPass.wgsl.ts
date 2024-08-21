@@ -9,10 +9,15 @@ import { BUFFER_HAIR_TILE_SEGMENTS } from './shared/hairTileSegmentsBuffer.ts';
 import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
 import { CONFIG } from '../../constants.ts';
 
-// I've also tested per-strand dispatch version - https://github.com/Scthe/frostbitten-hair-webgpu/blob/d6306a69ab1cde4ef1321fc98c2040fd64ccac37/src/passes/swHair/hairTilesPass.perStrand.wgsl.ts .
-// It is slower and harder to optimize. Not sure why.
+/*
+1) I've also tested per-strand dispatch version - https://github.com/Scthe/frostbitten-hair-webgpu/blob/d6306a69ab1cde4ef1321fc98c2040fd64ccac37/src/passes/swHair/hairTilesPass.perStrand.wgsl.ts .
+   It is slower and harder to optimize. Not sure why.
+2) Software rasterization in this shader is slower if you "optimize" edge function into "A*x + B*y + C".
+   I've left commented-out implementation if you want to try
 
-// TODO [MEDIUM] try workgroup shared for positions and tangents arrays. Probably after you remove strand-based impl.
+
+TODO [MEDIUM] try workgroup shared for positions and tangents arrays. Probably after you remove strand-based impl.
+*/
 
 export const SHADER_PARAMS = {
   workgroupSizeX: 4, // TODO [LOW] set even better values? Current seem OK.
@@ -100,14 +105,19 @@ fn main(
   let boundRectMax = bounds4f.zw;
   let tileMinXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMin));
   let tileMaxXY: vec2u = getHairTileXY_FromPx(vec2u(boundRectMax));
-  // reject degenerate strands from physics simulation
+  // reject degenerate strands from physics simulation.
+  // If parts of the strand disappear, this is probably the cause.
+  // Number tuned for Sintel's front hair lock
   let tileSize = (tileMaxXY - tileMinXY) + vec2u(1u, 1u);
-  // number tuned for Sintel's front hair lock
   if (tileSize.x * tileSize.y > INVALID_TILES_PER_SEGMENT_THRESHOLD) {
     return;
   } 
 
   // for each affected tile
+  // We could calculate affected tiles analytically, but we have to rasterize to test depth buffer.
+  // But you can probably do some optimizations by calculating where the strand edge crosses the tile bounds.
+  // Having tileMinXY + tileMaxXY iteration means we test all tiles in a rectangle.
+  // Could use early out for diagonal segments.
   for (var tileY: u32 = tileMinXY.y; tileY <= tileMaxXY.y; tileY += 1u) {
   for (var tileX: u32 = tileMinXY.x; tileX <= tileMaxXY.x; tileX += 1u) {
     processTile(
@@ -155,22 +165,18 @@ fn processTile(
   for (var y: u32 = boundsMin.y; y < boundsMax.y; y += 1u) {
   // var CX0 = CY0; var CX1 = CY1; var CX2 = CY2; var CX3 = CY3;
   for (var x: u32 = boundsMin.x; x < boundsMax.x; x += 1u) {
-      // Technically we should add (0.5, 0.5) to sample in the middle of the pixel.
-      // But only connection to hardware rasterizer is the depth buffer.
-      // The offset is strongly recommended, but not 100% required. Technically, also
-      // depends on hardware raster multi-sampling if you want to be 100% correct.
-      // You should NEVER multi-sample hair with software rasterizer. Just make sure
-      // you understand the interaction with hardware rasterizer.
-      // https://www.w3.org/TR/webgpu/#rasterization
-      let p = vec2f(f32(x), f32(y));
-      let C0 = edgeFunction(projSegm.v01, projSegm.v00, p);
-      let C1 = edgeFunction(projSegm.v11, projSegm.v01, p);
-      let C2 = edgeFunction(projSegm.v10, projSegm.v11, p);
-      let C3 = edgeFunction(projSegm.v00, projSegm.v10, p);
+      // You should NEVER multi-sample hair with Frostbite's technique.
+      // Just make sure you understand the interaction with hardware rasterizer (through depth-buffer).
+      // https://www.sctheblog.com/blog/hair-software-rasterize/#half-of-the-pixel-offset
+      let posPx = vec2f(f32(x), f32(y)); // + vec2f(0.5); // Removed after testing. Causes tiny z-fighting like artefacts
+      let C0 = edgeFunction(projSegm.v01, projSegm.v00, posPx);
+      let C1 = edgeFunction(projSegm.v11, projSegm.v01, posPx);
+      let C2 = edgeFunction(projSegm.v10, projSegm.v11, posPx);
+      let C3 = edgeFunction(projSegm.v00, projSegm.v10, posPx);
 
       if (C0 >= 0 && C1 >= 0 && C2 >= 0 && C3 >= 0) { // if (CX0 >= 0 && CX1 >= 0 && CX2 >= 0 && CX3 >= 0) {
-        let p_u32 = vec2u(x, y);
-        let interpW = interpolateHairQuad(projSegm, p);
+        // https://www.sctheblog.com/blog/hair-software-rasterize/#segment-space-coordinates
+        let interpW = interpolateHairQuad(projSegm, posPx);
         // let value = 0xffff00ffu;
         // let value = debugBarycentric(vec4f(interpW.xy, 0.1, 0.));
         // storeResult(viewportSize, p_u32, value);
@@ -186,7 +192,7 @@ fn processTile(
         }
 
         // get depth bin based on view-space depth
-        let hairDepthVS: vec3f = projectVertex(projMatrixInv, vec4f(p, hairDepth, 1.0));
+        let hairDepthVS: vec3f = projectVertex(projMatrixInv, vec4f(posPx, hairDepth, 1.0));
         // view space means Z is reversed. But we want bin 0 to be close etc.
         // So we invert the bin idx.
         let hairDepthBin = (TILE_DEPTH_BINS_COUNT - 1u) - getDepthBin(TILE_DEPTH_BINS_COUNT, hairDepthBoundsVS, hairDepthVS.z);

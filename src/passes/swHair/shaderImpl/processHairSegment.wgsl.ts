@@ -3,7 +3,7 @@
 for (var y: u32 = 0u; y < TILE_SIZE; y += 1u) { 
 for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
   let px = vec2f(boundRectMin + vec2f(f32(x), f32(y))); // pixel coordinates wrt. viewport
-  let px_u32 = vec2u(px);
+  let posPx_u32 = vec2u(px);
   let pxInTile: vec2u = vec2u(x, y); // pixel coordinates wrt. tile
   (continues as normal)
 }}
@@ -60,9 +60,11 @@ fn processHairSegment(
     // if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return writtenSliceDataCount; }
 
     // get pixel coordinates
-    let px = vec2f(x, y); // pixel coordinates wrt. viewport
-    let px_u32 = vec2u(u32(x), u32(y));
-    let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
+    // Half-of-the-pixel offset not added as it causes problems (small random pixels around the strand)
+    // https://www.sctheblog.com/blog/hair-software-rasterize/#half-of-the-pixel-offset
+    let posPx = vec2f(x, y); // pixel coordinates wrt. viewport
+    let posPx_u32 = vec2u(u32(x), u32(y));
+    let pxInTile: vec2u = vec2u(posPx - boundRectMin); // pixel coordinates wrt. tile
 
     let isOutside = CX0 < 0 || CX1 < 0 || CX2 < 0 || CX3 < 0;
     CX0 += CC0.A;
@@ -74,14 +76,15 @@ fn processHairSegment(
       continue;
     }
 
-    let interpW = interpolateHairQuad(projSegm, px);
+    // https://www.sctheblog.com/blog/hair-software-rasterize/#segment-space-coordinates
+    let interpW = interpolateHairQuad(projSegm, posPx);
     let t = interpW.y; // 0 .. 1
     let hairDepth: f32 = interpolateHairF32(interpW, projSegm.depthsProj);
     // TODO [IGNORE] instead of linear, have quadratic interp? It makes strands "fatter", so user would provide lower fiber radius. Which is good for us.
     let alpha = 1.0 - abs(interpW.x * 2. - 1.); // interpW.x is in 0..1. Turn it so strand middle is 1.0 and then 0.0 at edges.
 
     // sample depth buffer, depth test with GL_LESS
-    let depthTextSamplePx: vec2i = vec2i(i32(px_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
+    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
     let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
     if (hairDepth >= depthBufferValue) {
       continue;

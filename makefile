@@ -2,6 +2,10 @@ DENO = "C:\\programs\\portable\\deno\\deno.exe"
 BLENDER = "C:\\programs\\portable\\blender-4.0.2-windows-x64\\blender.exe"
 BLENDER_FILE = "_references/models/frostbite-hair.blend"
 
+# install dependencies before first run
+install:
+	$(DENO) cache "src/index.deno.ts"
+
 # Render to an image
 run:
 	$(DENO) task start

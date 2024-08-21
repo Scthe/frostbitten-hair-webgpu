@@ -19,7 +19,6 @@ Passes:
    2. [ShadowMapPass](shadowMapPass) to update shadow map. Has separate `GPURenderPipeline` for meshes and hair. Uses a hardware rasterizer for hair, but you should change this if you have extra time.
    3. [DrawMeshesPass](drawMeshes) draws solid objects. This also includes a special code for the ball collider.
    4. [HairTilesPass](swHair/hairTilesPass.ts) software rasterizes hair segments into tiles. Or, to be more precise, into each tile's depth bins. Dispatches a thread for each hair segment.
-      1. There is also an alternative implementation that dispatches a thread for each hair strand. It is slower.
    5. [HairFinePass](swHair/hairFinePass.ts) software rasterizes each tile and writes the final pixel colors into the buffer. It contains the main part of the order-independent transparency implementation. It uses a task queue internally. Each "processor" grabs the next tile from a list once it's done with the current one. Dispatches a thread for each processor.
    6. [HairCombinePass](hairCombine) writes the software-rasterized hair into the HDR texture. Has special code for debug modes.
    7. Update depth and normal buffers using [hardware rasterizer](hwHair).
