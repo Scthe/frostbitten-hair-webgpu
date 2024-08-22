@@ -12,18 +12,18 @@ for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
 export const SHADER_IMPL_PROCESS_HAIR_SEGMENT = () => /* wgsl */ `
 
 fn processHairSegment(
-  p: FineRasterParams,
+  params: FineRasterParams,
   tileBoundsPx: vec4u, tileDepth: vec2f,
   sliceDataOffset: u32,
   strandIdx: u32, segmentIdx: u32
 ) -> u32 {
   var writtenSliceDataCount: u32 = 0u;
-  let segmentCount = p.pointsPerStrand - 1;
+  let segmentCount = params.pointsPerStrand - 1;
 
   let projParams = ProjectHairParams(
-    p.pointsPerStrand,
-    p.viewportSize,
-    p.fiberRadius,
+    params.pointsPerStrand,
+    params.viewportSize,
+    params.fiberRadius,
   );
   let projSegm = projectHairSegment(
     projParams,
@@ -84,7 +84,7 @@ fn processHairSegment(
     let alpha = 1.0 - abs(interpW.x * 2. - 1.); // interpW.x is in 0..1. Turn it so strand middle is 1.0 and then 0.0 at edges.
 
     // sample depth buffer, depth test with GL_LESS
-    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
+    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(params.viewportSize.y - y)); // wgpu's naga requiers vec2i..
     let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
     if (hairDepth >= depthBufferValue) {
       continue;
@@ -99,8 +99,8 @@ fn processHairSegment(
 
     // insert into per-slice linked list
     // WARNING: Both lines below can be slow!
-    let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-    _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
+    let previousPtr: u32 = _setSlicesHeadPtr(params.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
+    _setSliceData(params.processorId, nextSliceDataPtr, color, previousPtr);
     writtenSliceDataCount += 1u;
   }
   CY0 += CC0.B;

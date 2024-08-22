@@ -67,8 +67,6 @@ var _depthTexture: texture_depth_2d;
 
 
 struct FineRasterParams {
-  viewModelMat: mat4x4f,
-  projMat: mat4x4f,
   // START: vec4u
   strandsCount: u32, // u32's first
   pointsPerStrand: u32,
@@ -84,21 +82,22 @@ struct FineRasterParams {
 ${SHADER_IMPL_PROCESS_HAIR_SEGMENT()}
 ${SHADER_IMPL_REDUCE_HAIR_SLICES()}
 
+var<private> _local_invocation_index: u32;
 
 @compute
 @workgroup_size(${c.workgroupSizeX}, 1, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
+  @builtin(local_invocation_index) local_invocation_index: u32, // threadId inside workgroup
 ) {
   let processorId = global_id.x;
   let viewportSize: vec2f = _uniforms.viewport.xy;
   let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
+  _local_invocation_index = local_invocation_index;
 
   let params = FineRasterParams(
-    _uniforms.modelViewMat,
-    _uniforms.projMatrix,
     strandsCount,
     pointsPerStrand,
     vec2u(viewportSize),
@@ -127,7 +126,10 @@ fn main(
         depthBin,
         &tileBoundsPx
       );
-      if (allPixelsDone) { break; }
+      if (allPixelsDone) { // early out for whole tile
+        // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
+        break;
+      }
     }
 
     // move to next tile
@@ -136,17 +138,17 @@ fn main(
 }
 
 fn processTile(
-  p: FineRasterParams,
+  params: FineRasterParams,
   maxDrawnSegments: u32,
   tileXY: vec2u,
   depthBin: u32,
   tileBoundsPx: ptr<function,vec4u>
 ) -> bool {
-  let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
+  let MAX_PROCESSED_SEGMENTS = params.strandsCount * params.pointsPerStrand; // just in case
   
-  let tileDepth = _getTileDepth(p.viewportSizeU32, tileXY, depthBin);
+  let tileDepth = _getTileDepth(params.viewportSizeU32, tileXY, depthBin);
   if (tileDepth.y == 0.0) { return false; } // no depth written means empty tile
-  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, depthBin);
+  var segmentPtr = _getTileSegmentPtr(params.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var processedSegmentCnt = 0u;
@@ -157,7 +159,7 @@ fn processTile(
   while (processedSegmentCnt < MAX_PROCESSED_SEGMENTS){
     if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
       let writtenSliceDataCount = processHairSegment(
-        p,
+        params,
         (*tileBoundsPx), tileDepth,
         sliceDataOffset,
         segmentData.x, segmentData.y // strandIdx, segmentIdx
@@ -183,9 +185,9 @@ fn processTile(
   // this also clears the current processor state for next tile
   // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
   let allPixelsDone = reduceHairSlices(
-    p.processorId,
-    p.viewportSizeU32,
-    p.dbgSlicesModeMaxSlices,
+    params.processorId,
+    params.viewportSizeU32,
+    params.dbgSlicesModeMaxSlices,
     tileBoundsPx
   );
 
