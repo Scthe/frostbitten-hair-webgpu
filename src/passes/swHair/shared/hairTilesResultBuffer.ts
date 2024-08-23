@@ -1,8 +1,9 @@
 import { BYTES_U32, CONFIG } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
-import { Dimensions, divideCeil } from '../../../utils/index.ts';
+import { Dimensions } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
 import { StorageAccess, u32_type } from '../../../utils/webgpu.ts';
+import { getTileCount } from './utils.ts';
 
 ///////////////////////////
 /// SHADER CODE
@@ -16,7 +17,7 @@ fn _storeTileHead(
   depthMin: f32, depthMax: f32,
   nextPtr: u32
 ) -> u32 {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
+  let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, depthBin);
   
   // store depth
   // TODO [IGNORE] low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
@@ -44,7 +45,7 @@ fn _storeTileHead(
 const getTileDepth = /* wgsl */ `
 
 fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> vec2f {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
+  let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, depthBin);
   let tile = _hairTilesResult[tileIdx];
   return vec2f(
     f32(MAX_U32 - tile.minDepth) / f32(MAX_U32),
@@ -53,7 +54,7 @@ fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> vec2f {
 }
 
 fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
+  let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, depthBin);
   let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr;
   return _translateHeadPointer(myPtr);
 }
@@ -95,14 +96,6 @@ fn _translateHeadPointer(segmentPtr: u32) -> u32 {
 ///////////////////////////
 /// GPU BUFFER
 ///////////////////////////
-
-export const getTileCount = (viewportSize: Dimensions): Dimensions => {
-  const { tileSize } = CONFIG.hairRender;
-  return {
-    width: divideCeil(viewportSize.width, tileSize),
-    height: divideCeil(viewportSize.height, tileSize),
-  };
-};
 
 export function createHairTilesResultBuffer(
   device: GPUDevice,

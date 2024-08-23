@@ -115,6 +115,8 @@ export const createMockPassCtx = (
     hairRasterizerResultsBuffer: undefined!,
     hairTilesBuffer: undefined!,
     hairTileSegmentsBuffer: undefined!,
+    hairTileListBuffer: undefined!,
+    hairSegmentCountPerTileBuffer: undefined!,
   };
 };
 

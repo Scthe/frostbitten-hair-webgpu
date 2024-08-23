@@ -8,6 +8,7 @@ import { BUFFER_HAIR_TILES_RESULT } from './shared/hairTilesResultBuffer.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from './shared/hairTileSegmentsBuffer.ts';
 import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
 import { CONFIG } from '../../constants.ts';
+import { BUFFER_SEGMENT_COUNT_PER_TILE } from './shared/segmentCountPerTileBuffer.ts';
 
 /*
 1) I've also tested per-strand dispatch version - https://github.com/Scthe/frostbitten-hair-webgpu/blob/d6306a69ab1cde4ef1321fc98c2040fd64ccac37/src/passes/swHair/hairTilesPass.perStrand.wgsl.ts .
@@ -33,6 +34,7 @@ export const SHADER_PARAMS = {
     tilesBuffer: 4,
     depthTexture: 5,
     tileSegmentsBuffer: 6,
+    segmentCountPerTileBuffer: 7,
   },
 };
 
@@ -56,6 +58,7 @@ ${BUFFER_HAIR_POINTS_POSITIONS(b.hairPositions)}
 ${BUFFER_HAIR_TANGENTS(b.hairTangents)}
 ${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read_write')}
 ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read_write')}
+${BUFFER_SEGMENT_COUNT_PER_TILE(b.segmentCountPerTileBuffer, 'read_write')}
 
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
@@ -228,6 +231,9 @@ fn processTile(
       nextPtr, prevPtr,
       strandIdx, segmentIdx
     );
+
+    // store for sorting
+    _incTileSegmentCount(viewportSize, tileXY);
   }
 }
 

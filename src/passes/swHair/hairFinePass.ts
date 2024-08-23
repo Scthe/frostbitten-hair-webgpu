@@ -4,6 +4,7 @@ import { Dimensions } from '../../utils/index.ts';
 import {
   assertIsGPUTextureView,
   bindBuffer,
+  cmdClearWholeBuffer,
   getItemsPerThread,
 } from '../../utils/webgpu.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
@@ -46,20 +47,11 @@ export class HairFinePass {
     this.hairSlicesDataBuffer = createHairSlicesDataBuffer(device);
   }
 
-  /** Clears to 0. We cannot select a number */
-  clearFramebuffer(ctx: PassCtx) {
+  cmdClearBeforeRender(ctx: PassCtx) {
     if (this.hairSlicesHeadsBuffer) {
-      ctx.cmdBuf.clearBuffer(
-        this.hairSlicesHeadsBuffer,
-        0,
-        this.hairSlicesHeadsBuffer.size
-      );
+      cmdClearWholeBuffer(ctx.cmdBuf, this.hairSlicesHeadsBuffer);
     }
-    ctx.cmdBuf.clearBuffer(
-      this.hairRasterizerResultsBuffer,
-      0,
-      this.hairRasterizerResultsBuffer.size
-    );
+    cmdClearWholeBuffer(ctx.cmdBuf, this.hairRasterizerResultsBuffer); // TODO not needed?
   }
 
   onViewportResize = (device: GPUDevice, viewportSize: Dimensions) => {
@@ -107,6 +99,7 @@ export class HairFinePass {
       depthTexture,
       hairTilesBuffer,
       hairTileSegmentsBuffer,
+      hairTileListBuffer,
     } = ctx;
     const b = SHADER_PARAMS.bindings;
     assertIsGPUTextureView(depthTexture);
@@ -117,6 +110,7 @@ export class HairFinePass {
       bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
       bindBuffer(b.hairSlicesData, this.hairSlicesDataBuffer),
       bindBuffer(b.rasterizerResult, this.hairRasterizerResultsBuffer),
+      bindBuffer(b.tileList, hairTileListBuffer),
       object.bindHairData(b.hairData),
       object.bindPointsPositions(b.hairPositions),
       object.bindTangents(b.hairTangents),
@@ -124,7 +118,7 @@ export class HairFinePass {
       { binding: b.depthTexture, resource: depthTexture },
     ];
 
-    // no needed if using local memory
+    // no needed if using workgroup/registers memory
     if (this.hairSlicesHeadsBuffer) {
       entries.push(bindBuffer(b.hairSlicesHeads, this.hairSlicesHeadsBuffer));
     }

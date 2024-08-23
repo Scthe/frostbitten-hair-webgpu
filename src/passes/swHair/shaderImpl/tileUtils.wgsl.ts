@@ -12,13 +12,18 @@ fn getTileCount(viewportSize: vec2u) -> vec2u {
   );
 }
 
-fn getHairTileIdx(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
+fn getHairTileDepthBinIdx(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
   let tileCount = getTileCount(viewportSize);
   return (
-    tileXY.y * tileCount.x  * TILE_DEPTH_BINS_COUNT +
+    tileXY.y * tileCount.x * TILE_DEPTH_BINS_COUNT +
     tileXY.x * TILE_DEPTH_BINS_COUNT +
     depthBin
   );
+}
+
+fn getHairTileIdx(viewportSize: vec2u, tileXY: vec2u) -> u32 {
+  let tileCount = getTileCount(viewportSize);
+  return tileXY.y * tileCount.x + tileXY.x;
 }
 
 /** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */

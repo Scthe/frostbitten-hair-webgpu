@@ -14,6 +14,7 @@ import { BUFFER_HAIR_SHADING } from '../../scene/hair/hairShadingBuffer.ts';
 import { SHADER_TILE_UTILS } from './shaderImpl/tileUtils.wgsl.ts';
 import { SW_RASTERIZE_HAIR } from './shaderImpl/swRasterizeHair.wgsl.ts';
 import { BUFFER_HAIR_TANGENTS } from '../../scene/hair/hairTangentsBuffer.ts';
+import { BUFFER_TILE_LIST } from './shared/tileListBuffer.ts';
 
 export const SHADER_PARAMS = {
   workgroupSizeX: CONFIG.hairRender.finePassWorkgroupSizeX,
@@ -29,6 +30,7 @@ export const SHADER_PARAMS = {
     depthTexture: 8,
     hairShading: 9,
     hairTangents: 10,
+    tileList: 11,
   },
 };
 
@@ -61,6 +63,7 @@ ${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizerResult, 'read_write')}
 ${BUFFER_HAIR_SLICES_HEADS(b.hairSlicesHeads, 'read_write')}
 ${BUFFER_HAIR_SLICES_DATA(b.hairSlicesData, 'read_write')}
 ${BUFFER_HAIR_SHADING(b.hairShading, 'read')}
+${BUFFER_TILE_LIST(b.tileList, 'read')}
 
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
@@ -111,10 +114,13 @@ fn main(
 
   // clear memory before starting work
   _clearSlicesHeadPtrs(processorId);
-  
+
+  // tile count based on screen size. Used to check if tile is valid
   let tileCount2d = getTileCount(params.viewportSizeU32);
   let tileCount = tileCount2d.x * tileCount2d.y;
-  var tileIdx = _getNextTileIdx(tileCount);
+  // size of task queue
+  let tilesToProcess = _hairTileData.drawnTiles;
+  var tileIdx = _getNextTileIdx(tilesToProcess);
 
   while (!workgroupUniformLoad(&_isDone)) {
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
@@ -139,7 +145,7 @@ fn main(
     }
 
     // move to next tile
-    tileIdx = _getNextTileIdx(tileCount);
+    tileIdx = _getNextTileIdx(tilesToProcess);
   }
 }
 
