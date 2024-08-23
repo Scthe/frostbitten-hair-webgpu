@@ -1,4 +1,4 @@
-import { BYTES_VEC4 } from '../../../constants.ts';
+import { BYTES_VEC4, CONFIG } from '../../../constants.ts';
 import { STATS } from '../../../stats.ts';
 import { Dimensions } from '../../../utils/index.ts';
 import { formatBytes } from '../../../utils/string.ts';
@@ -19,8 +19,20 @@ fn _setRasterizerResult(viewportSize: vec2u, posPx: vec2u, color: vec4f) {
   _hairRasterizerResults.data[idx] = color;
 }
 
-fn _getNextTileIdx() -> u32 {
-  return atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, 1u);
+fn _getNextTileIdx(tileCount: u32) -> u32 {
+  // we could do 'atomicAdd(_, 1)' on each thread. But which thread in wkgrp
+  // receives the smallest value? It is the one that decides if we are done.
+  // 'atomicAdd(_, 1)' does not give us guarantee inside wkgrp. And clever ways
+  // to find this are more complicated then the following code.
+  if (_local_invocation_index == 0u) {
+    let wkgrpThreadCnt = ${CONFIG.hairRender.finePassWorkgroupSizeX}u;
+    _tileStartOffset = atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, wkgrpThreadCnt);
+    _isDone = _tileStartOffset >= tileCount;
+  }
+
+  // workgroupUniformLoad() has implicit barrier
+  let tileStartOffset = workgroupUniformLoad(&_tileStartOffset);
+  return tileStartOffset + _local_invocation_index;
 }
 `;
 

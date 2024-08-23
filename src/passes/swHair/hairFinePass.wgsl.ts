@@ -83,6 +83,8 @@ ${SHADER_IMPL_PROCESS_HAIR_SEGMENT()}
 ${SHADER_IMPL_REDUCE_HAIR_SLICES()}
 
 var<private> _local_invocation_index: u32;
+var<workgroup> _tileStartOffset: u32;
+var<workgroup> _isDone: bool;
 
 @compute
 @workgroup_size(${c.workgroupSizeX}, 1, 1)
@@ -112,13 +114,17 @@ fn main(
   
   let tileCount2d = getTileCount(params.viewportSizeU32);
   let tileCount = tileCount2d.x * tileCount2d.y;
-  var tileIdx = _getNextTileIdx();
+  var tileIdx = _getNextTileIdx(tileCount);
 
-  while (tileIdx < tileCount) {
+  while (!workgroupUniformLoad(&_isDone)) {
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
     var tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
     
-    for (var depthBin = 0u; depthBin < TILE_DEPTH_BINS_COUNT; depthBin += 1u) {
+    for (
+      var depthBin = 0u;
+      depthBin < TILE_DEPTH_BINS_COUNT && tileIdx < tileCount;
+      depthBin += 1u
+    ) {
       let allPixelsDone = processTile(
         params,
         maxDrawnSegments,
@@ -133,7 +139,7 @@ fn main(
     }
 
     // move to next tile
-    tileIdx = _getNextTileIdx();
+    tileIdx = _getNextTileIdx(tileCount);
   }
 }
 
