@@ -14,21 +14,14 @@ export const BUFFER_TILE_LIST = (
 
 struct TilesList {
   drawnTiles: ${u32_type(access)},
-  // processedTiles: u32, // TODO move here instead of hairTileSegmentsBuffer? Or is it better if fine pass stays read-only there?
+  // processedTiles: u32, // TODO [NO] move here instead of hairTileSegmentsBuffer? Or is it better if fine pass stays read-only there?
   data: array<u32>, // tileIds
 }
 
 @group(0) @binding(${bindingIdx})
 var<storage, ${access}> _hairTileData: TilesList;
 
-${access == 'read_write' ? addTileToTaskQueue : getNextTileToProcess}
-`;
-
-const addTileToTaskQueue = /* wgsl */ `
-  fn _addTileToTaskQueue(tileIdx: u32) {
-    let writeIdx = atomicAdd(&_hairTileData.drawnTiles, 1u);
-    _hairTileData.data[writeIdx] = tileIdx;
-  }
+${access == 'read_write' ? '' : getNextTileToProcess}
 `;
 
 const getNextTileToProcess = /* wgsl */ `
@@ -64,10 +57,12 @@ export function createHairTileListBuffer(
   // 4 cause I will probably forget to inc. this if I add more fields
   const entries = 4 + tileCount;
 
+  const extraUsage = CONFIG.isTest ? GPUBufferUsage.COPY_SRC : 0;
+
   return device.createBuffer({
     label: `hair-tile-list`,
     size: entries * BYTES_U32,
-    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+    usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST | extraUsage,
   });
 
   /*const data = new Uint32Array(tileCount + 1);
@@ -77,4 +72,11 @@ export function createHairTileListBuffer(
   }
 
   return createGPU_StorageBuffer(device, `hair-tile-list`, data);*/
+}
+
+export function parseTileList(data: Uint32Array) {
+  return {
+    drawnTiles: data[0],
+    data: Array(...data.slice(1, 1 + data[0])) as number[],
+  };
 }

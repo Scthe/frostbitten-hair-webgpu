@@ -59,7 +59,9 @@ export class SDFCollider {
     const [boundsMin, boundsMax] = bounds;
     const size = vec3.subtract(boundsMax, boundsMin);
     const cellSize = vec3.scale(size, 1 / (dims - 1));
-    console.log(`SDF collider '${name}' (dims=${dims}, cellSize=${cellSize}), bounds:`, bounds); // prettier-ignore
+    if (!CONFIG.isTest) {
+      console.log(`SDF collider '${name}' (dims=${dims}, cellSize=${cellSize}), bounds:`, bounds); // prettier-ignore
+    }
   }
 
   bindTexture = (bindingIdx: number): GPUBindGroupEntry => ({

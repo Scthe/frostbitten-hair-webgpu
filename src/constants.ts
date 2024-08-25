@@ -236,6 +236,10 @@ export const CONFIG = {
      */
     invalidTilesPerSegmentThreshold: 64,
 
+    ////// SORT PASS
+    sortBuckets: 64,
+    sortBucketSize: 16,
+
     ////// FINE PASS
     /** This is like slices per pixel in original Frostbite presentation, but the slices are inside each depth bin */
     slicesPerPixel: 8,
