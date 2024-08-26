@@ -1,4 +1,4 @@
-(()=>{var fs=Object.create;var vi=Object.defineProperty;var ds=Object.getOwnPropertyDescriptor;var ps=Object.getOwnPropertyNames;var ms=Object.getPrototypeOf,hs=Object.prototype.hasOwnProperty;var gs=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var _s=(t,e,n,r)=>{if(e&&typeof e=="object"||typeof e=="function")for(let i of ps(e))!hs.call(t,i)&&i!==n&&vi(t,i,{get:()=>e[i],enumerable:!(r=ds(e,i))||r.enumerable});return t};var xs=(t,e,n)=>(n=t!=null?fs(ms(t)):{},_s(e||!t||!t.__esModule?vi(n,"default",{value:t,enumerable:!0}):n,t));var Ka=gs((exports,module)=>{(function(t,e){if(typeof exports=="object"&&typeof module=="object")module.exports=e();else if(typeof define=="function"&&define.amd)define([],e);else{var n=e();for(var r in n)(typeof exports=="object"?exports:t)[r]=n[r]}})(typeof self<"u"?self:exports,function(){return function(t){var e={};function n(r){if(e[r])return e[r].exports;var i=e[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=t,n.c=e,n.d=function(r,i,o){n.o(r,i)||Object.defineProperty(r,i,{enumerable:!0,get:o})},n.r=function(r){typeof Symbol<"u"&&Symbol.toStringTag&&Object.defineProperty(r,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(r,"__esModule",{value:!0})},n.t=function(r,i){if(1&i&&(r=n(r)),8&i||4&i&&typeof r=="object"&&r&&r.__esModule)return r;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:r}),2&i&&typeof r!="string")for(var a in r)n.d(o,a,(function(s){return r[s]}).bind(null,a));return o},n.n=function(r){var i=r&&r.__esModule?function(){return r.default}:function(){return r};return n.d(i,"a",i),i},n.o=function(r,i){return Object.prototype.hasOwnProperty.call(r,i)},n.p="/",n(n.s=0)}({"./src/index.ts":function(module,__webpack_exports__,__webpack_require__){"use strict";eval(`__webpack_require__.r(__webpack_exports__);
+(()=>{var Ms=Object.create;var Di=Object.defineProperty;var Is=Object.getOwnPropertyDescriptor;var Cs=Object.getOwnPropertyNames;var As=Object.getPrototypeOf,Rs=Object.prototype.hasOwnProperty;var Ds=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports);var Bs=(t,e,n,r)=>{if(e&&typeof e=="object"||typeof e=="function")for(let i of Cs(e))!Rs.call(t,i)&&i!==n&&Di(t,i,{get:()=>e[i],enumerable:!(r=Is(e,i))||r.enumerable});return t};var Os=(t,e,n)=>(n=t!=null?Ms(As(t)):{},Bs(e||!t||!t.__esModule?Di(n,"default",{value:t,enumerable:!0}):n,t));var ds=Ds((exports,module)=>{(function(t,e){if(typeof exports=="object"&&typeof module=="object")module.exports=e();else if(typeof define=="function"&&define.amd)define([],e);else{var n=e();for(var r in n)(typeof exports=="object"?exports:t)[r]=n[r]}})(typeof self<"u"?self:exports,function(){return function(t){var e={};function n(r){if(e[r])return e[r].exports;var i=e[r]={i:r,l:!1,exports:{}};return t[r].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=t,n.c=e,n.d=function(r,i,o){n.o(r,i)||Object.defineProperty(r,i,{enumerable:!0,get:o})},n.r=function(r){typeof Symbol<"u"&&Symbol.toStringTag&&Object.defineProperty(r,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(r,"__esModule",{value:!0})},n.t=function(r,i){if(1&i&&(r=n(r)),8&i||4&i&&typeof r=="object"&&r&&r.__esModule)return r;var o=Object.create(null);if(n.r(o),Object.defineProperty(o,"default",{enumerable:!0,value:r}),2&i&&typeof r!="string")for(var a in r)n.d(o,a,(function(s){return r[s]}).bind(null,a));return o},n.n=function(r){var i=r&&r.__esModule?function(){return r.default}:function(){return r};return n.d(i,"a",i),i},n.o=function(r,i){return Object.prototype.hasOwnProperty.call(r,i)},n.p="/",n(n.s=0)}({"./src/index.ts":function(module,__webpack_exports__,__webpack_require__){"use strict";eval(`__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "OBJ", function() { return OBJ; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
 /* harmony import */ var _mesh__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mesh */ "./src/mesh.ts");
@@ -1942,7 +1942,7 @@ function deleteMeshBuffers(gl, mesh) {
 //# sourceURL=webpack:///./src/utils.ts?`)},0:function(module,exports,__webpack_require__){eval(`module.exports = __webpack_require__(/*! /home/aaron/google_drive/projects/webgl-obj-loader/src/index.ts */"./src/index.ts");
 
 
-//# sourceURL=webpack:///multi_./src/index.ts?`)}})})});var Ie=t=>t*Math.PI/180;function Mt(t){return t.constructor.name}function bi(t){return Array.isArray(t)?"Array":typeof t=="object"?Mt(t):typeof t}function It(t,e,n){return Math.min(Math.max(t,e),n)}function wi(t,e){let n;return(...r)=>{clearTimeout(n),n=setTimeout(()=>t(...r),e)}}var st=(t,e,n,r)=>(n==="dgr"&&(t=Ie(t),e=Ie(e)),r[0]=Math.cos(t)*Math.sin(e),r[1]=Math.cos(e),r[2]=Math.sin(t)*Math.sin(e),r),Qe=(t,e)=>Math.ceil(t/e),Ss=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],nn=(t,e)=>{let n=Ss.indexOf(e),r=Math.floor(Math.pow(1024,n));return t*r};var yi=async t=>{let e=await fetch(t);if(!e.ok)throw`Could not download mesh file '${t}'`;return e.text()},Pi=async t=>(await fetch(t)).arrayBuffer(),Ti=async(t,e,n,r)=>{let i=await fetch(e),o=await createImageBitmap(await i.blob()),a=t.createTexture({label:e,dimension:"2d",size:[o.width,o.height,1],format:n,usage:r});return t.queue.copyExternalImageToTexture({source:o},{texture:a},[o.width,o.height]),a};var vs=1,we=4,te=4,Ei=8,Mi=we*2,ir=we*3,q=we*4,od=te*2,Ii=te*4,ad=vs*4,oe=we*16,Ai=1e-6,Di=.001,or=3,Ae=3,At=window.Deno!==void 0;var rn=At,on=At?"static/models":"models",an="depth24plus",Ue="rgba16float",sn="rg16float",ar="r16float",Ri=[0,1,0],G={FINAL:0,TILES:1,HW_RENDER:2,USED_SLICES:3,DEPTH:4,NORMALS:5,AO:6},ye={AXIS_X:0,AXIS_Y:1,AXIS_Z:2,NONE:3},_e={DENSITY:0,DENSITY_GRADIENT:1,VELOCITY:2,WIND:3},f={isTest:!1,githubRepoLink:"https://github.com/Scthe/frostbitten-hair-webgpu",loaders:{textFileReader:yi,binaryFileReader:Pi,createTextureFromFile:Ti},increaseStorageMemoryLimits:!1,displayMode:G.FINAL,clearColor:[.2,.2,.2,0],clearNormals:[0,0,0,0],clearAo:[0,0,0,0],background:{color0:et(22,162,188),color1:et(14,103,120),noiseScale:5,gradientStrength:.5},colliderGizmo:{lineLength:.04,lineWidth:.002,hoverPadding:1.5,activeAxis:ye.NONE,isDragging:!1},drawColliders:!0,camera:{position:{position:[.25,1.6,.6],rotation:[-.4,.1]},projection:{fovDgr:30,near:.01,far:100},rotationSpeed:1,movementSpeed:.5,movementSpeedFaster:3},lightAmbient:{color:[1,1,1],energy:.05},lights:[{posPhi:60,posTheta:20,color:et(255,244,204),energy:.8},{posPhi:100,posTheta:97,color:et(204,249,255),energy:.8},{posPhi:-90,posTheta:30,color:et(255,242,204),energy:.8}],shadows:{showDebugView:!1,debugViewPosition:At?[0,0]:[250,0],depthFormat:"depth24plus",textureSize:1024*2,usePCSS:!1,PCF_Radius:3,bias:5e-4,strength:.4,hairFiberWidthMultiplier:1,source:{posPhi:37,posTheta:45,distance:5,target:[0,2,0]}},ao:{textureSizeMul:.5,radius:2,directionOffset:0,falloffStart2:.16,falloffEnd2:4,numDirections:12,numSteps:8,strength:.4},hairFile:"SintelHairOriginal-sintel_hair.16points.tfx",pointsPerStrand:-1,hairRender:{fiberRadius:6e-4,dbgTileModeMaxSegments:370,dbgSlicesModeMaxSlices:50,dbgShowTiles:!1,material:{color0:et(119,43,119),color1:et(76,0,255),specular:.9,weightTT:0,weightTRT:1.4,shift:0,roughness:.3,colorRng:.1,lumaRng:.1,attenuation:30,shadows:.5},shadingPoints:64,tileSize:8,tileDepthBins:32,avgSegmentsPerTile:128,invalidTilesPerSegmentThreshold:64,slicesPerPixel:8,avgFragmentsPerSlice:16,processorCount:64*8,finePassWorkgroupSizeX:1,sliceHeadsMemory:"workgroup",lodRenderPercent:100},hairSimulation:{enabled:!0,deltaTime:1/30,nextFrameResetSimulation:!1,gravity:.03,friction:.3,volumePreservation:3e-5,collisionSphere:[-.18,1.56,.06,.06],collisionSphereInitial:[0,0,0,0],constraints:{constraintIterations:7,stiffnessLengthConstr:1,stiffnessGlobalConstr:.2,globalExtent:.1,globalFade:.75,stiffnessLocalConstr:.3,stiffnessCollisions:1,stiffnessSDF:1},wind:{dirPhi:18,dirTheta:91,strength:0,strengthLull:.75,strengthFrequency:1.8,strengthJitter:.7,phaseOffset:.45,colisionTraceOffset:1.5},physicsForcesGrid:{dims:64,enableUpdates:!0,scale:2,showDebugView:!1,debugSlice:.5,debugValue:_e.DENSITY_GRADIENT,debugAbsValue:!0},sdf:{distanceOffset:-.0015,showDebugView:!1,debugSlice:.5,debugSemitransparent:!0}},colors:{gamma:2.2,ditherStrength:1,exposure:.85}};function et(...t){if(t.length!==3)throw new Error(`Config color value ${JSON.stringify(t)} is invalid`);return t.map(e=>e/255)}var He=t=>Array(t).fill(0);function bs(t,e){let n=new t(e.length);return e.forEach((r,i)=>n[i]=r),n}function Dt(t,e){return e instanceof t?e:bs(t,e)}var sr=At,ws=1024,lt=2,ys=ws*lt,Rt=()=>performance.now(),Ps=t=>Rt()-t,ln=class{_profileThisFrame=!1;hasRequiredFeature;queryPool;queryInProgressBuffer;resultsBuffer;currentFrameScopes=[];get enabled(){return this._profileThisFrame&&this.hasRequiredFeature}constructor(e){if(this.hasRequiredFeature=e.features.has("timestamp-query"),!this.hasRequiredFeature||sr){this.queryPool=void 0,this.queryInProgressBuffer=void 0,this.resultsBuffer=void 0;return}this.queryPool=e.createQuerySet({type:"timestamp",count:ys}),this.queryInProgressBuffer=e.createBuffer({label:"profiler-in-progress",size:this.queryPool.count*Ei,usage:GPUBufferUsage.QUERY_RESOLVE|GPUBufferUsage.COPY_SRC}),this.resultsBuffer=e.createBuffer({label:"profiler-results",size:this.queryInProgressBuffer.size,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ})}profileNextFrame(e){this._profileThisFrame=e}beginFrame(){for(;this.currentFrameScopes.length>0;)this.currentFrameScopes.pop()}endFrame(e){if(!this.enabled||sr)return;let n=this.currentFrameScopes.length*lt;e.resolveQuerySet(this.queryPool,0,n,this.queryInProgressBuffer,0),this.resultsBuffer.mapState==="unmapped"&&e.copyBufferToBuffer(this.queryInProgressBuffer,0,this.resultsBuffer,0,this.resultsBuffer.size)}async scheduleRaportIfNeededAsync(e){if(!this.enabled||this.currentFrameScopes.length==0){this._profileThisFrame=!1;return}this._profileThisFrame=!1;let n=this.currentFrameScopes.slice();if(sr){let r=new BigInt64Array,i=this.parseScopeTimers(n,r);e?.(i);return}if(this.resultsBuffer.mapState==="unmapped"){await this.resultsBuffer.mapAsync(GPUMapMode.READ);let r=new BigInt64Array(this.resultsBuffer.getMappedRange()),i=this.parseScopeTimers(n,r);this.resultsBuffer.unmap(),e?.(i)}}parseScopeTimers(e,n){return e.map(([r,i,o],a)=>{let s=0;if(i==="gpu"){let l=n[a*lt],c=n[a*lt+1];s=Number(c-l)*Ai}else s=o;return[r,s]})}createScopeGpu(e){if(!this.enabled)return;let n=this.currentFrameScopes.length;return this.currentFrameScopes.push([e,"gpu",0]),{querySet:this.queryPool,beginningOfPassWriteIndex:n*lt,endOfPassWriteIndex:n*lt+1}}startRegionCpu(e){if(!this.enabled)return;let n=this.currentFrameScopes.length,r=performance.now();return this.currentFrameScopes.push([e,"cpu",r]),n}endRegionCpu(e){if(!this.enabled||e===void 0)return;let n=this.currentFrameScopes[e];if(n){let[r,i,o]=n;n[2]=Ps(o)}}};var lr=t=>t&&t.style.display!=="none",tt=(t,e="block")=>{t&&(t.style.display=e)},cn=t=>{t&&(t.style.display="none")};var Ci={fps:{hideLabel:!0},ms:{hideLabel:!0},"Camera pos":{},"Camera rot":{},Strands:{},"Points per strand":{},Segments:{},Tiles:{},s0:{categoryName:"Memory"},"Tiles heads":{},"Tiles segments":{},"Slices heads":{}," \\ Per processor":{},"Slices data":{},"Hair FBO":{},"Physics grid":{},s1:{categoryName:"Render"},"Rendered strands":{},"Rendered segments":{}},Bi=.95,Ts=1e3,cr=class{values={};lastRenderedValues={};frameStart=0;deltaTimeMS=0;deltaTimeSmoothMS=void 0;parentEl;lastDOMUpdate=0;constructor(){window&&window.document?(this.parentEl=window.document.getElementById("stats-window"),this.frameStart=Rt(),this.lastDOMUpdate=this.frameStart):this.parentEl=void 0}update(e,n){this.values[e]=n}show=()=>tt(this.parentEl);onBeginFrame=()=>{this.frameStart=Rt()};onEndFrame=()=>{let e=Rt();this.deltaTimeMS=e-this.frameStart,this.deltaTimeSmoothMS===void 0?this.deltaTimeSmoothMS=this.deltaTimeMS:this.deltaTimeSmoothMS=this.deltaTimeSmoothMS*Bi+this.deltaTimeMS*(1-Bi);let n=1/this.deltaTimeMS*1e3;this.update("fps",`${n.toFixed(2)} fps`),this.update("ms",`${this.deltaTimeMS.toFixed(2)}ms`),e-this.lastDOMUpdate>Ts&&(this.lastDOMUpdate=e,setTimeout(this.renderStats,0))};printStats=()=>{let e="  ";console.log("STATS {"),Object.entries(Ci).forEach(([n,r])=>{let i=n;if(r.categoryName)console.log(`%c${e}--- ${r.categoryName} ---`,"color: blue");else{let o=this.values[i];o!=null&&console.log(`%c${e}${i}:`,"color: green",o)}}),console.log("}")};renderStats=()=>{let e=Array.from(this.parentEl.children);Object.entries(Ci).forEach(([n,r])=>{let i=n,o=this.getStatsHtmlEl(e,i,r);if(r.categoryName){o.textContent!==r.categoryName&&(o.innerHTML=r.categoryName),o.classList.add("stats-category-name");return}let a=this.values[i],s=this.lastRenderedValues[i];if(a==s)return;let l=`${i}: ${a}`;r.hideLabel&&(l=String(a)),o.innerHTML=l}),this.lastRenderedValues={...this.values}};getStatsHtmlEl=(e,n,r)=>{let i="data-stats-attr";if(r.el)return r.el;let o=e.find(a=>a.getAttribute(i)===n);return o||(o=document.createElement("p"),o.setAttribute(i,n),this.parentEl.appendChild(o)),r.el=o,o};setElVisible(e,n){n&&!lr(e)&&(tt(e),this.lastRenderedValues={}),!n&&lr(e)&&(cn(e),this.lastRenderedValues={})}},U=new cr;function xe(t,e=0){if(t<=0)return"0 Bytes";let n=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],r=1024,i=Math.floor(Math.log(t)/Math.log(r));return`${(t/Math.pow(r,i)).toFixed(e)} ${n[i]}`}function un(t,e=2){if(t===0)return"0";let n=t<0?"-":"";t=Math.abs(t);let r=["","k","m","b"],i=1e3,o=Math.floor(Math.log(t)/Math.log(i)),a=(t/Math.pow(i,o)).toFixed(e);return`${n}${a}${r[o]}`}function ur(t,e,n=2){let r=e>0?t/e*100:0;return`${un(t,n)} (${r.toFixed(1)}%)`}var fn=f.hairRender.tileSize*f.hairRender.tileSize*f.hairRender.slicesPerPixel,Ct=f.hairRender.sliceHeadsMemory,Oi=()=>Ct==="workgroup"?fn*te:0,Fi=`
+//# sourceURL=webpack:///multi_./src/index.ts?`)}})})});var Ae=t=>t*Math.PI/180;function Rt(t){return t.constructor.name}function Bi(t){return Array.isArray(t)?"Array":typeof t=="object"?Rt(t):typeof t}function Dt(t,e,n){return Math.min(Math.max(t,e),n)}function Oi(t,e){let n;return(...r)=>{clearTimeout(n),n=setTimeout(()=>t(...r),e)}}var dt=(t,e,n,r)=>(n==="dgr"&&(t=Ae(t),e=Ae(e)),r[0]=Math.cos(t)*Math.sin(e),r[1]=Math.cos(e),r[2]=Math.sin(t)*Math.sin(e),r),ot=(t,e)=>Math.ceil(t/e),Fs=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],fn=(t,e)=>{let n=Fs.indexOf(e),r=Math.floor(Math.pow(1024,n));return t*r};var Fi=async t=>{let e=await fetch(t);if(!e.ok)throw`Could not download mesh file '${t}'`;return e.text()},Gi=async t=>(await fetch(t)).arrayBuffer(),Ni=async(t,e,n,r)=>{let i=await fetch(e),o=await createImageBitmap(await i.blob()),a=t.createTexture({label:e,dimension:"2d",size:[o.width,o.height,1],format:n,usage:r});return t.queue.copyExternalImageToTexture({source:o},{texture:a},[o.width,o.height]),a};var Gs=1,Te=4,X=4,Li=8,Ui=Te*2,pr=Te*3,J=Te*4,Rd=X*2,ki=X*4,Dd=Gs*4,oe=Te*16,zi=1e-6,Vi=.001,mr=3,Re=3,Bt=window.Deno!==void 0;var dn=Bt,pn=Bt?"static/models":"models",mn="depth24plus",He="rgba16float",hn="rg16float",hr="r16float",Hi=[0,1,0],A={FINAL:0,TILES:1,TILES_PPLL:2,HW_RENDER:3,USED_SLICES:4,DEPTH:5,NORMALS:6,AO:7},Ee={AXIS_X:0,AXIS_Y:1,AXIS_Z:2,NONE:3},xe={DENSITY:0,DENSITY_GRADIENT:1,VELOCITY:2,WIND:3},u={isTest:!1,githubRepoLink:"https://github.com/Scthe/frostbitten-hair-webgpu",loaders:{textFileReader:Fi,binaryFileReader:Gi,createTextureFromFile:Ni},increaseStorageMemoryLimits:!1,displayMode:A.FINAL,clearColor:[.2,.2,.2,0],clearNormals:[0,0,0,0],clearAo:[0,0,0,0],background:{color0:at(22,162,188),color1:at(14,103,120),noiseScale:5,gradientStrength:.5},colliderGizmo:{lineLength:.04,lineWidth:.002,hoverPadding:1.5,activeAxis:Ee.NONE,isDragging:!1},drawColliders:!0,camera:{position:{position:[.25,1.6,.6],rotation:[-.4,.1]},projection:{fovDgr:30,near:.01,far:100},rotationSpeed:1,movementSpeed:.5,movementSpeedFaster:3},lightAmbient:{color:[1,1,1],energy:.05},lights:[{posPhi:60,posTheta:20,color:at(255,244,204),energy:.8},{posPhi:100,posTheta:97,color:at(204,249,255),energy:.8},{posPhi:-90,posTheta:30,color:at(255,242,204),energy:.8}],shadows:{showDebugView:!1,debugViewPosition:Bt?[0,0]:[250,0],depthFormat:"depth24plus",textureSize:1024*2,usePCSS:!1,PCF_Radius:3,bias:5e-4,strength:.4,hairFiberWidthMultiplier:1,source:{posPhi:37,posTheta:45,distance:5,target:[0,2,0]}},ao:{textureSizeMul:.5,radius:2,directionOffset:0,falloffStart2:.16,falloffEnd2:4,numDirections:12,numSteps:8,strength:.4},hairFile:"SintelHairOriginal-sintel_hair.16points.tfx",pointsPerStrand:-1,hairRender:{fiberRadius:6e-4,dbgTileModeMaxSegments:370,dbgSlicesModeMaxSlices:50,dbgShowTiles:!1,material:{color0:at(119,43,119),color1:at(76,0,255),specular:.9,weightTT:0,weightTRT:1.4,shift:0,roughness:.3,colorRng:.1,lumaRng:.1,attenuation:30,shadows:.5},shadingPoints:64,tileSize:8,tileDepthBins:32,avgSegmentsPerTile:128,invalidTilesPerSegmentThreshold:64,sortBuckets:64,sortBucketSize:16,slicesPerPixel:8,avgFragmentsPerSlice:16,processorCount:64*8,finePassWorkgroupSizeX:1,sliceHeadsMemory:"workgroup",alphaQuadratic:!1,alphaMultipler:1.1,lodRenderPercent:100},hairSimulation:{enabled:!0,deltaTime:1/30,nextFrameResetSimulation:!1,gravity:.03,friction:.3,volumePreservation:3e-5,collisionSphere:[-.18,1.56,.06,.06],collisionSphereInitial:[0,0,0,0],constraints:{constraintIterations:7,stiffnessLengthConstr:1,stiffnessGlobalConstr:.2,globalExtent:.1,globalFade:.75,stiffnessLocalConstr:.3,stiffnessCollisions:1,stiffnessSDF:1},wind:{dirPhi:18,dirTheta:91,strength:0,strengthLull:.75,strengthFrequency:1.8,strengthJitter:.7,phaseOffset:.45,colisionTraceOffset:1.5},physicsForcesGrid:{dims:64,enableUpdates:!0,scale:2,showDebugView:!1,debugSlice:.5,debugValue:xe.DENSITY_GRADIENT,debugAbsValue:!0},sdf:{distanceOffset:-.0015,showDebugView:!1,debugSlice:.5,debugSemitransparent:!0}},colors:{gamma:2.2,ditherStrength:1,exposure:.85}};function at(...t){if(t.length!==3)throw new Error(`Config color value ${JSON.stringify(t)} is invalid`);return t.map(e=>e/255)}var Ye=t=>Array(t).fill(0);function Ns(t,e){let n=new t(e.length);return e.forEach((r,i)=>n[i]=r),n}function Ot(t,e){return e instanceof t?e:Ns(t,e)}var gr=Bt,Ls=1024,pt=2,Us=Ls*pt,Ft=()=>performance.now(),ks=t=>Ft()-t,gn=class{_profileThisFrame=!1;hasRequiredFeature;queryPool;queryInProgressBuffer;resultsBuffer;currentFrameScopes=[];get enabled(){return this._profileThisFrame&&this.hasRequiredFeature}constructor(e){if(this.hasRequiredFeature=e.features.has("timestamp-query"),!this.hasRequiredFeature||gr){this.queryPool=void 0,this.queryInProgressBuffer=void 0,this.resultsBuffer=void 0;return}this.queryPool=e.createQuerySet({type:"timestamp",count:Us}),this.queryInProgressBuffer=e.createBuffer({label:"profiler-in-progress",size:this.queryPool.count*Li,usage:GPUBufferUsage.QUERY_RESOLVE|GPUBufferUsage.COPY_SRC}),this.resultsBuffer=e.createBuffer({label:"profiler-results",size:this.queryInProgressBuffer.size,usage:GPUBufferUsage.COPY_DST|GPUBufferUsage.MAP_READ})}profileNextFrame(e){this._profileThisFrame=e}beginFrame(){for(;this.currentFrameScopes.length>0;)this.currentFrameScopes.pop()}endFrame(e){if(!this.enabled||gr)return;let n=this.currentFrameScopes.length*pt;e.resolveQuerySet(this.queryPool,0,n,this.queryInProgressBuffer,0),this.resultsBuffer.mapState==="unmapped"&&e.copyBufferToBuffer(this.queryInProgressBuffer,0,this.resultsBuffer,0,this.resultsBuffer.size)}async scheduleRaportIfNeededAsync(e){if(!this.enabled||this.currentFrameScopes.length==0){this._profileThisFrame=!1;return}this._profileThisFrame=!1;let n=this.currentFrameScopes.slice();if(gr){let r=new BigInt64Array,i=this.parseScopeTimers(n,r);e?.(i);return}if(this.resultsBuffer.mapState==="unmapped"){await this.resultsBuffer.mapAsync(GPUMapMode.READ);let r=new BigInt64Array(this.resultsBuffer.getMappedRange()),i=this.parseScopeTimers(n,r);this.resultsBuffer.unmap(),e?.(i)}}parseScopeTimers(e,n){return e.map(([r,i,o],a)=>{let s=0;if(i==="gpu"){let l=n[a*pt],c=n[a*pt+1];s=Number(c-l)*zi}else s=o;return[r,s]})}createScopeGpu(e){if(!this.enabled)return;let n=this.currentFrameScopes.length;return this.currentFrameScopes.push([e,"gpu",0]),{querySet:this.queryPool,beginningOfPassWriteIndex:n*pt,endOfPassWriteIndex:n*pt+1}}startRegionCpu(e){if(!this.enabled)return;let n=this.currentFrameScopes.length,r=performance.now();return this.currentFrameScopes.push([e,"cpu",r]),n}endRegionCpu(e){if(!this.enabled||e===void 0)return;let n=this.currentFrameScopes[e];if(n){let[r,i,o]=n;n[2]=ks(o)}}};var _r=t=>t&&t.style.display!=="none",st=(t,e="block")=>{t&&(t.style.display=e)},_n=t=>{t&&(t.style.display="none")};var $i={fps:{hideLabel:!0},ms:{hideLabel:!0},"Camera pos":{},"Camera rot":{},Strands:{},"Points per strand":{},Segments:{},Tiles:{},s0:{categoryName:"Memory"},"Tiles heads":{},"Tiles segments":{},"Slices heads":{}," \\ Per processor":{},"Slices data":{},"Hair FBO":{},"Physics grid":{},s1:{categoryName:"Render"},"Rendered strands":{},"Rendered segments":{}},Wi=.95,zs=1e3,xr=class{values={};lastRenderedValues={};frameStart=0;deltaTimeMS=0;deltaTimeSmoothMS=void 0;parentEl;lastDOMUpdate=0;constructor(){window&&window.document?(this.parentEl=window.document.getElementById("stats-window"),this.frameStart=Ft(),this.lastDOMUpdate=this.frameStart):this.parentEl=void 0}update(e,n){this.values[e]=n}show=()=>st(this.parentEl);onBeginFrame=()=>{this.frameStart=Ft()};onEndFrame=()=>{let e=Ft();this.deltaTimeMS=e-this.frameStart,this.deltaTimeSmoothMS===void 0?this.deltaTimeSmoothMS=this.deltaTimeMS:this.deltaTimeSmoothMS=this.deltaTimeSmoothMS*Wi+this.deltaTimeMS*(1-Wi);let n=1/this.deltaTimeMS*1e3;this.update("fps",`${n.toFixed(2)} fps`),this.update("ms",`${this.deltaTimeMS.toFixed(2)}ms`),e-this.lastDOMUpdate>zs&&(this.lastDOMUpdate=e,setTimeout(this.renderStats,0))};printStats=()=>{let e="  ";console.log("STATS {"),Object.entries($i).forEach(([n,r])=>{let i=n;if(r.categoryName)console.log(`%c${e}--- ${r.categoryName} ---`,"color: blue");else{let o=this.values[i];o!=null&&console.log(`%c${e}${i}:`,"color: green",o)}}),console.log("}")};renderStats=()=>{let e=Array.from(this.parentEl.children);Object.entries($i).forEach(([n,r])=>{let i=n,o=this.getStatsHtmlEl(e,i,r);if(r.categoryName){o.textContent!==r.categoryName&&(o.innerHTML=r.categoryName),o.classList.add("stats-category-name");return}let a=this.values[i],s=this.lastRenderedValues[i];if(a==s)return;let l=`${i}: ${a}`;r.hideLabel&&(l=String(a)),o.innerHTML=l}),this.lastRenderedValues={...this.values}};getStatsHtmlEl=(e,n,r)=>{let i="data-stats-attr";if(r.el)return r.el;let o=e.find(a=>a.getAttribute(i)===n);return o||(o=document.createElement("p"),o.setAttribute(i,n),this.parentEl.appendChild(o)),r.el=o,o};setElVisible(e,n){n&&!_r(e)&&(st(e),this.lastRenderedValues={}),!n&&_r(e)&&(_n(e),this.lastRenderedValues={})}},z=new xr;function Se(t,e=0){if(t<=0)return"0 Bytes";let n=["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"],r=1024,i=Math.floor(Math.log(t)/Math.log(r));return`${(t/Math.pow(r,i)).toFixed(e)} ${n[i]}`}function xn(t,e=2){if(t===0)return"0";let n=t<0?"-":"";t=Math.abs(t);let r=["","k","m","b"],i=1e3,o=Math.floor(Math.log(t)/Math.log(i)),a=(t/Math.pow(i,o)).toFixed(e);return`${n}${a}${r[o]}`}function Sr(t,e,n=2){let r=e>0?t/e*100:0;return`${xn(t,n)} (${r.toFixed(1)}%)`}var Gt=u.hairRender.tileSize*u.hairRender.tileSize*u.hairRender.slicesPerPixel,Vs=u.hairRender.processorCount,De=u.hairRender.sliceHeadsMemory,ji=()=>De==="workgroup"?Gt*X:0,Hs=()=>De==="workgroup"?u.hairRender.finePassWorkgroupSizeX:De==="global"?Vs:1,$s=()=>De==="workgroup"?"_local_invocation_index":De==="global"?"processorId":"0u",Yi=`
 
 const INVALID_SLICE_DATA_PTR: u32 = 0xffffffffu;
 
@@ -1950,13 +1950,13 @@ fn _getHeadsSliceIdx(
   processorId: u32,
   pixelInTile: vec2u, sliceIdx: u32,
 ) -> u32 {
-  let offset = _getHeadsProcessorOffset(processorId);
-  let offsetInProcessor = (
-    pixelInTile.y * TILE_SIZE * SLICES_PER_PIXEL +
-    pixelInTile.x * SLICES_PER_PIXEL +
-    sliceIdx
+  let OFFSET = ${Hs()}u;
+  return (
+    pixelInTile.y * OFFSET * TILE_SIZE * SLICES_PER_PIXEL +
+    pixelInTile.x * OFFSET * SLICES_PER_PIXEL +
+    sliceIdx * OFFSET +
+    ${$s()}
   );
-  return offset + offsetInProcessor;
 }
 
 fn _setSlicesHeadPtr(
@@ -1979,12 +1979,12 @@ fn _getSlicesHeadPtr(
 }
 
 fn _clearSlicesHeadPtrs(processorId: u32) {
-  let offset = _getHeadsProcessorOffset(processorId);
-  let count = ${fn}u;
-
-  for (var i: u32 = 0u; i < count; i += 1u) {
-    _hairSliceHeads[offset + i] = INVALID_SLICE_DATA_PTR;
-  }
+  for (var y: u32 = 0u; y < TILE_SIZE; y += 1u) {
+  for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
+    for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
+      _clearSliceHeadPtr(processorId, vec2u(x, y), s);
+    }
+  }}
 }
 
 fn _clearSliceHeadPtr(
@@ -1994,97 +1994,19 @@ fn _clearSliceHeadPtr(
   let idx = _getHeadsSliceIdx(processorId, pixelInTile, sliceIdx);
   _hairSliceHeads[idx] = INVALID_SLICE_DATA_PTR;
 }
-`,Es=(t,e)=>`
+`,Ws=(t,e)=>`
 
 
 @group(0) @binding(${t})
 var<storage, ${e}> _hairSliceHeads: array<u32>;
 
-fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
-  return processorId * ${fn};
-}
+${Yi}
+`,js=De==="workgroup"?"workgroup":"private",Ys=De==="workgroup"?Gt*u.hairRender.finePassWorkgroupSizeX:Gt,Xs=(t,e)=>`
 
-${Fi}
-`,Ms=Ct==="workgroup"?"workgroup":"private",Is=(t,e)=>`
+var<${js}> _hairSliceHeads: array<u32, ${Ys}u>;
 
-var<${Ms}> _hairSliceHeads: array<u32, ${fn}u>;
-
-fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
-  return 0u;
-}
-
-${Fi}
-`,Gi=Ct==="global"?Es:Is;function As(t){let e=Li();return t.createBuffer({label:"hair-slices-heads",size:e,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}function Ds(t){let{finePassWorkgroupSizeX:e,sliceHeadsMemory:n}=f.hairRender;if(e!==1&&n==="workgroup")throw new Error(`Expected finePassWorkgroupSizeX to be 1, was ${e}`);Li()}var Ni=Ct==="global"?As:Ds;function Li(){let{tileSize:t,slicesPerPixel:e,processorCount:n}=f.hairRender,r=t*t*e,i=n*r,o=te,a=Math.max(i*o,Se),l={global:"VRAM",workgroup:"WKGRP",registers:"REGS"}[Ct];return U.update("Slices heads",`${l} ${xe(a)}`),U.update(" \\ Per processor",xe(r*o)),a}var Se=256;async function Ui(){try{let t=await navigator.gpu.requestAdapter({powerPreference:"high-performance"}),e=a=>console.error(`WebGPU init error: '${a}'`);if(!t){e("No adapter found. WebGPU seems to be unavailable.");return}let n=t.features.has("timestamp-query"),r=["float32-filterable"];n&&r.push("timestamp-query");let i={};f.increaseStorageMemoryLimits&&(i.maxStorageBufferBindingSize=nn(1024,"MB"),i.maxBufferSize=nn(1024,"MB")),i.maxComputeWorkgroupStorageSize=Math.max(Oi(),t.limits.maxComputeWorkgroupStorageSize||nn(16,"KB")),i.maxStorageBuffersPerShaderStage=9;let o=await t?.requestDevice({requiredFeatures:r,requiredLimits:i});if(!o){e("Failed to get GPUDevice from the adapter.");return}return o}catch(t){console.error(t);return}}function fr(t,e,n,r){let i=t.createBuffer({label:e,size:r.byteLength,usage:n});return t.queue.writeBuffer(i,0,r,0),i}function dn(t,e,n,r=0){let i=Dt(Float32Array,n);return fr(t,e,GPUBufferUsage.VERTEX|GPUBufferUsage.COPY_DST|r,i)}function pn(t,e,n){let r=Dt(Uint32Array,n);return fr(t,e,GPUBufferUsage.INDEX|GPUBufferUsage.COPY_DST,r)}function ve(t,e,n,r=0){let i=Mt(n);if(![Uint32Array.name,Float32Array.name,Int32Array.name].includes(i))throw new Error(`Invalid data provided to createGPU_StorageBuffer(). Expected TypedArray, got ${i}`);return fr(t,e,GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|r,n)}var de=Qe,$e=t=>t==="read_write"?"atomic<u32>":"u32",Bt=t=>t==="read_write"?"atomic<i32>":"i32",K=(t,e)=>({binding:t,resource:{buffer:e}});var Rs=t=>typeof t=="object"&&Mt(t)===GPUTextureView.name,H=t=>{if(!Rs(t))throw new Error(`Expected ${GPUTextureView.name}, got ${bi(t)}`)};var nt={CAMERA_FORWARD:"w",CAMERA_BACK:"s",CAMERA_LEFT:"a",CAMERA_RIGHT:"d",CAMERA_UP:" ",CAMERA_DOWN:"z",CAMERA_GO_FASTER:"shift"},Cs=()=>({directions:{forward:!1,backward:!1,left:!1,right:!1,up:!1,down:!1,goFaster:!1},mouse:{x:0,y:0,dragX:0,dragY:0,touching:!1}});function zi(t,e){let{directions:n,mouse:r}=Cs(),i=(o,a)=>{switch(o.key.toLowerCase()){case nt.CAMERA_FORWARD:n.forward=a,o.preventDefault(),o.stopPropagation();break;case nt.CAMERA_BACK:n.backward=a,o.preventDefault(),o.stopPropagation();break;case nt.CAMERA_LEFT:n.left=a,o.preventDefault(),o.stopPropagation();break;case nt.CAMERA_RIGHT:n.right=a,o.preventDefault(),o.stopPropagation();break;case nt.CAMERA_UP:n.up=a,o.preventDefault(),o.stopPropagation();break;case nt.CAMERA_DOWN:n.down=a,o.preventDefault(),o.stopPropagation();break;case nt.CAMERA_GO_FASTER:n.goFaster=a,o.preventDefault(),o.stopPropagation();break}};return t.addEventListener("keydown",o=>i(o,!0)),t.addEventListener("keyup",o=>i(o,!1)),e.style.touchAction="pinch-zoom",e.addEventListener("pointerdown",()=>{r.touching=!0}),e.addEventListener("pointerup",()=>{r.touching=!1}),e.addEventListener("pointermove",o=>{r.x=o.clientX,r.y=o.clientY,r.touching&&(r.dragX+=o.movementX,r.dragY+=o.movementY)}),()=>{let o={directions:{...n},mouse:{...r}};return r.dragX=0,r.dragY=0,o}}var j=1e-6;var N=Float32Array;function Bs(t){let e=N;return N=t,e}function Vi(t=0,e=0){let n=new N(2);return t!==void 0&&(n[0]=t,e!==void 0&&(n[1]=e)),n}var I=Float32Array;function Os(t){let e=I;return I=t,e}function pe(t,e,n){let r=new I(3);return t!==void 0&&(r[0]=t,e!==void 0&&(r[1]=e,n!==void 0&&(r[2]=n))),r}var Fs=Vi;function Gs(t,e,n){return n=n||new N(2),n[0]=t,n[1]=e,n}function Ns(t,e){return e=e||new N(2),e[0]=Math.ceil(t[0]),e[1]=Math.ceil(t[1]),e}function Ls(t,e){return e=e||new N(2),e[0]=Math.floor(t[0]),e[1]=Math.floor(t[1]),e}function Us(t,e){return e=e||new N(2),e[0]=Math.round(t[0]),e[1]=Math.round(t[1]),e}function zs(t,e=0,n=1,r){return r=r||new N(2),r[0]=Math.min(n,Math.max(e,t[0])),r[1]=Math.min(n,Math.max(e,t[1])),r}function Vs(t,e,n){return n=n||new N(2),n[0]=t[0]+e[0],n[1]=t[1]+e[1],n}function ks(t,e,n,r){return r=r||new N(2),r[0]=t[0]+e[0]*n,r[1]=t[1]+e[1]*n,r}function Hs(t,e){let n=t[0],r=t[1],i=e[0],o=e[1],a=Math.sqrt(n*n+r*r),s=Math.sqrt(i*i+o*o),l=a*s,c=l&&Wi(t,e)/l;return Math.acos(c)}function ki(t,e,n){return n=n||new N(2),n[0]=t[0]-e[0],n[1]=t[1]-e[1],n}var $s=ki;function Ws(t,e){return Math.abs(t[0]-e[0])<j&&Math.abs(t[1]-e[1])<j}function js(t,e){return t[0]===e[0]&&t[1]===e[1]}function Hi(t,e,n,r){return r=r||new N(2),r[0]=t[0]+n*(e[0]-t[0]),r[1]=t[1]+n*(e[1]-t[1]),r}function Ys(t,e,n,r){return r=r||new N(2),r[0]=t[0]+n[0]*(e[0]-t[0]),r[1]=t[1]+n[1]*(e[1]-t[1]),r}function Xs(t,e,n){return n=n||new N(2),n[0]=Math.max(t[0],e[0]),n[1]=Math.max(t[1],e[1]),n}function qs(t,e,n){return n=n||new N(2),n[0]=Math.min(t[0],e[0]),n[1]=Math.min(t[1],e[1]),n}function dr(t,e,n){return n=n||new N(2),n[0]=t[0]*e,n[1]=t[1]*e,n}var Ks=dr;function Zs(t,e,n){return n=n||new N(2),n[0]=t[0]/e,n[1]=t[1]/e,n}function $i(t,e){return e=e||new N(2),e[0]=1/t[0],e[1]=1/t[1],e}var Js=$i;function Qs(t,e,n){n=n||new I(3);let r=t[0]*e[1]-t[1]*e[0];return n[0]=0,n[1]=0,n[2]=r,n}function Wi(t,e){return t[0]*e[0]+t[1]*e[1]}function pr(t){let e=t[0],n=t[1];return Math.sqrt(e*e+n*n)}var el=pr;function ji(t){let e=t[0],n=t[1];return e*e+n*n}var tl=ji;function Yi(t,e){let n=t[0]-e[0],r=t[1]-e[1];return Math.sqrt(n*n+r*r)}var nl=Yi;function Xi(t,e){let n=t[0]-e[0],r=t[1]-e[1];return n*n+r*r}var rl=Xi;function qi(t,e){e=e||new N(2);let n=t[0],r=t[1],i=Math.sqrt(n*n+r*r);return i>1e-5?(e[0]=n/i,e[1]=r/i):(e[0]=0,e[1]=0),e}function il(t,e){return e=e||new N(2),e[0]=-t[0],e[1]=-t[1],e}function mr(t,e){return e=e||new N(2),e[0]=t[0],e[1]=t[1],e}var ol=mr;function Ki(t,e,n){return n=n||new N(2),n[0]=t[0]*e[0],n[1]=t[1]*e[1],n}var al=Ki;function Zi(t,e,n){return n=n||new N(2),n[0]=t[0]/e[0],n[1]=t[1]/e[1],n}var sl=Zi;function ll(t=1,e){e=e||new N(2);let n=Math.random()*2*Math.PI;return e[0]=Math.cos(n)*t,e[1]=Math.sin(n)*t,e}function cl(t){return t=t||new N(2),t[0]=0,t[1]=0,t}function ul(t,e,n){n=n||new N(2);let r=t[0],i=t[1];return n[0]=r*e[0]+i*e[4]+e[12],n[1]=r*e[1]+i*e[5]+e[13],n}function fl(t,e,n){n=n||new N(2);let r=t[0],i=t[1];return n[0]=e[0]*r+e[4]*i+e[8],n[1]=e[1]*r+e[5]*i+e[9],n}function dl(t,e,n,r){r=r||new N(2);let i=t[0]-e[0],o=t[1]-e[1],a=Math.sin(n),s=Math.cos(n);return r[0]=i*s-o*a+e[0],r[1]=i*a+o*s+e[1],r}function Ji(t,e,n){return n=n||new N(2),qi(t,n),dr(n,e,n)}function pl(t,e,n){return n=n||new N(2),pr(t)>e?Ji(t,e,n):mr(t,n)}function ml(t,e,n){return n=n||new N(2),Hi(t,e,.5,n)}var hr={__proto__:null,add:Vs,addScaled:ks,angle:Hs,ceil:Ns,clamp:zs,clone:ol,copy:mr,create:Vi,cross:Qs,dist:nl,distSq:rl,distance:Yi,distanceSq:Xi,div:sl,divScalar:Zs,divide:Zi,dot:Wi,equals:js,equalsApproximately:Ws,floor:Ls,fromValues:Fs,inverse:$i,invert:Js,len:el,lenSq:tl,length:pr,lengthSq:ji,lerp:Hi,lerpV:Ys,max:Xs,midpoint:ml,min:qs,mul:al,mulScalar:dr,multiply:Ki,negate:il,normalize:qi,random:ll,rotate:dl,round:Us,scale:Ks,set:Gs,setDefaultType:Bs,setLength:Ji,sub:$s,subtract:ki,transformMat3:fl,transformMat4:ul,truncate:pl,zero:cl};var hl=new Map([[Float32Array,()=>new Float32Array(12)],[Float64Array,()=>new Float64Array(12)],[Array,()=>new Array(12).fill(0)]]),Dd=hl.get(Float32Array);var gl=pe;function _l(t,e,n,r){return r=r||new I(3),r[0]=t,r[1]=e,r[2]=n,r}function xl(t,e){return e=e||new I(3),e[0]=Math.ceil(t[0]),e[1]=Math.ceil(t[1]),e[2]=Math.ceil(t[2]),e}function Sl(t,e){return e=e||new I(3),e[0]=Math.floor(t[0]),e[1]=Math.floor(t[1]),e[2]=Math.floor(t[2]),e}function vl(t,e){return e=e||new I(3),e[0]=Math.round(t[0]),e[1]=Math.round(t[1]),e[2]=Math.round(t[2]),e}function bl(t,e=0,n=1,r){return r=r||new I(3),r[0]=Math.min(n,Math.max(e,t[0])),r[1]=Math.min(n,Math.max(e,t[1])),r[2]=Math.min(n,Math.max(e,t[2])),r}function wl(t,e,n){return n=n||new I(3),n[0]=t[0]+e[0],n[1]=t[1]+e[1],n[2]=t[2]+e[2],n}function yl(t,e,n,r){return r=r||new I(3),r[0]=t[0]+e[0]*n,r[1]=t[1]+e[1]*n,r[2]=t[2]+e[2]*n,r}function Pl(t,e){let n=t[0],r=t[1],i=t[2],o=e[0],a=e[1],s=e[2],l=Math.sqrt(n*n+r*r+i*i),c=Math.sqrt(o*o+a*a+s*s),d=l*c,u=d&&to(t,e)/d;return Math.acos(u)}function Ot(t,e,n){return n=n||new I(3),n[0]=t[0]-e[0],n[1]=t[1]-e[1],n[2]=t[2]-e[2],n}var Tl=Ot;function El(t,e){return Math.abs(t[0]-e[0])<j&&Math.abs(t[1]-e[1])<j&&Math.abs(t[2]-e[2])<j}function Ml(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]}function Qi(t,e,n,r){return r=r||new I(3),r[0]=t[0]+n*(e[0]-t[0]),r[1]=t[1]+n*(e[1]-t[1]),r[2]=t[2]+n*(e[2]-t[2]),r}function Il(t,e,n,r){return r=r||new I(3),r[0]=t[0]+n[0]*(e[0]-t[0]),r[1]=t[1]+n[1]*(e[1]-t[1]),r[2]=t[2]+n[2]*(e[2]-t[2]),r}function Al(t,e,n){return n=n||new I(3),n[0]=Math.max(t[0],e[0]),n[1]=Math.max(t[1],e[1]),n[2]=Math.max(t[2],e[2]),n}function Dl(t,e,n){return n=n||new I(3),n[0]=Math.min(t[0],e[0]),n[1]=Math.min(t[1],e[1]),n[2]=Math.min(t[2],e[2]),n}function gr(t,e,n){return n=n||new I(3),n[0]=t[0]*e,n[1]=t[1]*e,n[2]=t[2]*e,n}var Rl=gr;function Cl(t,e,n){return n=n||new I(3),n[0]=t[0]/e,n[1]=t[1]/e,n[2]=t[2]/e,n}function eo(t,e){return e=e||new I(3),e[0]=1/t[0],e[1]=1/t[1],e[2]=1/t[2],e}var Bl=eo;function rt(t,e,n){n=n||new I(3);let r=t[2]*e[0]-t[0]*e[2],i=t[0]*e[1]-t[1]*e[0];return n[0]=t[1]*e[2]-t[2]*e[1],n[1]=r,n[2]=i,n}function to(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]}function _r(t){let e=t[0],n=t[1],r=t[2];return Math.sqrt(e*e+n*n+r*r)}var Ol=_r;function no(t){let e=t[0],n=t[1],r=t[2];return e*e+n*n+r*r}var Fl=no;function ro(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2];return Math.sqrt(n*n+r*r+i*i)}var Gl=ro;function io(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2];return n*n+r*r+i*i}var Nl=io;function Pe(t,e){e=e||new I(3);let n=t[0],r=t[1],i=t[2],o=Math.sqrt(n*n+r*r+i*i);return o>1e-5?(e[0]=n/o,e[1]=r/o,e[2]=i/o):(e[0]=0,e[1]=0,e[2]=0),e}function Ll(t,e){return e=e||new I(3),e[0]=-t[0],e[1]=-t[1],e[2]=-t[2],e}function xr(t,e){return e=e||new I(3),e[0]=t[0],e[1]=t[1],e[2]=t[2],e}var Ul=xr;function oo(t,e,n){return n=n||new I(3),n[0]=t[0]*e[0],n[1]=t[1]*e[1],n[2]=t[2]*e[2],n}var zl=oo;function ao(t,e,n){return n=n||new I(3),n[0]=t[0]/e[0],n[1]=t[1]/e[1],n[2]=t[2]/e[2],n}var Vl=ao;function kl(t=1,e){e=e||new I(3);let n=Math.random()*2*Math.PI,r=Math.random()*2-1,i=Math.sqrt(1-r*r)*t;return e[0]=Math.cos(n)*i,e[1]=Math.sin(n)*i,e[2]=r*t,e}function Hl(t){return t=t||new I(3),t[0]=0,t[1]=0,t[2]=0,t}function $l(t,e,n){n=n||new I(3);let r=t[0],i=t[1],o=t[2],a=e[3]*r+e[7]*i+e[11]*o+e[15]||1;return n[0]=(e[0]*r+e[4]*i+e[8]*o+e[12])/a,n[1]=(e[1]*r+e[5]*i+e[9]*o+e[13])/a,n[2]=(e[2]*r+e[6]*i+e[10]*o+e[14])/a,n}function Wl(t,e,n){n=n||new I(3);let r=t[0],i=t[1],o=t[2];return n[0]=r*e[0*4+0]+i*e[1*4+0]+o*e[2*4+0],n[1]=r*e[0*4+1]+i*e[1*4+1]+o*e[2*4+1],n[2]=r*e[0*4+2]+i*e[1*4+2]+o*e[2*4+2],n}function jl(t,e,n){n=n||new I(3);let r=t[0],i=t[1],o=t[2];return n[0]=r*e[0]+i*e[4]+o*e[8],n[1]=r*e[1]+i*e[5]+o*e[9],n[2]=r*e[2]+i*e[6]+o*e[10],n}function Yl(t,e,n){n=n||new I(3);let r=e[0],i=e[1],o=e[2],a=e[3]*2,s=t[0],l=t[1],c=t[2],d=i*c-o*l,u=o*s-r*c,m=r*l-i*s;return n[0]=s+d*a+(i*m-o*u)*2,n[1]=l+u*a+(o*d-r*m)*2,n[2]=c+m*a+(r*u-i*d)*2,n}function Xl(t,e){return e=e||new I(3),e[0]=t[12],e[1]=t[13],e[2]=t[14],e}function ql(t,e,n){n=n||new I(3);let r=e*4;return n[0]=t[r+0],n[1]=t[r+1],n[2]=t[r+2],n}function Kl(t,e){e=e||new I(3);let n=t[0],r=t[1],i=t[2],o=t[4],a=t[5],s=t[6],l=t[8],c=t[9],d=t[10];return e[0]=Math.sqrt(n*n+r*r+i*i),e[1]=Math.sqrt(o*o+a*a+s*s),e[2]=Math.sqrt(l*l+c*c+d*d),e}function Zl(t,e,n,r){r=r||new I(3);let i=[],o=[];return i[0]=t[0]-e[0],i[1]=t[1]-e[1],i[2]=t[2]-e[2],o[0]=i[0],o[1]=i[1]*Math.cos(n)-i[2]*Math.sin(n),o[2]=i[1]*Math.sin(n)+i[2]*Math.cos(n),r[0]=o[0]+e[0],r[1]=o[1]+e[1],r[2]=o[2]+e[2],r}function Jl(t,e,n,r){r=r||new I(3);let i=[],o=[];return i[0]=t[0]-e[0],i[1]=t[1]-e[1],i[2]=t[2]-e[2],o[0]=i[2]*Math.sin(n)+i[0]*Math.cos(n),o[1]=i[1],o[2]=i[2]*Math.cos(n)-i[0]*Math.sin(n),r[0]=o[0]+e[0],r[1]=o[1]+e[1],r[2]=o[2]+e[2],r}function Ql(t,e,n,r){r=r||new I(3);let i=[],o=[];return i[0]=t[0]-e[0],i[1]=t[1]-e[1],i[2]=t[2]-e[2],o[0]=i[0]*Math.cos(n)-i[1]*Math.sin(n),o[1]=i[0]*Math.sin(n)+i[1]*Math.cos(n),o[2]=i[2],r[0]=o[0]+e[0],r[1]=o[1]+e[1],r[2]=o[2]+e[2],r}function so(t,e,n){return n=n||new I(3),Pe(t,n),gr(n,e,n)}function ec(t,e,n){return n=n||new I(3),_r(t)>e?so(t,e,n):xr(t,n)}function tc(t,e,n){return n=n||new I(3),Qi(t,e,.5,n)}var P={__proto__:null,add:wl,addScaled:yl,angle:Pl,ceil:xl,clamp:bl,clone:Ul,copy:xr,create:pe,cross:rt,dist:Gl,distSq:Nl,distance:ro,distanceSq:io,div:Vl,divScalar:Cl,divide:ao,dot:to,equals:Ml,equalsApproximately:El,floor:Sl,fromValues:gl,getAxis:ql,getScaling:Kl,getTranslation:Xl,inverse:eo,invert:Bl,len:Ol,lenSq:Fl,length:_r,lengthSq:no,lerp:Qi,lerpV:Il,max:Al,midpoint:tc,min:Dl,mul:zl,mulScalar:gr,multiply:oo,negate:Ll,normalize:Pe,random:kl,rotateX:Zl,rotateY:Jl,rotateZ:Ql,round:vl,scale:Rl,set:_l,setDefaultType:Os,setLength:so,sub:Tl,subtract:Ot,transformMat3:jl,transformMat4:$l,transformMat4Upper3x3:Wl,transformQuat:Yl,truncate:ec,zero:Hl},D=Float32Array;function nc(t){let e=D;return D=t,e}function rc(t,e,n,r,i,o,a,s,l,c,d,u,m,v,b,x){let g=new D(16);return t!==void 0&&(g[0]=t,e!==void 0&&(g[1]=e,n!==void 0&&(g[2]=n,r!==void 0&&(g[3]=r,i!==void 0&&(g[4]=i,o!==void 0&&(g[5]=o,a!==void 0&&(g[6]=a,s!==void 0&&(g[7]=s,l!==void 0&&(g[8]=l,c!==void 0&&(g[9]=c,d!==void 0&&(g[10]=d,u!==void 0&&(g[11]=u,m!==void 0&&(g[12]=m,v!==void 0&&(g[13]=v,b!==void 0&&(g[14]=b,x!==void 0&&(g[15]=x)))))))))))))))),g}function ic(t,e,n,r,i,o,a,s,l,c,d,u,m,v,b,x,g){return g=g||new D(16),g[0]=t,g[1]=e,g[2]=n,g[3]=r,g[4]=i,g[5]=o,g[6]=a,g[7]=s,g[8]=l,g[9]=c,g[10]=d,g[11]=u,g[12]=m,g[13]=v,g[14]=b,g[15]=x,g}function oc(t,e){return e=e||new D(16),e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=0,e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=0,e[8]=t[8],e[9]=t[9],e[10]=t[10],e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function ac(t,e){e=e||new D(16);let n=t[0],r=t[1],i=t[2],o=t[3],a=n+n,s=r+r,l=i+i,c=n*a,d=r*a,u=r*s,m=i*a,v=i*s,b=i*l,x=o*a,g=o*s,T=o*l;return e[0]=1-u-b,e[1]=d+T,e[2]=m-g,e[3]=0,e[4]=d-T,e[5]=1-c-b,e[6]=v+x,e[7]=0,e[8]=m+g,e[9]=v-x,e[10]=1-c-u,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function sc(t,e){return e=e||new D(16),e[0]=-t[0],e[1]=-t[1],e[2]=-t[2],e[3]=-t[3],e[4]=-t[4],e[5]=-t[5],e[6]=-t[6],e[7]=-t[7],e[8]=-t[8],e[9]=-t[9],e[10]=-t[10],e[11]=-t[11],e[12]=-t[12],e[13]=-t[13],e[14]=-t[14],e[15]=-t[15],e}function Sr(t,e){return e=e||new D(16),e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=t[7],e[8]=t[8],e[9]=t[9],e[10]=t[10],e[11]=t[11],e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15],e}var lc=Sr;function cc(t,e){return Math.abs(t[0]-e[0])<j&&Math.abs(t[1]-e[1])<j&&Math.abs(t[2]-e[2])<j&&Math.abs(t[3]-e[3])<j&&Math.abs(t[4]-e[4])<j&&Math.abs(t[5]-e[5])<j&&Math.abs(t[6]-e[6])<j&&Math.abs(t[7]-e[7])<j&&Math.abs(t[8]-e[8])<j&&Math.abs(t[9]-e[9])<j&&Math.abs(t[10]-e[10])<j&&Math.abs(t[11]-e[11])<j&&Math.abs(t[12]-e[12])<j&&Math.abs(t[13]-e[13])<j&&Math.abs(t[14]-e[14])<j&&Math.abs(t[15]-e[15])<j}function uc(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]&&t[4]===e[4]&&t[5]===e[5]&&t[6]===e[6]&&t[7]===e[7]&&t[8]===e[8]&&t[9]===e[9]&&t[10]===e[10]&&t[11]===e[11]&&t[12]===e[12]&&t[13]===e[13]&&t[14]===e[14]&&t[15]===e[15]}function lo(t){return t=t||new D(16),t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t}function fc(t,e){if(e=e||new D(16),e===t){let w;return w=t[1],t[1]=t[4],t[4]=w,w=t[2],t[2]=t[8],t[8]=w,w=t[3],t[3]=t[12],t[12]=w,w=t[6],t[6]=t[9],t[9]=w,w=t[7],t[7]=t[13],t[13]=w,w=t[11],t[11]=t[14],t[14]=w,e}let n=t[0*4+0],r=t[0*4+1],i=t[0*4+2],o=t[0*4+3],a=t[1*4+0],s=t[1*4+1],l=t[1*4+2],c=t[1*4+3],d=t[2*4+0],u=t[2*4+1],m=t[2*4+2],v=t[2*4+3],b=t[3*4+0],x=t[3*4+1],g=t[3*4+2],T=t[3*4+3];return e[0]=n,e[1]=a,e[2]=d,e[3]=b,e[4]=r,e[5]=s,e[6]=u,e[7]=x,e[8]=i,e[9]=l,e[10]=m,e[11]=g,e[12]=o,e[13]=c,e[14]=v,e[15]=T,e}function co(t,e){e=e||new D(16);let n=t[0*4+0],r=t[0*4+1],i=t[0*4+2],o=t[0*4+3],a=t[1*4+0],s=t[1*4+1],l=t[1*4+2],c=t[1*4+3],d=t[2*4+0],u=t[2*4+1],m=t[2*4+2],v=t[2*4+3],b=t[3*4+0],x=t[3*4+1],g=t[3*4+2],T=t[3*4+3],w=m*T,_=g*v,S=l*T,E=g*c,F=l*v,A=m*c,z=i*T,y=g*o,J=i*v,ne=m*o,re=i*c,le=l*o,ce=d*x,ue=b*u,fe=a*x,he=b*s,ge=a*u,qt=d*s,Kt=n*x,Zt=b*r,Jt=n*u,Qt=d*r,en=n*s,tn=a*r,gi=w*s+E*u+F*x-(_*s+S*u+A*x),_i=_*r+z*u+ne*x-(w*r+y*u+J*x),xi=S*r+y*s+re*x-(E*r+z*s+le*x),Si=A*r+J*s+le*u-(F*r+ne*s+re*u),ie=1/(n*gi+a*_i+d*xi+b*Si);return e[0]=ie*gi,e[1]=ie*_i,e[2]=ie*xi,e[3]=ie*Si,e[4]=ie*(_*a+S*d+A*b-(w*a+E*d+F*b)),e[5]=ie*(w*n+y*d+J*b-(_*n+z*d+ne*b)),e[6]=ie*(E*n+z*a+le*b-(S*n+y*a+re*b)),e[7]=ie*(F*n+ne*a+re*d-(A*n+J*a+le*d)),e[8]=ie*(ce*c+he*v+ge*T-(ue*c+fe*v+qt*T)),e[9]=ie*(ue*o+Kt*v+Qt*T-(ce*o+Zt*v+Jt*T)),e[10]=ie*(fe*o+Zt*c+en*T-(he*o+Kt*c+tn*T)),e[11]=ie*(qt*o+Jt*c+tn*v-(ge*o+Qt*c+en*v)),e[12]=ie*(fe*m+qt*g+ue*l-(ge*g+ce*l+he*m)),e[13]=ie*(Jt*g+ce*i+Zt*m-(Kt*m+Qt*g+ue*i)),e[14]=ie*(Kt*l+tn*g+he*i-(en*g+fe*i+Zt*l)),e[15]=ie*(en*m+ge*i+Qt*l-(Jt*l+tn*m+qt*i)),e}function dc(t){let e=t[0],n=t[0*4+1],r=t[0*4+2],i=t[0*4+3],o=t[1*4+0],a=t[1*4+1],s=t[1*4+2],l=t[1*4+3],c=t[2*4+0],d=t[2*4+1],u=t[2*4+2],m=t[2*4+3],v=t[3*4+0],b=t[3*4+1],x=t[3*4+2],g=t[3*4+3],T=u*g,w=x*m,_=s*g,S=x*l,E=s*m,F=u*l,A=r*g,z=x*i,y=r*m,J=u*i,ne=r*l,re=s*i,le=T*a+S*d+E*b-(w*a+_*d+F*b),ce=w*n+A*d+J*b-(T*n+z*d+y*b),ue=_*n+z*a+ne*b-(S*n+A*a+re*b),fe=F*n+y*a+re*d-(E*n+J*a+ne*d);return e*le+o*ce+c*ue+v*fe}var pc=co;function uo(t,e,n){n=n||new D(16);let r=t[0],i=t[1],o=t[2],a=t[3],s=t[4],l=t[5],c=t[6],d=t[7],u=t[8],m=t[9],v=t[10],b=t[11],x=t[12],g=t[13],T=t[14],w=t[15],_=e[0],S=e[1],E=e[2],F=e[3],A=e[4],z=e[5],y=e[6],J=e[7],ne=e[8],re=e[9],le=e[10],ce=e[11],ue=e[12],fe=e[13],he=e[14],ge=e[15];return n[0]=r*_+s*S+u*E+x*F,n[1]=i*_+l*S+m*E+g*F,n[2]=o*_+c*S+v*E+T*F,n[3]=a*_+d*S+b*E+w*F,n[4]=r*A+s*z+u*y+x*J,n[5]=i*A+l*z+m*y+g*J,n[6]=o*A+c*z+v*y+T*J,n[7]=a*A+d*z+b*y+w*J,n[8]=r*ne+s*re+u*le+x*ce,n[9]=i*ne+l*re+m*le+g*ce,n[10]=o*ne+c*re+v*le+T*ce,n[11]=a*ne+d*re+b*le+w*ce,n[12]=r*ue+s*fe+u*he+x*ge,n[13]=i*ue+l*fe+m*he+g*ge,n[14]=o*ue+c*fe+v*he+T*ge,n[15]=a*ue+d*fe+b*he+w*ge,n}var mc=uo;function hc(t,e,n){return n=n||lo(),t!==n&&(n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[4]=t[4],n[5]=t[5],n[6]=t[6],n[7]=t[7],n[8]=t[8],n[9]=t[9],n[10]=t[10],n[11]=t[11]),n[12]=e[0],n[13]=e[1],n[14]=e[2],n[15]=1,n}function gc(t,e){return e=e||pe(),e[0]=t[12],e[1]=t[13],e[2]=t[14],e}function _c(t,e,n){n=n||pe();let r=e*4;return n[0]=t[r+0],n[1]=t[r+1],n[2]=t[r+2],n}function xc(t,e,n,r){r!==t&&(r=Sr(t,r));let i=n*4;return r[i+0]=e[0],r[i+1]=e[1],r[i+2]=e[2],r}function Sc(t,e){e=e||pe();let n=t[0],r=t[1],i=t[2],o=t[4],a=t[5],s=t[6],l=t[8],c=t[9],d=t[10];return e[0]=Math.sqrt(n*n+r*r+i*i),e[1]=Math.sqrt(o*o+a*a+s*s),e[2]=Math.sqrt(l*l+c*c+d*d),e}function vc(t,e,n,r,i){i=i||new D(16);let o=Math.tan(Math.PI*.5-.5*t);if(i[0]=o/e,i[1]=0,i[2]=0,i[3]=0,i[4]=0,i[5]=o,i[6]=0,i[7]=0,i[8]=0,i[9]=0,i[11]=-1,i[12]=0,i[13]=0,i[15]=0,Number.isFinite(r)){let a=1/(n-r);i[10]=r*a,i[14]=r*n*a}else i[10]=-1,i[14]=-n;return i}function bc(t,e,n,r=1/0,i){i=i||new D(16);let o=1/Math.tan(t*.5);if(i[0]=o/e,i[1]=0,i[2]=0,i[3]=0,i[4]=0,i[5]=o,i[6]=0,i[7]=0,i[8]=0,i[9]=0,i[11]=-1,i[12]=0,i[13]=0,i[15]=0,r===1/0)i[10]=0,i[14]=n;else{let a=1/(r-n);i[10]=n*a,i[14]=r*n*a}return i}function wc(t,e,n,r,i,o,a){return a=a||new D(16),a[0]=2/(e-t),a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2/(r-n),a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1/(i-o),a[11]=0,a[12]=(e+t)/(t-e),a[13]=(r+n)/(n-r),a[14]=i/(i-o),a[15]=1,a}function yc(t,e,n,r,i,o,a){a=a||new D(16);let s=e-t,l=r-n,c=i-o;return a[0]=2*i/s,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2*i/l,a[6]=0,a[7]=0,a[8]=(t+e)/s,a[9]=(r+n)/l,a[10]=o/c,a[11]=-1,a[12]=0,a[13]=0,a[14]=i*o/c,a[15]=0,a}function Pc(t,e,n,r,i,o=1/0,a){a=a||new D(16);let s=e-t,l=r-n;if(a[0]=2*i/s,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2*i/l,a[6]=0,a[7]=0,a[8]=(t+e)/s,a[9]=(r+n)/l,a[11]=-1,a[12]=0,a[13]=0,a[15]=0,o===1/0)a[10]=0,a[14]=i;else{let c=1/(o-i);a[10]=i*c,a[14]=o*i*c}return a}var $,Y,L;function Tc(t,e,n,r){return r=r||new D(16),$=$||pe(),Y=Y||pe(),L=L||pe(),Pe(Ot(e,t,L),L),Pe(rt(n,L,$),$),Pe(rt(L,$,Y),Y),r[0]=$[0],r[1]=$[1],r[2]=$[2],r[3]=0,r[4]=Y[0],r[5]=Y[1],r[6]=Y[2],r[7]=0,r[8]=L[0],r[9]=L[1],r[10]=L[2],r[11]=0,r[12]=t[0],r[13]=t[1],r[14]=t[2],r[15]=1,r}function Ec(t,e,n,r){return r=r||new D(16),$=$||pe(),Y=Y||pe(),L=L||pe(),Pe(Ot(t,e,L),L),Pe(rt(n,L,$),$),Pe(rt(L,$,Y),Y),r[0]=$[0],r[1]=$[1],r[2]=$[2],r[3]=0,r[4]=Y[0],r[5]=Y[1],r[6]=Y[2],r[7]=0,r[8]=L[0],r[9]=L[1],r[10]=L[2],r[11]=0,r[12]=t[0],r[13]=t[1],r[14]=t[2],r[15]=1,r}function Mc(t,e,n,r){return r=r||new D(16),$=$||pe(),Y=Y||pe(),L=L||pe(),Pe(Ot(t,e,L),L),Pe(rt(n,L,$),$),Pe(rt(L,$,Y),Y),r[0]=$[0],r[1]=Y[0],r[2]=L[0],r[3]=0,r[4]=$[1],r[5]=Y[1],r[6]=L[1],r[7]=0,r[8]=$[2],r[9]=Y[2],r[10]=L[2],r[11]=0,r[12]=-($[0]*t[0]+$[1]*t[1]+$[2]*t[2]),r[13]=-(Y[0]*t[0]+Y[1]*t[1]+Y[2]*t[2]),r[14]=-(L[0]*t[0]+L[1]*t[1]+L[2]*t[2]),r[15]=1,r}function Ic(t,e){return e=e||new D(16),e[0]=1,e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=1,e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=1,e[11]=0,e[12]=t[0],e[13]=t[1],e[14]=t[2],e[15]=1,e}function Ac(t,e,n){n=n||new D(16);let r=e[0],i=e[1],o=e[2],a=t[0],s=t[1],l=t[2],c=t[3],d=t[1*4+0],u=t[1*4+1],m=t[1*4+2],v=t[1*4+3],b=t[2*4+0],x=t[2*4+1],g=t[2*4+2],T=t[2*4+3],w=t[3*4+0],_=t[3*4+1],S=t[3*4+2],E=t[3*4+3];return t!==n&&(n[0]=a,n[1]=s,n[2]=l,n[3]=c,n[4]=d,n[5]=u,n[6]=m,n[7]=v,n[8]=b,n[9]=x,n[10]=g,n[11]=T),n[12]=a*r+d*i+b*o+w,n[13]=s*r+u*i+x*o+_,n[14]=l*r+m*i+g*o+S,n[15]=c*r+v*i+T*o+E,n}function Dc(t,e){e=e||new D(16);let n=Math.cos(t),r=Math.sin(t);return e[0]=1,e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=n,e[6]=r,e[7]=0,e[8]=0,e[9]=-r,e[10]=n,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Rc(t,e,n){n=n||new D(16);let r=t[4],i=t[5],o=t[6],a=t[7],s=t[8],l=t[9],c=t[10],d=t[11],u=Math.cos(e),m=Math.sin(e);return n[4]=u*r+m*s,n[5]=u*i+m*l,n[6]=u*o+m*c,n[7]=u*a+m*d,n[8]=u*s-m*r,n[9]=u*l-m*i,n[10]=u*c-m*o,n[11]=u*d-m*a,t!==n&&(n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function Cc(t,e){e=e||new D(16);let n=Math.cos(t),r=Math.sin(t);return e[0]=n,e[1]=0,e[2]=-r,e[3]=0,e[4]=0,e[5]=1,e[6]=0,e[7]=0,e[8]=r,e[9]=0,e[10]=n,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Bc(t,e,n){n=n||new D(16);let r=t[0*4+0],i=t[0*4+1],o=t[0*4+2],a=t[0*4+3],s=t[2*4+0],l=t[2*4+1],c=t[2*4+2],d=t[2*4+3],u=Math.cos(e),m=Math.sin(e);return n[0]=u*r-m*s,n[1]=u*i-m*l,n[2]=u*o-m*c,n[3]=u*a-m*d,n[8]=u*s+m*r,n[9]=u*l+m*i,n[10]=u*c+m*o,n[11]=u*d+m*a,t!==n&&(n[4]=t[4],n[5]=t[5],n[6]=t[6],n[7]=t[7],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function Oc(t,e){e=e||new D(16);let n=Math.cos(t),r=Math.sin(t);return e[0]=n,e[1]=r,e[2]=0,e[3]=0,e[4]=-r,e[5]=n,e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=1,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Fc(t,e,n){n=n||new D(16);let r=t[0*4+0],i=t[0*4+1],o=t[0*4+2],a=t[0*4+3],s=t[1*4+0],l=t[1*4+1],c=t[1*4+2],d=t[1*4+3],u=Math.cos(e),m=Math.sin(e);return n[0]=u*r+m*s,n[1]=u*i+m*l,n[2]=u*o+m*c,n[3]=u*a+m*d,n[4]=u*s-m*r,n[5]=u*l-m*i,n[6]=u*c-m*o,n[7]=u*d-m*a,t!==n&&(n[8]=t[8],n[9]=t[9],n[10]=t[10],n[11]=t[11],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function fo(t,e,n){n=n||new D(16);let r=t[0],i=t[1],o=t[2],a=Math.sqrt(r*r+i*i+o*o);r/=a,i/=a,o/=a;let s=r*r,l=i*i,c=o*o,d=Math.cos(e),u=Math.sin(e),m=1-d;return n[0]=s+(1-s)*d,n[1]=r*i*m+o*u,n[2]=r*o*m-i*u,n[3]=0,n[4]=r*i*m-o*u,n[5]=l+(1-l)*d,n[6]=i*o*m+r*u,n[7]=0,n[8]=r*o*m+i*u,n[9]=i*o*m-r*u,n[10]=c+(1-c)*d,n[11]=0,n[12]=0,n[13]=0,n[14]=0,n[15]=1,n}var Gc=fo;function po(t,e,n,r){r=r||new D(16);let i=e[0],o=e[1],a=e[2],s=Math.sqrt(i*i+o*o+a*a);i/=s,o/=s,a/=s;let l=i*i,c=o*o,d=a*a,u=Math.cos(n),m=Math.sin(n),v=1-u,b=l+(1-l)*u,x=i*o*v+a*m,g=i*a*v-o*m,T=i*o*v-a*m,w=c+(1-c)*u,_=o*a*v+i*m,S=i*a*v+o*m,E=o*a*v-i*m,F=d+(1-d)*u,A=t[0],z=t[1],y=t[2],J=t[3],ne=t[4],re=t[5],le=t[6],ce=t[7],ue=t[8],fe=t[9],he=t[10],ge=t[11];return r[0]=b*A+x*ne+g*ue,r[1]=b*z+x*re+g*fe,r[2]=b*y+x*le+g*he,r[3]=b*J+x*ce+g*ge,r[4]=T*A+w*ne+_*ue,r[5]=T*z+w*re+_*fe,r[6]=T*y+w*le+_*he,r[7]=T*J+w*ce+_*ge,r[8]=S*A+E*ne+F*ue,r[9]=S*z+E*re+F*fe,r[10]=S*y+E*le+F*he,r[11]=S*J+E*ce+F*ge,t!==r&&(r[12]=t[12],r[13]=t[13],r[14]=t[14],r[15]=t[15]),r}var Nc=po;function Lc(t,e){return e=e||new D(16),e[0]=t[0],e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=t[1],e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=t[2],e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Uc(t,e,n){n=n||new D(16);let r=e[0],i=e[1],o=e[2];return n[0]=r*t[0*4+0],n[1]=r*t[0*4+1],n[2]=r*t[0*4+2],n[3]=r*t[0*4+3],n[4]=i*t[1*4+0],n[5]=i*t[1*4+1],n[6]=i*t[1*4+2],n[7]=i*t[1*4+3],n[8]=o*t[2*4+0],n[9]=o*t[2*4+1],n[10]=o*t[2*4+2],n[11]=o*t[2*4+3],t!==n&&(n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function zc(t,e){return e=e||new D(16),e[0]=t,e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=t,e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=t,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Vc(t,e,n){return n=n||new D(16),n[0]=e*t[0*4+0],n[1]=e*t[0*4+1],n[2]=e*t[0*4+2],n[3]=e*t[0*4+3],n[4]=e*t[1*4+0],n[5]=e*t[1*4+1],n[6]=e*t[1*4+2],n[7]=e*t[1*4+3],n[8]=e*t[2*4+0],n[9]=e*t[2*4+1],n[10]=e*t[2*4+2],n[11]=e*t[2*4+3],t!==n&&(n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}var M={__proto__:null,aim:Tc,axisRotate:po,axisRotation:fo,cameraAim:Ec,clone:lc,copy:Sr,create:rc,determinant:dc,equals:uc,equalsApproximately:cc,fromMat3:oc,fromQuat:ac,frustum:yc,frustumReverseZ:Pc,getAxis:_c,getScaling:Sc,getTranslation:gc,identity:lo,inverse:co,invert:pc,lookAt:Mc,mul:mc,multiply:uo,negate:sc,ortho:wc,perspective:vc,perspectiveReverseZ:bc,rotate:Nc,rotateX:Rc,rotateY:Bc,rotateZ:Fc,rotation:Gc,rotationX:Dc,rotationY:Cc,rotationZ:Oc,scale:Uc,scaling:Lc,set:ic,setAxis:xc,setDefaultType:nc,setTranslation:hc,translate:Ac,translation:Ic,transpose:fc,uniformScale:Vc,uniformScaling:zc};var V=Float32Array;function kc(t){let e=V;return V=t,e}function mo(t,e,n,r){let i=new V(4);return t!==void 0&&(i[0]=t,e!==void 0&&(i[1]=e,n!==void 0&&(i[2]=n,r!==void 0&&(i[3]=r)))),i}var Hc=mo;function $c(t,e,n,r,i){return i=i||new V(4),i[0]=t,i[1]=e,i[2]=n,i[3]=r,i}function Wc(t,e){return e=e||new V(4),e[0]=Math.ceil(t[0]),e[1]=Math.ceil(t[1]),e[2]=Math.ceil(t[2]),e[3]=Math.ceil(t[3]),e}function jc(t,e){return e=e||new V(4),e[0]=Math.floor(t[0]),e[1]=Math.floor(t[1]),e[2]=Math.floor(t[2]),e[3]=Math.floor(t[3]),e}function Yc(t,e){return e=e||new V(4),e[0]=Math.round(t[0]),e[1]=Math.round(t[1]),e[2]=Math.round(t[2]),e[3]=Math.round(t[3]),e}function Xc(t,e=0,n=1,r){return r=r||new V(4),r[0]=Math.min(n,Math.max(e,t[0])),r[1]=Math.min(n,Math.max(e,t[1])),r[2]=Math.min(n,Math.max(e,t[2])),r[3]=Math.min(n,Math.max(e,t[3])),r}function qc(t,e,n){return n=n||new V(4),n[0]=t[0]+e[0],n[1]=t[1]+e[1],n[2]=t[2]+e[2],n[3]=t[3]+e[3],n}function Kc(t,e,n,r){return r=r||new V(4),r[0]=t[0]+e[0]*n,r[1]=t[1]+e[1]*n,r[2]=t[2]+e[2]*n,r[3]=t[3]+e[3]*n,r}function ho(t,e,n){return n=n||new V(4),n[0]=t[0]-e[0],n[1]=t[1]-e[1],n[2]=t[2]-e[2],n[3]=t[3]-e[3],n}var Zc=ho;function Jc(t,e){return Math.abs(t[0]-e[0])<j&&Math.abs(t[1]-e[1])<j&&Math.abs(t[2]-e[2])<j&&Math.abs(t[3]-e[3])<j}function Qc(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]}function go(t,e,n,r){return r=r||new V(4),r[0]=t[0]+n*(e[0]-t[0]),r[1]=t[1]+n*(e[1]-t[1]),r[2]=t[2]+n*(e[2]-t[2]),r[3]=t[3]+n*(e[3]-t[3]),r}function eu(t,e,n,r){return r=r||new V(4),r[0]=t[0]+n[0]*(e[0]-t[0]),r[1]=t[1]+n[1]*(e[1]-t[1]),r[2]=t[2]+n[2]*(e[2]-t[2]),r[3]=t[3]+n[3]*(e[3]-t[3]),r}function tu(t,e,n){return n=n||new V(4),n[0]=Math.max(t[0],e[0]),n[1]=Math.max(t[1],e[1]),n[2]=Math.max(t[2],e[2]),n[3]=Math.max(t[3],e[3]),n}function nu(t,e,n){return n=n||new V(4),n[0]=Math.min(t[0],e[0]),n[1]=Math.min(t[1],e[1]),n[2]=Math.min(t[2],e[2]),n[3]=Math.min(t[3],e[3]),n}function vr(t,e,n){return n=n||new V(4),n[0]=t[0]*e,n[1]=t[1]*e,n[2]=t[2]*e,n[3]=t[3]*e,n}var ru=vr;function iu(t,e,n){return n=n||new V(4),n[0]=t[0]/e,n[1]=t[1]/e,n[2]=t[2]/e,n[3]=t[3]/e,n}function _o(t,e){return e=e||new V(4),e[0]=1/t[0],e[1]=1/t[1],e[2]=1/t[2],e[3]=1/t[3],e}var ou=_o;function au(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]+t[3]*e[3]}function br(t){let e=t[0],n=t[1],r=t[2],i=t[3];return Math.sqrt(e*e+n*n+r*r+i*i)}var su=br;function xo(t){let e=t[0],n=t[1],r=t[2],i=t[3];return e*e+n*n+r*r+i*i}var lu=xo;function So(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2],o=t[3]-e[3];return Math.sqrt(n*n+r*r+i*i+o*o)}var cu=So;function vo(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2],o=t[3]-e[3];return n*n+r*r+i*i+o*o}var uu=vo;function bo(t,e){e=e||new V(4);let n=t[0],r=t[1],i=t[2],o=t[3],a=Math.sqrt(n*n+r*r+i*i+o*o);return a>1e-5?(e[0]=n/a,e[1]=r/a,e[2]=i/a,e[3]=o/a):(e[0]=0,e[1]=0,e[2]=0,e[3]=0),e}function fu(t,e){return e=e||new V(4),e[0]=-t[0],e[1]=-t[1],e[2]=-t[2],e[3]=-t[3],e}function wr(t,e){return e=e||new V(4),e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e}var du=wr;function wo(t,e,n){return n=n||new V(4),n[0]=t[0]*e[0],n[1]=t[1]*e[1],n[2]=t[2]*e[2],n[3]=t[3]*e[3],n}var pu=wo;function yo(t,e,n){return n=n||new V(4),n[0]=t[0]/e[0],n[1]=t[1]/e[1],n[2]=t[2]/e[2],n[3]=t[3]/e[3],n}var mu=yo;function hu(t){return t=t||new V(4),t[0]=0,t[1]=0,t[2]=0,t[3]=0,t}function gu(t,e,n){n=n||new V(4);let r=t[0],i=t[1],o=t[2],a=t[3];return n[0]=e[0]*r+e[4]*i+e[8]*o+e[12]*a,n[1]=e[1]*r+e[5]*i+e[9]*o+e[13]*a,n[2]=e[2]*r+e[6]*i+e[10]*o+e[14]*a,n[3]=e[3]*r+e[7]*i+e[11]*o+e[15]*a,n}function Po(t,e,n){return n=n||new V(4),bo(t,n),vr(n,e,n)}function _u(t,e,n){return n=n||new V(4),br(t)>e?Po(t,e,n):wr(t,n)}function xu(t,e,n){return n=n||new V(4),go(t,e,.5,n)}var X={__proto__:null,add:qc,addScaled:Kc,ceil:Wc,clamp:Xc,clone:du,copy:wr,create:mo,dist:cu,distSq:uu,distance:So,distanceSq:vo,div:mu,divScalar:iu,divide:yo,dot:au,equals:Qc,equalsApproximately:Jc,floor:jc,fromValues:Hc,inverse:_o,invert:ou,len:su,lenSq:lu,length:br,lengthSq:xo,lerp:go,lerpV:eu,max:tu,midpoint:xu,min:nu,mul:pu,mulScalar:vr,multiply:wo,negate:fu,normalize:bo,round:Yc,scale:ru,set:$c,setDefaultType:kc,setLength:Po,sub:Zc,subtract:ho,transformMat4:gu,truncate:_u,zero:hu};var We=class{constructor(e,n=0,r=0){this.buffer=e;this.byteOffset=n;this.byteSize=r;this.byteSize=r===0?e.byteLength:r,this.asF32=new Float32Array(e),this.asU32=new Uint32Array(e)}asF32;asU32;offsetBytes=0;f32=e=>this.asF32[e];u32=e=>this.asU32[e];cursor=()=>this.offsetBytes;resetCursor(){this.offsetBytes=0}padding(e){this.offsetBytes+=e}assertWrittenBytes(e){if(this.offsetBytes!==e)throw new Error(`Written invalid byte count ${this.offsetBytes}. Expected ${e}.`);if(this.offsetBytes%16!==0){let n=Qe(this.offsetBytes,16)*16,r=(n-this.offsetBytes)/te;throw new Error(`Byte count ${this.offsetBytes} does not cleanly divide by 16. This might lead to errors. Add padding to fill to ${n} bytes (${r} u32 elements is enough).`)}}writeMat4(e){for(let n=0;n<16;n++)this.writeF32(e[n])}writeF32Array(e){for(let n=0;n<e.length;n++)this.writeF32(e[n])}writeF32(e){let n=(this.byteOffset+this.offsetBytes)/we;this.asF32[n]=e,this.offsetBytes+=we}writeU32(e){let n=(this.byteOffset+this.offsetBytes)/te;this.asU32[n]=Math.floor(e),this.offsetBytes+=te}upload(e,n,r){e.queue.writeBuffer(n,r,this.buffer,this.byteOffset,this.byteSize)}};var Su=`
-
-fn _storeTileHead(
-  viewportSize: vec2u,
-  tileXY: vec2u, depthBin: u32,
-  depthMin: f32, depthMax: f32,
-  nextPtr: u32
-) -> u32 {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
-  
-  // store depth
-  // TODO [IGNORE] low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
-  let depthMax_U32 = u32(depthMax * f32(MAX_U32));
-  // WebGPU clears to 0. So atomicMin() is pointless. Use atomicMax() with inverted values instead
-  let depthMin_U32 = u32((1.0 - depthMin) * f32(MAX_U32));
-  atomicMax(&_hairTilesResult[tileIdx].maxDepth, depthMax_U32);
-  atomicMax(&_hairTilesResult[tileIdx].minDepth, depthMin_U32);
-
-  // store pointer to 1st segment.
-  // 0 is the value we cleared the buffer to. We always write +1, so previous value '0'
-  // means this ptr was never modified. It signifies the end of the list.
-  // But '0' is also a valid pointer into a linked list segments buffer.
-  // That's why we add 1. To detect this case and turn it into $INVALID_TILE_SEGMENT_PTR.
-  // This $INVALID_TILE_SEGMENT_PTR will be then written to the linked list segments buffer.
-  let lastHeadPtr = atomicExchange(
-    &_hairTilesResult[tileIdx].tileSegmentPtr,
-    nextPtr + 1u
-  );
-
-  return _translateHeadPointer(lastHeadPtr);
-}
-`,vu=`
-
-fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> vec2f {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
-  let tile = _hairTilesResult[tileIdx];
-  return vec2f(
-    f32(MAX_U32 - tile.minDepth) / f32(MAX_U32),
-    f32(tile.maxDepth) / f32(MAX_U32)
-  );
-}
-
-fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
-  let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, depthBin);
-  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr;
-  return _translateHeadPointer(myPtr);
-}
-
-`,ct=(t,e)=>`
-
-const MAX_U32: u32 = 0xffffffffu;
-const INVALID_TILE_SEGMENT_PTR: u32 = 0xffffffffu;
-
-struct HairTileResult {
-  minDepth: ${$e(e)},
-  maxDepth: ${$e(e)},
-  tileSegmentPtr: ${$e(e)},
-  padding0: u32
-}
-
-@group(0) @binding(${t})
-var<storage, ${e}> _hairTilesResult: array<HairTileResult>;
-
-${e=="read_write"?Su:vu}
-
-fn _translateHeadPointer(segmentPtr: u32) -> u32 {
-  // PS. there is no ternary in WGSL. There is select(). It was designed by someone THAT HAS NEVER WRITTEN A LINE OF CODE IN THEIR LIFE. I.N.C.O.M.P.E.T.E.N.C.E.
-  if (segmentPtr == 0u) { return INVALID_TILE_SEGMENT_PTR; }
-  return segmentPtr - 1u;
-}
-`,yr=t=>{let{tileSize:e}=f.hairRender;return{width:Qe(t.width,e),height:Qe(t.height,e)}};function To(t,e){let n=f.hairRender.tileDepthBins,r=yr(e);console.log(`Creating hair tiles buffer: ${r.width}x${r.height}x${n} tiles`),U.update("Tiles",`${r.width} x ${r.height} x ${n}`);let i=r.width*r.height*n,o=4*te,a=i*o;U.update("Tiles heads",xe(a));let s=f.isTest?GPUBufferUsage.COPY_SRC:0;return t.createBuffer({label:"hair-tiles-result",size:a,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|s})}var bu=`
+${Yi}
+`,Xi=De==="global"?Ws:Xs;function qs(t){let e=Ki();return t.createBuffer({label:"hair-slices-heads",size:Math.max(e,ve),usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}function Ks(t){Ki()}var qi=De==="global"?qs:Ks;function Ki(){let{processorCount:t}=u.hairRender,e=t*Gt,n=X,r=e*n,o={global:"VRAM",workgroup:"WKGRP",registers:"REGS"}[De];return z.update("Slices heads",`${o} ${Se(r)}`),z.update(" \\ Per processor",Se(Gt*n)),r}var ve=256;async function Zi(){try{let t=await navigator.gpu.requestAdapter({powerPreference:"high-performance"}),e=a=>console.error(`WebGPU init error: '${a}'`);if(!t){e("No adapter found. WebGPU seems to be unavailable.");return}let n=t.features.has("timestamp-query"),r=["float32-filterable"];n&&r.push("timestamp-query");let i={};u.increaseStorageMemoryLimits&&(i.maxStorageBufferBindingSize=fn(1024,"MB"),i.maxBufferSize=fn(1024,"MB")),i.maxComputeWorkgroupStorageSize=Math.max(ji(),t.limits.maxComputeWorkgroupStorageSize||fn(16,"KB")),i.maxStorageBuffersPerShaderStage=10;let o=await t?.requestDevice({requiredFeatures:r,requiredLimits:i});if(!o){e("Failed to get GPUDevice from the adapter.");return}return o}catch(t){console.error(t);return}}function vr(t,e,n,r){let i=t.createBuffer({label:e,size:r.byteLength,usage:n});return t.queue.writeBuffer(i,0,r,0),i}function Sn(t,e,n,r=0){let i=Ot(Float32Array,n);return vr(t,e,GPUBufferUsage.VERTEX|GPUBufferUsage.COPY_DST|r,i)}function vn(t,e,n){let r=Ot(Uint32Array,n);return vr(t,e,GPUBufferUsage.INDEX|GPUBufferUsage.COPY_DST,r)}function be(t,e,n,r=0){let i=Rt(n);if(![Uint32Array.name,Float32Array.name,Int32Array.name].includes(i))throw new Error(`Invalid data provided to createGPU_StorageBuffer(). Expected TypedArray, got ${i}`);return vr(t,e,GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|r,n)}function Xe(t,e){t.clearBuffer(e,0,e.size)}var ae=ot,pe=t=>t==="read_write"?"atomic<u32>":"u32",Nt=t=>t==="read_write"?"atomic<i32>":"i32",L=(t,e)=>({binding:t,resource:{buffer:e}});var Zs=t=>typeof t=="object"&&Rt(t)===GPUTextureView.name,$=t=>{if(!Zs(t))throw new Error(`Expected ${GPUTextureView.name}, got ${Bi(t)}`)};var lt={CAMERA_FORWARD:"w",CAMERA_BACK:"s",CAMERA_LEFT:"a",CAMERA_RIGHT:"d",CAMERA_UP:" ",CAMERA_DOWN:"z",CAMERA_GO_FASTER:"shift"},Js=()=>({directions:{forward:!1,backward:!1,left:!1,right:!1,up:!1,down:!1,goFaster:!1},mouse:{x:0,y:0,dragX:0,dragY:0,touching:!1}});function Ji(t,e){let{directions:n,mouse:r}=Js(),i=(o,a)=>{switch(o.key.toLowerCase()){case lt.CAMERA_FORWARD:n.forward=a,o.preventDefault(),o.stopPropagation();break;case lt.CAMERA_BACK:n.backward=a,o.preventDefault(),o.stopPropagation();break;case lt.CAMERA_LEFT:n.left=a,o.preventDefault(),o.stopPropagation();break;case lt.CAMERA_RIGHT:n.right=a,o.preventDefault(),o.stopPropagation();break;case lt.CAMERA_UP:n.up=a,o.preventDefault(),o.stopPropagation();break;case lt.CAMERA_DOWN:n.down=a,o.preventDefault(),o.stopPropagation();break;case lt.CAMERA_GO_FASTER:n.goFaster=a,o.preventDefault(),o.stopPropagation();break}};return t.addEventListener("keydown",o=>i(o,!0)),t.addEventListener("keyup",o=>i(o,!1)),e.style.touchAction="pinch-zoom",e.addEventListener("pointerdown",()=>{r.touching=!0}),e.addEventListener("pointerup",()=>{r.touching=!1}),e.addEventListener("pointermove",o=>{r.x=o.clientX,r.y=o.clientY,r.touching&&(r.dragX+=o.movementX,r.dragY+=o.movementY)}),()=>{let o={directions:{...n},mouse:{...r}};return r.dragX=0,r.dragY=0,o}}var Y=1e-6;var U=Float32Array;function Qs(t){let e=U;return U=t,e}function Qi(t=0,e=0){let n=new U(2);return t!==void 0&&(n[0]=t,e!==void 0&&(n[1]=e)),n}var I=Float32Array;function el(t){let e=I;return I=t,e}function me(t,e,n){let r=new I(3);return t!==void 0&&(r[0]=t,e!==void 0&&(r[1]=e,n!==void 0&&(r[2]=n))),r}var tl=Qi;function nl(t,e,n){return n=n||new U(2),n[0]=t,n[1]=e,n}function rl(t,e){return e=e||new U(2),e[0]=Math.ceil(t[0]),e[1]=Math.ceil(t[1]),e}function il(t,e){return e=e||new U(2),e[0]=Math.floor(t[0]),e[1]=Math.floor(t[1]),e}function ol(t,e){return e=e||new U(2),e[0]=Math.round(t[0]),e[1]=Math.round(t[1]),e}function al(t,e=0,n=1,r){return r=r||new U(2),r[0]=Math.min(n,Math.max(e,t[0])),r[1]=Math.min(n,Math.max(e,t[1])),r}function sl(t,e,n){return n=n||new U(2),n[0]=t[0]+e[0],n[1]=t[1]+e[1],n}function ll(t,e,n,r){return r=r||new U(2),r[0]=t[0]+e[0]*n,r[1]=t[1]+e[1]*n,r}function cl(t,e){let n=t[0],r=t[1],i=e[0],o=e[1],a=Math.sqrt(n*n+r*r),s=Math.sqrt(i*i+o*o),l=a*s,c=l&&ro(t,e)/l;return Math.acos(c)}function eo(t,e,n){return n=n||new U(2),n[0]=t[0]-e[0],n[1]=t[1]-e[1],n}var ul=eo;function fl(t,e){return Math.abs(t[0]-e[0])<Y&&Math.abs(t[1]-e[1])<Y}function dl(t,e){return t[0]===e[0]&&t[1]===e[1]}function to(t,e,n,r){return r=r||new U(2),r[0]=t[0]+n*(e[0]-t[0]),r[1]=t[1]+n*(e[1]-t[1]),r}function pl(t,e,n,r){return r=r||new U(2),r[0]=t[0]+n[0]*(e[0]-t[0]),r[1]=t[1]+n[1]*(e[1]-t[1]),r}function ml(t,e,n){return n=n||new U(2),n[0]=Math.max(t[0],e[0]),n[1]=Math.max(t[1],e[1]),n}function hl(t,e,n){return n=n||new U(2),n[0]=Math.min(t[0],e[0]),n[1]=Math.min(t[1],e[1]),n}function br(t,e,n){return n=n||new U(2),n[0]=t[0]*e,n[1]=t[1]*e,n}var gl=br;function _l(t,e,n){return n=n||new U(2),n[0]=t[0]/e,n[1]=t[1]/e,n}function no(t,e){return e=e||new U(2),e[0]=1/t[0],e[1]=1/t[1],e}var xl=no;function Sl(t,e,n){n=n||new I(3);let r=t[0]*e[1]-t[1]*e[0];return n[0]=0,n[1]=0,n[2]=r,n}function ro(t,e){return t[0]*e[0]+t[1]*e[1]}function wr(t){let e=t[0],n=t[1];return Math.sqrt(e*e+n*n)}var vl=wr;function io(t){let e=t[0],n=t[1];return e*e+n*n}var bl=io;function oo(t,e){let n=t[0]-e[0],r=t[1]-e[1];return Math.sqrt(n*n+r*r)}var wl=oo;function ao(t,e){let n=t[0]-e[0],r=t[1]-e[1];return n*n+r*r}var Pl=ao;function so(t,e){e=e||new U(2);let n=t[0],r=t[1],i=Math.sqrt(n*n+r*r);return i>1e-5?(e[0]=n/i,e[1]=r/i):(e[0]=0,e[1]=0),e}function yl(t,e){return e=e||new U(2),e[0]=-t[0],e[1]=-t[1],e}function Pr(t,e){return e=e||new U(2),e[0]=t[0],e[1]=t[1],e}var Tl=Pr;function lo(t,e,n){return n=n||new U(2),n[0]=t[0]*e[0],n[1]=t[1]*e[1],n}var El=lo;function co(t,e,n){return n=n||new U(2),n[0]=t[0]/e[0],n[1]=t[1]/e[1],n}var Ml=co;function Il(t=1,e){e=e||new U(2);let n=Math.random()*2*Math.PI;return e[0]=Math.cos(n)*t,e[1]=Math.sin(n)*t,e}function Cl(t){return t=t||new U(2),t[0]=0,t[1]=0,t}function Al(t,e,n){n=n||new U(2);let r=t[0],i=t[1];return n[0]=r*e[0]+i*e[4]+e[12],n[1]=r*e[1]+i*e[5]+e[13],n}function Rl(t,e,n){n=n||new U(2);let r=t[0],i=t[1];return n[0]=e[0]*r+e[4]*i+e[8],n[1]=e[1]*r+e[5]*i+e[9],n}function Dl(t,e,n,r){r=r||new U(2);let i=t[0]-e[0],o=t[1]-e[1],a=Math.sin(n),s=Math.cos(n);return r[0]=i*s-o*a+e[0],r[1]=i*a+o*s+e[1],r}function uo(t,e,n){return n=n||new U(2),so(t,n),br(n,e,n)}function Bl(t,e,n){return n=n||new U(2),wr(t)>e?uo(t,e,n):Pr(t,n)}function Ol(t,e,n){return n=n||new U(2),to(t,e,.5,n)}var yr={__proto__:null,add:sl,addScaled:ll,angle:cl,ceil:rl,clamp:al,clone:Tl,copy:Pr,create:Qi,cross:Sl,dist:wl,distSq:Pl,distance:oo,distanceSq:ao,div:Ml,divScalar:_l,divide:co,dot:ro,equals:dl,equalsApproximately:fl,floor:il,fromValues:tl,inverse:no,invert:xl,len:vl,lenSq:bl,length:wr,lengthSq:io,lerp:to,lerpV:pl,max:ml,midpoint:Ol,min:hl,mul:El,mulScalar:br,multiply:lo,negate:yl,normalize:so,random:Il,rotate:Dl,round:ol,scale:gl,set:nl,setDefaultType:Qs,setLength:uo,sub:ul,subtract:eo,transformMat3:Rl,transformMat4:Al,truncate:Bl,zero:Cl};var Fl=new Map([[Float32Array,()=>new Float32Array(12)],[Float64Array,()=>new Float64Array(12)],[Array,()=>new Array(12).fill(0)]]),np=Fl.get(Float32Array);var Gl=me;function Nl(t,e,n,r){return r=r||new I(3),r[0]=t,r[1]=e,r[2]=n,r}function Ll(t,e){return e=e||new I(3),e[0]=Math.ceil(t[0]),e[1]=Math.ceil(t[1]),e[2]=Math.ceil(t[2]),e}function Ul(t,e){return e=e||new I(3),e[0]=Math.floor(t[0]),e[1]=Math.floor(t[1]),e[2]=Math.floor(t[2]),e}function kl(t,e){return e=e||new I(3),e[0]=Math.round(t[0]),e[1]=Math.round(t[1]),e[2]=Math.round(t[2]),e}function zl(t,e=0,n=1,r){return r=r||new I(3),r[0]=Math.min(n,Math.max(e,t[0])),r[1]=Math.min(n,Math.max(e,t[1])),r[2]=Math.min(n,Math.max(e,t[2])),r}function Vl(t,e,n){return n=n||new I(3),n[0]=t[0]+e[0],n[1]=t[1]+e[1],n[2]=t[2]+e[2],n}function Hl(t,e,n,r){return r=r||new I(3),r[0]=t[0]+e[0]*n,r[1]=t[1]+e[1]*n,r[2]=t[2]+e[2]*n,r}function $l(t,e){let n=t[0],r=t[1],i=t[2],o=e[0],a=e[1],s=e[2],l=Math.sqrt(n*n+r*r+i*i),c=Math.sqrt(o*o+a*a+s*s),d=l*c,f=d&&mo(t,e)/d;return Math.acos(f)}function Lt(t,e,n){return n=n||new I(3),n[0]=t[0]-e[0],n[1]=t[1]-e[1],n[2]=t[2]-e[2],n}var Wl=Lt;function jl(t,e){return Math.abs(t[0]-e[0])<Y&&Math.abs(t[1]-e[1])<Y&&Math.abs(t[2]-e[2])<Y}function Yl(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]}function fo(t,e,n,r){return r=r||new I(3),r[0]=t[0]+n*(e[0]-t[0]),r[1]=t[1]+n*(e[1]-t[1]),r[2]=t[2]+n*(e[2]-t[2]),r}function Xl(t,e,n,r){return r=r||new I(3),r[0]=t[0]+n[0]*(e[0]-t[0]),r[1]=t[1]+n[1]*(e[1]-t[1]),r[2]=t[2]+n[2]*(e[2]-t[2]),r}function ql(t,e,n){return n=n||new I(3),n[0]=Math.max(t[0],e[0]),n[1]=Math.max(t[1],e[1]),n[2]=Math.max(t[2],e[2]),n}function Kl(t,e,n){return n=n||new I(3),n[0]=Math.min(t[0],e[0]),n[1]=Math.min(t[1],e[1]),n[2]=Math.min(t[2],e[2]),n}function Tr(t,e,n){return n=n||new I(3),n[0]=t[0]*e,n[1]=t[1]*e,n[2]=t[2]*e,n}var Zl=Tr;function Jl(t,e,n){return n=n||new I(3),n[0]=t[0]/e,n[1]=t[1]/e,n[2]=t[2]/e,n}function po(t,e){return e=e||new I(3),e[0]=1/t[0],e[1]=1/t[1],e[2]=1/t[2],e}var Ql=po;function ct(t,e,n){n=n||new I(3);let r=t[2]*e[0]-t[0]*e[2],i=t[0]*e[1]-t[1]*e[0];return n[0]=t[1]*e[2]-t[2]*e[1],n[1]=r,n[2]=i,n}function mo(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]}function Er(t){let e=t[0],n=t[1],r=t[2];return Math.sqrt(e*e+n*n+r*r)}var ec=Er;function ho(t){let e=t[0],n=t[1],r=t[2];return e*e+n*n+r*r}var tc=ho;function go(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2];return Math.sqrt(n*n+r*r+i*i)}var nc=go;function _o(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2];return n*n+r*r+i*i}var rc=_o;function Me(t,e){e=e||new I(3);let n=t[0],r=t[1],i=t[2],o=Math.sqrt(n*n+r*r+i*i);return o>1e-5?(e[0]=n/o,e[1]=r/o,e[2]=i/o):(e[0]=0,e[1]=0,e[2]=0),e}function ic(t,e){return e=e||new I(3),e[0]=-t[0],e[1]=-t[1],e[2]=-t[2],e}function Mr(t,e){return e=e||new I(3),e[0]=t[0],e[1]=t[1],e[2]=t[2],e}var oc=Mr;function xo(t,e,n){return n=n||new I(3),n[0]=t[0]*e[0],n[1]=t[1]*e[1],n[2]=t[2]*e[2],n}var ac=xo;function So(t,e,n){return n=n||new I(3),n[0]=t[0]/e[0],n[1]=t[1]/e[1],n[2]=t[2]/e[2],n}var sc=So;function lc(t=1,e){e=e||new I(3);let n=Math.random()*2*Math.PI,r=Math.random()*2-1,i=Math.sqrt(1-r*r)*t;return e[0]=Math.cos(n)*i,e[1]=Math.sin(n)*i,e[2]=r*t,e}function cc(t){return t=t||new I(3),t[0]=0,t[1]=0,t[2]=0,t}function uc(t,e,n){n=n||new I(3);let r=t[0],i=t[1],o=t[2],a=e[3]*r+e[7]*i+e[11]*o+e[15]||1;return n[0]=(e[0]*r+e[4]*i+e[8]*o+e[12])/a,n[1]=(e[1]*r+e[5]*i+e[9]*o+e[13])/a,n[2]=(e[2]*r+e[6]*i+e[10]*o+e[14])/a,n}function fc(t,e,n){n=n||new I(3);let r=t[0],i=t[1],o=t[2];return n[0]=r*e[0*4+0]+i*e[1*4+0]+o*e[2*4+0],n[1]=r*e[0*4+1]+i*e[1*4+1]+o*e[2*4+1],n[2]=r*e[0*4+2]+i*e[1*4+2]+o*e[2*4+2],n}function dc(t,e,n){n=n||new I(3);let r=t[0],i=t[1],o=t[2];return n[0]=r*e[0]+i*e[4]+o*e[8],n[1]=r*e[1]+i*e[5]+o*e[9],n[2]=r*e[2]+i*e[6]+o*e[10],n}function pc(t,e,n){n=n||new I(3);let r=e[0],i=e[1],o=e[2],a=e[3]*2,s=t[0],l=t[1],c=t[2],d=i*c-o*l,f=o*s-r*c,m=r*l-i*s;return n[0]=s+d*a+(i*m-o*f)*2,n[1]=l+f*a+(o*d-r*m)*2,n[2]=c+m*a+(r*f-i*d)*2,n}function mc(t,e){return e=e||new I(3),e[0]=t[12],e[1]=t[13],e[2]=t[14],e}function hc(t,e,n){n=n||new I(3);let r=e*4;return n[0]=t[r+0],n[1]=t[r+1],n[2]=t[r+2],n}function gc(t,e){e=e||new I(3);let n=t[0],r=t[1],i=t[2],o=t[4],a=t[5],s=t[6],l=t[8],c=t[9],d=t[10];return e[0]=Math.sqrt(n*n+r*r+i*i),e[1]=Math.sqrt(o*o+a*a+s*s),e[2]=Math.sqrt(l*l+c*c+d*d),e}function _c(t,e,n,r){r=r||new I(3);let i=[],o=[];return i[0]=t[0]-e[0],i[1]=t[1]-e[1],i[2]=t[2]-e[2],o[0]=i[0],o[1]=i[1]*Math.cos(n)-i[2]*Math.sin(n),o[2]=i[1]*Math.sin(n)+i[2]*Math.cos(n),r[0]=o[0]+e[0],r[1]=o[1]+e[1],r[2]=o[2]+e[2],r}function xc(t,e,n,r){r=r||new I(3);let i=[],o=[];return i[0]=t[0]-e[0],i[1]=t[1]-e[1],i[2]=t[2]-e[2],o[0]=i[2]*Math.sin(n)+i[0]*Math.cos(n),o[1]=i[1],o[2]=i[2]*Math.cos(n)-i[0]*Math.sin(n),r[0]=o[0]+e[0],r[1]=o[1]+e[1],r[2]=o[2]+e[2],r}function Sc(t,e,n,r){r=r||new I(3);let i=[],o=[];return i[0]=t[0]-e[0],i[1]=t[1]-e[1],i[2]=t[2]-e[2],o[0]=i[0]*Math.cos(n)-i[1]*Math.sin(n),o[1]=i[0]*Math.sin(n)+i[1]*Math.cos(n),o[2]=i[2],r[0]=o[0]+e[0],r[1]=o[1]+e[1],r[2]=o[2]+e[2],r}function vo(t,e,n){return n=n||new I(3),Me(t,n),Tr(n,e,n)}function vc(t,e,n){return n=n||new I(3),Er(t)>e?vo(t,e,n):Mr(t,n)}function bc(t,e,n){return n=n||new I(3),fo(t,e,.5,n)}var y={__proto__:null,add:Vl,addScaled:Hl,angle:$l,ceil:Ll,clamp:zl,clone:oc,copy:Mr,create:me,cross:ct,dist:nc,distSq:rc,distance:go,distanceSq:_o,div:sc,divScalar:Jl,divide:So,dot:mo,equals:Yl,equalsApproximately:jl,floor:Ul,fromValues:Gl,getAxis:hc,getScaling:gc,getTranslation:mc,inverse:po,invert:Ql,len:ec,lenSq:tc,length:Er,lengthSq:ho,lerp:fo,lerpV:Xl,max:ql,midpoint:bc,min:Kl,mul:ac,mulScalar:Tr,multiply:xo,negate:ic,normalize:Me,random:lc,rotateX:_c,rotateY:xc,rotateZ:Sc,round:kl,scale:Zl,set:Nl,setDefaultType:el,setLength:vo,sub:Wl,subtract:Lt,transformMat3:dc,transformMat4:uc,transformMat4Upper3x3:fc,transformQuat:pc,truncate:vc,zero:cc},O=Float32Array;function wc(t){let e=O;return O=t,e}function Pc(t,e,n,r,i,o,a,s,l,c,d,f,m,v,b,x){let g=new O(16);return t!==void 0&&(g[0]=t,e!==void 0&&(g[1]=e,n!==void 0&&(g[2]=n,r!==void 0&&(g[3]=r,i!==void 0&&(g[4]=i,o!==void 0&&(g[5]=o,a!==void 0&&(g[6]=a,s!==void 0&&(g[7]=s,l!==void 0&&(g[8]=l,c!==void 0&&(g[9]=c,d!==void 0&&(g[10]=d,f!==void 0&&(g[11]=f,m!==void 0&&(g[12]=m,v!==void 0&&(g[13]=v,b!==void 0&&(g[14]=b,x!==void 0&&(g[15]=x)))))))))))))))),g}function yc(t,e,n,r,i,o,a,s,l,c,d,f,m,v,b,x,g){return g=g||new O(16),g[0]=t,g[1]=e,g[2]=n,g[3]=r,g[4]=i,g[5]=o,g[6]=a,g[7]=s,g[8]=l,g[9]=c,g[10]=d,g[11]=f,g[12]=m,g[13]=v,g[14]=b,g[15]=x,g}function Tc(t,e){return e=e||new O(16),e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=0,e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=0,e[8]=t[8],e[9]=t[9],e[10]=t[10],e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Ec(t,e){e=e||new O(16);let n=t[0],r=t[1],i=t[2],o=t[3],a=n+n,s=r+r,l=i+i,c=n*a,d=r*a,f=r*s,m=i*a,v=i*s,b=i*l,x=o*a,g=o*s,T=o*l;return e[0]=1-f-b,e[1]=d+T,e[2]=m-g,e[3]=0,e[4]=d-T,e[5]=1-c-b,e[6]=v+x,e[7]=0,e[8]=m+g,e[9]=v-x,e[10]=1-c-f,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Mc(t,e){return e=e||new O(16),e[0]=-t[0],e[1]=-t[1],e[2]=-t[2],e[3]=-t[3],e[4]=-t[4],e[5]=-t[5],e[6]=-t[6],e[7]=-t[7],e[8]=-t[8],e[9]=-t[9],e[10]=-t[10],e[11]=-t[11],e[12]=-t[12],e[13]=-t[13],e[14]=-t[14],e[15]=-t[15],e}function Ir(t,e){return e=e||new O(16),e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e[4]=t[4],e[5]=t[5],e[6]=t[6],e[7]=t[7],e[8]=t[8],e[9]=t[9],e[10]=t[10],e[11]=t[11],e[12]=t[12],e[13]=t[13],e[14]=t[14],e[15]=t[15],e}var Ic=Ir;function Cc(t,e){return Math.abs(t[0]-e[0])<Y&&Math.abs(t[1]-e[1])<Y&&Math.abs(t[2]-e[2])<Y&&Math.abs(t[3]-e[3])<Y&&Math.abs(t[4]-e[4])<Y&&Math.abs(t[5]-e[5])<Y&&Math.abs(t[6]-e[6])<Y&&Math.abs(t[7]-e[7])<Y&&Math.abs(t[8]-e[8])<Y&&Math.abs(t[9]-e[9])<Y&&Math.abs(t[10]-e[10])<Y&&Math.abs(t[11]-e[11])<Y&&Math.abs(t[12]-e[12])<Y&&Math.abs(t[13]-e[13])<Y&&Math.abs(t[14]-e[14])<Y&&Math.abs(t[15]-e[15])<Y}function Ac(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]&&t[4]===e[4]&&t[5]===e[5]&&t[6]===e[6]&&t[7]===e[7]&&t[8]===e[8]&&t[9]===e[9]&&t[10]===e[10]&&t[11]===e[11]&&t[12]===e[12]&&t[13]===e[13]&&t[14]===e[14]&&t[15]===e[15]}function bo(t){return t=t||new O(16),t[0]=1,t[1]=0,t[2]=0,t[3]=0,t[4]=0,t[5]=1,t[6]=0,t[7]=0,t[8]=0,t[9]=0,t[10]=1,t[11]=0,t[12]=0,t[13]=0,t[14]=0,t[15]=1,t}function Rc(t,e){if(e=e||new O(16),e===t){let P;return P=t[1],t[1]=t[4],t[4]=P,P=t[2],t[2]=t[8],t[8]=P,P=t[3],t[3]=t[12],t[12]=P,P=t[6],t[6]=t[9],t[9]=P,P=t[7],t[7]=t[13],t[13]=P,P=t[11],t[11]=t[14],t[14]=P,e}let n=t[0*4+0],r=t[0*4+1],i=t[0*4+2],o=t[0*4+3],a=t[1*4+0],s=t[1*4+1],l=t[1*4+2],c=t[1*4+3],d=t[2*4+0],f=t[2*4+1],m=t[2*4+2],v=t[2*4+3],b=t[3*4+0],x=t[3*4+1],g=t[3*4+2],T=t[3*4+3];return e[0]=n,e[1]=a,e[2]=d,e[3]=b,e[4]=r,e[5]=s,e[6]=f,e[7]=x,e[8]=i,e[9]=l,e[10]=m,e[11]=g,e[12]=o,e[13]=c,e[14]=v,e[15]=T,e}function wo(t,e){e=e||new O(16);let n=t[0*4+0],r=t[0*4+1],i=t[0*4+2],o=t[0*4+3],a=t[1*4+0],s=t[1*4+1],l=t[1*4+2],c=t[1*4+3],d=t[2*4+0],f=t[2*4+1],m=t[2*4+2],v=t[2*4+3],b=t[3*4+0],x=t[3*4+1],g=t[3*4+2],T=t[3*4+3],P=m*T,_=g*v,S=l*T,E=g*c,N=l*v,D=m*c,V=i*T,w=g*o,Q=i*v,ne=m*o,re=i*c,ce=l*o,ue=d*x,fe=b*f,de=a*x,ge=b*s,_e=a*f,rn=d*s,on=n*x,an=b*r,sn=n*f,ln=d*r,cn=n*s,un=a*r,Ii=P*s+E*f+N*x-(_*s+S*f+D*x),Ci=_*r+V*f+ne*x-(P*r+w*f+Q*x),Ai=S*r+w*s+re*x-(E*r+V*s+ce*x),Ri=D*r+Q*s+ce*f-(N*r+ne*s+re*f),ie=1/(n*Ii+a*Ci+d*Ai+b*Ri);return e[0]=ie*Ii,e[1]=ie*Ci,e[2]=ie*Ai,e[3]=ie*Ri,e[4]=ie*(_*a+S*d+D*b-(P*a+E*d+N*b)),e[5]=ie*(P*n+w*d+Q*b-(_*n+V*d+ne*b)),e[6]=ie*(E*n+V*a+ce*b-(S*n+w*a+re*b)),e[7]=ie*(N*n+ne*a+re*d-(D*n+Q*a+ce*d)),e[8]=ie*(ue*c+ge*v+_e*T-(fe*c+de*v+rn*T)),e[9]=ie*(fe*o+on*v+ln*T-(ue*o+an*v+sn*T)),e[10]=ie*(de*o+an*c+cn*T-(ge*o+on*c+un*T)),e[11]=ie*(rn*o+sn*c+un*v-(_e*o+ln*c+cn*v)),e[12]=ie*(de*m+rn*g+fe*l-(_e*g+ue*l+ge*m)),e[13]=ie*(sn*g+ue*i+an*m-(on*m+ln*g+fe*i)),e[14]=ie*(on*l+un*g+ge*i-(cn*g+de*i+an*l)),e[15]=ie*(cn*m+_e*i+ln*l-(sn*l+un*m+rn*i)),e}function Dc(t){let e=t[0],n=t[0*4+1],r=t[0*4+2],i=t[0*4+3],o=t[1*4+0],a=t[1*4+1],s=t[1*4+2],l=t[1*4+3],c=t[2*4+0],d=t[2*4+1],f=t[2*4+2],m=t[2*4+3],v=t[3*4+0],b=t[3*4+1],x=t[3*4+2],g=t[3*4+3],T=f*g,P=x*m,_=s*g,S=x*l,E=s*m,N=f*l,D=r*g,V=x*i,w=r*m,Q=f*i,ne=r*l,re=s*i,ce=T*a+S*d+E*b-(P*a+_*d+N*b),ue=P*n+D*d+Q*b-(T*n+V*d+w*b),fe=_*n+V*a+ne*b-(S*n+D*a+re*b),de=N*n+w*a+re*d-(E*n+Q*a+ne*d);return e*ce+o*ue+c*fe+v*de}var Bc=wo;function Po(t,e,n){n=n||new O(16);let r=t[0],i=t[1],o=t[2],a=t[3],s=t[4],l=t[5],c=t[6],d=t[7],f=t[8],m=t[9],v=t[10],b=t[11],x=t[12],g=t[13],T=t[14],P=t[15],_=e[0],S=e[1],E=e[2],N=e[3],D=e[4],V=e[5],w=e[6],Q=e[7],ne=e[8],re=e[9],ce=e[10],ue=e[11],fe=e[12],de=e[13],ge=e[14],_e=e[15];return n[0]=r*_+s*S+f*E+x*N,n[1]=i*_+l*S+m*E+g*N,n[2]=o*_+c*S+v*E+T*N,n[3]=a*_+d*S+b*E+P*N,n[4]=r*D+s*V+f*w+x*Q,n[5]=i*D+l*V+m*w+g*Q,n[6]=o*D+c*V+v*w+T*Q,n[7]=a*D+d*V+b*w+P*Q,n[8]=r*ne+s*re+f*ce+x*ue,n[9]=i*ne+l*re+m*ce+g*ue,n[10]=o*ne+c*re+v*ce+T*ue,n[11]=a*ne+d*re+b*ce+P*ue,n[12]=r*fe+s*de+f*ge+x*_e,n[13]=i*fe+l*de+m*ge+g*_e,n[14]=o*fe+c*de+v*ge+T*_e,n[15]=a*fe+d*de+b*ge+P*_e,n}var Oc=Po;function Fc(t,e,n){return n=n||bo(),t!==n&&(n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[4]=t[4],n[5]=t[5],n[6]=t[6],n[7]=t[7],n[8]=t[8],n[9]=t[9],n[10]=t[10],n[11]=t[11]),n[12]=e[0],n[13]=e[1],n[14]=e[2],n[15]=1,n}function Gc(t,e){return e=e||me(),e[0]=t[12],e[1]=t[13],e[2]=t[14],e}function Nc(t,e,n){n=n||me();let r=e*4;return n[0]=t[r+0],n[1]=t[r+1],n[2]=t[r+2],n}function Lc(t,e,n,r){r!==t&&(r=Ir(t,r));let i=n*4;return r[i+0]=e[0],r[i+1]=e[1],r[i+2]=e[2],r}function Uc(t,e){e=e||me();let n=t[0],r=t[1],i=t[2],o=t[4],a=t[5],s=t[6],l=t[8],c=t[9],d=t[10];return e[0]=Math.sqrt(n*n+r*r+i*i),e[1]=Math.sqrt(o*o+a*a+s*s),e[2]=Math.sqrt(l*l+c*c+d*d),e}function kc(t,e,n,r,i){i=i||new O(16);let o=Math.tan(Math.PI*.5-.5*t);if(i[0]=o/e,i[1]=0,i[2]=0,i[3]=0,i[4]=0,i[5]=o,i[6]=0,i[7]=0,i[8]=0,i[9]=0,i[11]=-1,i[12]=0,i[13]=0,i[15]=0,Number.isFinite(r)){let a=1/(n-r);i[10]=r*a,i[14]=r*n*a}else i[10]=-1,i[14]=-n;return i}function zc(t,e,n,r=1/0,i){i=i||new O(16);let o=1/Math.tan(t*.5);if(i[0]=o/e,i[1]=0,i[2]=0,i[3]=0,i[4]=0,i[5]=o,i[6]=0,i[7]=0,i[8]=0,i[9]=0,i[11]=-1,i[12]=0,i[13]=0,i[15]=0,r===1/0)i[10]=0,i[14]=n;else{let a=1/(r-n);i[10]=n*a,i[14]=r*n*a}return i}function Vc(t,e,n,r,i,o,a){return a=a||new O(16),a[0]=2/(e-t),a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2/(r-n),a[6]=0,a[7]=0,a[8]=0,a[9]=0,a[10]=1/(i-o),a[11]=0,a[12]=(e+t)/(t-e),a[13]=(r+n)/(n-r),a[14]=i/(i-o),a[15]=1,a}function Hc(t,e,n,r,i,o,a){a=a||new O(16);let s=e-t,l=r-n,c=i-o;return a[0]=2*i/s,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2*i/l,a[6]=0,a[7]=0,a[8]=(t+e)/s,a[9]=(r+n)/l,a[10]=o/c,a[11]=-1,a[12]=0,a[13]=0,a[14]=i*o/c,a[15]=0,a}function $c(t,e,n,r,i,o=1/0,a){a=a||new O(16);let s=e-t,l=r-n;if(a[0]=2*i/s,a[1]=0,a[2]=0,a[3]=0,a[4]=0,a[5]=2*i/l,a[6]=0,a[7]=0,a[8]=(t+e)/s,a[9]=(r+n)/l,a[11]=-1,a[12]=0,a[13]=0,a[15]=0,o===1/0)a[10]=0,a[14]=i;else{let c=1/(o-i);a[10]=i*c,a[14]=o*i*c}return a}var W,q,k;function Wc(t,e,n,r){return r=r||new O(16),W=W||me(),q=q||me(),k=k||me(),Me(Lt(e,t,k),k),Me(ct(n,k,W),W),Me(ct(k,W,q),q),r[0]=W[0],r[1]=W[1],r[2]=W[2],r[3]=0,r[4]=q[0],r[5]=q[1],r[6]=q[2],r[7]=0,r[8]=k[0],r[9]=k[1],r[10]=k[2],r[11]=0,r[12]=t[0],r[13]=t[1],r[14]=t[2],r[15]=1,r}function jc(t,e,n,r){return r=r||new O(16),W=W||me(),q=q||me(),k=k||me(),Me(Lt(t,e,k),k),Me(ct(n,k,W),W),Me(ct(k,W,q),q),r[0]=W[0],r[1]=W[1],r[2]=W[2],r[3]=0,r[4]=q[0],r[5]=q[1],r[6]=q[2],r[7]=0,r[8]=k[0],r[9]=k[1],r[10]=k[2],r[11]=0,r[12]=t[0],r[13]=t[1],r[14]=t[2],r[15]=1,r}function Yc(t,e,n,r){return r=r||new O(16),W=W||me(),q=q||me(),k=k||me(),Me(Lt(t,e,k),k),Me(ct(n,k,W),W),Me(ct(k,W,q),q),r[0]=W[0],r[1]=q[0],r[2]=k[0],r[3]=0,r[4]=W[1],r[5]=q[1],r[6]=k[1],r[7]=0,r[8]=W[2],r[9]=q[2],r[10]=k[2],r[11]=0,r[12]=-(W[0]*t[0]+W[1]*t[1]+W[2]*t[2]),r[13]=-(q[0]*t[0]+q[1]*t[1]+q[2]*t[2]),r[14]=-(k[0]*t[0]+k[1]*t[1]+k[2]*t[2]),r[15]=1,r}function Xc(t,e){return e=e||new O(16),e[0]=1,e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=1,e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=1,e[11]=0,e[12]=t[0],e[13]=t[1],e[14]=t[2],e[15]=1,e}function qc(t,e,n){n=n||new O(16);let r=e[0],i=e[1],o=e[2],a=t[0],s=t[1],l=t[2],c=t[3],d=t[1*4+0],f=t[1*4+1],m=t[1*4+2],v=t[1*4+3],b=t[2*4+0],x=t[2*4+1],g=t[2*4+2],T=t[2*4+3],P=t[3*4+0],_=t[3*4+1],S=t[3*4+2],E=t[3*4+3];return t!==n&&(n[0]=a,n[1]=s,n[2]=l,n[3]=c,n[4]=d,n[5]=f,n[6]=m,n[7]=v,n[8]=b,n[9]=x,n[10]=g,n[11]=T),n[12]=a*r+d*i+b*o+P,n[13]=s*r+f*i+x*o+_,n[14]=l*r+m*i+g*o+S,n[15]=c*r+v*i+T*o+E,n}function Kc(t,e){e=e||new O(16);let n=Math.cos(t),r=Math.sin(t);return e[0]=1,e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=n,e[6]=r,e[7]=0,e[8]=0,e[9]=-r,e[10]=n,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Zc(t,e,n){n=n||new O(16);let r=t[4],i=t[5],o=t[6],a=t[7],s=t[8],l=t[9],c=t[10],d=t[11],f=Math.cos(e),m=Math.sin(e);return n[4]=f*r+m*s,n[5]=f*i+m*l,n[6]=f*o+m*c,n[7]=f*a+m*d,n[8]=f*s-m*r,n[9]=f*l-m*i,n[10]=f*c-m*o,n[11]=f*d-m*a,t!==n&&(n[0]=t[0],n[1]=t[1],n[2]=t[2],n[3]=t[3],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function Jc(t,e){e=e||new O(16);let n=Math.cos(t),r=Math.sin(t);return e[0]=n,e[1]=0,e[2]=-r,e[3]=0,e[4]=0,e[5]=1,e[6]=0,e[7]=0,e[8]=r,e[9]=0,e[10]=n,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function Qc(t,e,n){n=n||new O(16);let r=t[0*4+0],i=t[0*4+1],o=t[0*4+2],a=t[0*4+3],s=t[2*4+0],l=t[2*4+1],c=t[2*4+2],d=t[2*4+3],f=Math.cos(e),m=Math.sin(e);return n[0]=f*r-m*s,n[1]=f*i-m*l,n[2]=f*o-m*c,n[3]=f*a-m*d,n[8]=f*s+m*r,n[9]=f*l+m*i,n[10]=f*c+m*o,n[11]=f*d+m*a,t!==n&&(n[4]=t[4],n[5]=t[5],n[6]=t[6],n[7]=t[7],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function eu(t,e){e=e||new O(16);let n=Math.cos(t),r=Math.sin(t);return e[0]=n,e[1]=r,e[2]=0,e[3]=0,e[4]=-r,e[5]=n,e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=1,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function tu(t,e,n){n=n||new O(16);let r=t[0*4+0],i=t[0*4+1],o=t[0*4+2],a=t[0*4+3],s=t[1*4+0],l=t[1*4+1],c=t[1*4+2],d=t[1*4+3],f=Math.cos(e),m=Math.sin(e);return n[0]=f*r+m*s,n[1]=f*i+m*l,n[2]=f*o+m*c,n[3]=f*a+m*d,n[4]=f*s-m*r,n[5]=f*l-m*i,n[6]=f*c-m*o,n[7]=f*d-m*a,t!==n&&(n[8]=t[8],n[9]=t[9],n[10]=t[10],n[11]=t[11],n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function yo(t,e,n){n=n||new O(16);let r=t[0],i=t[1],o=t[2],a=Math.sqrt(r*r+i*i+o*o);r/=a,i/=a,o/=a;let s=r*r,l=i*i,c=o*o,d=Math.cos(e),f=Math.sin(e),m=1-d;return n[0]=s+(1-s)*d,n[1]=r*i*m+o*f,n[2]=r*o*m-i*f,n[3]=0,n[4]=r*i*m-o*f,n[5]=l+(1-l)*d,n[6]=i*o*m+r*f,n[7]=0,n[8]=r*o*m+i*f,n[9]=i*o*m-r*f,n[10]=c+(1-c)*d,n[11]=0,n[12]=0,n[13]=0,n[14]=0,n[15]=1,n}var nu=yo;function To(t,e,n,r){r=r||new O(16);let i=e[0],o=e[1],a=e[2],s=Math.sqrt(i*i+o*o+a*a);i/=s,o/=s,a/=s;let l=i*i,c=o*o,d=a*a,f=Math.cos(n),m=Math.sin(n),v=1-f,b=l+(1-l)*f,x=i*o*v+a*m,g=i*a*v-o*m,T=i*o*v-a*m,P=c+(1-c)*f,_=o*a*v+i*m,S=i*a*v+o*m,E=o*a*v-i*m,N=d+(1-d)*f,D=t[0],V=t[1],w=t[2],Q=t[3],ne=t[4],re=t[5],ce=t[6],ue=t[7],fe=t[8],de=t[9],ge=t[10],_e=t[11];return r[0]=b*D+x*ne+g*fe,r[1]=b*V+x*re+g*de,r[2]=b*w+x*ce+g*ge,r[3]=b*Q+x*ue+g*_e,r[4]=T*D+P*ne+_*fe,r[5]=T*V+P*re+_*de,r[6]=T*w+P*ce+_*ge,r[7]=T*Q+P*ue+_*_e,r[8]=S*D+E*ne+N*fe,r[9]=S*V+E*re+N*de,r[10]=S*w+E*ce+N*ge,r[11]=S*Q+E*ue+N*_e,t!==r&&(r[12]=t[12],r[13]=t[13],r[14]=t[14],r[15]=t[15]),r}var ru=To;function iu(t,e){return e=e||new O(16),e[0]=t[0],e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=t[1],e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=t[2],e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function ou(t,e,n){n=n||new O(16);let r=e[0],i=e[1],o=e[2];return n[0]=r*t[0*4+0],n[1]=r*t[0*4+1],n[2]=r*t[0*4+2],n[3]=r*t[0*4+3],n[4]=i*t[1*4+0],n[5]=i*t[1*4+1],n[6]=i*t[1*4+2],n[7]=i*t[1*4+3],n[8]=o*t[2*4+0],n[9]=o*t[2*4+1],n[10]=o*t[2*4+2],n[11]=o*t[2*4+3],t!==n&&(n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}function au(t,e){return e=e||new O(16),e[0]=t,e[1]=0,e[2]=0,e[3]=0,e[4]=0,e[5]=t,e[6]=0,e[7]=0,e[8]=0,e[9]=0,e[10]=t,e[11]=0,e[12]=0,e[13]=0,e[14]=0,e[15]=1,e}function su(t,e,n){return n=n||new O(16),n[0]=e*t[0*4+0],n[1]=e*t[0*4+1],n[2]=e*t[0*4+2],n[3]=e*t[0*4+3],n[4]=e*t[1*4+0],n[5]=e*t[1*4+1],n[6]=e*t[1*4+2],n[7]=e*t[1*4+3],n[8]=e*t[2*4+0],n[9]=e*t[2*4+1],n[10]=e*t[2*4+2],n[11]=e*t[2*4+3],t!==n&&(n[12]=t[12],n[13]=t[13],n[14]=t[14],n[15]=t[15]),n}var M={__proto__:null,aim:Wc,axisRotate:To,axisRotation:yo,cameraAim:jc,clone:Ic,copy:Ir,create:Pc,determinant:Dc,equals:Ac,equalsApproximately:Cc,fromMat3:Tc,fromQuat:Ec,frustum:Hc,frustumReverseZ:$c,getAxis:Nc,getScaling:Uc,getTranslation:Gc,identity:bo,inverse:wo,invert:Bc,lookAt:Yc,mul:Oc,multiply:Po,negate:Mc,ortho:Vc,perspective:kc,perspectiveReverseZ:zc,rotate:ru,rotateX:Zc,rotateY:Qc,rotateZ:tu,rotation:nu,rotationX:Kc,rotationY:Jc,rotationZ:eu,scale:ou,scaling:iu,set:yc,setAxis:Lc,setDefaultType:wc,setTranslation:Fc,translate:qc,translation:Xc,transpose:Rc,uniformScale:su,uniformScaling:au};var H=Float32Array;function lu(t){let e=H;return H=t,e}function Eo(t,e,n,r){let i=new H(4);return t!==void 0&&(i[0]=t,e!==void 0&&(i[1]=e,n!==void 0&&(i[2]=n,r!==void 0&&(i[3]=r)))),i}var cu=Eo;function uu(t,e,n,r,i){return i=i||new H(4),i[0]=t,i[1]=e,i[2]=n,i[3]=r,i}function fu(t,e){return e=e||new H(4),e[0]=Math.ceil(t[0]),e[1]=Math.ceil(t[1]),e[2]=Math.ceil(t[2]),e[3]=Math.ceil(t[3]),e}function du(t,e){return e=e||new H(4),e[0]=Math.floor(t[0]),e[1]=Math.floor(t[1]),e[2]=Math.floor(t[2]),e[3]=Math.floor(t[3]),e}function pu(t,e){return e=e||new H(4),e[0]=Math.round(t[0]),e[1]=Math.round(t[1]),e[2]=Math.round(t[2]),e[3]=Math.round(t[3]),e}function mu(t,e=0,n=1,r){return r=r||new H(4),r[0]=Math.min(n,Math.max(e,t[0])),r[1]=Math.min(n,Math.max(e,t[1])),r[2]=Math.min(n,Math.max(e,t[2])),r[3]=Math.min(n,Math.max(e,t[3])),r}function hu(t,e,n){return n=n||new H(4),n[0]=t[0]+e[0],n[1]=t[1]+e[1],n[2]=t[2]+e[2],n[3]=t[3]+e[3],n}function gu(t,e,n,r){return r=r||new H(4),r[0]=t[0]+e[0]*n,r[1]=t[1]+e[1]*n,r[2]=t[2]+e[2]*n,r[3]=t[3]+e[3]*n,r}function Mo(t,e,n){return n=n||new H(4),n[0]=t[0]-e[0],n[1]=t[1]-e[1],n[2]=t[2]-e[2],n[3]=t[3]-e[3],n}var _u=Mo;function xu(t,e){return Math.abs(t[0]-e[0])<Y&&Math.abs(t[1]-e[1])<Y&&Math.abs(t[2]-e[2])<Y&&Math.abs(t[3]-e[3])<Y}function Su(t,e){return t[0]===e[0]&&t[1]===e[1]&&t[2]===e[2]&&t[3]===e[3]}function Io(t,e,n,r){return r=r||new H(4),r[0]=t[0]+n*(e[0]-t[0]),r[1]=t[1]+n*(e[1]-t[1]),r[2]=t[2]+n*(e[2]-t[2]),r[3]=t[3]+n*(e[3]-t[3]),r}function vu(t,e,n,r){return r=r||new H(4),r[0]=t[0]+n[0]*(e[0]-t[0]),r[1]=t[1]+n[1]*(e[1]-t[1]),r[2]=t[2]+n[2]*(e[2]-t[2]),r[3]=t[3]+n[3]*(e[3]-t[3]),r}function bu(t,e,n){return n=n||new H(4),n[0]=Math.max(t[0],e[0]),n[1]=Math.max(t[1],e[1]),n[2]=Math.max(t[2],e[2]),n[3]=Math.max(t[3],e[3]),n}function wu(t,e,n){return n=n||new H(4),n[0]=Math.min(t[0],e[0]),n[1]=Math.min(t[1],e[1]),n[2]=Math.min(t[2],e[2]),n[3]=Math.min(t[3],e[3]),n}function Cr(t,e,n){return n=n||new H(4),n[0]=t[0]*e,n[1]=t[1]*e,n[2]=t[2]*e,n[3]=t[3]*e,n}var Pu=Cr;function yu(t,e,n){return n=n||new H(4),n[0]=t[0]/e,n[1]=t[1]/e,n[2]=t[2]/e,n[3]=t[3]/e,n}function Co(t,e){return e=e||new H(4),e[0]=1/t[0],e[1]=1/t[1],e[2]=1/t[2],e[3]=1/t[3],e}var Tu=Co;function Eu(t,e){return t[0]*e[0]+t[1]*e[1]+t[2]*e[2]+t[3]*e[3]}function Ar(t){let e=t[0],n=t[1],r=t[2],i=t[3];return Math.sqrt(e*e+n*n+r*r+i*i)}var Mu=Ar;function Ao(t){let e=t[0],n=t[1],r=t[2],i=t[3];return e*e+n*n+r*r+i*i}var Iu=Ao;function Ro(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2],o=t[3]-e[3];return Math.sqrt(n*n+r*r+i*i+o*o)}var Cu=Ro;function Do(t,e){let n=t[0]-e[0],r=t[1]-e[1],i=t[2]-e[2],o=t[3]-e[3];return n*n+r*r+i*i+o*o}var Au=Do;function Bo(t,e){e=e||new H(4);let n=t[0],r=t[1],i=t[2],o=t[3],a=Math.sqrt(n*n+r*r+i*i+o*o);return a>1e-5?(e[0]=n/a,e[1]=r/a,e[2]=i/a,e[3]=o/a):(e[0]=0,e[1]=0,e[2]=0,e[3]=0),e}function Ru(t,e){return e=e||new H(4),e[0]=-t[0],e[1]=-t[1],e[2]=-t[2],e[3]=-t[3],e}function Rr(t,e){return e=e||new H(4),e[0]=t[0],e[1]=t[1],e[2]=t[2],e[3]=t[3],e}var Du=Rr;function Oo(t,e,n){return n=n||new H(4),n[0]=t[0]*e[0],n[1]=t[1]*e[1],n[2]=t[2]*e[2],n[3]=t[3]*e[3],n}var Bu=Oo;function Fo(t,e,n){return n=n||new H(4),n[0]=t[0]/e[0],n[1]=t[1]/e[1],n[2]=t[2]/e[2],n[3]=t[3]/e[3],n}var Ou=Fo;function Fu(t){return t=t||new H(4),t[0]=0,t[1]=0,t[2]=0,t[3]=0,t}function Gu(t,e,n){n=n||new H(4);let r=t[0],i=t[1],o=t[2],a=t[3];return n[0]=e[0]*r+e[4]*i+e[8]*o+e[12]*a,n[1]=e[1]*r+e[5]*i+e[9]*o+e[13]*a,n[2]=e[2]*r+e[6]*i+e[10]*o+e[14]*a,n[3]=e[3]*r+e[7]*i+e[11]*o+e[15]*a,n}function Go(t,e,n){return n=n||new H(4),Bo(t,n),Cr(n,e,n)}function Nu(t,e,n){return n=n||new H(4),Ar(t)>e?Go(t,e,n):Rr(t,n)}function Lu(t,e,n){return n=n||new H(4),Io(t,e,.5,n)}var K={__proto__:null,add:hu,addScaled:gu,ceil:fu,clamp:mu,clone:Du,copy:Rr,create:Eo,dist:Cu,distSq:Au,distance:Ro,distanceSq:Do,div:Ou,divScalar:yu,divide:Fo,dot:Eu,equals:Su,equalsApproximately:xu,floor:du,fromValues:cu,inverse:Co,invert:Tu,len:Mu,lenSq:Iu,length:Ar,lengthSq:Ao,lerp:Io,lerpV:vu,max:bu,midpoint:Lu,min:wu,mul:Bu,mulScalar:Cr,multiply:Oo,negate:Ru,normalize:Bo,round:pu,scale:Pu,set:uu,setDefaultType:lu,setLength:Go,sub:_u,subtract:Mo,transformMat4:Gu,truncate:Nu,zero:Fu};var qe=class{constructor(e,n=0,r=0){this.buffer=e;this.byteOffset=n;this.byteSize=r;this.byteSize=r===0?e.byteLength:r,this.asF32=new Float32Array(e),this.asU32=new Uint32Array(e)}asF32;asU32;offsetBytes=0;f32=e=>this.asF32[e];u32=e=>this.asU32[e];cursor=()=>this.offsetBytes;resetCursor(){this.offsetBytes=0}padding(e){this.offsetBytes+=e}assertWrittenBytes(e){if(this.offsetBytes!==e)throw new Error(`Written invalid byte count ${this.offsetBytes}. Expected ${e}.`);if(this.offsetBytes%16!==0){let n=ot(this.offsetBytes,16)*16,r=(n-this.offsetBytes)/X;throw new Error(`Byte count ${this.offsetBytes} does not cleanly divide by 16. This might lead to errors. Add padding to fill to ${n} bytes (${r} u32 elements is enough).`)}}writeMat4(e){for(let n=0;n<16;n++)this.writeF32(e[n])}writeF32Array(e){for(let n=0;n<e.length;n++)this.writeF32(e[n])}writeF32(e){let n=(this.byteOffset+this.offsetBytes)/Te;this.asF32[n]=e,this.offsetBytes+=Te}writeU32(e){let n=(this.byteOffset+this.offsetBytes)/X;this.asU32[n]=Math.floor(e),this.offsetBytes+=X}upload(e,n,r){e.queue.writeBuffer(n,r,this.buffer,this.byteOffset,this.byteSize)}};var Be=t=>{let{tileSize:e}=u.hairRender;return{width:ot(t.width,e),height:ot(t.height,e)}};var Uu=`
 
 fn _storeTileSegment(
   nextPtr: u32, prevPtr: u32,
@@ -2094,7 +2016,7 @@ fn _storeTileSegment(
   _hairTileSegments.data[nextPtr].strandAndSegmentIdxs = encodedSegment;
   _hairTileSegments.data[nextPtr].next = prevPtr;
 }
-`,wu=`
+`,ku=`
 
 fn _getTileSegment(
   maxDrawnSegments: u32,
@@ -2112,7 +2034,7 @@ fn _getTileSegment(
   (*result).z = data.next;
   return true;
 }
-`,ut=(t,e)=>`
+`,mt=(t,e)=>`
 
 struct LinkedListElement {
   strandAndSegmentIdxs: u32,
@@ -2120,7 +2042,7 @@ struct LinkedListElement {
 };
 
 struct DrawnHairSegments {
-  drawnSegmentsCount: ${$e(e)},
+  drawnSegmentsCount: ${pe(e)},
   data: array<LinkedListElement>
 };
 
@@ -2128,8 +2050,8 @@ struct DrawnHairSegments {
 var<storage, ${e}> _hairTileSegments: DrawnHairSegments;
 
 
-${e=="read_write"?bu:wu}
-`;function Pr(t){let e=yr(t);return 1+Math.ceil(e.width*e.height*f.hairRender.avgSegmentsPerTile)}function Eo(t,e){let n=Pr(e),r=2*te,i=Math.max(n*r,Se);U.update("Tiles segments",xe(i));let o=f.isTest?GPUBufferUsage.COPY_SRC:0;return t.createBuffer({label:"hair-segments-per-tile",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|o})}function Tr(t,e){let n=e.width/e.height;return M.perspective(Ie(t.fovDgr),n,t.near,t.far)}function mn(t,e,n){return M.multiply(e,t,n)}function Er(t,e,n,r){return r=M.multiply(e,t,r),r=M.multiply(n,r,r),r}function ft(t,e,n){let r;if(e.length===4){if(e[3]!==1)throw new Error("Tried to project a point, but provided Vec4 has .w !== 1");r=e}else r=X.create(e[0],e[1],e[2],1);return X.transformMat4(r,t,n)}function Mr(t,e,n){let r=ft(t,e,n);return X.divScalar(r,r[3],r),r}var yu=M.create(),Pu=M.create(),Tu=M.create(),Eu=P.create(),Ir=X.create();function Ar(){let t=f.shadows.source,e=st(t.posPhi,t.posTheta,"dgr",Eu);return P.scale(e,t.distance,e),e}function Mo(t){let e=Ar(),n=f.shadows.source,r=ft(t,n.target,Ir);return M.lookAt(e,r,Ri,Pu)}var hn=1.05,gn=9999999;function Io(t,e,n){let r=M.multiply(e,t,Tu),i=gn,o=-gn,a=gn,s=-gn,l=.1,c=20,d=u=>{let m=X.set(u.center[0],u.center[1],u.center[2],1,Ir),v=ft(r,m,Ir);i=Math.min(i,v[0]-u.radius),o=Math.max(o,v[0]+u.radius),a=Math.min(a,v[1]-u.radius),s=Math.max(s,v[1]+u.radius)};d(n.hairObject.bounds.sphere);for(let u of n.objects)u.isColliderPreview||d(u.bounds.sphere);return M.ortho(i*hn,o*hn,a*hn,s*hn,l,c,yu)}var Mu=500;function _n(t){return Math.floor(Math.min(Mu,t.width/3,t.height/3))}var ae=class{constructor(e,n,r,i,o,a){this.name=e;this.bounds=n;this.dims=r;this.texture=i;this.textureView=o;this.sampler=a;f.isTest||H(o);let[s,l]=n,c=P.subtract(l,s),d=P.scale(c,1/(r-1));console.log(`SDF collider '${e}' (dims=${r}, cellSize=${d}), bounds:`,n)}static SDF_DATA_SNIPPET=`
+${e=="read_write"?Uu:ku}
+`;function Dr(t){let e=Be(t);return 1+Math.ceil(e.width*e.height*u.hairRender.avgSegmentsPerTile)}function No(t,e){let n=Dr(e),r=2*X,i=Math.max(n*r,ve);z.update("Tiles segments",Se(i));let o=u.isTest?GPUBufferUsage.COPY_SRC:0;return t.createBuffer({label:"hair-segments-per-tile",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|o})}function Br(t,e){let n=e.width/e.height;return M.perspective(Ae(t.fovDgr),n,t.near,t.far)}function bn(t,e,n){return M.multiply(e,t,n)}function Or(t,e,n,r){return r=M.multiply(e,t,r),r=M.multiply(n,r,r),r}function ht(t,e,n){let r;if(e.length===4){if(e[3]!==1)throw new Error("Tried to project a point, but provided Vec4 has .w !== 1");r=e}else r=K.create(e[0],e[1],e[2],1);return K.transformMat4(r,t,n)}function Fr(t,e,n){let r=ht(t,e,n);return K.divScalar(r,r[3],r),r}var zu=M.create(),Vu=M.create(),Hu=M.create(),$u=y.create(),Gr=K.create();function Nr(){let t=u.shadows.source,e=dt(t.posPhi,t.posTheta,"dgr",$u);return y.scale(e,t.distance,e),e}function Lo(t){let e=Nr(),n=u.shadows.source,r=ht(t,n.target,Gr);return M.lookAt(e,r,Hi,Vu)}var wn=1.05,Pn=9999999;function Uo(t,e,n){let r=M.multiply(e,t,Hu),i=Pn,o=-Pn,a=Pn,s=-Pn,l=.1,c=20,d=f=>{let m=K.set(f.center[0],f.center[1],f.center[2],1,Gr),v=ht(r,m,Gr);i=Math.min(i,v[0]-f.radius),o=Math.max(o,v[0]+f.radius),a=Math.min(a,v[1]-f.radius),s=Math.max(s,v[1]+f.radius)};d(n.hairObject.bounds.sphere);for(let f of n.objects)f.isColliderPreview||d(f.bounds.sphere);return M.ortho(i*wn,o*wn,a*wn,s*wn,l,c,zu)}var Wu=500;function yn(t){return Math.floor(Math.min(Wu,t.width/3,t.height/3))}var se=class{constructor(e,n,r,i,o,a){this.name=e;this.bounds=n;this.dims=r;this.texture=i;this.textureView=o;this.sampler=a;u.isTest||$(o);let[s,l]=n,c=y.subtract(l,s),d=y.scale(c,1/(r-1));u.isTest||console.log(`SDF collider '${e}' (dims=${r}, cellSize=${d}), bounds:`,n)}static SDF_DATA_SNIPPET=`
     struct SDFCollider {
       boundsMin: vec4f,
       boundsMax: vec4f,
@@ -2142,7 +2064,7 @@ ${e=="read_write"?bu:wu}
     }
     fn isSdfDebugSemiTransparent() -> bool { return _uniforms.sdf.boundsMin.w > 1.0; }
     fn getSDF_Offset() -> f32 { return _uniforms.sdf.boundsMax.w; }
-  `;static BUFFER_SIZE=2*q;static TEXTURE_SDF=(e,n)=>`
+  `;static BUFFER_SIZE=2*J;static TEXTURE_SDF=(e,n)=>`
     @group(0) @binding(${e})
     var _sdfTexture: texture_3d<f32>;
 
@@ -2158,12 +2080,12 @@ ${e=="read_write"?bu:wu}
       // t.z = 1.0 - t.z; // WebGPU reverted Z-axis (I guess?)
       return textureSampleLevel(_sdfTexture, _sdfSampler, t, 0.0).x;
     }
-  `;bindTexture=e=>({binding:e,resource:this.textureView});bindSampler=e=>({binding:e,resource:this.sampler});writeToDataView(e){let n=f.hairSimulation.sdf,[r,i]=this.bounds;e.writeF32(r[0]),e.writeF32(r[1]),e.writeF32(r[2]);let o=n.debugSemitransparent?2:0;e.writeF32(n.debugSlice+o),e.writeF32(i[0]),e.writeF32(i[1]),e.writeF32(i[2]),e.writeF32(n.distanceOffset)}};function Ao(t,e){let n=e?Du(t,e):Dr(t);return{box:n,sphere:Rr(n)}}function Iu(t,e=or,n){let r=t.length/e,i=[0,0,0];for(let o=0;o<r;o++){let a=o*e;i[0]=t[a],i[1]=t[a+1],i[2]=t[a+2],n(i)}}function Au(t,e,n){let r=[0,0,0];for(let i=0;i<e.length;i++){let o=e[i]*Ae;r[0]=t[o],r[1]=t[o+1],r[2]=t[o+2],n(r)}}function Do(){let t=[void 0,void 0,void 0],e=[void 0,void 0,void 0];return[[e,t],r=>{for(let i=0;i<3;i++)t[i]=t[i]!==void 0?Math.max(t[i],r[i]):r[i],e[i]=e[i]!==void 0?Math.min(e[i],r[i]):r[i]}]}function Dr(t,e=or){let[n,r]=Do();return Iu(t,e,r),n}function Du(t,e){let[n,r]=Do();return Au(t,e,r),n}function Rr([t,e]){let n=P.midpoint(t,e),r=P.distance(n,e);return{center:n,radius:r}}function Ro(t,e){if(e<=0)throw new Error(`Invalid scale=${e}`);let[n,r]=t,i=P.midpoint(n,r),o=P.subtract(r,i),a=P.scale(o,e);return[P.subtract(i,a),P.add(i,a)]}var Cr=1e6,je=`
+  `;bindTexture=e=>({binding:e,resource:this.textureView});bindSampler=e=>({binding:e,resource:this.sampler});writeToDataView(e){let n=u.hairSimulation.sdf,[r,i]=this.bounds;e.writeF32(r[0]),e.writeF32(r[1]),e.writeF32(r[2]);let o=n.debugSemitransparent?2:0;e.writeF32(n.debugSlice+o),e.writeF32(i[0]),e.writeF32(i[1]),e.writeF32(i[2]),e.writeF32(n.distanceOffset)}};function ko(t,e){let n=e?Xu(t,e):Lr(t);return{box:n,sphere:Ur(n)}}function ju(t,e=mr,n){let r=t.length/e,i=[0,0,0];for(let o=0;o<r;o++){let a=o*e;i[0]=t[a],i[1]=t[a+1],i[2]=t[a+2],n(i)}}function Yu(t,e,n){let r=[0,0,0];for(let i=0;i<e.length;i++){let o=e[i]*Re;r[0]=t[o],r[1]=t[o+1],r[2]=t[o+2],n(r)}}function zo(){let t=[void 0,void 0,void 0],e=[void 0,void 0,void 0];return[[e,t],r=>{for(let i=0;i<3;i++)t[i]=t[i]!==void 0?Math.max(t[i],r[i]):r[i],e[i]=e[i]!==void 0?Math.min(e[i],r[i]):r[i]}]}function Lr(t,e=mr){let[n,r]=zo();return ju(t,e,r),n}function Xu(t,e){let[n,r]=zo();return Yu(t,e,r),n}function Ur([t,e]){let n=y.midpoint(t,e),r=y.distance(n,e);return{center:n,radius:r}}function Vo(t,e){if(e<=0)throw new Error(`Invalid scale=${e}`);let[n,r]=t,i=y.midpoint(n,r),o=y.subtract(r,i),a=y.scale(o,e);return[y.subtract(i,a),y.add(i,a)]}var kr=1e6,Ke=`
 
-const GRID_DIMS: u32 = ${f.hairSimulation.physicsForcesGrid.dims}u;
+const GRID_DIMS: u32 = ${u.hairSimulation.physicsForcesGrid.dims}u;
 
 // There are no float atomics in WGSL. Convert to i32
-const GRID_FLOAT_TO_U32_MUL: f32 = ${Cr};
+const GRID_FLOAT_TO_U32_MUL: f32 = ${kr};
 fn gridEncodeValue(v: f32) -> i32 { return i32(v * GRID_FLOAT_TO_U32_MUL); }
 fn gridDecodeValue(v: i32) -> f32 { return f32(v) / GRID_FLOAT_TO_U32_MUL; }
 
@@ -2246,7 +2168,7 @@ fn _getGridCellWeights(
 fn _getGridCellWeight(cellW: vec3f) -> f32 {
   return length(cellW);
 }
-`;var De=class{static GRID_DATA_SNIPPET=`
+`;var Oe=class{static GRID_DATA_SNIPPET=`
 
   struct GridData {
     boundsMin: vec4f,
@@ -2258,20 +2180,21 @@ fn _getGridCellWeight(cellW: vec3f) -> f32 {
     let FLOAT_EPSILON: f32 = 1e-7;
     return clamp(_uniforms.gridData.boundsMin.w, FLOAT_EPSILON, 1.0 - FLOAT_EPSILON);
   }
-  `;static BUFFER_SIZE=2*q;densityVelocityBuffer;densityGradAndWindBuffer;bounds;constructor(e,n){if(this.bounds=Ro(n,f.hairSimulation.physicsForcesGrid.scale),f.isTest){this.densityVelocityBuffer=void 0,this.densityGradAndWindBuffer=void 0;return}let r=f.hairSimulation.physicsForcesGrid.dims,[i,o]=this.bounds,a=P.subtract(o,i),s=P.scale(a,1/(r-1)),l=r*r*r;console.log(`Physics grid (dims=${r}x${r}x${r}, ${l} points, cellSize=${s}), bounds:`,this.bounds),this.densityVelocityBuffer=Co(e,"grid-density-velocity",r),this.densityGradAndWindBuffer=Co(e,"grid-density-grad-and-wind",r)}clearDensityVelocityBuffer(e){e.clearBuffer(this.densityVelocityBuffer,0,this.densityVelocityBuffer.size)}clearDensityGradAndWindBuffer(e){e.clearBuffer(this.densityGradAndWindBuffer,0,this.densityGradAndWindBuffer.size)}bindDensityVelocityBuffer=e=>K(e,this.densityVelocityBuffer);bindDensityGradAndWindBuffer=e=>K(e,this.densityGradAndWindBuffer);getDebuggedGridBuffer(){let e=f.hairSimulation.physicsForcesGrid.debugValue;return e==_e.WIND||e==_e.DENSITY_GRADIENT?this.densityGradAndWindBuffer:this.densityVelocityBuffer}writeToDataView(e){let n=f.hairSimulation.physicsForcesGrid,[r,i]=this.bounds;e.writeF32(r[0]),e.writeF32(r[1]),e.writeF32(r[2]),e.writeF32(n.debugSlice),e.writeF32(i[0]),e.writeF32(i[1]),e.writeF32(i[2]),e.writeU32(n.debugValue+(n.debugAbsValue?16:0))}};function Co(t,e,n){let r=n*n*n,o=Math.max(Se,r*4),a=new Int32Array(o),s=c=>Math.floor(c*Cr);for(let c=0;c<n;c++)for(let d=0;d<n;d++)for(let u=0;u<n;u++){let m=c*n*n+d*n+u,v=u==1||u==5;a[4*m+3]=s(v?1:0)}let l=ve(t,e,a);return U.update("Physics grid","2 * "+xe(l.size)),l}var ze=M.create(),Ru=M.create(),R=class t{static SHADER_SNIPPET=e=>`
+  `;static BUFFER_SIZE=2*J;densityVelocityBuffer;densityGradAndWindBuffer;bounds;constructor(e,n){if(this.bounds=Vo(n,u.hairSimulation.physicsForcesGrid.scale),u.isTest){this.densityVelocityBuffer=void 0,this.densityGradAndWindBuffer=void 0;return}let r=u.hairSimulation.physicsForcesGrid.dims,[i,o]=this.bounds,a=y.subtract(o,i),s=y.scale(a,1/(r-1)),l=r*r*r;console.log(`Physics grid (dims=${r}x${r}x${r}, ${l} points, cellSize=${s}), bounds:`,this.bounds),this.densityVelocityBuffer=Ho(e,"grid-density-velocity",r),this.densityGradAndWindBuffer=Ho(e,"grid-density-grad-and-wind",r)}clearDensityVelocityBuffer(e){e.clearBuffer(this.densityVelocityBuffer,0,this.densityVelocityBuffer.size)}clearDensityGradAndWindBuffer(e){e.clearBuffer(this.densityGradAndWindBuffer,0,this.densityGradAndWindBuffer.size)}bindDensityVelocityBuffer=e=>L(e,this.densityVelocityBuffer);bindDensityGradAndWindBuffer=e=>L(e,this.densityGradAndWindBuffer);getDebuggedGridBuffer(){let e=u.hairSimulation.physicsForcesGrid.debugValue;return e==xe.WIND||e==xe.DENSITY_GRADIENT?this.densityGradAndWindBuffer:this.densityVelocityBuffer}writeToDataView(e){let n=u.hairSimulation.physicsForcesGrid,[r,i]=this.bounds;e.writeF32(r[0]),e.writeF32(r[1]),e.writeF32(r[2]),e.writeF32(n.debugSlice),e.writeF32(i[0]),e.writeF32(i[1]),e.writeF32(i[2]),e.writeU32(n.debugValue+(n.debugAbsValue?16:0))}};function Ho(t,e,n){let r=n*n*n,o=Math.max(ve,r*4),a=new Int32Array(o),s=c=>Math.floor(c*kr);for(let c=0;c<n;c++)for(let d=0;d<n;d++)for(let f=0;f<n;f++){let m=c*n*n+d*n+f,v=f==1||f==5;a[4*m+3]=s(v?1:0)}let l=be(t,e,a);return z.update("Physics grid","2 * "+Se(l.size)),l}var $e=M.create(),qu=M.create(),C=class t{static SHADER_SNIPPET=e=>`
     const b11 = 3u; // binary 0b11
     const b111 = 7u; // binary 0b111
     const b1111 = 15u; // binary 0b1111
     const b11111 = 31u; // binary 0b11111
     const b111111 = 63u; // binary 0b111111
 
-    const DISPLAY_MODE_FINAL = ${G.FINAL}u;
-    const DISPLAY_MODE_TILES = ${G.TILES}u;
-    const DISPLAY_MODE_HW_RENDER = ${G.HW_RENDER}u;
-    const DISPLAY_MODE_USED_SLICES = ${G.USED_SLICES}u;
-    const DISPLAY_MODE_DEPTH = ${G.DEPTH}u;
-    const DISPLAY_MODE_NORMALS = ${G.NORMALS}u;
-    const DISPLAY_MODE_AO = ${G.AO}u;
+    const DISPLAY_MODE_FINAL = ${A.FINAL}u;
+    const DISPLAY_MODE_TILES = ${A.TILES}u;
+    const DISPLAY_MODE_TILES_PPLL = ${A.TILES_PPLL}u;
+    const DISPLAY_MODE_HW_RENDER = ${A.HW_RENDER}u;
+    const DISPLAY_MODE_USED_SLICES = ${A.USED_SLICES}u;
+    const DISPLAY_MODE_DEPTH = ${A.DEPTH}u;
+    const DISPLAY_MODE_NORMALS = ${A.NORMALS}u;
+    const DISPLAY_MODE_AO = ${A.AO}u;
 
     struct Light {
       position: vec4f, // [x, y, z, 0.0]
@@ -2329,8 +2252,8 @@ fn _getGridCellWeight(cellW: vec3f) -> f32 {
       gradientStrength: f32,
     }
 
-    ${ae.SDF_DATA_SNIPPET}
-    ${De.GRID_DATA_SNIPPET}
+    ${se.SDF_DATA_SNIPPET}
+    ${Oe.GRID_DATA_SNIPPET}
 
     struct Uniforms {
       vpMatrix: mat4x4<f32>,
@@ -2378,14 +2301,14 @@ fn _getGridCellWeight(cellW: vec3f) -> f32 {
       let flags = select(0u, getDbgModeExtra(), getDisplayMode() == DISPLAY_MODE_FINAL);
       return (flags & 1u) > 0u;
     }
-  `;static LIGHT_SIZE=2*q;static SHADOWS_SIZE=oe+oe+oe+q+q;static AO_SIZE=q+Ii;static BACKGROUND_SIZE=2*q;static BUFFER_SIZE=oe+oe+oe+oe+oe+oe+oe+oe+oe+q+q+q+q+3*t.LIGHT_SIZE+t.SHADOWS_SIZE+t.AO_SIZE+4*q+ae.BUFFER_SIZE+De.BUFFER_SIZE+4*we+t.BACKGROUND_SIZE+q;gpuBuffer;data=new ArrayBuffer(t.BUFFER_SIZE);dataView;constructor(e){this.gpuBuffer=e.createBuffer({label:"render-uniforms-buffer",size:t.BUFFER_SIZE,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),this.dataView=new We(this.data)}createBindingDesc=e=>({binding:e,resource:{buffer:this.gpuBuffer}});update(e){let{device:n,vpMatrix:r,viewMatrix:i,projMatrix:o,viewport:a,cameraPositionWorldSpace:s,scene:l}=e,{modelMatrix:c}=e.scene,d=f,u=d.colors,m=s;this.dataView.resetCursor(),this.dataView.writeMat4(r),this.dataView.writeMat4(M.invert(r,ze)),this.dataView.writeMat4(i),this.dataView.writeMat4(o),this.dataView.writeMat4(M.invert(o,ze)),this.dataView.writeMat4(c),M.multiply(i,c,ze),this.dataView.writeMat4(ze),Er(c,i,o,ze),this.dataView.writeMat4(ze);let v=f.hairSimulation.collisionSphere,b=v[3]*.95,x=M.translation(v,Ru),g=M.scale(x,[b,b,b],ze);this.dataView.writeMat4(g),this.dataView.writeF32(a.width),this.dataView.writeF32(a.height),this.dataView.writeF32(0),this.dataView.writeF32(0),this.dataView.writeF32(m[0]),this.dataView.writeF32(m[1]),this.dataView.writeF32(m[2]),this.dataView.writeF32(0),this.dataView.writeF32(u.gamma),this.dataView.writeF32(u.exposure),this.dataView.writeF32(u.ditherStrength),this.dataView.writeF32(0),this.dataView.writeF32(d.lightAmbient.color[0]),this.dataView.writeF32(d.lightAmbient.color[1]),this.dataView.writeF32(d.lightAmbient.color[2]),this.dataView.writeF32(d.lightAmbient.energy),this.writeLight(d.lights[0]),this.writeLight(d.lights[1]),this.writeLight(d.lights[2]),this.writeShadows(l,c),this.writeAo(),this.writeHairMaterial(),e.scene.sdfCollider.writeToDataView(this.dataView),e.scene.physicsGrid.writeToDataView(this.dataView),this.dataView.writeF32(d.hairRender.fiberRadius),this.dataView.writeF32(_n(a)),this.dataView.writeU32(Pr(a)),this.dataView.writeU32(this.encodeDebugMode()),this.writeBackground(),this.dataView.writeF32(v[0]),this.dataView.writeF32(v[1]),this.dataView.writeF32(v[2]),this.dataView.writeU32(f.colliderGizmo.activeAxis),this.dataView.assertWrittenBytes(t.BUFFER_SIZE),this.dataView.upload(n,this.gpuBuffer,0)}writeLight(e){let n=st(e.posPhi,e.posTheta,"dgr",Cu),r=2;this.dataView.writeF32(n[0]*r),this.dataView.writeF32(n[1]*r),this.dataView.writeF32(n[2]*r),this.dataView.writeF32(0),this.dataView.writeF32(e.color[0]),this.dataView.writeF32(e.color[1]),this.dataView.writeF32(e.color[2]),this.dataView.writeF32(e.energy)}writeShadows(e,n){let r=f.shadows,i=Mo(n),o=Io(n,i,e),a=M.multiply(i,n,ze);this.dataView.writeMat4(a),this.dataView.writeMat4(o);let s=Er(n,i,o,ze);this.dataView.writeMat4(s);let l=Ar();this.dataView.writeF32(l[0]),this.dataView.writeF32(l[1]),this.dataView.writeF32(l[2]);let c=r.hairFiberWidthMultiplier*f.hairRender.fiberRadius;this.dataView.writeF32(c),this.dataView.writeU32(r.usePCSS?1:0),this.dataView.writeU32(r.PCF_Radius),this.dataView.writeF32(r.bias),this.dataView.writeF32(r.strength)}writeAo(){let e=f.ao;this.dataView.writeF32(e.radius),this.dataView.writeF32(e.directionOffset),this.dataView.writeF32(e.falloffStart2),this.dataView.writeF32(e.falloffEnd2),this.dataView.writeU32(e.numDirections),this.dataView.writeU32(e.numSteps);let n=e.strength;this.dataView.writeF32(n),this.dataView.writeU32(0)}writeHairMaterial(){let e=f.hairRender.material;this.dataView.writeF32(e.color0[0]),this.dataView.writeF32(e.color0[1]),this.dataView.writeF32(e.color0[2]),this.dataView.writeF32(e.specular),this.dataView.writeF32(e.color1[0]),this.dataView.writeF32(e.color1[1]),this.dataView.writeF32(e.color1[2]),this.dataView.writeF32(e.shadows),this.dataView.writeF32(e.weightTT),this.dataView.writeF32(e.weightTRT),this.dataView.writeF32(e.shift),this.dataView.writeF32(e.roughness),this.dataView.writeF32(e.colorRng),this.dataView.writeF32(e.lumaRng),this.dataView.writeF32(e.attenuation),this.dataView.writeF32(0)}writeBackground(){let e=f.background;this.dataView.writeF32(e.color0[0]),this.dataView.writeF32(e.color0[1]),this.dataView.writeF32(e.color0[2]),this.dataView.writeF32(e.noiseScale),this.dataView.writeF32(e.color1[0]),this.dataView.writeF32(e.color1[1]),this.dataView.writeF32(e.color1[2]),this.dataView.writeF32(e.gradientStrength)}encodeDebugMode(){let e=f,n=f.hairRender,r=0;return e.displayMode===G.TILES?r=n.dbgTileModeMaxSegments:e.displayMode===G.USED_SLICES?r=n.dbgSlicesModeMaxSlices:e.displayMode===G.FINAL&&(r=n.dbgShowTiles?1:0),e.displayMode|r<<8}},Cu=P.create();var Bu=Math.PI/2,dt=0,xn=1,Sn=class{_viewMatrix=M.identity();_tmpMatrix=M.identity();_angles=[0,0];_position=[0,0,0];constructor(e=f.camera.position){this.resetPosition(e)}get positionWorldSpace(){return this._position}resetPosition=(e=f.camera.position)=>{e.position?.length===3&&(this._position[0]=e.position[0],this._position[1]=e.position[1],this._position[2]=e.position[2]),e.rotation?.length===2&&(this._angles[dt]=e.rotation[1],this._angles[xn]=e.rotation[0])};update(e,n){this.applyMovement(e,n),this.applyRotation(e,n),this.updateShownStats()}applyMovement(e,n){let r=(d,u)=>(d?1:0)-(u?1:0),i=f.camera,o=n.directions,a=e*(o.goFaster?i.movementSpeedFaster:i.movementSpeed),s=[0,0,0,1];s[0]=a*r(o.right,o.left),s[1]=a*r(o.up,o.down),s[2]=a*r(o.backward,o.forward);let l=M.transpose(this.getRotationMat(),this._tmpMatrix),c=ft(l,s,s);P.add(this._position,c,this._position)}applyRotation(e,n){let r=f.camera,i=n.mouse.dragX*e*r.rotationSpeed,o=n.mouse.dragY*e*r.rotationSpeed;this._angles[xn]+=i,this._angles[dt]+=o;let a=Bu*.95;this._angles[dt]=It(this._angles[dt],-a,a)}updateShownStats(){let e=i=>i.toFixed(1),n=this._position,r=this._angles;U.update("Camera pos",`[${e(n[0])}, ${e(n[1])}, ${e(n[2])}]`),U.update("Camera rot",`[${e(r[xn])}, ${e(r[dt])}]`)}getRotationMat(){let e=this._angles,n=M.identity(this._tmpMatrix);return M.rotateX(n,e[dt],n),M.rotateY(n,e[xn],n),n}get viewMatrix(){let e=this.getRotationMat(),n=this._position;return M.translate(e,[-n[0],-n[1],-n[2]],this._viewMatrix)}};var Re=`
+  `;static LIGHT_SIZE=2*J;static SHADOWS_SIZE=oe+oe+oe+J+J;static AO_SIZE=J+ki;static BACKGROUND_SIZE=2*J;static BUFFER_SIZE=oe+oe+oe+oe+oe+oe+oe+oe+oe+J+J+J+J+3*t.LIGHT_SIZE+t.SHADOWS_SIZE+t.AO_SIZE+4*J+se.BUFFER_SIZE+Oe.BUFFER_SIZE+4*Te+t.BACKGROUND_SIZE+J;gpuBuffer;data=new ArrayBuffer(t.BUFFER_SIZE);dataView;constructor(e){this.gpuBuffer=e.createBuffer({label:"render-uniforms-buffer",size:t.BUFFER_SIZE,usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),this.dataView=new qe(this.data)}createBindingDesc=e=>({binding:e,resource:{buffer:this.gpuBuffer}});update(e){let{device:n,vpMatrix:r,viewMatrix:i,projMatrix:o,viewport:a,cameraPositionWorldSpace:s,scene:l}=e,{modelMatrix:c}=e.scene,d=u,f=d.colors,m=s;this.dataView.resetCursor(),this.dataView.writeMat4(r),this.dataView.writeMat4(M.invert(r,$e)),this.dataView.writeMat4(i),this.dataView.writeMat4(o),this.dataView.writeMat4(M.invert(o,$e)),this.dataView.writeMat4(c),M.multiply(i,c,$e),this.dataView.writeMat4($e),Or(c,i,o,$e),this.dataView.writeMat4($e);let v=u.hairSimulation.collisionSphere,b=v[3]*.95,x=M.translation(v,qu),g=M.scale(x,[b,b,b],$e);this.dataView.writeMat4(g),this.dataView.writeF32(a.width),this.dataView.writeF32(a.height),this.dataView.writeF32(0),this.dataView.writeF32(0),this.dataView.writeF32(m[0]),this.dataView.writeF32(m[1]),this.dataView.writeF32(m[2]),this.dataView.writeF32(0),this.dataView.writeF32(f.gamma),this.dataView.writeF32(f.exposure),this.dataView.writeF32(f.ditherStrength),this.dataView.writeF32(0),this.dataView.writeF32(d.lightAmbient.color[0]),this.dataView.writeF32(d.lightAmbient.color[1]),this.dataView.writeF32(d.lightAmbient.color[2]),this.dataView.writeF32(d.lightAmbient.energy),this.writeLight(d.lights[0]),this.writeLight(d.lights[1]),this.writeLight(d.lights[2]),this.writeShadows(l,c),this.writeAo(),this.writeHairMaterial(),e.scene.sdfCollider.writeToDataView(this.dataView),e.scene.physicsGrid.writeToDataView(this.dataView),this.dataView.writeF32(d.hairRender.fiberRadius),this.dataView.writeF32(yn(a)),this.dataView.writeU32(Dr(a)),this.dataView.writeU32(this.encodeDebugMode()),this.writeBackground(),this.dataView.writeF32(v[0]),this.dataView.writeF32(v[1]),this.dataView.writeF32(v[2]),this.dataView.writeU32(u.colliderGizmo.activeAxis),this.dataView.assertWrittenBytes(t.BUFFER_SIZE),this.dataView.upload(n,this.gpuBuffer,0)}writeLight(e){let n=dt(e.posPhi,e.posTheta,"dgr",Ku),r=2;this.dataView.writeF32(n[0]*r),this.dataView.writeF32(n[1]*r),this.dataView.writeF32(n[2]*r),this.dataView.writeF32(0),this.dataView.writeF32(e.color[0]),this.dataView.writeF32(e.color[1]),this.dataView.writeF32(e.color[2]),this.dataView.writeF32(e.energy)}writeShadows(e,n){let r=u.shadows,i=Lo(n),o=Uo(n,i,e),a=M.multiply(i,n,$e);this.dataView.writeMat4(a),this.dataView.writeMat4(o);let s=Or(n,i,o,$e);this.dataView.writeMat4(s);let l=Nr();this.dataView.writeF32(l[0]),this.dataView.writeF32(l[1]),this.dataView.writeF32(l[2]);let c=r.hairFiberWidthMultiplier*u.hairRender.fiberRadius;this.dataView.writeF32(c),this.dataView.writeU32(r.usePCSS?1:0),this.dataView.writeU32(r.PCF_Radius),this.dataView.writeF32(r.bias),this.dataView.writeF32(r.strength)}writeAo(){let e=u.ao;this.dataView.writeF32(e.radius),this.dataView.writeF32(e.directionOffset),this.dataView.writeF32(e.falloffStart2),this.dataView.writeF32(e.falloffEnd2),this.dataView.writeU32(e.numDirections),this.dataView.writeU32(e.numSteps);let n=e.strength;this.dataView.writeF32(n),this.dataView.writeU32(0)}writeHairMaterial(){let e=u.hairRender.material;this.dataView.writeF32(e.color0[0]),this.dataView.writeF32(e.color0[1]),this.dataView.writeF32(e.color0[2]),this.dataView.writeF32(e.specular),this.dataView.writeF32(e.color1[0]),this.dataView.writeF32(e.color1[1]),this.dataView.writeF32(e.color1[2]),this.dataView.writeF32(e.shadows),this.dataView.writeF32(e.weightTT),this.dataView.writeF32(e.weightTRT),this.dataView.writeF32(e.shift),this.dataView.writeF32(e.roughness),this.dataView.writeF32(e.colorRng),this.dataView.writeF32(e.lumaRng),this.dataView.writeF32(e.attenuation),this.dataView.writeF32(0)}writeBackground(){let e=u.background;this.dataView.writeF32(e.color0[0]),this.dataView.writeF32(e.color0[1]),this.dataView.writeF32(e.color0[2]),this.dataView.writeF32(e.noiseScale),this.dataView.writeF32(e.color1[0]),this.dataView.writeF32(e.color1[1]),this.dataView.writeF32(e.color1[2]),this.dataView.writeF32(e.gradientStrength)}encodeDebugMode(){let e=u,n=u.hairRender,r=0;return e.displayMode===A.TILES||e.displayMode===A.TILES_PPLL?r=n.dbgTileModeMaxSegments:e.displayMode===A.USED_SLICES?r=n.dbgSlicesModeMaxSlices:e.displayMode===A.FINAL&&(r=n.dbgShowTiles?1:0),e.displayMode|r<<8}},Ku=y.create();var Zu=Math.PI/2,gt=0,Tn=1,En=class{_viewMatrix=M.identity();_tmpMatrix=M.identity();_angles=[0,0];_position=[0,0,0];constructor(e=u.camera.position){this.resetPosition(e)}get positionWorldSpace(){return this._position}resetPosition=(e=u.camera.position)=>{e.position?.length===3&&(this._position[0]=e.position[0],this._position[1]=e.position[1],this._position[2]=e.position[2]),e.rotation?.length===2&&(this._angles[gt]=e.rotation[1],this._angles[Tn]=e.rotation[0])};update(e,n){this.applyMovement(e,n),this.applyRotation(e,n),this.updateShownStats()}applyMovement(e,n){let r=(d,f)=>(d?1:0)-(f?1:0),i=u.camera,o=n.directions,a=e*(o.goFaster?i.movementSpeedFaster:i.movementSpeed),s=[0,0,0,1];s[0]=a*r(o.right,o.left),s[1]=a*r(o.up,o.down),s[2]=a*r(o.backward,o.forward);let l=M.transpose(this.getRotationMat(),this._tmpMatrix),c=ht(l,s,s);y.add(this._position,c,this._position)}applyRotation(e,n){let r=u.camera,i=n.mouse.dragX*e*r.rotationSpeed,o=n.mouse.dragY*e*r.rotationSpeed;this._angles[Tn]+=i,this._angles[gt]+=o;let a=Zu*.95;this._angles[gt]=Dt(this._angles[gt],-a,a)}updateShownStats(){let e=i=>i.toFixed(1),n=this._position,r=this._angles;z.update("Camera pos",`[${e(n[0])}, ${e(n[1])}, ${e(n[2])}]`),z.update("Camera rot",`[${e(r[Tn])}, ${e(r[gt])}]`)}getRotationMat(){let e=this._angles,n=M.identity(this._tmpMatrix);return M.rotateX(n,e[gt],n),M.rotateY(n,e[Tn],n),n}get viewMatrix(){let e=this.getRotationMat(),n=this._position;return M.translate(e,[-n[0],-n[1],-n[2]],this._viewMatrix)}};var Fe=`
 
 /** https://www.saschawillems.de/blog/2016/08/13/vulkan-tutorial-on-rendering-a-fullscreen-quad-without-buffers/ */
 fn getFullscreenTrianglePosition(vertIdx: u32) -> vec4f {
   let outUV = vec2u((vertIdx << 1) & 2, vertIdx & 2);
   return vec4f(vec2f(outUV) * 2.0 - 1.0, 0.0, 1.0);
 }
-`;function Ve(t){t.draw(3)}var C=class{cache={};getBindings(e,n){let r=this.cache[e];if(r)return r;let i=n();return this.cache[e]=i,i}clear(){this.cache={}}};var Br=(t,e="")=>`${t.NAME}${e?"-"+e:""}`,B=(t,e="")=>`${Br(t,e)}-shader`,O=(t,e="")=>`${Br(t,e)}-pipeline`,Ou=(t,e="")=>`${Br(t,e)}-uniforms`,pt={cullMode:"back",topology:"triangle-list",stripIndexFormat:void 0},mt={format:an,depthWriteEnabled:!0,depthCompare:"less"},se=(t,e,n,r)=>Z(t,"",e,n,r),Z=(t,e,n,r,i)=>{let o=r.getBindGroupLayout(0);return n.createBindGroup({label:Ou(t,e),layout:o,entries:i})},Q=(t,e,n,r="store")=>(H(t),{view:t,loadOp:n,storeOp:r,clearValue:e}),ht=(t,e,n="store")=>(H(t),{view:t,depthClearValue:1,depthLoadOp:e,depthStoreOp:n});var Bo=`
+`;function We(t){t.draw(3)}var R=class{cache={};getBindings(e,n){let r=this.cache[e];if(r)return r;let i=n();return this.cache[e]=i,i}clear(){this.cache={}}};var Ut=(t,e="")=>`${t.NAME}${e?"-"+e:""}`,B=(t,e="")=>`${Ut(t,e)}-shader`,F=(t,e="")=>`${Ut(t,e)}-pipeline`,Ju=(t,e="")=>`${Ut(t,e)}-uniforms`,_t={cullMode:"back",topology:"triangle-list",stripIndexFormat:void 0},xt={format:mn,depthWriteEnabled:!0,depthCompare:"less"},le=(t,e,n,r)=>Z(t,"",e,n,r),Z=(t,e,n,r,i)=>{let o=r.getBindGroupLayout(0);return n.createBindGroup({label:Ju(t,e),layout:o,entries:i})},ee=(t,e,n,r="store")=>($(t),{view:t,loadOp:n,storeOp:r,clearValue:e}),St=(t,e,n="store")=>($(t),{view:t,depthClearValue:1,depthLoadOp:e,depthStoreOp:n}),zr=(t,e,n,r="",i="main")=>{let o=t.createShaderModule({label:B(e,r),code:n});return t.createComputePipeline({label:F(e,r),layout:"auto",compute:{module:o,entryPoint:i}})};var $o=`
 
 fn doACES_Tonemapping(x: vec3f) -> vec3f {
   let a = 2.51;
@@ -2395,7 +2318,7 @@ fn doACES_Tonemapping(x: vec3f) -> vec3f {
   let e = 0.14;
   return saturate((x*(a*x+b)) / (x*(c*x+d)+e));
 }
-`;var Oo=`
+`;var Wo=`
 
 const DITHER_ELEMENT_RANGE: f32 = 63.0;
 
@@ -2425,7 +2348,7 @@ fn getDitherForPixel(gl_FragCoord: vec2u) -> f32 {
   let idx = pxPos.y * 8u + pxPos.x;
   // Disabled on Deno, as Naga does not allow indexing 'array<u32, 64>'
   // with nonconst values. See 'nagaFixes.ts'.
-  let matValue = DITHER_MATRIX[${rn?"0":"idx"}]; // [1-64]
+  let matValue = DITHER_MATRIX[${dn?"0":"idx"}]; // [1-64]
   return f32(matValue) / DITHER_ELEMENT_RANGE;
 }
 
@@ -2442,12 +2365,12 @@ fn ditherColor (
   return originalColor + ditherMod;
 }
 
-`;var vn=f.camera.projection,gt=`
+`;var Mn=u.camera.projection,vt=`
 
 /** Returns value [zNear, zFar] */
 fn linearizeDepth(depth: f32) -> f32 {
-  let zNear: f32 = ${vn.near}f;
-  let zFar: f32 = ${vn.far}f;
+  let zNear: f32 = ${Mn.near}f;
+  let zFar: f32 = ${Mn.far}f;
   
   // PP := projection matrix
   // PP[10] = zFar / (zNear - zFar);
@@ -2467,17 +2390,17 @@ fn linearizeDepth(depth: f32) -> f32 {
 
 /** Returns value [0, 1] */
 fn linearizeDepth_0_1(depth: f32) -> f32 {
-  let zNear: f32 = ${vn.near}f;
-  let zFar: f32 = ${vn.far}f;
+  let zNear: f32 = ${Mn.near}f;
+  let zFar: f32 = ${Mn.far}f;
   let d2 = linearizeDepth(depth);
   return d2 / (zFar - zNear);
 }
-`;var bn="mat4x4<f32>",me=`
-fn getMVP_Mat(modelMat: ${bn}, viewMat: ${bn}, projMat: ${bn}) -> ${bn} {
+`;var In="mat4x4<f32>",he=`
+fn getMVP_Mat(modelMat: ${In}, viewMat: ${In}, projMat: ${In}) -> ${In} {
   let a = viewMat * modelMat;
   return projMat * a;
 }
-`,Ce=`
+`,Ge=`
 
 // WARNING: This is true only when you do not have scale (only rotation and transpose).
 // https://paroj.github.io/gltut/Illumination/Tut09%20Normal%20Transformation.html
@@ -2525,7 +2448,7 @@ fn decodeOctahedronNormal(f_: vec2f) -> vec3f {
   if (n.y >= 0.0){ n.y -= t; } else { n.y += t; }
   return normalize(n);
 }
-`,k=`
+`,G=`
 
 const PI: f32 = ${Math.PI};
 const HALF_PI: f32 = ${.5*Math.PI};
@@ -2631,7 +2554,7 @@ fn mapRange(
   return mix(outMin, outMax, t);
 }
 
-`;var _t=t=>`
+`;var bt=t=>`
 
 @group(0) @binding(${t})
 var _aoTexture: texture_2d<f32>;
@@ -2643,25 +2566,25 @@ fn sampleAo(viewport: vec2f, positionPx: vec2f) -> f32 {
   let aoSamplePx = vec2i(vec2f(aoTexSize) * t);
   return textureLoad(_aoTexture, aoSamplePx, 0).r;
 }
-`;var Or={bindings:{renderUniforms:0,resultHDR_Texture:1,depthTexture:2,normalsTexture:3,aoTexture:4}},Ft=Or.bindings,Fo=()=>`
+`;var Vr={bindings:{renderUniforms:0,resultHDR_Texture:1,depthTexture:2,normalsTexture:3,aoTexture:4}},kt=Vr.bindings,jo=()=>`
 
-${Re}
-${Oo}
-${Bo}
-${gt}
-${k}
-${Ce}
+${Fe}
+${Wo}
+${$o}
+${vt}
+${G}
+${Ge}
 
-${R.SHADER_SNIPPET(Ft.renderUniforms)}
-${_t(Ft.aoTexture)}
+${C.SHADER_SNIPPET(kt.renderUniforms)}
+${bt(kt.aoTexture)}
 
-@group(0) @binding(${Ft.resultHDR_Texture})
+@group(0) @binding(${kt.resultHDR_Texture})
 var _resultHDR_Texture: texture_2d<f32>;
 
-@group(0) @binding(${Ft.depthTexture})
+@group(0) @binding(${kt.depthTexture})
 var _depthTexture: texture_depth_2d;
 
-@group(0) @binding(${Ft.normalsTexture})
+@group(0) @binding(${kt.normalsTexture})
 var _normalsTexture: texture_2d<f32>;
 
 
@@ -2723,13 +2646,13 @@ fn main_fs(
   return vec4(color.xyz, 1.0);
 }
 
-`;var Fr={bindings:{renderUniforms:0,depthTexture:1}},Go=Fr.bindings,No=()=>`
+`;var Hr={bindings:{renderUniforms:0,depthTexture:1}},Yo=Hr.bindings,Xo=()=>`
 
-${Re}
+${Fe}
 
-${R.SHADER_SNIPPET(Go.renderUniforms)}
+${C.SHADER_SNIPPET(Yo.renderUniforms)}
 
-@group(0) @binding(${Go.depthTexture})
+@group(0) @binding(${Yo.depthTexture})
 var _depthTexture: texture_depth_2d;
 
 
@@ -2748,11 +2671,11 @@ fn main_fs(
   let previewSize = _uniforms.dbgShadowMapPreviewSize;
   // THIS DEPENDS ON THE POSITION OF THE PREVIEW ON SCREEN. CHANGE .TS CODE TOO!
   let previewPosition = vec2f(
-    ${f.shadows.debugViewPosition[0]},
-    ${f.shadows.debugViewPosition[1]},
+    ${u.shadows.debugViewPosition[0]},
+    ${u.shadows.debugViewPosition[1]},
   );
 
-  let shadowMapSize: f32 = ${f.shadows.textureSize}.0;
+  let shadowMapSize: f32 = ${u.shadows.textureSize}.0;
   let sample_0_1 = (positionPxF32.xy - previewPosition) / vec2f(previewSize, previewSize);
   let fragPositionPx = vec2u(shadowMapSize * sample_0_1);
   
@@ -2763,7 +2686,7 @@ fn main_fs(
   // return vec4(sample_0_1.xy, 0., 1.0);
 }
 
-`;var wn="dbg-shadow-map",yn=class t{static NAME="PresentPass";pipeline;pipelineDbgShadowMap;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Fo()});this.pipeline=this.createPipeline(e,n,r,""),r=e.createShaderModule({label:B(t,wn),code:No()}),this.pipelineDbgShadowMap=this.createPipeline(e,n,r,wn)}createPipeline=(e,n,r,i)=>e.createRenderPipeline({label:O(t,i),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{topology:"triangle-list"}});onViewportResize=()=>this.bindingsCache.clear();cmdDraw(e,n,r){let{cmdBuf:i,profiler:o}=e;H(n);let a=i.beginRenderPass({label:t.NAME,colorAttachments:[Q(n,f.clearColor,r)],timestampWrites:o?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings("-",()=>this.createBindings(e));a.setBindGroup(0,s),a.setPipeline(this.pipeline),Ve(a),f.shadows.showDebugView&&this.renderDbgShadowMap(e,a),a.end()}createBindings=e=>{let{device:n,globalUniforms:r,hdrRenderTexture:i,normalsTexture:o,depthTexture:a,aoTexture:s}=e,l=Or.bindings;return H(i),se(t,n,this.pipeline,[r.createBindingDesc(l.renderUniforms),{binding:l.resultHDR_Texture,resource:i},{binding:l.depthTexture,resource:a},{binding:l.normalsTexture,resource:o},{binding:l.aoTexture,resource:s}])};renderDbgShadowMap(e,n){let{viewport:r}=e,i=this.pipelineDbgShadowMap,o=this.bindingsCache.getBindings(wn,()=>this.createDbgShadowMapBindings(e,i)),a=_n(r);n.setBindGroup(0,o),n.setPipeline(i);let s=f.shadows.debugViewPosition,l=s[0],c=s[1];n.setViewport(l,c,a,a,0,1),Ve(n)}createDbgShadowMapBindings=(e,n)=>{let{device:r,globalUniforms:i,shadowDepthTexture:o}=e,a=Fr.bindings;return H(o),Z(t,wn,r,n,[i.createBindingDesc(a.renderUniforms),{binding:a.depthTexture,resource:o}])}};var Gr={attributes:[{shaderLocation:0,offset:0,format:"float32x3"}],arrayStride:ir,stepMode:"vertex"},Lo=[Gr,{attributes:[{shaderLocation:1,offset:0,format:"float32x3"}],arrayStride:ir,stepMode:"vertex"},{attributes:[{shaderLocation:2,offset:0,format:"float32x2"}],arrayStride:Mi,stepMode:"vertex"}];var Nr=`
+`;var Cn="dbg-shadow-map",An=class t{static NAME="PresentPass";pipeline;pipelineDbgShadowMap;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:jo()});this.pipeline=this.createPipeline(e,n,r,""),r=e.createShaderModule({label:B(t,Cn),code:Xo()}),this.pipelineDbgShadowMap=this.createPipeline(e,n,r,Cn)}createPipeline=(e,n,r,i)=>e.createRenderPipeline({label:F(t,i),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{topology:"triangle-list"}});onViewportResize=()=>this.bindingsCache.clear();cmdDraw(e,n,r){let{cmdBuf:i,profiler:o}=e;$(n);let a=i.beginRenderPass({label:t.NAME,colorAttachments:[ee(n,u.clearColor,r)],timestampWrites:o?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings("-",()=>this.createBindings(e));a.setBindGroup(0,s),a.setPipeline(this.pipeline),We(a),u.shadows.showDebugView&&this.renderDbgShadowMap(e,a),a.end()}createBindings=e=>{let{device:n,globalUniforms:r,hdrRenderTexture:i,normalsTexture:o,depthTexture:a,aoTexture:s}=e,l=Vr.bindings;return $(i),le(t,n,this.pipeline,[r.createBindingDesc(l.renderUniforms),{binding:l.resultHDR_Texture,resource:i},{binding:l.depthTexture,resource:a},{binding:l.normalsTexture,resource:o},{binding:l.aoTexture,resource:s}])};renderDbgShadowMap(e,n){let{viewport:r}=e,i=this.pipelineDbgShadowMap,o=this.bindingsCache.getBindings(Cn,()=>this.createDbgShadowMapBindings(e,i)),a=yn(r);n.setBindGroup(0,o),n.setPipeline(i);let s=u.shadows.debugViewPosition,l=s[0],c=s[1];n.setViewport(l,c,a,a,0,1),We(n)}createDbgShadowMapBindings=(e,n)=>{let{device:r,globalUniforms:i,shadowDepthTexture:o}=e,a=Hr.bindings;return $(o),Z(t,Cn,r,n,[i.createBindingDesc(a.renderUniforms),{binding:a.depthTexture,resource:o}])}};var $r={attributes:[{shaderLocation:0,offset:0,format:"float32x3"}],arrayStride:pr,stepMode:"vertex"},qo=[$r,{attributes:[{shaderLocation:1,offset:0,format:"float32x3"}],arrayStride:pr,stepMode:"vertex"},{attributes:[{shaderLocation:2,offset:0,format:"float32x2"}],arrayStride:Ui,stepMode:"vertex"}];var Wr=`
 
 
 /**
@@ -2838,9 +2761,9 @@ fn GeometrySmith(N: vec3f, V: vec3f, L: vec3f, roughness: f32) -> f32 {
   return ggx1 * ggx2;
 }
 
-`,Uo=`
+`,Ko=`
 
-${Nr}
+${Wr}
 
 const DIELECTRIC_FRESNEL = vec3f(0.04, 0.04, 0.04); // nearly black
 const METALLIC_DIFFUSE_CONTRIBUTION = vec3(0.0, 0.0, 0.0); // none
@@ -2915,7 +2838,7 @@ fn disneyPBR(material: Material, light: Light) -> vec3f {
   let radiance = light.colorAndEnergy.rgb * attenuation * light.colorAndEnergy.a; // incoming color from light
   return brdfFinal * radiance * NdotL;
 }
-`;var Pn=t=>`
+`;var Rn=t=>`
 
 @group(0) @binding(${t.bindingTexture})
 var _shadowMapTexture: texture_depth_2d;
@@ -3062,16 +2985,16 @@ fn _isValidShadowSample(postionShadowSourceSpace: vec3f) -> bool {
   return true;
 }
 
-`;function zo(t){return t.createSampler({label:"shadow-map-sampler"})}var xt={firstInstance:{sintel:0,colliderPreview:1},bindings:{renderUniforms:0,shadowMapTexture:1,shadowMapSampler:2,aoTexture:3}},Lr=[.9,.9,.9],Gu=xt,Tn=xt.bindings,Vo=()=>`
+`;function Zo(t){return t.createSampler({label:"shadow-map-sampler"})}var wt={firstInstance:{sintel:0,colliderPreview:1},bindings:{renderUniforms:0,shadowMapTexture:1,shadowMapSampler:2,aoTexture:3}},jr=[.9,.9,.9],ef=wt,Dn=wt.bindings,Jo=()=>`
 
-${me}
-${k}
-${Ce}
-${Uo}
-${Pn({bindingTexture:Tn.shadowMapTexture,bindingSampler:Tn.shadowMapSampler})}
+${he}
+${G}
+${Ge}
+${Ko}
+${Rn({bindingTexture:Dn.shadowMapTexture,bindingSampler:Dn.shadowMapSampler})}
 
-${R.SHADER_SNIPPET(Tn.renderUniforms)}
-${_t(Tn.aoTexture)}
+${C.SHADER_SNIPPET(Dn.renderUniforms)}
+${bt(Dn.aoTexture)}
 
 
 struct VertexOutput {
@@ -3097,7 +3020,7 @@ fn main_vs(
   var mvpShadowSourceMatrix = _uniforms.shadows.sourceMVP_Matrix;
   var modelMat = _uniforms.modelMatrix;
   
-  if (instanceIdx == ${Gu.firstInstance.colliderPreview}u) {
+  if (instanceIdx == ${ef.firstInstance.colliderPreview}u) {
     modelMat = _uniforms.collisionSphereModelMatrix;
     mvpMatrix = getMVP_Mat(modelMat, _uniforms.viewMatrix, _uniforms.projMatrix);
     mvpShadowSourceMatrix = mat4x4<f32>();
@@ -3199,15 +3122,15 @@ fn createDefaultMaterial(
   (*material).toEye = normalize(cameraPos - positionWS.xyz);
   // brdf params:
   (*material).albedo = vec3f(
-    ${Lr[0]},
-    ${Lr[1]},
-    ${Lr[2]});
+    ${jr[0]},
+    ${jr[1]},
+    ${jr[2]});
   (*material).roughness = 0.8;
   (*material).isMetallic = 0.0;
   (*material).ao = 1.0;
   (*material).shadow = 1.0;
 }
-`;var En=class t{static NAME="DrawMeshesPass";pipeline;bindingsCache=new C;constructor(e,n,r){let i=e.createShaderModule({label:B(t),code:Vo()});this.pipeline=e.createRenderPipeline({label:O(t),layout:"auto",vertex:{module:i,entryPoint:"main_vs",buffers:Lo},fragment:{module:i,entryPoint:"main_fs",targets:[{format:n},{format:r}]},primitive:pt,depthStencil:mt})}onViewportResize=()=>{this.bindingsCache.clear()};cmdDrawMeshes(e){let{cmdBuf:n,profiler:r,depthTexture:i,hdrRenderTexture:o,normalsTexture:a,scene:s}=e,l=n.beginRenderPass({label:t.NAME,colorAttachments:[Q(o,f.clearColor,"load"),Q(a,f.clearNormals,"clear")],depthStencilAttachment:ht(i,"clear"),timestampWrites:r?.createScopeGpu(t.NAME)});l.setPipeline(this.pipeline);for(let c of s.objects)this.renderObject(e,l,c);l.end()}renderObject(e,n,r){if(r.isColliderPreview&&!f.drawColliders)return;let i=this.bindingsCache.getBindings(r.name,()=>this.createBindings(e,r));n.setBindGroup(0,i),n.setVertexBuffer(0,r.positionsBuffer),n.setVertexBuffer(1,r.normalsBuffer),n.setVertexBuffer(2,r.uvBuffer),n.setIndexBuffer(r.indexBuffer,"uint32");let o=r.triangleCount*Ae,a=r.isColliderPreview?xt.firstInstance.colliderPreview:xt.firstInstance.sintel;n.drawIndexed(o,1,0,0,a)}createBindings=(e,n)=>{let{device:r,globalUniforms:i,shadowDepthTexture:o,shadowMapSampler:a,aoTexture:s}=e,l=xt.bindings;return H(o),H(s),Z(t,n.name,r,this.pipeline,[i.createBindingDesc(l.renderUniforms),{binding:l.shadowMapTexture,resource:o},{binding:l.shadowMapSampler,resource:a},{binding:l.aoTexture,resource:s}])}};var Mn=`
+`;var Bn=class t{static NAME="DrawMeshesPass";pipeline;bindingsCache=new R;constructor(e,n,r){let i=e.createShaderModule({label:B(t),code:Jo()});this.pipeline=e.createRenderPipeline({label:F(t),layout:"auto",vertex:{module:i,entryPoint:"main_vs",buffers:qo},fragment:{module:i,entryPoint:"main_fs",targets:[{format:n},{format:r}]},primitive:_t,depthStencil:xt})}onViewportResize=()=>{this.bindingsCache.clear()};cmdDrawMeshes(e){let{cmdBuf:n,profiler:r,depthTexture:i,hdrRenderTexture:o,normalsTexture:a,scene:s}=e,l=n.beginRenderPass({label:t.NAME,colorAttachments:[ee(o,u.clearColor,"load"),ee(a,u.clearNormals,"clear")],depthStencilAttachment:St(i,"clear"),timestampWrites:r?.createScopeGpu(t.NAME)});l.setPipeline(this.pipeline);for(let c of s.objects)this.renderObject(e,l,c);l.end()}renderObject(e,n,r){if(r.isColliderPreview&&!u.drawColliders)return;let i=this.bindingsCache.getBindings(r.name,()=>this.createBindings(e,r));n.setBindGroup(0,i),n.setVertexBuffer(0,r.positionsBuffer),n.setVertexBuffer(1,r.normalsBuffer),n.setVertexBuffer(2,r.uvBuffer),n.setIndexBuffer(r.indexBuffer,"uint32");let o=r.triangleCount*Re,a=r.isColliderPreview?wt.firstInstance.colliderPreview:wt.firstInstance.sintel;n.drawIndexed(o,1,0,0,a)}createBindings=(e,n)=>{let{device:r,globalUniforms:i,shadowDepthTexture:o,shadowMapSampler:a,aoTexture:s}=e,l=wt.bindings;return $(o),$(s),Z(t,n.name,r,this.pipeline,[i.createBindingDesc(l.renderUniforms),{binding:l.shadowMapTexture,resource:o},{binding:l.shadowMapSampler,resource:a},{binding:l.aoTexture,resource:s}])}};var On=`
 
 /** range: [-1, 1] */
 fn hash(p0: vec2f) -> f32 {
@@ -3247,12 +3170,12 @@ fn randomRGB(v: u32, brightnessMod: f32) -> vec3f {
     fract(f32(v) * 1.31) * brightnessMod,
   ));
 }
-`;var Ur={bindings:{renderUniforms:0}},Nu=Ur.bindings,ko=()=>`
+`;var Yr={bindings:{renderUniforms:0}},tf=Yr.bindings,Qo=()=>`
 
-${Re}
-${Mn}
+${Fe}
+${On}
 
-${R.SHADER_SNIPPET(Nu.renderUniforms)}
+${C.SHADER_SNIPPET(tf.renderUniforms)}
 
 
 @vertex
@@ -3282,7 +3205,7 @@ fn main_fs(
   return vec4(color.xyz, 1.0);
 }
 
-`;var In=class t{static NAME="DrawBackgroundGradientPass";pipeline;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:ko()});this.pipeline=e.createRenderPipeline({label:O(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{topology:"triangle-list"}})}onViewportResize=()=>this.bindingsCache.clear();cmdDraw(e){let{cmdBuf:n,profiler:r,hdrRenderTexture:i}=e;H(i);let o=n.beginRenderPass({label:t.NAME,colorAttachments:[Q(i,f.clearColor,"load")],timestampWrites:r?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings("-",()=>this.createBindings(e));o.setBindGroup(0,a),o.setPipeline(this.pipeline),Ve(o),o.end()}createBindings=({device:e,globalUniforms:n})=>{let r=Ur.bindings;return se(t,e,this.pipeline,[n.createBindingDesc(r.renderUniforms)])}};var Ho=(t,e)=>{let n=t*(e-1)*6;return Math.floor(n/3)};function $o(t,e,n){let{numHairStrands:r,numVerticesPerStrand:i}=n.header,o=r*(i-1),a=Array(o*6).fill(0),s=0,l=0;for(let u=0;u<r;u++){for(let m=0;m<i-1;m++)a[l++]=2*s,a[l++]=2*s+1,a[l++]=2*s+2,a[l++]=2*s+2,a[l++]=2*s+1,a[l++]=2*s+3,s++;s++}let c=Uint32Array.from(a);return{indexBuffer:pn(t,`${e}-indices`,c),indexFormat:"uint32",triangleCount:Math.floor(l/3)}}var be=t=>`
+`;var Fn=class t{static NAME="DrawBackgroundGradientPass";pipeline;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Qo()});this.pipeline=e.createRenderPipeline({label:F(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{topology:"triangle-list"}})}onViewportResize=()=>this.bindingsCache.clear();cmdDraw(e){let{cmdBuf:n,profiler:r,hdrRenderTexture:i}=e;$(i);let o=n.beginRenderPass({label:t.NAME,colorAttachments:[ee(i,u.clearColor,"load")],timestampWrites:r?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings("-",()=>this.createBindings(e));o.setBindGroup(0,a),o.setPipeline(this.pipeline),We(o),o.end()}createBindings=({device:e,globalUniforms:n})=>{let r=Yr.bindings;return le(t,e,this.pipeline,[n.createBindingDesc(r.renderUniforms)])}};var ea=(t,e)=>{let n=t*(e-1)*6;return Math.floor(n/3)};function ta(t,e,n){let{numHairStrands:r,numVerticesPerStrand:i}=n.header,o=r*(i-1),a=Array(o*6).fill(0),s=0,l=0;for(let f=0;f<r;f++){for(let m=0;m<i-1;m++)a[l++]=2*s,a[l++]=2*s+1,a[l++]=2*s+2,a[l++]=2*s+2,a[l++]=2*s+1,a[l++]=2*s+3,s++;s++}let c=Uint32Array.from(a);return{indexBuffer:vn(t,`${e}-indices`,c),indexFormat:"uint32",triangleCount:Math.floor(l/3)}}var Pe=t=>`
 
 struct HairData {
   boundingSphere: vec4f,
@@ -3292,7 +3215,7 @@ struct HairData {
 
 @group(0) @binding(${t})
 var<storage, read> _hairData: HairData;
-`;function Wo(t,e,n,r){let i=Se,o=new ArrayBuffer(i),a=new We(o);return a.writeF32(r.center[0]),a.writeF32(r.center[1]),a.writeF32(r.center[2]),a.writeF32(r.radius),a.writeU32(n.header.numHairStrands),a.writeU32(n.header.numVerticesPerStrand),ve(t,`${e}-hair-data`,a.asU32)}var it=(t,e)=>`
+`;function na(t,e,n,r){let i=ve,o=new ArrayBuffer(i),a=new qe(o);return a.writeF32(r.center[0]),a.writeF32(r.center[1]),a.writeF32(r.center[2]),a.writeF32(r.radius),a.writeU32(n.header.numHairStrands),a.writeU32(n.header.numVerticesPerStrand),be(t,`${e}-hair-data`,a.asU32)}var ut=(t,e)=>`
 
 @group(0) @binding(${t})
 var<storage, read> ${e.bufferName}: array<vec4f>;
@@ -3304,7 +3227,7 @@ fn ${e.getterName}(
 ) -> vec4f {
   return ${e.bufferName}[strandIdx * pointsPerStrand + pointIdx];
 }
-`,Oe=t=>it(t,{bufferName:"_hairPointPositions",getterName:"_getHairPointPosition"}),jo=(t,e)=>`
+`,Ne=t=>ut(t,{bufferName:"_hairPointPositions",getterName:"_getHairPointPosition"}),ra=(t,e)=>`
 
 @group(0) @binding(${t})
 var<storage, read_write> ${e.bufferName}: array<vec4f>;
@@ -3325,16 +3248,16 @@ fn ${e.setterName}(
 ) {
   ${e.bufferName}[strandIdx * pointsPerStrand + pointIdx] = value;
 }
-`;function Yo(t,e,n,r){return ve(t,`${e}-points-positions`,n,r)}var Lu=`
+`;function ia(t,e,n,r){return be(t,`${e}-points-positions`,n,r)}var nf=`
 
 fn _setShadingPoint(strandId: u32, pointIdx: u32, color: vec4f) {
   let offset = strandId * SHADING_POINTS;
   let i0 = clamp(pointIdx, 0u, SHADING_POINTS - 1u);
   _hairShading[offset + i0] = color;
 }
-`,St=(t,e)=>`
+`,Pt=(t,e)=>`
 
-const SHADING_POINTS = ${f.hairRender.shadingPoints}u;
+const SHADING_POINTS = ${u.hairRender.shadingPoints}u;
 
 @group(0) @binding(${t})
 var<storage, ${e}> _hairShading: array<vec4f>;
@@ -3350,9 +3273,9 @@ fn _sampleShading(strandId: u32, t: f32) -> vec4f {
   return mix(c0, c1, fractMod);
 }
 
-${e==="read_write"?Lu:""}
+${e==="read_write"?nf:""}
 
-`;function Xo(t,e,n){let{header:{numHairStrands:r}}=n,{shadingPoints:i}=f.hairRender,o=He(i).map((s,l)=>{let c=l/(i-1);return[1-c,c,0,1]}),a=new Float32Array(He(r).map(()=>o).flat().flat());return ve(t,`${e}-shading`,a)}var Fe=t=>`
+`;function oa(t,e,n){let{header:{numHairStrands:r}}=n,{shadingPoints:i}=u.hairRender,o=Ye(i).map((s,l)=>{let c=l/(i-1);return[1-c,c,0,1]}),a=new Float32Array(Ye(r).map(()=>o).flat().flat());return be(t,`${e}-shading`,a)}var Le=t=>`
 
 @group(0) @binding(${t})
 var<storage, read> _hairTangents: array<vec4f>;
@@ -3364,7 +3287,7 @@ fn _getHairTangent(
 ) -> vec4f {
   return _hairTangents[strandIdx * pointsPerStrand + pointIdx];
 }
-`;function Uu(t,e){let n=P.subtract(t,e);return P.normalize(n,n)}function qo(t,e,n){let{vertexPositions:r,header:{numHairStrands:i,numVerticesPerStrand:o}}=n,a=new Float32Array(r.length),s=c=>[r[c*4],r[c*4+1],r[c*4+2]],l=(c,d)=>{a[c*4+0]=d[0],a[c*4+1]=d[1],a[c*4+2]=d[2],a[c*4+3]=0};for(let c=0;c<i;c++){let d=c*o;for(let u=0;u<o;u++){let v=u==o-1?u-1:u,b=s(d+v),x=s(d+v+1),g=Uu(x,b);l(d+u,g)}}return ve(t,`${e}-tangents`,a)}var An=`
+`;function rf(t,e){let n=y.subtract(t,e);return y.normalize(n,n)}function aa(t,e,n){let{vertexPositions:r,header:{numHairStrands:i,numVerticesPerStrand:o}}=n,a=new Float32Array(r.length),s=c=>[r[c*4],r[c*4+1],r[c*4+2]],l=(c,d)=>{a[c*4+0]=d[0],a[c*4+1]=d[1],a[c*4+2]=d[2],a[c*4+3]=0};for(let c=0;c<i;c++){let d=c*o;for(let f=0;f<o;f++){let v=f==o-1?f-1:f,b=s(d+v),x=s(d+v+1),g=rf(x,b);l(d+f,g)}}return be(t,`${e}-tangents`,a)}var Gn=`
 
 struct HwHairRasterizeParams {
   modelViewMatrix: mat4x4f,
@@ -3426,18 +3349,18 @@ fn getHairStrandData(
   return HairStrandData(strandIdx, tFullStrand);
 }
 
-`;var zr={bindings:{renderUniforms:0,hairPositions:1,hairTangents:2,hairData:3,hairShading:4}},Gt=zr.bindings,Ko=()=>`
+`;var Xr={bindings:{renderUniforms:0,hairPositions:1,hairTangents:2,hairData:3,hairShading:4}},zt=Xr.bindings,sa=()=>`
 
-${me}
-${Ce}
-${k}
-${An}
+${he}
+${Ge}
+${G}
+${Gn}
 
-${R.SHADER_SNIPPET(Gt.renderUniforms)}
-${Oe(Gt.hairPositions)}
-${Fe(Gt.hairTangents)}
-${be(Gt.hairData)}
-${St(Gt.hairShading,"read")}
+${C.SHADER_SNIPPET(zt.renderUniforms)}
+${Ne(zt.hairPositions)}
+${Le(zt.hairTangents)}
+${Pe(zt.hairData)}
+${Pt(zt.hairShading,"read")}
 
 
 struct VertexOutput {
@@ -3502,7 +3425,7 @@ fn main_fs(fragIn: VertexOutput) -> FragmentOutput {
   
   return result;
 }
-`;var Ye=class t{static NAME="HwHairPass";pipeline;bindingsCache=new C;constructor(e,n,r){let i=e.createShaderModule({label:B(t),code:Ko()}),o=t.createPipelineDesc(i);o.fragment?.targets.push({format:n,blend:{color:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha"},alpha:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha"}}},{format:r}),this.pipeline=e.createRenderPipeline(o)}static createPipelineDesc(e){return{label:O(t),layout:"auto",vertex:{module:e,entryPoint:"main_vs",buffers:[]},fragment:{module:e,entryPoint:"main_fs",targets:[]},primitive:{cullMode:"none",topology:"triangle-list",stripIndexFormat:void 0},depthStencil:mt}}cmdDrawHair(e){let{cmdBuf:n,profiler:r,depthTexture:i,hdrRenderTexture:o,normalsTexture:a,scene:s}=e,l=n.beginRenderPass({label:t.NAME,colorAttachments:[Q(o,f.clearColor,"load"),Q(a,f.clearNormals,"load")],depthStencilAttachment:ht(i,"load"),timestampWrites:r?.createScopeGpu(t.NAME)});l.setPipeline(this.pipeline);let c=s.hairObject,d=this.bindingsCache.getBindings(c.name,()=>this.createBindings(e,c));l.setBindGroup(0,d),t.cmdRenderHair(l,c),l.end(),c.reportRenderedStrandCount()}static cmdRenderHair(e,n){n.bindIndexBuffer(e);let r=n.getRenderedStrandCount(),o=Ho(r,n.pointsPerStrand)*Ae;e.drawIndexed(o,1,0,0,0)}createBindings=({device:e,globalUniforms:n},r)=>{let i=zr.bindings;return Z(t,r.name,e,this.pipeline,[n.createBindingDesc(i.renderUniforms),r.bindPointsPositions(i.hairPositions),r.bindTangents(i.hairTangents),r.bindHairData(i.hairData),r.bindShading(i.hairShading)])}};var Dn=`
+`;var Ze=class t{static NAME="HwHairPass";pipeline;bindingsCache=new R;constructor(e,n,r){let i=e.createShaderModule({label:B(t),code:sa()}),o=t.createPipelineDesc(i);o.fragment?.targets.push({format:n,blend:{color:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha"},alpha:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha"}}},{format:r}),this.pipeline=e.createRenderPipeline(o)}static createPipelineDesc(e){return{label:F(t),layout:"auto",vertex:{module:e,entryPoint:"main_vs",buffers:[]},fragment:{module:e,entryPoint:"main_fs",targets:[]},primitive:{cullMode:"none",topology:"triangle-list",stripIndexFormat:void 0},depthStencil:xt}}cmdDrawHair(e){let{cmdBuf:n,profiler:r,depthTexture:i,hdrRenderTexture:o,normalsTexture:a,scene:s}=e,l=n.beginRenderPass({label:t.NAME,colorAttachments:[ee(o,u.clearColor,"load"),ee(a,u.clearNormals,"load")],depthStencilAttachment:St(i,"load"),timestampWrites:r?.createScopeGpu(t.NAME)});l.setPipeline(this.pipeline);let c=s.hairObject,d=this.bindingsCache.getBindings(c.name,()=>this.createBindings(e,c));l.setBindGroup(0,d),t.cmdRenderHair(l,c),l.end(),c.reportRenderedStrandCount()}static cmdRenderHair(e,n){n.bindIndexBuffer(e);let r=n.getRenderedStrandCount(),o=ea(r,n.pointsPerStrand)*Re;e.drawIndexed(o,1,0,0,0)}createBindings=({device:e,globalUniforms:n},r)=>{let i=Xr.bindings;return Z(t,r.name,e,this.pipeline,[n.createBindingDesc(i.renderUniforms),r.bindPointsPositions(i.hairPositions),r.bindTangents(i.hairTangents),r.bindHairData(i.hairData),r.bindShading(i.hairShading)])}};var Nn=`
 
 
 // test colors in ABGR
@@ -3698,10 +3621,80 @@ fn interpolateHairF32(w: vec2f, values: vec4f) -> f32 {
   return mix(valueStart, valueEnd, w.y);
 }
 
-`;var vt=`
+`;var of=`
 
-const TILE_SIZE: u32 = ${f.hairRender.tileSize}u;
-const TILE_DEPTH_BINS_COUNT = ${f.hairRender.tileDepthBins}u;
+fn _storeTileHead(
+  viewportSize: vec2u,
+  tileXY: vec2u, depthBin: u32,
+  depthMin: f32, depthMax: f32,
+  nextPtr: u32
+) -> u32 {
+  let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, depthBin);
+  
+  // store depth
+  // TODO [IGNORE] low precision. Convert this into 0-1 inside the bounding sphere and then quantisize
+  let depthMax_U32 = u32(depthMax * f32(MAX_U32));
+  // WebGPU clears to 0. So atomicMin() is pointless. Use atomicMax() with inverted values instead
+  let depthMin_U32 = u32((1.0 - depthMin) * f32(MAX_U32));
+  atomicMax(&_hairTilesResult[tileIdx].maxDepth, depthMax_U32);
+  atomicMax(&_hairTilesResult[tileIdx].minDepth, depthMin_U32);
+
+  // store pointer to 1st segment.
+  // 0 is the value we cleared the buffer to. We always write +1, so previous value '0'
+  // means this ptr was never modified. It signifies the end of the list.
+  // But '0' is also a valid pointer into a linked list segments buffer.
+  // That's why we add 1. To detect this case and turn it into $INVALID_TILE_SEGMENT_PTR.
+  // This $INVALID_TILE_SEGMENT_PTR will be then written to the linked list segments buffer.
+  let lastHeadPtr = atomicExchange(
+    &_hairTilesResult[tileIdx].tileSegmentPtr,
+    nextPtr + 1u
+  );
+
+  return _translateHeadPointer(lastHeadPtr);
+}
+`,af=`
+
+fn _getTileDepth(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> vec2f {
+  let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, depthBin);
+  let tile = _hairTilesResult[tileIdx];
+  return vec2f(
+    f32(MAX_U32 - tile.minDepth) / f32(MAX_U32),
+    f32(tile.maxDepth) / f32(MAX_U32)
+  );
+}
+
+fn _getTileSegmentPtr(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
+  let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, depthBin);
+  let myPtr = _hairTilesResult[tileIdx].tileSegmentPtr;
+  return _translateHeadPointer(myPtr);
+}
+
+`,yt=(t,e)=>`
+
+const MAX_U32: u32 = 0xffffffffu;
+const INVALID_TILE_SEGMENT_PTR: u32 = 0xffffffffu;
+
+struct HairTileResult {
+  minDepth: ${pe(e)},
+  maxDepth: ${pe(e)},
+  tileSegmentPtr: ${pe(e)},
+  padding0: u32
+}
+
+@group(0) @binding(${t})
+var<storage, ${e}> _hairTilesResult: array<HairTileResult>;
+
+${e=="read_write"?of:af}
+
+fn _translateHeadPointer(segmentPtr: u32) -> u32 {
+  // PS. there is no ternary in WGSL. There is select(). It was designed by someone THAT HAS NEVER WRITTEN A LINE OF CODE IN THEIR LIFE. I.N.C.O.M.P.E.T.E.N.C.E.
+  if (segmentPtr == 0u) { return INVALID_TILE_SEGMENT_PTR; }
+  return segmentPtr - 1u;
+}
+`;function la(t,e){let n=u.hairRender.tileDepthBins,r=Be(e);console.log(`Creating hair tiles buffer: ${r.width}x${r.height}x${n} tiles`),z.update("Tiles",`${r.width} x ${r.height} x ${n}`);let i=r.width*r.height*n,o=4*X,a=i*o;z.update("Tiles heads",Se(a));let s=u.isTest?GPUBufferUsage.COPY_SRC:0;return t.createBuffer({label:"hair-tiles-result",size:a,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|s})}var Ue=`
+
+const TILE_SIZE: u32 = ${u.hairRender.tileSize}u;
+const TILE_DEPTH_BINS_COUNT = ${u.hairRender.tileDepthBins}u;
 
 fn getTileCount(viewportSize: vec2u) -> vec2u {
   return vec2u(
@@ -3710,13 +3703,18 @@ fn getTileCount(viewportSize: vec2u) -> vec2u {
   );
 }
 
-fn getHairTileIdx(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
+fn getHairTileDepthBinIdx(viewportSize: vec2u, tileXY: vec2u, depthBin: u32) -> u32 {
   let tileCount = getTileCount(viewportSize);
   return (
-    tileXY.y * tileCount.x  * TILE_DEPTH_BINS_COUNT +
+    tileXY.y * tileCount.x * TILE_DEPTH_BINS_COUNT +
     tileXY.x * TILE_DEPTH_BINS_COUNT +
     depthBin
   );
+}
+
+fn getHairTileIdx(viewportSize: vec2u, tileXY: vec2u) -> u32 {
+  let tileCount = getTileCount(viewportSize);
+  return tileXY.y * tileCount.x + tileXY.x;
 }
 
 /** Changes tileIdx into (tileX, tileY) coordinates (NOT IN PIXELS!) */
@@ -3746,28 +3744,40 @@ fn getTileBoundsPx(viewportSize: vec2u, tileXY: vec2u) -> vec4u {
   return vec4u(boundsMin, boundsMax);
 }
 
-`;var bt={workgroupSizeX:4,workgroupSizeY:32,bindings:{renderUniforms:0,hairData:1,hairPositions:2,hairTangents:3,tilesBuffer:4,depthTexture:5,tileSegmentsBuffer:6}},Zo=bt,ot=bt.bindings,Jo=()=>`
+`;var Je=(t,e)=>`
+
+@group(0) @binding(${t})
+var<storage, ${e}> _hairSegmentCountPerTile: array<${pe(e)}>;
+
+${e=="read_write"?sf:""}
+`,sf=`
+  fn _incTileSegmentCount(viewportSize: vec2u, tileXY: vec2u) {
+    let tileIdx = getHairTileIdx(viewportSize, tileXY);
+    atomicAdd(&_hairSegmentCountPerTile[tileIdx], 1u);
+  }
+`;function ca(t,e){let n=Be(e),i=n.width*n.height*X;return t.createBuffer({label:"hair-segments-per-tile",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}var Tt={workgroupSizeX:4,workgroupSizeY:32,bindings:{renderUniforms:0,hairData:1,hairPositions:2,hairTangents:3,tilesBuffer:4,depthTexture:5,tileSegmentsBuffer:6,segmentCountPerTileBuffer:7}},ua=Tt,Qe=Tt.bindings,fa=()=>`
 
 
-${me}
-${k}
-${Dn}
-${vt}
+${he}
+${G}
+${Nn}
+${Ue}
 
-${R.SHADER_SNIPPET(ot.renderUniforms)}
-${be(ot.hairData)}
-${Oe(ot.hairPositions)}
-${Fe(ot.hairTangents)}
-${ct(ot.tilesBuffer,"read_write")}
-${ut(ot.tileSegmentsBuffer,"read_write")}
+${C.SHADER_SNIPPET(Qe.renderUniforms)}
+${Pe(Qe.hairData)}
+${Ne(Qe.hairPositions)}
+${Le(Qe.hairTangents)}
+${yt(Qe.tilesBuffer,"read_write")}
+${mt(Qe.tileSegmentsBuffer,"read_write")}
+${Je(Qe.segmentCountPerTileBuffer,"read_write")}
 
-@group(0) @binding(${ot.depthTexture})
+@group(0) @binding(${Qe.depthTexture})
 var _depthTexture: texture_depth_2d;
 
-const INVALID_TILES_PER_SEGMENT_THRESHOLD = ${f.hairRender.invalidTilesPerSegmentThreshold}u;
+const INVALID_TILES_PER_SEGMENT_THRESHOLD = ${u.hairRender.invalidTilesPerSegmentThreshold}u;
 
 @compute
-@workgroup_size(${Zo.workgroupSizeX}, ${Zo.workgroupSizeY}, 1)
+@workgroup_size(${ua.workgroupSizeX}, ${ua.workgroupSizeY}, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
 ) {
@@ -3930,6 +3940,9 @@ fn processTile(
       nextPtr, prevPtr,
       strandIdx, segmentIdx
     );
+
+    // store for sorting
+    _incTileSegmentCount(viewportSize, tileXY);
   }
 }
 
@@ -3956,7 +3969,7 @@ fn getHairDepthBoundsVS(mvMat: mat4x4f) -> vec2f {
   atomicMax(&_hairTilesResult[idx], value);
 }*/
 
-`;var Rn=class t{static NAME="HairTilesPass";pipeline;bindingsCache=new C;hairTilesBuffer=void 0;hairTileSegmentsBuffer=void 0;constructor(e){let n=e.createShaderModule({label:B(t),code:Jo()});this.pipeline=e.createComputePipeline({label:O(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}clearFramebuffer(e){e.cmdBuf.clearBuffer(this.hairTilesBuffer,0,this.hairTilesBuffer.size),e.cmdBuf.clearBuffer(this.hairTileSegmentsBuffer,0,te)}onViewportResize=(e,n)=>{this.bindingsCache.clear(),this.hairTilesBuffer&&this.hairTilesBuffer.destroy(),this.hairTileSegmentsBuffer&&this.hairTileSegmentsBuffer.destroy(),this.hairTilesBuffer=To(e,n),this.hairTileSegmentsBuffer=Eo(e,n)};cmdDrawHairToTiles(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a),this.cmdDispatchPerSegment(o,n),o.end(),n.reportRenderedStrandCount()}cmdDispatchPerSegment(e,n){let r=de(n.getRenderedStrandCount(),bt.workgroupSizeX),i=de(n.pointsPerStrand,bt.workgroupSizeY);e.dispatchWorkgroups(r,i,1)}createBindings=({device:e,globalUniforms:n,depthTexture:r},i)=>{let o=bt.bindings;return H(r),Z(t,i.name,e,this.pipeline,[n.createBindingDesc(o.renderUniforms),K(o.tilesBuffer,this.hairTilesBuffer),K(o.tileSegmentsBuffer,this.hairTileSegmentsBuffer),i.bindHairData(o.hairData),i.bindPointsPositions(o.hairPositions),i.bindTangents(o.hairTangents),{binding:o.depthTexture,resource:r}])}};var zu=`
+`;var Ln=class t{static NAME="HairTilesPass";pipeline;bindingsCache=new R;hairTilesBuffer=void 0;hairTileSegmentsBuffer=void 0;segmentCountPerTileBuffer=void 0;constructor(e){let n=e.createShaderModule({label:B(t),code:fa()});this.pipeline=e.createComputePipeline({label:F(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdClearBeforeRender(e){Xe(e.cmdBuf,this.hairTilesBuffer),Xe(e.cmdBuf,this.segmentCountPerTileBuffer),e.cmdBuf.clearBuffer(this.hairTileSegmentsBuffer,0,X)}onViewportResize=(e,n)=>{this.bindingsCache.clear(),this.hairTilesBuffer&&this.hairTilesBuffer.destroy(),this.hairTileSegmentsBuffer&&this.hairTileSegmentsBuffer.destroy(),this.segmentCountPerTileBuffer&&this.segmentCountPerTileBuffer.destroy(),this.hairTilesBuffer=la(e,n),this.hairTileSegmentsBuffer=No(e,n),this.segmentCountPerTileBuffer=ca(e,n)};cmdDrawHairToTiles(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a),this.cmdDispatchPerSegment(o,n),o.end(),n.reportRenderedStrandCount()}cmdDispatchPerSegment(e,n){let r=ae(n.getRenderedStrandCount(),Tt.workgroupSizeX),i=ae(n.pointsPerStrand,Tt.workgroupSizeY);e.dispatchWorkgroups(r,i,1)}createBindings=({device:e,globalUniforms:n,depthTexture:r},i)=>{let o=Tt.bindings;return $(r),Z(t,i.name,e,this.pipeline,[n.createBindingDesc(o.renderUniforms),L(o.tilesBuffer,this.hairTilesBuffer),L(o.tileSegmentsBuffer,this.hairTileSegmentsBuffer),L(o.segmentCountPerTileBuffer,this.segmentCountPerTileBuffer),i.bindHairData(o.hairData),i.bindPointsPositions(o.hairPositions),i.bindTangents(o.hairTangents),{binding:o.depthTexture,resource:r}])}};var lf=`
 fn _setRasterizerResult(viewportSize: vec2u, posPx: vec2u, color: vec4f) {
   if(
     posPx.x < 0 || posPx.x >= viewportSize.x ||
@@ -3966,17 +3979,13 @@ fn _setRasterizerResult(viewportSize: vec2u, posPx: vec2u, color: vec4f) {
   let idx = viewportSize.x * posPx.y + posPx.x;
   _hairRasterizerResults.data[idx] = color;
 }
-
-fn _getNextTileIdx() -> u32 {
-  return atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, 1u);
-}
-`,Cn=(t,e)=>`
+`,Un=(t,e)=>`
 
 struct HairRasterResult {
   // there is a limit of 8 storage buffers. We are reaching this limit right now.
   // So pack this counter 'somewhere'. I could raise a limit, but..
   // https://gpuweb.github.io/gpuweb/#gpusupportedlimits
-  tileQueueAtomicIdx: ${$e(e)},
+  tileQueueAtomicIdx: ${pe(e)},
   data: array<vec4f>,
 }
 
@@ -3988,17 +3997,18 @@ fn _getRasterizerResult(viewportSize: vec2u, posPx: vec2u) -> vec4f {
   return _hairRasterizerResults.data[idx];
 }
 
-${e=="read_write"?zu:""}
-`;function Qo(t,e){let i=e.width*e.height*q;return U.update("Hair FBO",xe(i)),t.createBuffer({label:"hair-rasterizer-result",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}var Vr={bindings:{renderUniforms:0,tilesBuffer:1,tileSegmentsBuffer:2,rasterizeResultBuffer:3}},Bn=Vr.bindings,ea=()=>`
+${e=="read_write"?lf:""}
+`;function da(t,e){let i=e.width*e.height*J;return z.update("Hair FBO",Se(i)),t.createBuffer({label:"hair-rasterizer-result",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}var qr={bindings:{renderUniforms:0,tilesBuffer:1,tileSegmentsBuffer:2,rasterizeResultBuffer:3,segmentCountPerTile:4}},Vt=qr.bindings,pa=()=>`
 
-${Re}
-${k}
-${vt}
+${Fe}
+${G}
+${Ue}
 
-${R.SHADER_SNIPPET(Bn.renderUniforms)}
-${ct(Bn.tilesBuffer,"read")}
-${ut(Bn.tileSegmentsBuffer,"read")}
-${Cn(Bn.rasterizeResultBuffer,"read")}
+${C.SHADER_SNIPPET(Vt.renderUniforms)}
+${yt(Vt.tilesBuffer,"read")}
+${mt(Vt.tileSegmentsBuffer,"read")}
+${Un(Vt.rasterizeResultBuffer,"read")}
+${Je(Vt.segmentCountPerTile,"read")}
 
 
 @vertex
@@ -4030,8 +4040,8 @@ fn main_fs(
   let tileXY = getHairTileXY_FromPx(fragPositionPx);
   let displayMode = getDisplayMode();
 
-  if (displayMode == DISPLAY_MODE_TILES) {
-    result.color = renderTileSegmentCount(viewportSizeU32, tileXY);
+  if (displayMode == DISPLAY_MODE_TILES || displayMode == DISPLAY_MODE_TILES_PPLL) {
+    result.color = renderTileSegmentCount(displayMode, viewportSizeU32, tileXY);
 
   } else {
     var color = vec4f(0.0, 0.0, 0.0, 1.0);
@@ -4063,6 +4073,7 @@ fn getDebugTileColor(tileXY: vec2u) -> vec4f {
 }
 
 fn renderTileSegmentCount(
+  displayMode: u32,
   viewportSize: vec2u,
   tileXY: vec2u
 ) -> vec4f {
@@ -4070,12 +4081,18 @@ fn renderTileSegmentCount(
 
   // output: segment count in each tile normalized by UI provided value
   let maxSegmentsCount = getDbgTileModeMaxSegments();
-  let segments = getSegmentCountInTiles(viewportSize, maxSegmentsCount, tileXY);
+  var segments = 0u;
+  if (displayMode == DISPLAY_MODE_TILES) {
+    segments = getSegmentCountInTiles_Count(viewportSize, maxSegmentsCount, tileXY);
+  } else {
+    segments = getSegmentCountInTiles_PPLL(viewportSize, maxSegmentsCount, tileXY);
+  }
+  
   color.r = f32(segments) / f32(maxSegmentsCount);
   color.g = 1.0 - color.r;
 
   // dbg: tile bounds
-  // let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, 0u);
+  // let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, 0u);
   // color.r = f32((tileIdx * 17) % 33) / 33.0;
   // color.a = 1.0;
   
@@ -4085,7 +4102,7 @@ fn renderTileSegmentCount(
   return color;
 }
 
-fn getSegmentCountInTiles(
+fn getSegmentCountInTiles_PPLL(
   viewportSize: vec2u,
   maxSegmentsCount: u32,
   tileXY: vec2u
@@ -4110,9 +4127,18 @@ fn getSegmentCountInTiles(
   return count;
 }
 
-`;var On=class t{static NAME="HairCombinePass";pipeline;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:ea()});this.pipeline=e.createRenderPipeline({label:O(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n,blend:{color:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha",operation:"add"},alpha:{srcFactor:"one",dstFactor:"one",operation:"add"}}}]},primitive:{topology:"triangle-list"}})}onViewportResize=()=>this.bindingsCache.clear();cmdCombineRasterResults(e){let{cmdBuf:n,profiler:r,hdrRenderTexture:i,depthTexture:o}=e;H(i);let a=n.beginRenderPass({label:t.NAME,colorAttachments:[Q(i,f.clearColor,"load")],timestampWrites:r?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings(o.label,()=>this.createBindings(e));a.setBindGroup(0,s),a.setPipeline(this.pipeline),Ve(a),a.end()}createBindings=e=>{let{device:n,globalUniforms:r,hairTilesBuffer:i,hairTileSegmentsBuffer:o,hairRasterizerResultsBuffer:a}=e,s=Vr.bindings;return se(t,n,this.pipeline,[r.createBindingDesc(s.renderUniforms),K(s.tilesBuffer,i),K(s.tileSegmentsBuffer,o),K(s.rasterizeResultBuffer,a)])}};var Fn=f.hairRender,ta=Fn.avgFragmentsPerSlice*Fn.slicesPerPixel*Fn.tileSize*Fn.tileSize,na=(t,e)=>`
+fn getSegmentCountInTiles_Count(
+  viewportSize: vec2u,
+  maxSegmentsCount: u32,
+  tileXY: vec2u
+) -> u32 {
+  let tileIdx = getHairTileIdx(viewportSize, tileXY);
+  return _hairSegmentCountPerTile[tileIdx];
+}
 
-const SLICE_DATA_PER_PROCESSOR_COUNT = ${ta}u;
+`;var kn=class t{static NAME="HairCombinePass";pipeline;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:pa()});this.pipeline=e.createRenderPipeline({label:F(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n,blend:{color:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha",operation:"add"},alpha:{srcFactor:"one",dstFactor:"one",operation:"add"}}}]},primitive:{topology:"triangle-list"}})}onViewportResize=()=>this.bindingsCache.clear();cmdCombineRasterResults(e){let{cmdBuf:n,profiler:r,hdrRenderTexture:i,depthTexture:o}=e;$(i);let a=n.beginRenderPass({label:t.NAME,colorAttachments:[ee(i,u.clearColor,"load")],timestampWrites:r?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings(o.label,()=>this.createBindings(e));a.setBindGroup(0,s),a.setPipeline(this.pipeline),We(a),a.end()}createBindings=e=>{let{device:n,globalUniforms:r,hairTilesBuffer:i,hairTileSegmentsBuffer:o,hairRasterizerResultsBuffer:a,hairSegmentCountPerTileBuffer:s}=e,l=qr.bindings;return le(t,n,this.pipeline,[r.createBindingDesc(l.renderUniforms),L(l.tilesBuffer,i),L(l.tileSegmentsBuffer,o),L(l.rasterizeResultBuffer,a),L(l.segmentCountPerTile,s)])}};var zn=u.hairRender,ma=zn.avgFragmentsPerSlice*zn.slicesPerPixel*zn.tileSize*zn.tileSize,ha=(t,e)=>`
+
+const SLICE_DATA_PER_PROCESSOR_COUNT = ${ma}u;
 
 struct SliceData {
   /** [encodedColor.rg, encodedColor.ba, nextSlicePtr, 0u] */
@@ -4159,21 +4185,21 @@ fn _getSliceData(
   (*data).value = _hairSliceData[offset].value;
   return true;
 }
-`;function ra(t){let{processorCount:e}=f.hairRender,n=ta*e,r=4*te,i=Math.max(n*r,Se);return U.update("Slices data",xe(i)),t.createBuffer({label:"hair-slices-data",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}var ia=()=>`
+`;function ga(t){let{processorCount:e}=u.hairRender,n=ma*e,r=4*X,i=Math.max(n*r,ve);return z.update("Slices data",Se(i)),t.createBuffer({label:"hair-slices-data",size:i,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST})}var _a=()=>`
 
 fn processHairSegment(
-  p: FineRasterParams,
+  params: FineRasterParams,
   tileBoundsPx: vec4u, tileDepth: vec2f,
   sliceDataOffset: u32,
   strandIdx: u32, segmentIdx: u32
 ) -> u32 {
   var writtenSliceDataCount: u32 = 0u;
-  let segmentCount = p.pointsPerStrand - 1;
+  let segmentCount = params.pointsPerStrand - 1;
 
   let projParams = ProjectHairParams(
-    p.pointsPerStrand,
-    p.viewportSize,
-    p.fiberRadius,
+    params.pointsPerStrand,
+    params.viewportSize,
+    params.fiberRadius,
   );
   let projSegm = projectHairSegment(
     projParams,
@@ -4230,11 +4256,17 @@ fn processHairSegment(
     let interpW = interpolateHairQuad(projSegm, posPx);
     let t = interpW.y; // 0 .. 1
     let hairDepth: f32 = interpolateHairF32(interpW, projSegm.depthsProj);
-    // TODO [IGNORE] instead of linear, have quadratic interp? It makes strands "fatter", so user would provide lower fiber radius. Which is good for us.
-    let alpha = 1.0 - abs(interpW.x * 2. - 1.); // interpW.x is in 0..1. Turn it so strand middle is 1.0 and then 0.0 at edges.
+    
+    // interpW.x is in 0..1. Transform it so strand middle is 1.0 and then 0.0 at edges.
+    var alpha = 1.0 - abs(interpW.x * 2. - 1.);
+    if (${u.hairRender.alphaQuadratic}) { // see CONFIG docs
+      alpha = sqrt(alpha);
+    }
+    // optimization: -0.5ms with x1.1 'fatter' strands. Fills the pixel/tiles faster
+    alpha = saturate(alpha * ${u.hairRender.alphaMultipler});
 
     // sample depth buffer, depth test with GL_LESS
-    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
+    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(params.viewportSize.y - y)); // wgpu's naga requiers vec2i..
     let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
     if (hairDepth >= depthBufferValue) {
       continue;
@@ -4243,14 +4275,16 @@ fn processHairSegment(
     // calculate final color
     let tFullStrand = (f32(segmentIdx) + t) / f32(segmentCount);
     // let color = vec4f(1.0 - t, t, 0.0, alpha); // red at root, green at tip
+    // Either shade here and store RGBA per slice or at least
+    // (strandIdx: u32, tFullStrand: f16, alpha: f16).
+    // Either way it's u32 for nextSlicePtr and 2*u32 for payload.
     var color = _sampleShading(strandIdx, tFullStrand);
     color.a = color.a * alpha;
-    let sliceIdx = getSliceIdx(tileDepth, hairDepth);
-
+    
     // insert into per-slice linked list
-    // WARNING: Both lines below can be slow!
-    let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-    _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
+    let sliceIdx = getSliceIdx(tileDepth, hairDepth);
+    let previousPtr: u32 = _setSlicesHeadPtr(params.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
+    _setSliceData(params.processorId, nextSliceDataPtr, color, previousPtr);
     writtenSliceDataCount += 1u;
   }
   CY0 += CC0.B;
@@ -4271,7 +4305,7 @@ fn getSliceIdx(
   return getDepthBin(SLICES_PER_PIXEL, tileDepth, pixelDepth);
 }
 
-`;var oa=()=>`
+`;var xa=()=>`
 
 fn reduceHairSlices(
   processorId: u32,
@@ -4296,7 +4330,7 @@ fn reduceHairSlices(
     var sliceCount = select(0u, u32(finalColor.r * f32(dbgSlicesModeMaxSlices)), isDbgSliceCnt); // debug value
     
     // START: ITERATE SLICES (front to back)
-    // TODO [NOW] is it faster if we get start/end values from 'processHairSegment'? ATM it's loop on consts, so might be quite fast. And only 4 iters with current settings..
+    // We know the start/end slices from 'processHairSegment'. But iterating with consts is -0.4ms faster
     var s: u32 = 0u;
     for (; s < SLICES_PER_PIXEL; s += 1u) {
       if (isPixelDone(finalColor) && !isDbgSliceCnt) {
@@ -4367,37 +4401,65 @@ fn reduceHairSlices(
 fn isPixelDone (finalColor: vec4f) -> bool {
   return finalColor.a >= ALPHA_CUTOFF;
 }
-`;var Nt={workgroupSizeX:f.hairRender.finePassWorkgroupSizeX,bindings:{renderUniforms:0,hairData:1,hairPositions:2,tilesBuffer:3,tileSegmentsBuffer:4,hairSlicesHeads:5,hairSlicesData:6,rasterizerResult:7,depthTexture:8,hairShading:9,hairTangents:10}},Vu=Nt,Te=Nt.bindings,aa=()=>`
+`;var Vn=(t,e)=>`
 
-const SLICES_PER_PIXEL: u32 = ${f.hairRender.slicesPerPixel}u;
+struct TilesList {
+  drawnTiles: ${pe(e)},
+  // processedTiles: u32, // TODO [NO] move here instead of hairTileSegmentsBuffer? Or is it better if fine pass stays read-only there?
+  data: array<u32>, // tileIds
+}
+
+@group(0) @binding(${t})
+var<storage, ${e}> _hairTileData: TilesList;
+
+${e=="read_write"?"":cf}
+`,cf=`
+  fn _getNextTileIdx(tileCount: u32) -> u32 {
+    // we could do 'atomicAdd(_, 1)' on each thread. But which thread in wkgrp
+    // receives the smallest value? It is the one that decides if we are done.
+    // 'atomicAdd(_, 1)' does not give us guarantee inside wkgrp. And clever ways
+    // to find this are more complicated then the following code.
+    if (_local_invocation_index == 0u) {
+      let wkgrpThreadCnt = ${u.hairRender.finePassWorkgroupSizeX}u;
+      _tileStartOffset = atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, wkgrpThreadCnt);
+      _isDone = _tileStartOffset >= tileCount;
+    }
+  
+    // workgroupUniformLoad() has implicit barrier
+    let tileStartOffset = workgroupUniformLoad(&_tileStartOffset);
+    let idx =  tileStartOffset + _local_invocation_index;
+    return _hairTileData.data[idx];
+  }
+`;function Sa(t,e){let n=Be(e),i=4+n.width*n.height,o=u.isTest?GPUBufferUsage.COPY_SRC:0;return t.createBuffer({label:"hair-tile-list",size:i*X,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|o})}var Ht={workgroupSizeX:u.hairRender.finePassWorkgroupSizeX,bindings:{renderUniforms:0,hairData:1,hairPositions:2,tilesBuffer:3,tileSegmentsBuffer:4,hairSlicesHeads:5,hairSlicesData:6,rasterizerResult:7,depthTexture:8,hairShading:9,hairTangents:10,tileList:11}},uf=Ht,ye=Ht.bindings,va=()=>`
+
+const SLICES_PER_PIXEL: u32 = ${u.hairRender.slicesPerPixel}u;
 const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
 // Stop processing slices once we reach opaque color
 // TBH does not help much, it's not where the actuall cost is. Still..
 const ALPHA_CUTOFF = 0.999;
 
-${me}
-${k}
-${vt}
-${Dn}
+${he}
+${G}
+${Ue}
+${Nn}
 
-${R.SHADER_SNIPPET(Te.renderUniforms)}
-${be(Te.hairData)}
-${Oe(Te.hairPositions)}
-${Fe(Te.hairTangents)}
-${ct(Te.tilesBuffer,"read")}
-${ut(Te.tileSegmentsBuffer,"read")}
-${Cn(Te.rasterizerResult,"read_write")}
-${Gi(Te.hairSlicesHeads,"read_write")}
-${na(Te.hairSlicesData,"read_write")}
-${St(Te.hairShading,"read")}
+${C.SHADER_SNIPPET(ye.renderUniforms)}
+${Pe(ye.hairData)}
+${Ne(ye.hairPositions)}
+${Le(ye.hairTangents)}
+${yt(ye.tilesBuffer,"read")}
+${mt(ye.tileSegmentsBuffer,"read")}
+${Un(ye.rasterizerResult,"read_write")}
+${Xi(ye.hairSlicesHeads,"read_write")}
+${ha(ye.hairSlicesData,"read_write")}
+${Pt(ye.hairShading,"read")}
+${Vn(ye.tileList,"read")}
 
-@group(0) @binding(${Te.depthTexture})
+@group(0) @binding(${ye.depthTexture})
 var _depthTexture: texture_depth_2d;
 
 
 struct FineRasterParams {
-  viewModelMat: mat4x4f,
-  projMat: mat4x4f,
   // START: vec4u
   strandsCount: u32, // u32's first
   pointsPerStrand: u32,
@@ -4410,24 +4472,27 @@ struct FineRasterParams {
 }
 
 // Extra code to make this file manageable
-${ia()}
-${oa()}
+${_a()}
+${xa()}
 
+var<private> _local_invocation_index: u32;
+var<workgroup> _tileStartOffset: u32;
+var<workgroup> _isDone: bool;
 
 @compute
-@workgroup_size(${Vu.workgroupSizeX}, 1, 1)
+@workgroup_size(${uf.workgroupSizeX}, 1, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
+  @builtin(local_invocation_index) local_invocation_index: u32, // threadId inside workgroup
 ) {
   let processorId = global_id.x;
   let viewportSize: vec2f = _uniforms.viewport.xy;
   let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
+  _local_invocation_index = local_invocation_index;
 
   let params = FineRasterParams(
-    _uniforms.modelViewMat,
-    _uniforms.projMatrix,
     strandsCount,
     pointsPerStrand,
     vec2u(viewportSize),
@@ -4439,16 +4504,23 @@ fn main(
 
   // clear memory before starting work
   _clearSlicesHeadPtrs(processorId);
-  
+
+  // tile count based on screen size. Used to check if tile is valid
   let tileCount2d = getTileCount(params.viewportSizeU32);
   let tileCount = tileCount2d.x * tileCount2d.y;
-  var tileIdx = _getNextTileIdx();
+  // size of task queue
+  let tilesToProcess = _hairTileData.drawnTiles;
+  var tileIdx = _getNextTileIdx(tilesToProcess);
 
-  while (tileIdx < tileCount) {
+  while (!workgroupUniformLoad(&_isDone)) {
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
     var tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
     
-    for (var depthBin = 0u; depthBin < TILE_DEPTH_BINS_COUNT; depthBin += 1u) {
+    for (
+      var depthBin = 0u;
+      depthBin < TILE_DEPTH_BINS_COUNT && tileIdx < tileCount;
+      depthBin += 1u
+    ) {
       let allPixelsDone = processTile(
         params,
         maxDrawnSegments,
@@ -4456,26 +4528,29 @@ fn main(
         depthBin,
         &tileBoundsPx
       );
-      if (allPixelsDone) { break; }
+      if (allPixelsDone) { // early out for whole tile
+        // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
+        break;
+      }
     }
 
     // move to next tile
-    tileIdx = _getNextTileIdx();
+    tileIdx = _getNextTileIdx(tilesToProcess);
   }
 }
 
 fn processTile(
-  p: FineRasterParams,
+  params: FineRasterParams,
   maxDrawnSegments: u32,
   tileXY: vec2u,
   depthBin: u32,
   tileBoundsPx: ptr<function,vec4u>
 ) -> bool {
-  let MAX_PROCESSED_SEGMENTS = p.strandsCount * p.pointsPerStrand; // just in case
+  let MAX_PROCESSED_SEGMENTS = params.strandsCount * params.pointsPerStrand; // just in case
   
-  let tileDepth = _getTileDepth(p.viewportSizeU32, tileXY, depthBin);
+  let tileDepth = _getTileDepth(params.viewportSizeU32, tileXY, depthBin);
   if (tileDepth.y == 0.0) { return false; } // no depth written means empty tile
-  var segmentPtr = _getTileSegmentPtr(p.viewportSizeU32, tileXY, depthBin);
+  var segmentPtr = _getTileSegmentPtr(params.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var processedSegmentCnt = 0u;
@@ -4486,7 +4561,7 @@ fn processTile(
   while (processedSegmentCnt < MAX_PROCESSED_SEGMENTS){
     if (_getTileSegment(maxDrawnSegments, segmentPtr, &segmentData)) {
       let writtenSliceDataCount = processHairSegment(
-        p,
+        params,
         (*tileBoundsPx), tileDepth,
         sliceDataOffset,
         segmentData.x, segmentData.y // strandIdx, segmentIdx
@@ -4512,9 +4587,9 @@ fn processTile(
   // this also clears the current processor state for next tile
   // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
   let allPixelsDone = reduceHairSlices(
-    p.processorId,
-    p.viewportSizeU32,
-    p.dbgSlicesModeMaxSlices,
+    params.processorId,
+    params.viewportSizeU32,
+    params.dbgSlicesModeMaxSlices,
     tileBoundsPx
   );
 
@@ -4552,7 +4627,7 @@ fn debugColorPointInTile(tileBoundsPx: vec4u, pos: vec2f, color: vec4f) {
   }
 }
 
-`;var Gn=class t{static NAME="HairFinePass";pipeline;bindingsCache=new C;hairSlicesHeadsBuffer;hairSlicesDataBuffer;hairRasterizerResultsBuffer=void 0;constructor(e){let n=e.createShaderModule({label:B(t),code:aa()});this.pipeline=e.createComputePipeline({label:O(t),layout:"auto",compute:{module:n,entryPoint:"main"}}),this.hairSlicesHeadsBuffer=Ni(e),this.hairSlicesDataBuffer=ra(e)}clearFramebuffer(e){this.hairSlicesHeadsBuffer&&e.cmdBuf.clearBuffer(this.hairSlicesHeadsBuffer,0,this.hairSlicesHeadsBuffer.size),e.cmdBuf.clearBuffer(this.hairRasterizerResultsBuffer,0,this.hairRasterizerResultsBuffer.size)}onViewportResize=(e,n)=>{this.bindingsCache.clear(),this.hairRasterizerResultsBuffer&&this.hairRasterizerResultsBuffer.destroy(),this.hairRasterizerResultsBuffer=Qo(e,n)};cmdRasterizeSlicesHair(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=de(f.hairRender.processorCount,Nt.workgroupSizeX);o.dispatchWorkgroups(s,1,1),o.end()}createBindings=(e,n)=>{let{device:r,globalUniforms:i,depthTexture:o,hairTilesBuffer:a,hairTileSegmentsBuffer:s}=e,l=Nt.bindings;H(o);let c=[i.createBindingDesc(l.renderUniforms),K(l.tilesBuffer,a),K(l.tileSegmentsBuffer,s),K(l.hairSlicesData,this.hairSlicesDataBuffer),K(l.rasterizerResult,this.hairRasterizerResultsBuffer),n.bindHairData(l.hairData),n.bindPointsPositions(l.hairPositions),n.bindTangents(l.hairTangents),n.bindShading(l.hairShading),{binding:l.depthTexture,resource:o}];return this.hairSlicesHeadsBuffer&&c.push(K(l.hairSlicesHeads,this.hairSlicesHeadsBuffer)),Z(t,n.name,r,this.pipeline,c)}};var sa=`
+`;var Hn=class t{static NAME="HairFinePass";pipeline;bindingsCache=new R;hairSlicesHeadsBuffer;hairSlicesDataBuffer;hairRasterizerResultsBuffer=void 0;constructor(e){let n=e.createShaderModule({label:B(t),code:va()});this.pipeline=e.createComputePipeline({label:F(t),layout:"auto",compute:{module:n,entryPoint:"main"}}),this.hairSlicesHeadsBuffer=qi(e),this.hairSlicesDataBuffer=ga(e)}cmdClearBeforeRender(e){this.hairSlicesHeadsBuffer&&Xe(e.cmdBuf,this.hairSlicesHeadsBuffer),Xe(e.cmdBuf,this.hairRasterizerResultsBuffer)}onViewportResize=(e,n)=>{this.bindingsCache.clear(),this.hairRasterizerResultsBuffer&&this.hairRasterizerResultsBuffer.destroy(),this.hairRasterizerResultsBuffer=da(e,n)};cmdRasterizeSlicesHair(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=ae(u.hairRender.processorCount,Ht.workgroupSizeX);o.dispatchWorkgroups(s,1,1),o.end()}createBindings=(e,n)=>{let{device:r,globalUniforms:i,depthTexture:o,hairTilesBuffer:a,hairTileSegmentsBuffer:s,hairTileListBuffer:l}=e,c=Ht.bindings;$(o);let d=[i.createBindingDesc(c.renderUniforms),L(c.tilesBuffer,a),L(c.tileSegmentsBuffer,s),L(c.hairSlicesData,this.hairSlicesDataBuffer),L(c.rasterizerResult,this.hairRasterizerResultsBuffer),L(c.tileList,l),n.bindHairData(c.hairData),n.bindPointsPositions(c.hairPositions),n.bindTangents(c.hairTangents),n.bindShading(c.hairShading),{binding:c.depthTexture,resource:o}];return this.hairSlicesHeadsBuffer&&d.push(L(c.hairSlicesHeads,this.hairSlicesHeadsBuffer)),Z(t,n.name,r,this.pipeline,d)}};var ba=`
 
 struct MarschnerParams {
   // https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=44
@@ -4707,29 +4782,29 @@ fn azimuthalScattering_TRT(
   return f_TRT * T_TRT * D_TRT; // like slide 23
 }
 
-`;var wt={workgroupSizeX:1,workgroupSizeY:f.hairRender.shadingPoints,bindings:{renderUniforms:0,hairData:1,hairPositions:2,hairTangents:3,hairShading:4,shadowMapTexture:5,shadowMapSampler:6,aoTexture:7,depthTexture:8}},la=wt,ke=wt.bindings,ca=()=>`
+`;var Et={workgroupSizeX:1,workgroupSizeY:u.hairRender.shadingPoints,bindings:{renderUniforms:0,hairData:1,hairPositions:2,hairTangents:3,hairShading:4,shadowMapTexture:5,shadowMapSampler:6,aoTexture:7,depthTexture:8}},wa=Et,je=Et.bindings,Pa=()=>`
 
-${me}
-${k}
-${Nr}
-${sa}
-${Mn}
-${Pn({bindingTexture:ke.shadowMapTexture,bindingSampler:ke.shadowMapSampler})}
+${he}
+${G}
+${Wr}
+${ba}
+${On}
+${Rn({bindingTexture:je.shadowMapTexture,bindingSampler:je.shadowMapSampler})}
 
-${R.SHADER_SNIPPET(ke.renderUniforms)}
-${be(ke.hairData)}
-${Oe(ke.hairPositions)}
-${Fe(ke.hairTangents)}
-${St(ke.hairShading,"read_write")}
-${_t(ke.aoTexture)}
-${gt}
+${C.SHADER_SNIPPET(je.renderUniforms)}
+${Pe(je.hairData)}
+${Ne(je.hairPositions)}
+${Le(je.hairTangents)}
+${Pt(je.hairShading,"read_write")}
+${bt(je.aoTexture)}
+${vt}
 
-@group(0) @binding(${ke.depthTexture})
+@group(0) @binding(${je.depthTexture})
 var _depthTexture: texture_depth_2d;
 
 
 @compute
-@workgroup_size(${la.workgroupSizeX}, ${la.workgroupSizeY}, 1)
+@workgroup_size(${wa.workgroupSizeX}, ${wa.workgroupSizeY}, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
 ) {
@@ -4951,9 +5026,9 @@ fn getAttenuation(
   // baseColor = vec3f(attenuation); // dbg
 }
 
-`;var Nn=class t{static NAME="HairShadingPass";pipeline;bindingsCache=new C;constructor(e){let n=e.createShaderModule({label:B(t),code:ca()});this.pipeline=e.createComputePipeline({label:O(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}onViewportResize=()=>{this.bindingsCache.clear()};cmdComputeShadingPoints(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=de(n.strandsCount,wt.workgroupSizeX),l=de(f.hairRender.shadingPoints,wt.workgroupSizeY);o.dispatchWorkgroups(s,l,1),o.end()}createBindings=(e,n)=>{let{device:r,globalUniforms:i,shadowDepthTexture:o,shadowMapSampler:a,depthTexture:s,aoTexture:l}=e,c=wt.bindings;return H(s),Z(t,n.name,r,this.pipeline,[i.createBindingDesc(c.renderUniforms),n.bindHairData(c.hairData),n.bindPointsPositions(c.hairPositions),n.bindTangents(c.hairTangents),n.bindShading(c.hairShading),{binding:c.shadowMapTexture,resource:o},{binding:c.shadowMapSampler,resource:a},{binding:c.aoTexture,resource:l},{binding:c.depthTexture,resource:s}])}};var kr={bindings:{renderUniforms:0}},ku=kr.bindings,ua=()=>`
+`;var $n=class t{static NAME="HairShadingPass";pipeline;bindingsCache=new R;constructor(e){let n=e.createShaderModule({label:B(t),code:Pa()});this.pipeline=e.createComputePipeline({label:F(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}onViewportResize=()=>{this.bindingsCache.clear()};cmdComputeShadingPoints(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=ae(n.strandsCount,Et.workgroupSizeX),l=ae(u.hairRender.shadingPoints,Et.workgroupSizeY);o.dispatchWorkgroups(s,l,1),o.end()}createBindings=(e,n)=>{let{device:r,globalUniforms:i,shadowDepthTexture:o,shadowMapSampler:a,depthTexture:s,aoTexture:l}=e,c=Et.bindings;return $(s),Z(t,n.name,r,this.pipeline,[i.createBindingDesc(c.renderUniforms),n.bindHairData(c.hairData),n.bindPointsPositions(c.hairPositions),n.bindTangents(c.hairTangents),n.bindShading(c.hairShading),{binding:c.shadowMapTexture,resource:o},{binding:c.shadowMapSampler,resource:a},{binding:c.aoTexture,resource:l},{binding:c.depthTexture,resource:s}])}};var Kr={bindings:{renderUniforms:0}},ff=Kr.bindings,ya=()=>`
 
-${R.SHADER_SNIPPET(ku.renderUniforms)}
+${C.SHADER_SNIPPET(ff.renderUniforms)}
 
 
 @vertex
@@ -4969,16 +5044,16 @@ fn main_vs(
 fn main_fs() -> @location(0) vec4<f32> {
   return vec4(0.0);
 }
-`;var $r={bindings:{renderUniforms:0,hairPositions:1,hairTangents:2}},Hr=$r.bindings,fa=()=>`
+`;var Jr={bindings:{renderUniforms:0,hairPositions:1,hairTangents:2}},Zr=Jr.bindings,Ta=()=>`
 
-${me}
-${Ce}
-${k}
-${An}
+${he}
+${Ge}
+${G}
+${Gn}
 
-${R.SHADER_SNIPPET(Hr.renderUniforms)}
-${Oe(Hr.hairPositions)}
-${Fe(Hr.hairTangents)}
+${C.SHADER_SNIPPET(Zr.renderUniforms)}
+${Ne(Zr.hairPositions)}
+${Le(Zr.hairTangents)}
 
 
 @vertex
@@ -5001,12 +5076,12 @@ fn main_vs(
 fn main_fs() -> @location(0) vec4<f32> {
   return vec4(0.0);
 }
-`;var Ln=class t{static NAME="ShadowMapPass";pipelineMeshes;pipelineHair;bindingsCache=new C;shadowMapSampler;shadowDepthTexture;shadowDepthTextureView;constructor(e){this.shadowMapSampler=zo(e);let n=e.createShaderModule({label:B(t),code:ua()});this.pipelineMeshes=e.createRenderPipeline({label:O(t),layout:"auto",vertex:{module:n,entryPoint:"main_vs",buffers:[Gr]},fragment:{module:n,entryPoint:"main_fs",targets:[]},primitive:{...pt,cullMode:"none"},depthStencil:{...mt,format:f.shadows.depthFormat}});let r=e.createShaderModule({label:B(t),code:fa()}),i=Ye.createPipelineDesc(r);this.pipelineHair=e.createRenderPipeline(i);let o=f.shadows;this.shadowDepthTexture=e.createTexture({label:"shadowmap-depth-texture",size:[o.textureSize,o.textureSize,1],format:o.depthFormat,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING}),this.shadowDepthTextureView=this.shadowDepthTexture.createView()}cmdUpdateShadowMap(e){let{cmdBuf:n,profiler:r,shadowDepthTexture:i,scene:o}=e,a=n.beginRenderPass({label:t.NAME,colorAttachments:[],depthStencilAttachment:ht(i,"clear"),timestampWrites:r?.createScopeGpu(t.NAME)});a.setPipeline(this.pipelineMeshes);let s=this.bindingsCache.getBindings("meshes",()=>this.createBindingsMeshes(e));a.setBindGroup(0,s);for(let c of o.objects)this.renderMesh(a,c);let l=o.hairObject;a.setPipeline(this.pipelineHair),s=this.bindingsCache.getBindings(`hair-${l.name}`,()=>this.createBindingsHair(e,l)),a.setBindGroup(0,s),Ye.cmdRenderHair(a,l),a.end()}renderMesh(e,n){if(n.isColliderPreview)return;e.setVertexBuffer(0,n.positionsBuffer),e.setIndexBuffer(n.indexBuffer,"uint32");let r=n.triangleCount*Ae;e.drawIndexed(r,1,0,0,0)}createBindingsMeshes=({device:e,globalUniforms:n})=>{let r=kr.bindings;return se(t,e,this.pipelineMeshes,[n.createBindingDesc(r.renderUniforms)])};createBindingsHair=({device:e,globalUniforms:n},r)=>{let i=$r.bindings;return Z(Ye,r.name,e,this.pipelineHair,[n.createBindingDesc(i.renderUniforms),r.bindPointsPositions(i.hairPositions),r.bindTangents(i.hairTangents)])}};var Wr=f.camera,Wu=2*Math.tan(Ie(Wr.projection.fovDgr)*.5),da=`
+`;var Wn=class t{static NAME="ShadowMapPass";pipelineMeshes;pipelineHair;bindingsCache=new R;shadowMapSampler;shadowDepthTexture;shadowDepthTextureView;constructor(e){this.shadowMapSampler=Zo(e);let n=e.createShaderModule({label:B(t),code:ya()});this.pipelineMeshes=e.createRenderPipeline({label:F(t),layout:"auto",vertex:{module:n,entryPoint:"main_vs",buffers:[$r]},fragment:{module:n,entryPoint:"main_fs",targets:[]},primitive:{..._t,cullMode:"none"},depthStencil:{...xt,format:u.shadows.depthFormat}});let r=e.createShaderModule({label:B(t),code:Ta()}),i=Ze.createPipelineDesc(r);this.pipelineHair=e.createRenderPipeline(i);let o=u.shadows;this.shadowDepthTexture=e.createTexture({label:"shadowmap-depth-texture",size:[o.textureSize,o.textureSize,1],format:o.depthFormat,usage:GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING}),this.shadowDepthTextureView=this.shadowDepthTexture.createView()}cmdUpdateShadowMap(e){let{cmdBuf:n,profiler:r,shadowDepthTexture:i,scene:o}=e,a=n.beginRenderPass({label:t.NAME,colorAttachments:[],depthStencilAttachment:St(i,"clear"),timestampWrites:r?.createScopeGpu(t.NAME)});a.setPipeline(this.pipelineMeshes);let s=this.bindingsCache.getBindings("meshes",()=>this.createBindingsMeshes(e));a.setBindGroup(0,s);for(let c of o.objects)this.renderMesh(a,c);let l=o.hairObject;a.setPipeline(this.pipelineHair),s=this.bindingsCache.getBindings(`hair-${l.name}`,()=>this.createBindingsHair(e,l)),a.setBindGroup(0,s),Ze.cmdRenderHair(a,l),a.end()}renderMesh(e,n){if(n.isColliderPreview)return;e.setVertexBuffer(0,n.positionsBuffer),e.setIndexBuffer(n.indexBuffer,"uint32");let r=n.triangleCount*Re;e.drawIndexed(r,1,0,0,0)}createBindingsMeshes=({device:e,globalUniforms:n})=>{let r=Kr.bindings;return le(t,e,this.pipelineMeshes,[n.createBindingDesc(r.renderUniforms)])};createBindingsHair=({device:e,globalUniforms:n},r)=>{let i=Jr.bindings;return Z(Ze,r.name,e,this.pipelineHair,[n.createBindingDesc(i.renderUniforms),r.bindPointsPositions(i.hairPositions),r.bindTangents(i.hairTangents)])}};var Qr=u.camera,mf=2*Math.tan(Ae(Qr.projection.fovDgr)*.5),Ea=`
 
-const Z_FAR: f32 = ${Wr.projection.far};
-const Z_NEAR: f32 = ${Wr.projection.near};
+const Z_FAR: f32 = ${Qr.projection.far};
+const Z_NEAR: f32 = ${Qr.projection.near};
 // used to calculate distance from camera to far plane in pixel-ish space
-// const VIEWPORT_HEIGHT_OVER_DISTANCE_TO_CAMERA: f32 =  ${Wu};
+// const VIEWPORT_HEIGHT_OVER_DISTANCE_TO_CAMERA: f32 =  ${mf};
 
 fn reprojectPositionToVS(
   projMatrixInv: mat4x4f,
@@ -5142,20 +5217,20 @@ fn gtaoFalloff(dist: f32, falloffStart2: f32, falloffEnd2: f32) -> f32 {
   );
 }
 
-`;var Yr={bindings:{renderUniforms:0,depthTexture:1,normalsTexture:2}},jr=Yr.bindings,pa=()=>`
+`;var ti={bindings:{renderUniforms:0,depthTexture:1,normalsTexture:2}},ei=ti.bindings,Ma=()=>`
 
-${Re}
-${gt}
-${k}
-${Ce}
-${da}
+${Fe}
+${vt}
+${G}
+${Ge}
+${Ea}
 
-${R.SHADER_SNIPPET(jr.renderUniforms)}
+${C.SHADER_SNIPPET(ei.renderUniforms)}
 
-@group(0) @binding(${jr.depthTexture})
+@group(0) @binding(${ei.depthTexture})
 var _depthTexture: texture_depth_2d;
 
-@group(0) @binding(${jr.normalsTexture})
+@group(0) @binding(${ei.normalsTexture})
 var _normalsTexture: texture_2d<f32>;
 
 
@@ -5166,7 +5241,7 @@ fn main_vs(
   return getFullscreenTrianglePosition(VertexIndex);
 }
 
-const AO_TEXTURE_SCALE = ${f.ao.textureSizeMul};
+const AO_TEXTURE_SCALE = ${u.ao.textureSizeMul};
 
 @fragment
 fn main_fs(
@@ -5201,10 +5276,10 @@ fn main_fs(
   );
 }
 
-`;var Un=class t{static NAME="AoPass";pipeline;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:pa()});this.pipeline=e.createRenderPipeline({label:O(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{topology:"triangle-list"}})}onViewportResize=()=>this.bindingsCache.clear();cmdCalcAo(e){let{cmdBuf:n,profiler:r,aoTexture:i}=e;H(i);let o=n.beginRenderPass({label:t.NAME,colorAttachments:[Q(i,f.clearAo,"clear")],timestampWrites:r?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings("-",()=>this.createBindings(e));o.setBindGroup(0,a),o.setPipeline(this.pipeline),Ve(o),o.end()}createBindings=e=>{let{device:n,globalUniforms:r,hdrRenderTexture:i,normalsTexture:o,depthTexture:a}=e,s=Yr.bindings;return H(i),se(t,n,this.pipeline,[r.createBindingDesc(s.renderUniforms),{binding:s.depthTexture,resource:a},{binding:s.normalsTexture,resource:o}])}};var ju=M.create(),zn=X.create(),Ge=class t{static SHADER_SNIPPET=e=>`
+`;var jn=class t{static NAME="AoPass";pipeline;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Ma()});this.pipeline=e.createRenderPipeline({label:F(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs",buffers:[]},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{topology:"triangle-list"}})}onViewportResize=()=>this.bindingsCache.clear();cmdCalcAo(e){let{cmdBuf:n,profiler:r,aoTexture:i}=e;$(i);let o=n.beginRenderPass({label:t.NAME,colorAttachments:[ee(i,u.clearAo,"clear")],timestampWrites:r?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings("-",()=>this.createBindings(e));o.setBindGroup(0,a),o.setPipeline(this.pipeline),We(o),o.end()}createBindings=e=>{let{device:n,globalUniforms:r,hdrRenderTexture:i,normalsTexture:o,depthTexture:a}=e,s=ti.bindings;return $(i),le(t,n,this.pipeline,[r.createBindingDesc(s.renderUniforms),{binding:s.depthTexture,resource:a},{binding:s.normalsTexture,resource:o}])}};var hf=M.create(),Yn=K.create(),ke=class t{static SHADER_SNIPPET=e=>`
 
-    ${ae.SDF_DATA_SNIPPET}
-    ${De.GRID_DATA_SNIPPET}
+    ${se.SDF_DATA_SNIPPET}
+    ${Oe.GRID_DATA_SNIPPET}
 
     struct SimulationUniforms {
       modelMatrix: mat4x4<f32>,
@@ -5241,7 +5316,7 @@ fn main_fs(
     };
     @group(0) @binding(${e})
     var<uniform> _uniforms: SimulationUniforms;
-  `;static BUFFER_SIZE=oe+oe+q+q+ae.BUFFER_SIZE+De.BUFFER_SIZE+5*q;gpuBuffer;data=new ArrayBuffer(t.BUFFER_SIZE);dataView;constructor(e){this.gpuBuffer=e.createBuffer({label:"simulation-uniforms-buffer",size:Math.max(t.BUFFER_SIZE,Se),usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),this.dataView=new We(this.data)}createBindingDesc=e=>({binding:e,resource:{buffer:this.gpuBuffer}});update(e){let{device:n}=e,{modelMatrix:r}=e.scene,i=f.hairSimulation;this.dataView.resetCursor(),this.dataView.writeMat4(r);let o=M.invert(r,ju);this.dataView.writeMat4(o);let a=f.hairSimulation.collisionSphere,s=X.set(a[0],a[1],a[2],1,zn),l=X.transformMat4(s,o,zn);this.dataView.writeF32(l[0]),this.dataView.writeF32(l[1]),this.dataView.writeF32(l[2]),this.dataView.writeF32(a[3]);let c=st(i.wind.dirPhi,i.wind.dirTheta,"dgr",zn),d=X.transformMat4(c,o,zn);this.dataView.writeF32(d[0]),this.dataView.writeF32(d[1]),this.dataView.writeF32(d[2]),this.dataView.writeF32(i.wind.strength),e.scene.sdfCollider.writeToDataView(this.dataView),e.scene.physicsGrid.writeToDataView(this.dataView),this.dataView.writeF32(this.getDeltaTime()),this.dataView.writeF32(i.gravity),this.dataView.writeU32(i.constraints.constraintIterations),this.dataView.writeU32(e.frameIdx),this.dataView.writeF32(i.wind.strengthLull),this.dataView.writeF32(i.wind.colisionTraceOffset),this.dataView.writeF32(i.constraints.stiffnessLengthConstr),this.dataView.writeF32(i.constraints.stiffnessCollisions),this.dataView.writeF32(i.constraints.stiffnessSDF),this.dataView.writeF32(i.volumePreservation),this.dataView.writeF32(i.friction),this.dataView.writeF32(i.constraints.stiffnessGlobalConstr),this.dataView.writeF32(i.constraints.globalExtent),this.dataView.writeF32(i.constraints.globalFade),this.dataView.writeF32(i.constraints.stiffnessLocalConstr),this.dataView.writeF32(i.wind.phaseOffset),this.dataView.writeF32(i.wind.strengthFrequency),this.dataView.writeF32(i.wind.strengthJitter),this.dataView.writeF32(0),this.dataView.writeF32(0),this.dataView.assertWrittenBytes(t.BUFFER_SIZE),this.dataView.upload(n,this.gpuBuffer,0)}getDeltaTime(){return f.hairSimulation.deltaTime}};var ma=t=>`
+  `;static BUFFER_SIZE=oe+oe+J+J+se.BUFFER_SIZE+Oe.BUFFER_SIZE+5*J;gpuBuffer;data=new ArrayBuffer(t.BUFFER_SIZE);dataView;constructor(e){this.gpuBuffer=e.createBuffer({label:"simulation-uniforms-buffer",size:Math.max(t.BUFFER_SIZE,ve),usage:GPUBufferUsage.UNIFORM|GPUBufferUsage.COPY_DST}),this.dataView=new qe(this.data)}createBindingDesc=e=>({binding:e,resource:{buffer:this.gpuBuffer}});update(e){let{device:n}=e,{modelMatrix:r}=e.scene,i=u.hairSimulation;this.dataView.resetCursor(),this.dataView.writeMat4(r);let o=M.invert(r,hf);this.dataView.writeMat4(o);let a=u.hairSimulation.collisionSphere,s=K.set(a[0],a[1],a[2],1,Yn),l=K.transformMat4(s,o,Yn);this.dataView.writeF32(l[0]),this.dataView.writeF32(l[1]),this.dataView.writeF32(l[2]),this.dataView.writeF32(a[3]);let c=dt(i.wind.dirPhi,i.wind.dirTheta,"dgr",Yn),d=K.transformMat4(c,o,Yn);this.dataView.writeF32(d[0]),this.dataView.writeF32(d[1]),this.dataView.writeF32(d[2]),this.dataView.writeF32(i.wind.strength),e.scene.sdfCollider.writeToDataView(this.dataView),e.scene.physicsGrid.writeToDataView(this.dataView),this.dataView.writeF32(this.getDeltaTime()),this.dataView.writeF32(i.gravity),this.dataView.writeU32(i.constraints.constraintIterations),this.dataView.writeU32(e.frameIdx),this.dataView.writeF32(i.wind.strengthLull),this.dataView.writeF32(i.wind.colisionTraceOffset),this.dataView.writeF32(i.constraints.stiffnessLengthConstr),this.dataView.writeF32(i.constraints.stiffnessCollisions),this.dataView.writeF32(i.constraints.stiffnessSDF),this.dataView.writeF32(i.volumePreservation),this.dataView.writeF32(i.friction),this.dataView.writeF32(i.constraints.stiffnessGlobalConstr),this.dataView.writeF32(i.constraints.globalExtent),this.dataView.writeF32(i.constraints.globalFade),this.dataView.writeF32(i.constraints.stiffnessLocalConstr),this.dataView.writeF32(i.wind.phaseOffset),this.dataView.writeF32(i.wind.strengthFrequency),this.dataView.writeF32(i.wind.strengthJitter),this.dataView.writeF32(0),this.dataView.writeF32(0),this.dataView.assertWrittenBytes(t.BUFFER_SIZE),this.dataView.upload(n,this.gpuBuffer,0)}getDeltaTime(){return u.hairSimulation.deltaTime}};var Ia=t=>`
 
 @group(0) @binding(${t})
 var<storage, read> _hairSegmentLengths: array<f32>;
@@ -5253,7 +5328,7 @@ fn _getHairSegmentLength(
 ) -> f32 {
   return _hairSegmentLengths[strandIdx * pointsPerStrand + segmentIdx];
 }
-`;function ha(t,e,n,r){let i=s=>[r[s*4+0],r[s*4+1],r[s*4+2]],o=r.length/4,a=new Float32Array(o);for(let s=0;s<o;s++)s%n==n-1?a[s]=P.distance(i(s-1),i(s)):a[s]=P.distance(i(s),i(s+1));return ve(t,`${e}-segmentLengths`,a)}var yt=(t,e)=>`
+`;function Ca(t,e,n,r){let i=s=>[r[s*4+0],r[s*4+1],r[s*4+2]],o=r.length/4,a=new Float32Array(o);for(let s=0;s<o;s++)s%n==n-1?a[s]=y.distance(i(s-1),i(s)):a[s]=y.distance(i(s),i(s+1));return be(t,`${e}-segmentLengths`,a)}var Mt=(t,e)=>`
 
 struct DensityGradAndWind {
   densityGrad: vec3f,
@@ -5263,7 +5338,7 @@ struct DensityGradAndWind {
 @group(0) @binding(${t})
 var<storage, ${e}> _gridDensityGradAndWindVelocity: array<DensityGradAndWind>;
 
-${e==="read_write"?Yu():""}
+${e==="read_write"?gf():""}
 
 
 
@@ -5299,7 +5374,7 @@ fn _getGridDensityGradAndWindAtPoint(p: vec3u) -> DensityGradAndWind {
   return _gridDensityGradAndWindVelocity[idx];
 }
 
-`;function Yu(){return`
+`;function gf(){return`
 
   fn _setGridDensityGradAndWind(
     p: vec3u,
@@ -5313,21 +5388,21 @@ fn _getGridDensityGradAndWindAtPoint(p: vec3u) -> DensityGradAndWind {
     );
   }
 
-  `}var Xe=(t,e)=>`
+  `}var et=(t,e)=>`
 
 struct DensityVelocityI32 {
-  velocityX: ${Bt(e)},
-  velocityY: ${Bt(e)},
-  velocityZ: ${Bt(e)},
-  density: ${Bt(e)},
+  velocityX: ${Nt(e)},
+  velocityY: ${Nt(e)},
+  velocityZ: ${Nt(e)},
+  density: ${Nt(e)},
 }
 
 @group(0) @binding(${t})
 var<storage, ${e}> _gridDensityVelocity: array<DensityVelocityI32>;
 
-${e==="read"?Xu():qu()}
+${e==="read"?_f():xf()}
 
-`;function Xu(){return`
+`;function _f(){return`
 
   struct DensityVelocity {
     velocity: vec3f,
@@ -5391,7 +5466,7 @@ ${e==="read"?Xu():qu()}
     let idx = _getGridIdx(p);
     return gridDecodeValue(_gridDensityVelocity[idx].density);
   }
-  `}function qu(){return`
+  `}function xf(){return`
 
   fn _addGridDensityVelocity(
     gridBoundsMin: vec3f,
@@ -5426,7 +5501,7 @@ ${e==="read"?Xu():qu()}
     }}}
   }
 
-  `}var ga=`
+  `}var Aa=`
 
 // assumes sphere is in object space!
 fn applyCollisionsSphere (
@@ -5488,7 +5563,7 @@ fn applyCollisionsSdf (
   (*pos) += vec4f(correction * stiffness , 0.0);
 }
 
-`;var _a=`
+`;var Ra=`
 
 // See [Bender15] "Position-Based Simulation Methods in Computer Graphics"
 // Section "5.1. Stretching"
@@ -5609,7 +5684,7 @@ fn applyConstraint_matchTangent(
   _positionsWkGrp[wkOffset] += vec4f(stiffness * w * delta, 0.0);
 }
 
-`;var xa=`
+`;var Da=`
 
 // Positions have .w as isMovable flag. 1.0 if isMovable, 0.0 if is not (strand root).
 // Returned as float to avoid branching. Just multiply delta instead.
@@ -5637,33 +5712,33 @@ fn verletIntegration (
     posNow.w
   );
 }
-`;var Sa=8,Ku=()=>Sa*f.pointsPerStrand,Lt={workgroupSizeX:Sa,bindings:{simulationUniforms:0,hairData:1,positionsPrev:2,positionsNow:3,segmentLengths:4,sdfTexture:5,sdfSampler:6,densityVelocityBuffer:7,densityGradWindBuffer:8,positionsInitial:9}},Zu=Lt,Ne=Lt.bindings,va=()=>`
+`;var Ba=8,Sf=()=>Ba*u.pointsPerStrand,$t={workgroupSizeX:Ba,bindings:{simulationUniforms:0,hairData:1,positionsPrev:2,positionsNow:3,segmentLengths:4,sdfTexture:5,sdfSampler:6,densityVelocityBuffer:7,densityGradWindBuffer:8,positionsInitial:9}},vf=$t,ze=$t.bindings,Oa=()=>`
 
-${k}
-${je}
-${_a}
-${xa}
-${ga}
+${G}
+${Ke}
+${Ra}
+${Da}
+${Aa}
 
-${Ge.SHADER_SNIPPET(Ne.simulationUniforms)}
-${ae.TEXTURE_SDF(Ne.sdfTexture,Ne.sdfSampler)}
-${Xe(Ne.densityVelocityBuffer,"read")}
-${yt(Ne.densityGradWindBuffer,"read")}
-${be(Ne.hairData)}
-${jo(Ne.positionsPrev,{bufferName:"_hairPointPositionsPrev",getterName:"_getHairPointPositionPrev",setterName:"_setHairPointPositionPrev"})}
-${it(Ne.positionsNow,{bufferName:"_hairPointPositionsNow",getterName:"_getHairPointPositionNow"})}
-${it(Ne.positionsInitial,{bufferName:"_hairPointPositionsInitial",getterName:"_getHairPointPositionInitial"})}
-${ma(Ne.segmentLengths)}
+${ke.SHADER_SNIPPET(ze.simulationUniforms)}
+${se.TEXTURE_SDF(ze.sdfTexture,ze.sdfSampler)}
+${et(ze.densityVelocityBuffer,"read")}
+${Mt(ze.densityGradWindBuffer,"read")}
+${Pe(ze.hairData)}
+${ra(ze.positionsPrev,{bufferName:"_hairPointPositionsPrev",getterName:"_getHairPointPositionPrev",setterName:"_setHairPointPositionPrev"})}
+${ut(ze.positionsNow,{bufferName:"_hairPointPositionsNow",getterName:"_getHairPointPositionNow"})}
+${ut(ze.positionsInitial,{bufferName:"_hairPointPositionsInitial",getterName:"_getHairPointPositionInitial"})}
+${Ia(ze.segmentLengths)}
 
 
 /** Temporary position storage for duration of the shader */
-var<workgroup> _positionsWkGrp: array<vec4f, ${Ku()}u>;
+var<workgroup> _positionsWkGrp: array<vec4f, ${Sf()}u>;
 
 
 // Everything is in object space (unless noted otherwise).
 // The comments assume 32 points per strand to make it easier
 @compute
-@workgroup_size(${Zu.workgroupSizeX}, 1, 1)
+@workgroup_size(${vf.workgroupSizeX}, 1, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
   // id of the thread inside the workgroup
@@ -5858,15 +5933,15 @@ fn main(
   }
 }
 
-`;var Vn=class t{static NAME="HairSimIntegrationPass";pipeline;bindingsCache=new C;constructor(e){let n=e.createShaderModule({label:B(t),code:va()});this.pipeline=e.createComputePipeline({label:O(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdSimulateHairPositions(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(`${n.name}-${n.currentPositionsBufferIdx}`,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=de(n.strandsCount,Lt.workgroupSizeX);o.dispatchWorkgroups(s,1,1),o.end(),n.swapPositionBuffersAfterSimIntegration()}createBindings=(e,n)=>{let{device:r,simulationUniforms:i,scene:o,physicsForcesGrid:a}=e,s=Lt.bindings,l=o.sdfCollider;return Z(t,`${n.name}-${n.currentPositionsBufferIdx}`,r,this.pipeline,[i.createBindingDesc(s.simulationUniforms),n.bindHairData(s.hairData),n.bindInitialSegmentLengths(s.segmentLengths),n.bindPointsPositions_PREV(s.positionsPrev),n.bindPointsPositions(s.positionsNow),n.bindPointsPositions_INITIAL(s.positionsInitial),l.bindTexture(s.sdfTexture),l.bindSampler(s.sdfSampler),a.bindDensityVelocityBuffer(s.densityVelocityBuffer),a.bindDensityGradAndWindBuffer(s.densityGradWindBuffer)])}};function kn(t,e,n,r){return t.createRenderPipeline({label:r,layout:"auto",vertex:{module:e,entryPoint:"main_vs",buffers:[]},fragment:{module:e,entryPoint:"main_fs",targets:[{format:n,blend:{color:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha",operation:"add"},alpha:{srcFactor:"one",dstFactor:"one",operation:"add"}}}]},primitive:{...pt,cullMode:"none"}})}function Hn(t,e,n,r){let{cmdBuf:i,profiler:o,hdrRenderTexture:a}=t,s=i.beginRenderPass({label:e.NAME,colorAttachments:[Q(a,f.clearColor,"load")],timestampWrites:o?.createScopeGpu(e.NAME)});s.setPipeline(n),s.setBindGroup(0,r);let l=2*Ae;s.draw(l,1,0,0),s.end()}var Ju=(t,e,n,r)=>{let i=(o,a)=>{let s=`${t}[${a}u]`,l=a==0?", default":"";return`case ${a}u ${l}: { ${r(s)} }`};return`
+`;var Xn=class t{static NAME="HairSimIntegrationPass";pipeline;bindingsCache=new R;constructor(e){let n=e.createShaderModule({label:B(t),code:Oa()});this.pipeline=e.createComputePipeline({label:F(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdSimulateHairPositions(e,n){let{cmdBuf:r,profiler:i}=e,o=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings(`${n.name}-${n.currentPositionsBufferIdx}`,()=>this.createBindings(e,n));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=ae(n.strandsCount,$t.workgroupSizeX);o.dispatchWorkgroups(s,1,1),o.end(),n.swapPositionBuffersAfterSimIntegration()}createBindings=(e,n)=>{let{device:r,simulationUniforms:i,scene:o,physicsForcesGrid:a}=e,s=$t.bindings,l=o.sdfCollider;return Z(t,`${n.name}-${n.currentPositionsBufferIdx}`,r,this.pipeline,[i.createBindingDesc(s.simulationUniforms),n.bindHairData(s.hairData),n.bindInitialSegmentLengths(s.segmentLengths),n.bindPointsPositions_PREV(s.positionsPrev),n.bindPointsPositions(s.positionsNow),n.bindPointsPositions_INITIAL(s.positionsInitial),l.bindTexture(s.sdfTexture),l.bindSampler(s.sdfSampler),a.bindDensityVelocityBuffer(s.densityVelocityBuffer),a.bindDensityGradAndWindBuffer(s.densityGradWindBuffer)])}};function qn(t,e,n,r){return t.createRenderPipeline({label:r,layout:"auto",vertex:{module:e,entryPoint:"main_vs",buffers:[]},fragment:{module:e,entryPoint:"main_fs",targets:[{format:n,blend:{color:{srcFactor:"src-alpha",dstFactor:"one-minus-src-alpha",operation:"add"},alpha:{srcFactor:"one",dstFactor:"one",operation:"add"}}}]},primitive:{..._t,cullMode:"none"}})}function Kn(t,e,n,r){let{cmdBuf:i,profiler:o,hdrRenderTexture:a}=t,s=i.beginRenderPass({label:e.NAME,colorAttachments:[ee(a,u.clearColor,"load")],timestampWrites:o?.createScopeGpu(e.NAME)});s.setPipeline(n),s.setBindGroup(0,r);let l=2*Re;s.draw(l,1,0,0),s.end()}var bf=(t,e,n,r)=>{let i=(o,a)=>{let s=`${t}[${a}u]`,l=a==0?", default":"";return`case ${a}u ${l}: { ${r(s)} }`};return`
   switch (${n}) {
-      ${He(e).map(i).join(`
+      ${Ye(e).map(i).join(`
 `)}
-  }`},$n=(t,e,n,r)=>{let[i,o]=t.split(":").map(s=>s?.trim());if(i==null||o==null)throw new Error(`assignValueFromConstArray expected newVarDecl param to include variable name and type e.g. 'normal: vec3f'. Got '${t}', where name='${i}', type=${o}`);if(!rn)return`let ${t} = ${e}[${r}];`;let a=Ju(e,n,r,s=>`${i} = ${s};`);return`var ${t};
-  ${a}`};var qr={bindings:{renderUniforms:0,sdfTexture:1,sdfSampler:2}},Xr=qr.bindings,ba=()=>`
+  }`},Zn=(t,e,n,r)=>{let[i,o]=t.split(":").map(s=>s?.trim());if(i==null||o==null)throw new Error(`assignValueFromConstArray expected newVarDecl param to include variable name and type e.g. 'normal: vec3f'. Got '${t}', where name='${i}', type=${o}`);if(!dn)return`let ${t} = ${e}[${r}];`;let a=bf(e,n,r,s=>`${i} = ${s};`);return`var ${t};
+  ${a}`};var ri={bindings:{renderUniforms:0,sdfTexture:1,sdfSampler:2}},ni=ri.bindings,Fa=()=>`
 
-${R.SHADER_SNIPPET(Xr.renderUniforms)}
-${ae.TEXTURE_SDF(Xr.sdfTexture,Xr.sdfSampler)}
+${C.SHADER_SNIPPET(ni.renderUniforms)}
+${se.TEXTURE_SDF(ni.sdfTexture,ni.sdfSampler)}
 
 
 struct VertexOutput {
@@ -5892,7 +5967,7 @@ fn main_vs(
   let boundsMax = _uniforms.sdf.boundsMax.xyz;
   let depthSlice = getSdfDebugDepthSlice();
 
-  ${$n("uv: vec2f","POSITIONS",6,"inVertexIndex")}
+  ${Zn("uv: vec2f","POSITIONS",6,"inVertexIndex")}
   var positionOS = mix(boundsMin, boundsMax, vec3f(uv, depthSlice));
 
   var result: VertexOutput;
@@ -5934,15 +6009,15 @@ fn main_fs(
 }
 
 
-`;var Wn=class t{static NAME="DrawSdfColliderPass";pipeline;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:ba()});this.pipeline=kn(e,r,n,O(t))}cmdDrawSdf(e){let n=e.scene.sdfCollider,r=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));Hn(e,t,this.pipeline,r)}createBindings=(e,n)=>{let{device:r,globalUniforms:i}=e,o=qr.bindings;return se(t,r,this.pipeline,[i.createBindingDesc(o.renderUniforms),n.bindTexture(o.sdfTexture),n.bindSampler(o.sdfSampler)])}};var Zr={bindings:{renderUniforms:0,densityVelocityBuffer:1,densityGradWindBuffer:2}},Kr=Zr.bindings,wa=()=>`
+`;var Jn=class t{static NAME="DrawSdfColliderPass";pipeline;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Fa()});this.pipeline=qn(e,r,n,F(t))}cmdDrawSdf(e){let n=e.scene.sdfCollider,r=this.bindingsCache.getBindings(n.name,()=>this.createBindings(e,n));Kn(e,t,this.pipeline,r)}createBindings=(e,n)=>{let{device:r,globalUniforms:i}=e,o=ri.bindings;return le(t,r,this.pipeline,[i.createBindingDesc(o.renderUniforms),n.bindTexture(o.sdfTexture),n.bindSampler(o.sdfSampler)])}};var oi={bindings:{renderUniforms:0,densityVelocityBuffer:1,densityGradWindBuffer:2}},ii=oi.bindings,Ga=()=>`
 
-${k}
-${je}
+${G}
+${Ke}
 
-${R.SHADER_SNIPPET(Kr.renderUniforms)}
+${C.SHADER_SNIPPET(ii.renderUniforms)}
 
-${Xe(Kr.densityVelocityBuffer,"read")}
-${yt(Kr.densityGradWindBuffer,"read")}
+${et(ii.densityVelocityBuffer,"read")}
+${Mt(ii.densityGradWindBuffer,"read")}
 
 struct VertexOutput {
   @builtin(position) position: vec4<f32>,
@@ -5969,7 +6044,7 @@ fn main_vs(
   let depthSlice = getGridDebugDepthSlice();
 
   // TODO [LOW] same as SDF. Move to shared lib
-  ${$n("uv: vec2f","POSITIONS",6,"inVertexIndex")}
+  ${Zn("uv: vec2f","POSITIONS",6,"inVertexIndex")}
   var positionOS = mix(boundsMin, boundsMax, vec3f(uv, depthSlice));
 
   var result: VertexOutput;
@@ -6010,14 +6085,14 @@ fn main_fs(
   let densityGradAndWind = _getGridDensityGradAndWindAtPoint(gridPoint);
 
 
-  if (displayMode == ${_e.VELOCITY}u) {
+  if (displayMode == ${xe.VELOCITY}u) {
     getVectorColor(&color, densityVelocity.velocity, absTheVector);
   
-  } else if (displayMode == ${_e.DENSITY_GRADIENT}u) {
+  } else if (displayMode == ${xe.DENSITY_GRADIENT}u) {
     let grad = densityGradAndWind.densityGrad;
     getVectorColor(&color, grad, absTheVector);
   
-  } else if (displayMode == ${_e.WIND}u) {
+  } else if (displayMode == ${xe.WIND}u) {
     let windStr = densityGradAndWind.windStrength;
     if (windStr < 0.01) { color.r = 1.0; }
     else if (windStr < 0.99) { color.b = 1.0; }
@@ -6043,22 +6118,22 @@ fn getVectorColor(color: ptr<function, vec3f>, v: vec3f, absTheVector: bool) {
   (*color) = result;
 }
 
-`;var jn=class t{static NAME="DrawGridDbgPass";pipeline;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:wa()});this.pipeline=kn(e,r,n,O(t))}cmdDrawGridDbg(e){let n=this.bindingsCache.getBindings("-",()=>this.createBindings(e));Hn(e,t,this.pipeline,n)}createBindings=e=>{let{device:n,globalUniforms:r,physicsForcesGrid:i}=e,o=Zr.bindings;return se(t,n,this.pipeline,[r.createBindingDesc(o.renderUniforms),i.bindDensityVelocityBuffer(o.densityVelocityBuffer),i.bindDensityGradAndWindBuffer(o.densityGradWindBuffer)])}};var zt={workgroupSizeX:32,bindings:{simulationUniforms:0,hairData:1,positionsPrev:2,positionsNow:3,gridBuffer:4}},Qu=zt,Ut=zt.bindings,ya=()=>`
+`;var Qn=class t{static NAME="DrawGridDbgPass";pipeline;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Ga()});this.pipeline=qn(e,r,n,F(t))}cmdDrawGridDbg(e){let n=this.bindingsCache.getBindings("-",()=>this.createBindings(e));Kn(e,t,this.pipeline,n)}createBindings=e=>{let{device:n,globalUniforms:r,physicsForcesGrid:i}=e,o=oi.bindings;return le(t,n,this.pipeline,[r.createBindingDesc(o.renderUniforms),i.bindDensityVelocityBuffer(o.densityVelocityBuffer),i.bindDensityGradAndWindBuffer(o.densityGradWindBuffer)])}};var jt={workgroupSizeX:32,bindings:{simulationUniforms:0,hairData:1,positionsPrev:2,positionsNow:3,gridBuffer:4}},wf=jt,Wt=jt.bindings,Na=()=>`
 
-${k}
-${je}
+${G}
+${Ke}
 
-${Ge.SHADER_SNIPPET(Ut.simulationUniforms)}
-${Xe(Ut.gridBuffer,"read_write")}
-${be(Ut.hairData)}
-${it(Ut.positionsPrev,{bufferName:"_hairPointPositionsPrev",getterName:"_getHairPointPositionPrev"})}
-${it(Ut.positionsNow,{bufferName:"_hairPointPositionsNow",getterName:"_getHairPointPositionNow"})}
+${ke.SHADER_SNIPPET(Wt.simulationUniforms)}
+${et(Wt.gridBuffer,"read_write")}
+${Pe(Wt.hairData)}
+${ut(Wt.positionsPrev,{bufferName:"_hairPointPositionsPrev",getterName:"_getHairPointPositionPrev"})}
+${ut(Wt.positionsNow,{bufferName:"_hairPointPositionsNow",getterName:"_getHairPointPositionNow"})}
 
 
 // Everything is in object space (unless noted otherwise).
 // The comments assume 32 points per strand to make it easier
 @compute
-@workgroup_size(${Qu.workgroupSizeX}, 1, 1)
+@workgroup_size(${wf.workgroupSizeX}, 1, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
 ) {
@@ -6086,21 +6161,21 @@ fn main(
   }
 }
 
-`;var Yn=class t{static NAME="GridPostSimPass";pipeline;bindingsCache=new C;constructor(e){let n=e.createShaderModule({label:B(t),code:ya()});this.pipeline=e.createComputePipeline({label:O(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdUpdateGridsAfterSim(e,n){let{cmdBuf:r,profiler:i,physicsForcesGrid:o}=e;o.clearDensityVelocityBuffer(r);let a=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings(`${n.name}-${n.currentPositionsBufferIdx}`,()=>this.createBindings(e,n));a.setPipeline(this.pipeline),a.setBindGroup(0,s);let l=de(n.strandsCount,zt.workgroupSizeX);a.dispatchWorkgroups(l,1,1),a.end()}createBindings=(e,n)=>{let{device:r,simulationUniforms:i,physicsForcesGrid:o}=e,a=zt.bindings;return Z(t,`${n.name}-${n.currentPositionsBufferIdx}`,r,this.pipeline,[i.createBindingDesc(a.simulationUniforms),n.bindHairData(a.hairData),n.bindPointsPositions_PREV(a.positionsPrev),n.bindPointsPositions(a.positionsNow),o.bindDensityVelocityBuffer(a.gridBuffer)])}};var kt={workgroupSizeX:32,bindings:{simulationUniforms:0,densityVelocityBuffer:1,densityGradWindBuffer:2,sdfTexture:3,sdfSampler:4}},ef=kt,Vt=kt.bindings,Pa=()=>`
+`;var er=class t{static NAME="GridPostSimPass";pipeline;bindingsCache=new R;constructor(e){let n=e.createShaderModule({label:B(t),code:Na()});this.pipeline=e.createComputePipeline({label:F(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdUpdateGridsAfterSim(e,n){let{cmdBuf:r,profiler:i,physicsForcesGrid:o}=e;o.clearDensityVelocityBuffer(r);let a=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings(`${n.name}-${n.currentPositionsBufferIdx}`,()=>this.createBindings(e,n));a.setPipeline(this.pipeline),a.setBindGroup(0,s);let l=ae(n.strandsCount,jt.workgroupSizeX);a.dispatchWorkgroups(l,1,1),a.end()}createBindings=(e,n)=>{let{device:r,simulationUniforms:i,physicsForcesGrid:o}=e,a=jt.bindings;return Z(t,`${n.name}-${n.currentPositionsBufferIdx}`,r,this.pipeline,[i.createBindingDesc(a.simulationUniforms),n.bindHairData(a.hairData),n.bindPointsPositions_PREV(a.positionsPrev),n.bindPointsPositions(a.positionsNow),o.bindDensityVelocityBuffer(a.gridBuffer)])}};var Xt={workgroupSizeX:32,bindings:{simulationUniforms:0,densityVelocityBuffer:1,densityGradWindBuffer:2,sdfTexture:3,sdfSampler:4}},Pf=Xt,Yt=Xt.bindings,La=()=>`
 
-${k}
-${je}
+${G}
+${Ke}
 
-${Ge.SHADER_SNIPPET(Vt.simulationUniforms)}
-${Xe(Vt.densityVelocityBuffer,"read")}
-${yt(Vt.densityGradWindBuffer,"read_write")}
-${ae.TEXTURE_SDF(Vt.sdfTexture,Vt.sdfSampler)}
+${ke.SHADER_SNIPPET(Yt.simulationUniforms)}
+${et(Yt.densityVelocityBuffer,"read")}
+${Mt(Yt.densityGradWindBuffer,"read_write")}
+${se.TEXTURE_SDF(Yt.sdfTexture,Yt.sdfSampler)}
 
 
 // Everything is in object space (unless noted otherwise).
 // The comments assume 32 points per strand to make it easier
 @compute
-@workgroup_size(${ef.workgroupSizeX}, 1, 1)
+@workgroup_size(${Pf.workgroupSizeX}, 1, 1)
 fn main(
   @builtin(global_invocation_id) global_id: vec3<u32>,
 ) {
@@ -6222,11 +6297,11 @@ fn getDensityGradientFromDirection(
   // return vec3f(0., 0., 1.); // dbg
 }
 
-`;var Xn=class t{static NAME="GridPreSimPass";pipeline;bindingsCache=new C;constructor(e){let n=e.createShaderModule({label:B(t),code:Pa()});this.pipeline=e.createComputePipeline({label:O(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdUpdateGridsBeforeSim(e,n){let{cmdBuf:r,profiler:i,physicsForcesGrid:o}=e;o.clearDensityGradAndWindBuffer(r);let a=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings(`${n.name}-${n.currentPositionsBufferIdx}`,()=>this.createBindings(e,n));a.setPipeline(this.pipeline),a.setBindGroup(0,s);let l=f.hairSimulation.physicsForcesGrid.dims,c=l*l*l,d=de(c,kt.workgroupSizeX);a.dispatchWorkgroups(d,1,1),a.end()}createBindings=(e,n)=>{let{device:r,simulationUniforms:i,physicsForcesGrid:o,scene:a}=e,s=kt.bindings,l=a.sdfCollider;return Z(t,`${n.name}-${n.currentPositionsBufferIdx}`,r,this.pipeline,[i.createBindingDesc(s.simulationUniforms),o.bindDensityVelocityBuffer(s.densityVelocityBuffer),o.bindDensityGradAndWindBuffer(s.densityGradWindBuffer),l.bindTexture(s.sdfTexture),l.bindSampler(s.sdfSampler)])}};var Jr={bindings:{renderUniforms:0}},tf=Jr.bindings,Ta=()=>`
+`;var tr=class t{static NAME="GridPreSimPass";pipeline;bindingsCache=new R;constructor(e){let n=e.createShaderModule({label:B(t),code:La()});this.pipeline=e.createComputePipeline({label:F(t),layout:"auto",compute:{module:n,entryPoint:"main"}})}cmdUpdateGridsBeforeSim(e,n){let{cmdBuf:r,profiler:i,physicsForcesGrid:o}=e;o.clearDensityGradAndWindBuffer(r);let a=r.beginComputePass({label:t.NAME,timestampWrites:i?.createScopeGpu(t.NAME)}),s=this.bindingsCache.getBindings(`${n.name}-${n.currentPositionsBufferIdx}`,()=>this.createBindings(e,n));a.setPipeline(this.pipeline),a.setBindGroup(0,s);let l=u.hairSimulation.physicsForcesGrid.dims,c=l*l*l,d=ae(c,Xt.workgroupSizeX);a.dispatchWorkgroups(d,1,1),a.end()}createBindings=(e,n)=>{let{device:r,simulationUniforms:i,physicsForcesGrid:o,scene:a}=e,s=Xt.bindings,l=a.sdfCollider;return Z(t,`${n.name}-${n.currentPositionsBufferIdx}`,r,this.pipeline,[i.createBindingDesc(s.simulationUniforms),o.bindDensityVelocityBuffer(s.densityVelocityBuffer),o.bindDensityGradAndWindBuffer(s.densityGradWindBuffer),l.bindTexture(s.sdfTexture),l.bindSampler(s.sdfSampler)])}};var ai={bindings:{renderUniforms:0}},yf=ai.bindings,Ua=()=>`
 
-${me}
-${k}
-${R.SHADER_SNIPPET(tf.renderUniforms)}
+${he}
+${G}
+${C.SHADER_SNIPPET(yf.renderUniforms)}
 
 
 struct VertexOutput {
@@ -6238,8 +6313,8 @@ const AXIS_X = 0u;
 const AXIS_Y = 1u;
 const AXIS_Z = 2u;
 
-const LINE_LENGTH = ${f.colliderGizmo.lineLength};
-const LINE_WIDTH = ${f.colliderGizmo.lineWidth};
+const LINE_LENGTH = ${u.colliderGizmo.lineLength};
+const LINE_WIDTH = ${u.colliderGizmo.lineWidth};
 
 @vertex
 fn main_vs(
@@ -6289,7 +6364,127 @@ fn getAxisVector(axisIdx: u32) -> vec3f {
   if (axisIdx == AXIS_Z) { return vec3f(0.0, 0.0, 1.0); }
   return vec3f(1.0, 0.0, 0.0);
 }
-`;var qn=class t{static NAME="DrawGizmoPass";pipeline;bindingsCache=new C;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Ta()});this.pipeline=e.createRenderPipeline({label:O(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs"},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{cullMode:"none",topology:"triangle-list"}})}onViewportResize=()=>{this.bindingsCache.clear()};cmdDrawGizmo(e){let{cmdBuf:n,profiler:r,hdrRenderTexture:i}=e,o=n.beginRenderPass({label:t.NAME,colorAttachments:[Q(i,f.clearColor,"load")],timestampWrites:r?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings("-",()=>this.createBindings(e));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=f.colliderGizmo;s.isDragging?this.cmdDrawSingleAxis(o,s.activeAxis):this.cmdDrawAllAxis(o),o.end()}cmdDrawAllAxis(e){e.draw(6,3,0,0)}cmdDrawSingleAxis(e,n){n!==ye.NONE&&e.draw(6,1,0,n)}createBindings=e=>{let{device:n,globalUniforms:r}=e,i=Jr.bindings;return se(t,n,this.pipeline,[r.createBindingDesc(i.renderUniforms)])}};var Kn=class{constructor(e,n,r,i){this.device=e;this.profiler=i;this.cameraCtrl=new Sn,this.projectionMat=Tr(f.camera.projection,n),this.renderUniformBuffer=new R(e),this.drawBackgroundGradientPass=new In(e,Ue),this.shadowMapPass=new Ln(e),this.aoPass=new Un(e,ar),this.drawMeshesPass=new En(e,Ue,sn),this.drawGizmoPass=new qn(e,Ue),this.hwHairPass=new Ye(e,Ue,sn),this.hairTilesPass=new Rn(e),this.hairShadingPass=new Nn(e),this.hairFinePass=new Gn(e),this.hairCombinePass=new On(e,Ue),this.presentPass=new yn(e,r),this.simulationUniformsBuffer=new Ge(e),this.hairSimIntegrationPass=new Vn(e),this.gridPreSimPass=new Xn(e),this.gridPostSimPass=new Yn(e),this.drawSdfColliderPass=new Wn(e,Ue),this.drawGridDbgPass=new jn(e,Ue),this.handleViewportResize(n)}cameraCtrl;projectionMat;_viewProjectionMatrix=M.identity();viewportSize={width:0,height:0};frameIdx=0;depthTexture=void 0;depthTextureView=void 0;hdrRenderTexture=void 0;hdrRenderTextureView=void 0;normalsTexture=void 0;normalsTextureView=void 0;aoTexture=void 0;aoTextureView=void 0;renderUniformBuffer;drawBackgroundGradientPass;shadowMapPass;aoPass;drawMeshesPass;drawGizmoPass;hwHairPass;hairTilesPass;hairShadingPass;hairFinePass;hairCombinePass;presentPass;simulationUniformsBuffer;hairSimIntegrationPass;gridPreSimPass;gridPostSimPass;drawSdfColliderPass;drawGridDbgPass;updateCamera(e,n){this.cameraCtrl.update(e,n)}beforeFirstFrame(e){let n=this.device.createCommandEncoder({label:"renderer--before-first-frame"}),r=f.hairSimulation,i=this.createPassCtx(n,e);this.renderUniformBuffer.update(i),this.simulationUniformsBuffer.update(i),r.physicsForcesGrid.enableUpdates&&this.gridPostSimPass.cmdUpdateGridsAfterSim(i,e.hairObject),this.drawMeshesPass.cmdDrawMeshes(i);let{hairObject:o}=i.scene;this.updateResourcesForNextFrame(i,o),this.device.queue.submit([n.finish()])}cmdRender(e,n,r){H(r);let i=f.hairSimulation,o=this.createPassCtx(e,n),{displayMode:a}=f;this.renderUniformBuffer.update(o),this.simulationUniformsBuffer.update(o),this.simulateHair(o,n.hairObject),this.drawBackgroundGradientPass.cmdDraw(o),this.cmdDrawScene(o),(a===G.HW_RENDER||a===G.FINAL)&&this.drawGizmoPass.cmdDrawGizmo(o),i.sdf.showDebugView?this.drawSdfColliderPass.cmdDrawSdf(o):i.physicsForcesGrid.showDebugView&&this.drawGridDbgPass.cmdDrawGridDbg(o),this.presentPass.cmdDraw(o,r,"load"),this.frameIdx+=1}simulateHair(e,n){let{cmdBuf:r,physicsForcesGrid:i}=e,o=f.hairSimulation;if(o.nextFrameResetSimulation){n.resetSimulation(r),i.clearDensityGradAndWindBuffer(r),i.clearDensityVelocityBuffer(r),o.nextFrameResetSimulation=!1;return}if(!o.enabled){i.clearDensityGradAndWindBuffer(r),i.clearDensityVelocityBuffer(r);return}o.physicsForcesGrid.enableUpdates&&this.gridPreSimPass.cmdUpdateGridsBeforeSim(e,n),this.hairSimIntegrationPass.cmdSimulateHairPositions(e,n),o.physicsForcesGrid.enableUpdates&&this.gridPostSimPass.cmdUpdateGridsAfterSim(e,n)}cmdDrawScene(e){let{hairObject:n}=e.scene;this.shadowMapPass.cmdUpdateShadowMap(e),this.drawMeshesPass.cmdDrawMeshes(e);let{displayMode:r}=f;if(r===G.HW_RENDER||r===G.DEPTH||r===G.AO||r===G.NORMALS){this.hwHairPass.cmdDrawHair(e),this.aoPass.cmdCalcAo(e),this.hairShadingPass.cmdComputeShadingPoints(e,n);return}this.hairTilesPass.clearFramebuffer(e),this.hairFinePass.clearFramebuffer(e),this.hairTilesPass.cmdDrawHairToTiles(e,n),r!==G.TILES&&this.hairFinePass.cmdRasterizeSlicesHair(e,n),this.hairCombinePass.cmdCombineRasterResults(e),this.updateResourcesForNextFrame(e,n)}updateResourcesForNextFrame(e,n){this.hwHairPass.cmdDrawHair(e),this.aoPass.cmdCalcAo(e),this.hairShadingPass.cmdComputeShadingPoints(e,n)}get viewMatrix(){return this.cameraCtrl.viewMatrix}createPassCtx(e,n){let r=mn(this.viewMatrix,this.projectionMat,this._viewProjectionMatrix);return{frameIdx:this.frameIdx,device:this.device,cmdBuf:e,viewport:this.viewportSize,scene:n,hdrRenderTexture:this.hdrRenderTextureView,normalsTexture:this.normalsTextureView,aoTexture:this.aoTextureView,profiler:this.profiler,viewMatrix:this.viewMatrix,vpMatrix:r,projMatrix:this.projectionMat,cameraPositionWorldSpace:this.cameraCtrl.positionWorldSpace,depthTexture:this.depthTextureView,shadowDepthTexture:this.shadowMapPass.shadowDepthTextureView,shadowMapSampler:this.shadowMapPass.shadowMapSampler,globalUniforms:this.renderUniformBuffer,simulationUniforms:this.simulationUniformsBuffer,physicsForcesGrid:n.physicsGrid,hairTilesBuffer:this.hairTilesPass.hairTilesBuffer,hairTileSegmentsBuffer:this.hairTilesPass.hairTileSegmentsBuffer,hairRasterizerResultsBuffer:this.hairFinePass.hairRasterizerResultsBuffer}}handleViewportResize=e=>{console.log("Viewport resize",e),this.viewportSize.width=e.width,this.viewportSize.height=e.height,this.projectionMat=Tr(f.camera.projection,e),this.recreateTextures(e),this.presentPass.onViewportResize(),this.drawBackgroundGradientPass.onViewportResize(),this.hairTilesPass.onViewportResize(this.device,e),this.hairFinePass.onViewportResize(this.device,e),this.hairCombinePass.onViewportResize(),this.aoPass.onViewportResize(),this.hairShadingPass.onViewportResize(),this.drawMeshesPass.onViewportResize()};recreateTextures(e){this.depthTexture&&this.depthTexture.destroy(),this.hdrRenderTexture&&this.hdrRenderTexture.destroy(),this.normalsTexture&&this.normalsTexture.destroy(),this.aoTexture&&this.aoTexture.destroy();let n=`${e.width}x${e.height}`,r=GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING;this.hdrRenderTexture=this.device.createTexture({label:`hdr-texture-${n}`,size:[e.width,e.height],format:Ue,usage:r}),this.hdrRenderTextureView=this.hdrRenderTexture.createView(),this.normalsTexture=this.device.createTexture({label:`normals-texture-${n}`,size:[e.width,e.height],format:sn,usage:r}),this.normalsTextureView=this.normalsTexture.createView(),this.depthTexture=this.device.createTexture({label:`depth-texture-${n}`,size:[e.width,e.height],format:an,usage:r}),this.depthTextureView=this.depthTexture.createView();let i=f.ao.textureSizeMul,o={width:Math.ceil(e.width*i),height:Math.ceil(e.height*i)};this.aoTexture=this.device.createTexture({label:`ao-texture-${n}`,size:[o.width,o.height],format:ar,usage:r}),this.aoTextureView=this.aoTexture.createView()}onCanvasResize=wi(this.handleViewportResize,500)};function nf(t){if(t&&!(typeof window>"u")){var e=document.createElement("style");return e.setAttribute("type","text/css"),e.innerHTML=t,document.head.appendChild(e),t}}function Et(t,e){var n=t.__state.conversionName.toString(),r=Math.round(t.r),i=Math.round(t.g),o=Math.round(t.b),a=t.a,s=Math.round(t.h),l=t.s.toFixed(1),c=t.v.toFixed(1);if(e||n==="THREE_CHAR_HEX"||n==="SIX_CHAR_HEX"){for(var d=t.hex.toString(16);d.length<6;)d="0"+d;return"#"+d}else{if(n==="CSS_RGB")return"rgb("+r+","+i+","+o+")";if(n==="CSS_RGBA")return"rgba("+r+","+i+","+o+","+a+")";if(n==="HEX")return"0x"+t.hex.toString(16);if(n==="RGB_ARRAY")return"["+r+","+i+","+o+"]";if(n==="RGBA_ARRAY")return"["+r+","+i+","+o+","+a+"]";if(n==="RGB_OBJ")return"{r:"+r+",g:"+i+",b:"+o+"}";if(n==="RGBA_OBJ")return"{r:"+r+",g:"+i+",b:"+o+",a:"+a+"}";if(n==="HSV_OBJ")return"{h:"+s+",s:"+l+",v:"+c+"}";if(n==="HSVA_OBJ")return"{h:"+s+",s:"+l+",v:"+c+",a:"+a+"}"}return"unknown format"}var Ea=Array.prototype.forEach,Ht=Array.prototype.slice,h={BREAK:{},extend:function(e){return this.each(Ht.call(arguments,1),function(n){var r=this.isObject(n)?Object.keys(n):[];r.forEach((function(i){this.isUndefined(n[i])||(e[i]=n[i])}).bind(this))},this),e},defaults:function(e){return this.each(Ht.call(arguments,1),function(n){var r=this.isObject(n)?Object.keys(n):[];r.forEach((function(i){this.isUndefined(e[i])&&(e[i]=n[i])}).bind(this))},this),e},compose:function(){var e=Ht.call(arguments);return function(){for(var n=Ht.call(arguments),r=e.length-1;r>=0;r--)n=[e[r].apply(this,n)];return n[0]}},each:function(e,n,r){if(e){if(Ea&&e.forEach&&e.forEach===Ea)e.forEach(n,r);else if(e.length===e.length+0){var i=void 0,o=void 0;for(i=0,o=e.length;i<o;i++)if(i in e&&n.call(r,e[i],i)===this.BREAK)return}else for(var a in e)if(n.call(r,e[a],a)===this.BREAK)return}},defer:function(e){setTimeout(e,0)},debounce:function(e,n,r){var i=void 0;return function(){var o=this,a=arguments;function s(){i=null,r||e.apply(o,a)}var l=r||!i;clearTimeout(i),i=setTimeout(s,n),l&&e.apply(o,a)}},toArray:function(e){return e.toArray?e.toArray():Ht.call(e)},isUndefined:function(e){return e===void 0},isNull:function(e){return e===null},isNaN:function(t){function e(n){return t.apply(this,arguments)}return e.toString=function(){return t.toString()},e}(function(t){return isNaN(t)}),isArray:Array.isArray||function(t){return t.constructor===Array},isObject:function(e){return e===Object(e)},isNumber:function(e){return e===e+0},isString:function(e){return e===e+""},isBoolean:function(e){return e===!1||e===!0},isFunction:function(e){return e instanceof Function}},rf=[{litmus:h.isString,conversions:{THREE_CHAR_HEX:{read:function(e){var n=e.match(/^#([A-F0-9])([A-F0-9])([A-F0-9])$/i);return n===null?!1:{space:"HEX",hex:parseInt("0x"+n[1].toString()+n[1].toString()+n[2].toString()+n[2].toString()+n[3].toString()+n[3].toString(),0)}},write:Et},SIX_CHAR_HEX:{read:function(e){var n=e.match(/^#([A-F0-9]{6})$/i);return n===null?!1:{space:"HEX",hex:parseInt("0x"+n[1].toString(),0)}},write:Et},CSS_RGB:{read:function(e){var n=e.match(/^rgb\(\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*\)/);return n===null?!1:{space:"RGB",r:parseFloat(n[1]),g:parseFloat(n[2]),b:parseFloat(n[3])}},write:Et},CSS_RGBA:{read:function(e){var n=e.match(/^rgba\(\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*\)/);return n===null?!1:{space:"RGB",r:parseFloat(n[1]),g:parseFloat(n[2]),b:parseFloat(n[3]),a:parseFloat(n[4])}},write:Et}}},{litmus:h.isNumber,conversions:{HEX:{read:function(e){return{space:"HEX",hex:e,conversionName:"HEX"}},write:function(e){return e.hex}}}},{litmus:h.isArray,conversions:{RGB_ARRAY:{read:function(e){return e.length!==3?!1:{space:"RGB",r:e[0],g:e[1],b:e[2]}},write:function(e){return[e.r,e.g,e.b]}},RGBA_ARRAY:{read:function(e){return e.length!==4?!1:{space:"RGB",r:e[0],g:e[1],b:e[2],a:e[3]}},write:function(e){return[e.r,e.g,e.b,e.a]}}}},{litmus:h.isObject,conversions:{RGBA_OBJ:{read:function(e){return h.isNumber(e.r)&&h.isNumber(e.g)&&h.isNumber(e.b)&&h.isNumber(e.a)?{space:"RGB",r:e.r,g:e.g,b:e.b,a:e.a}:!1},write:function(e){return{r:e.r,g:e.g,b:e.b,a:e.a}}},RGB_OBJ:{read:function(e){return h.isNumber(e.r)&&h.isNumber(e.g)&&h.isNumber(e.b)?{space:"RGB",r:e.r,g:e.g,b:e.b}:!1},write:function(e){return{r:e.r,g:e.g,b:e.b}}},HSVA_OBJ:{read:function(e){return h.isNumber(e.h)&&h.isNumber(e.s)&&h.isNumber(e.v)&&h.isNumber(e.a)?{space:"HSV",h:e.h,s:e.s,v:e.v,a:e.a}:!1},write:function(e){return{h:e.h,s:e.s,v:e.v,a:e.a}}},HSV_OBJ:{read:function(e){return h.isNumber(e.h)&&h.isNumber(e.s)&&h.isNumber(e.v)?{space:"HSV",h:e.h,s:e.s,v:e.v}:!1},write:function(e){return{h:e.h,s:e.s,v:e.v}}}}}],$t=void 0,Zn=void 0,ei=function(){Zn=!1;var e=arguments.length>1?h.toArray(arguments):arguments[0];return h.each(rf,function(n){if(n.litmus(e))return h.each(n.conversions,function(r,i){if($t=r.read(e),Zn===!1&&$t!==!1)return Zn=$t,$t.conversionName=i,$t.conversion=r,h.BREAK}),h.BREAK}),Zn},Ma=void 0,Qn={hsv_to_rgb:function(e,n,r){var i=Math.floor(e/60)%6,o=e/60-Math.floor(e/60),a=r*(1-n),s=r*(1-o*n),l=r*(1-(1-o)*n),c=[[r,l,a],[s,r,a],[a,r,l],[a,s,r],[l,a,r],[r,a,s]][i];return{r:c[0]*255,g:c[1]*255,b:c[2]*255}},rgb_to_hsv:function(e,n,r){var i=Math.min(e,n,r),o=Math.max(e,n,r),a=o-i,s=void 0,l=void 0;if(o!==0)l=a/o;else return{h:NaN,s:0,v:0};return e===o?s=(n-r)/a:n===o?s=2+(r-e)/a:s=4+(e-n)/a,s/=6,s<0&&(s+=1),{h:s*360,s:l,v:o/255}},rgb_to_hex:function(e,n,r){var i=this.hex_with_component(0,2,e);return i=this.hex_with_component(i,1,n),i=this.hex_with_component(i,0,r),i},component_from_hex:function(e,n){return e>>n*8&255},hex_with_component:function(e,n,r){return r<<(Ma=n*8)|e&~(255<<Ma)}},of=typeof Symbol=="function"&&typeof Symbol.iterator=="symbol"?function(t){return typeof t}:function(t){return t&&typeof Symbol=="function"&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Ee=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")},Me=function(){function t(e,n){for(var r=0;r<n.length;r++){var i=n[r];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,n,r){return n&&t(e.prototype,n),r&&t(e,r),e}}(),qe=function t(e,n,r){e===null&&(e=Function.prototype);var i=Object.getOwnPropertyDescriptor(e,n);if(i===void 0){var o=Object.getPrototypeOf(e);return o===null?void 0:t(o,n,r)}else{if("value"in i)return i.value;var a=i.get;return a===void 0?void 0:a.call(r)}},Ke=function(t,e){if(typeof e!="function"&&e!==null)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)},Ze=function(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e&&(typeof e=="object"||typeof e=="function")?e:t},ee=function(){function t(){if(Ee(this,t),this.__state=ei.apply(this,arguments),this.__state===!1)throw new Error("Failed to interpret color arguments");this.__state.a=this.__state.a||1}return Me(t,[{key:"toString",value:function(){return Et(this)}},{key:"toHexString",value:function(){return Et(this,!0)}},{key:"toOriginal",value:function(){return this.__state.conversion.write(this)}}]),t}();function ai(t,e,n){Object.defineProperty(t,e,{get:function(){return this.__state.space==="RGB"?this.__state[e]:(ee.recalculateRGB(this,e,n),this.__state[e])},set:function(i){this.__state.space!=="RGB"&&(ee.recalculateRGB(this,e,n),this.__state.space="RGB"),this.__state[e]=i}})}function si(t,e){Object.defineProperty(t,e,{get:function(){return this.__state.space==="HSV"?this.__state[e]:(ee.recalculateHSV(this),this.__state[e])},set:function(r){this.__state.space!=="HSV"&&(ee.recalculateHSV(this),this.__state.space="HSV"),this.__state[e]=r}})}ee.recalculateRGB=function(t,e,n){if(t.__state.space==="HEX")t.__state[e]=Qn.component_from_hex(t.__state.hex,n);else if(t.__state.space==="HSV")h.extend(t.__state,Qn.hsv_to_rgb(t.__state.h,t.__state.s,t.__state.v));else throw new Error("Corrupted color state")};ee.recalculateHSV=function(t){var e=Qn.rgb_to_hsv(t.r,t.g,t.b);h.extend(t.__state,{s:e.s,v:e.v}),h.isNaN(e.h)?h.isUndefined(t.__state.h)&&(t.__state.h=0):t.__state.h=e.h};ee.COMPONENTS=["r","g","b","h","s","v","hex","a"];ai(ee.prototype,"r",2);ai(ee.prototype,"g",1);ai(ee.prototype,"b",0);si(ee.prototype,"h");si(ee.prototype,"s");si(ee.prototype,"v");Object.defineProperty(ee.prototype,"a",{get:function(){return this.__state.a},set:function(e){this.__state.a=e}});Object.defineProperty(ee.prototype,"hex",{get:function(){return this.__state.space!=="HEX"&&(this.__state.hex=Qn.rgb_to_hex(this.r,this.g,this.b),this.__state.space="HEX"),this.__state.hex},set:function(e){this.__state.space="HEX",this.__state.hex=e}});var at=function(){function t(e,n){Ee(this,t),this.initialValue=e[n],this.domElement=document.createElement("div"),this.object=e,this.property=n,this.__onChange=void 0,this.__onFinishChange=void 0}return Me(t,[{key:"onChange",value:function(n){return this.__onChange=n,this}},{key:"onFinishChange",value:function(n){return this.__onFinishChange=n,this}},{key:"setValue",value:function(n){return this.object[this.property]=n,this.__onChange&&this.__onChange.call(this,n),this.updateDisplay(),this}},{key:"getValue",value:function(){return this.object[this.property]}},{key:"updateDisplay",value:function(){return this}},{key:"isModified",value:function(){return this.initialValue!==this.getValue()}}]),t}(),af={HTMLEvents:["change"],MouseEvents:["click","mousemove","mousedown","mouseup","mouseover"],KeyboardEvents:["keydown"]},Na={};h.each(af,function(t,e){h.each(t,function(n){Na[n]=e})});var sf=/(\d+(\.\d+)?)px/;function Le(t){if(t==="0"||h.isUndefined(t))return 0;var e=t.match(sf);return h.isNull(e)?0:parseFloat(e[1])}var p={makeSelectable:function(e,n){e===void 0||e.style===void 0||(e.onselectstart=n?function(){return!1}:function(){},e.style.MozUserSelect=n?"auto":"none",e.style.KhtmlUserSelect=n?"auto":"none",e.unselectable=n?"on":"off")},makeFullscreen:function(e,n,r){var i=r,o=n;h.isUndefined(o)&&(o=!0),h.isUndefined(i)&&(i=!0),e.style.position="absolute",o&&(e.style.left=0,e.style.right=0),i&&(e.style.top=0,e.style.bottom=0)},fakeEvent:function(e,n,r,i){var o=r||{},a=Na[n];if(!a)throw new Error("Event type "+n+" not supported.");var s=document.createEvent(a);switch(a){case"MouseEvents":{var l=o.x||o.clientX||0,c=o.y||o.clientY||0;s.initMouseEvent(n,o.bubbles||!1,o.cancelable||!0,window,o.clickCount||1,0,0,l,c,!1,!1,!1,!1,0,null);break}case"KeyboardEvents":{var d=s.initKeyboardEvent||s.initKeyEvent;h.defaults(o,{cancelable:!0,ctrlKey:!1,altKey:!1,shiftKey:!1,metaKey:!1,keyCode:void 0,charCode:void 0}),d(n,o.bubbles||!1,o.cancelable,window,o.ctrlKey,o.altKey,o.shiftKey,o.metaKey,o.keyCode,o.charCode);break}default:{s.initEvent(n,o.bubbles||!1,o.cancelable||!0);break}}h.defaults(s,i),e.dispatchEvent(s)},bind:function(e,n,r,i){var o=i||!1;return e.addEventListener?e.addEventListener(n,r,o):e.attachEvent&&e.attachEvent("on"+n,r),p},unbind:function(e,n,r,i){var o=i||!1;return e.removeEventListener?e.removeEventListener(n,r,o):e.detachEvent&&e.detachEvent("on"+n,r),p},addClass:function(e,n){if(e.className===void 0)e.className=n;else if(e.className!==n){var r=e.className.split(/ +/);r.indexOf(n)===-1&&(r.push(n),e.className=r.join(" ").replace(/^\s+/,"").replace(/\s+$/,""))}return p},removeClass:function(e,n){if(n)if(e.className===n)e.removeAttribute("class");else{var r=e.className.split(/ +/),i=r.indexOf(n);i!==-1&&(r.splice(i,1),e.className=r.join(" "))}else e.className=void 0;return p},hasClass:function(e,n){return new RegExp("(?:^|\\s+)"+n+"(?:\\s+|$)").test(e.className)||!1},getWidth:function(e){var n=getComputedStyle(e);return Le(n["border-left-width"])+Le(n["border-right-width"])+Le(n["padding-left"])+Le(n["padding-right"])+Le(n.width)},getHeight:function(e){var n=getComputedStyle(e);return Le(n["border-top-width"])+Le(n["border-bottom-width"])+Le(n["padding-top"])+Le(n["padding-bottom"])+Le(n.height)},getOffset:function(e){var n=e,r={left:0,top:0};if(n.offsetParent)do r.left+=n.offsetLeft,r.top+=n.offsetTop,n=n.offsetParent;while(n);return r},isActive:function(e){return e===document.activeElement&&(e.type||e.href)}},La=function(t){Ke(e,t);function e(n,r){Ee(this,e);var i=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),o=i;i.__prev=i.getValue(),i.__checkbox=document.createElement("input"),i.__checkbox.setAttribute("type","checkbox");function a(){o.setValue(!o.__prev)}return p.bind(i.__checkbox,"change",a,!1),i.domElement.appendChild(i.__checkbox),i.updateDisplay(),i}return Me(e,[{key:"setValue",value:function(r){var i=qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"setValue",this).call(this,r);return this.__onFinishChange&&this.__onFinishChange.call(this,this.getValue()),this.__prev=this.getValue(),i}},{key:"updateDisplay",value:function(){return this.getValue()===!0?(this.__checkbox.setAttribute("checked","checked"),this.__checkbox.checked=!0,this.__prev=!0):(this.__checkbox.checked=!1,this.__prev=!1),qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(at),lf=function(t){Ke(e,t);function e(n,r,i){Ee(this,e);var o=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),a=i,s=o;if(o.__select=document.createElement("select"),h.isArray(a)){var l={};h.each(a,function(c){l[c]=c}),a=l}return h.each(a,function(c,d){var u=document.createElement("option");u.innerHTML=d,u.setAttribute("value",c),s.__select.appendChild(u)}),o.updateDisplay(),p.bind(o.__select,"change",function(){var c=this.options[this.selectedIndex].value;s.setValue(c)}),o.domElement.appendChild(o.__select),o}return Me(e,[{key:"setValue",value:function(r){var i=qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"setValue",this).call(this,r);return this.__onFinishChange&&this.__onFinishChange.call(this,this.getValue()),i}},{key:"updateDisplay",value:function(){return p.isActive(this.__select)?this:(this.__select.value=this.getValue(),qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this))}}]),e}(at),cf=function(t){Ke(e,t);function e(n,r){Ee(this,e);var i=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),o=i;function a(){o.setValue(o.__input.value)}function s(){o.__onFinishChange&&o.__onFinishChange.call(o,o.getValue())}return i.__input=document.createElement("input"),i.__input.setAttribute("type","text"),p.bind(i.__input,"keyup",a),p.bind(i.__input,"change",a),p.bind(i.__input,"blur",s),p.bind(i.__input,"keydown",function(l){l.keyCode===13&&this.blur()}),i.updateDisplay(),i.domElement.appendChild(i.__input),i}return Me(e,[{key:"updateDisplay",value:function(){return p.isActive(this.__input)||(this.__input.value=this.getValue()),qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(at);function Ia(t){var e=t.toString();return e.indexOf(".")>-1?e.length-e.indexOf(".")-1:0}var Ua=function(t){Ke(e,t);function e(n,r,i){Ee(this,e);var o=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),a=i||{};return o.__min=a.min,o.__max=a.max,o.__step=a.step,h.isUndefined(o.__step)?o.initialValue===0?o.__impliedStep=1:o.__impliedStep=Math.pow(10,Math.floor(Math.log(Math.abs(o.initialValue))/Math.LN10))/10:o.__impliedStep=o.__step,o.__precision=Ia(o.__impliedStep),o}return Me(e,[{key:"setValue",value:function(r){var i=r;return this.__min!==void 0&&i<this.__min?i=this.__min:this.__max!==void 0&&i>this.__max&&(i=this.__max),this.__step!==void 0&&i%this.__step!==0&&(i=Math.round(i/this.__step)*this.__step),qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"setValue",this).call(this,i)}},{key:"min",value:function(r){return this.__min=r,this}},{key:"max",value:function(r){return this.__max=r,this}},{key:"step",value:function(r){return this.__step=r,this.__impliedStep=r,this.__precision=Ia(r),this}}]),e}(at);function uf(t,e){var n=Math.pow(10,e);return Math.round(t*n)/n}var er=function(t){Ke(e,t);function e(n,r,i){Ee(this,e);var o=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r,i));o.__truncationSuspended=!1;var a=o,s=void 0;function l(){var b=parseFloat(a.__input.value);h.isNaN(b)||a.setValue(b)}function c(){a.__onFinishChange&&a.__onFinishChange.call(a,a.getValue())}function d(){c()}function u(b){var x=s-b.clientY;a.setValue(a.getValue()+x*a.__impliedStep),s=b.clientY}function m(){p.unbind(window,"mousemove",u),p.unbind(window,"mouseup",m),c()}function v(b){p.bind(window,"mousemove",u),p.bind(window,"mouseup",m),s=b.clientY}return o.__input=document.createElement("input"),o.__input.setAttribute("type","text"),p.bind(o.__input,"change",l),p.bind(o.__input,"blur",d),p.bind(o.__input,"mousedown",v),p.bind(o.__input,"keydown",function(b){b.keyCode===13&&(a.__truncationSuspended=!0,this.blur(),a.__truncationSuspended=!1,c())}),o.updateDisplay(),o.domElement.appendChild(o.__input),o}return Me(e,[{key:"updateDisplay",value:function(){return this.__input.value=this.__truncationSuspended?this.getValue():uf(this.getValue(),this.__precision),qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(Ua);function Aa(t,e,n,r,i){return r+(i-r)*((t-e)/(n-e))}var ti=function(t){Ke(e,t);function e(n,r,i,o,a){Ee(this,e);var s=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r,{min:i,max:o,step:a})),l=s;s.__background=document.createElement("div"),s.__foreground=document.createElement("div"),p.bind(s.__background,"mousedown",c),p.bind(s.__background,"touchstart",m),p.addClass(s.__background,"slider"),p.addClass(s.__foreground,"slider-fg");function c(x){document.activeElement.blur(),p.bind(window,"mousemove",d),p.bind(window,"mouseup",u),d(x)}function d(x){x.preventDefault();var g=l.__background.getBoundingClientRect();return l.setValue(Aa(x.clientX,g.left,g.right,l.__min,l.__max)),!1}function u(){p.unbind(window,"mousemove",d),p.unbind(window,"mouseup",u),l.__onFinishChange&&l.__onFinishChange.call(l,l.getValue())}function m(x){x.touches.length===1&&(p.bind(window,"touchmove",v),p.bind(window,"touchend",b),v(x))}function v(x){var g=x.touches[0].clientX,T=l.__background.getBoundingClientRect();l.setValue(Aa(g,T.left,T.right,l.__min,l.__max))}function b(){p.unbind(window,"touchmove",v),p.unbind(window,"touchend",b),l.__onFinishChange&&l.__onFinishChange.call(l,l.getValue())}return s.updateDisplay(),s.__background.appendChild(s.__foreground),s.domElement.appendChild(s.__background),s}return Me(e,[{key:"updateDisplay",value:function(){var r=(this.getValue()-this.__min)/(this.__max-this.__min);return this.__foreground.style.width=r*100+"%",qe(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(Ua),za=function(t){Ke(e,t);function e(n,r,i){Ee(this,e);var o=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),a=o;return o.__button=document.createElement("div"),o.__button.innerHTML=i===void 0?"Fire":i,p.bind(o.__button,"click",function(s){return s.preventDefault(),a.fire(),!1}),p.addClass(o.__button,"button"),o.domElement.appendChild(o.__button),o}return Me(e,[{key:"fire",value:function(){this.__onChange&&this.__onChange.call(this),this.getValue().call(this.object),this.__onFinishChange&&this.__onFinishChange.call(this,this.getValue())}}]),e}(at),ni=function(t){Ke(e,t);function e(n,r){Ee(this,e);var i=Ze(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r));i.__color=new ee(i.getValue()),i.__temp=new ee(0);var o=i;i.domElement=document.createElement("div"),p.makeSelectable(i.domElement,!1),i.__selector=document.createElement("div"),i.__selector.className="selector",i.__saturation_field=document.createElement("div"),i.__saturation_field.className="saturation-field",i.__field_knob=document.createElement("div"),i.__field_knob.className="field-knob",i.__field_knob_border="2px solid ",i.__hue_knob=document.createElement("div"),i.__hue_knob.className="hue-knob",i.__hue_field=document.createElement("div"),i.__hue_field.className="hue-field",i.__input=document.createElement("input"),i.__input.type="text",i.__input_textShadow="0 1px 1px ",p.bind(i.__input,"keydown",function(x){x.keyCode===13&&u.call(this)}),p.bind(i.__input,"blur",u),p.bind(i.__selector,"mousedown",function(){p.addClass(this,"drag").bind(window,"mouseup",function(){p.removeClass(o.__selector,"drag")})}),p.bind(i.__selector,"touchstart",function(){p.addClass(this,"drag").bind(window,"touchend",function(){p.removeClass(o.__selector,"drag")})});var a=document.createElement("div");h.extend(i.__selector.style,{width:"122px",height:"102px",padding:"3px",backgroundColor:"#222",boxShadow:"0px 1px 3px rgba(0,0,0,0.3)"}),h.extend(i.__field_knob.style,{position:"absolute",width:"12px",height:"12px",border:i.__field_knob_border+(i.__color.v<.5?"#fff":"#000"),boxShadow:"0px 1px 3px rgba(0,0,0,0.5)",borderRadius:"12px",zIndex:1}),h.extend(i.__hue_knob.style,{position:"absolute",width:"15px",height:"2px",borderRight:"4px solid #fff",zIndex:1}),h.extend(i.__saturation_field.style,{width:"100px",height:"100px",border:"1px solid #555",marginRight:"3px",display:"inline-block",cursor:"pointer"}),h.extend(a.style,{width:"100%",height:"100%",background:"none"}),Da(a,"top","rgba(0,0,0,0)","#000"),h.extend(i.__hue_field.style,{width:"15px",height:"100px",border:"1px solid #555",cursor:"ns-resize",position:"absolute",top:"3px",right:"3px"}),df(i.__hue_field),h.extend(i.__input.style,{outline:"none",textAlign:"center",color:"#fff",border:0,fontWeight:"bold",textShadow:i.__input_textShadow+"rgba(0,0,0,0.7)"}),p.bind(i.__saturation_field,"mousedown",s),p.bind(i.__saturation_field,"touchstart",s),p.bind(i.__field_knob,"mousedown",s),p.bind(i.__field_knob,"touchstart",s),p.bind(i.__hue_field,"mousedown",l),p.bind(i.__hue_field,"touchstart",l);function s(x){v(x),p.bind(window,"mousemove",v),p.bind(window,"touchmove",v),p.bind(window,"mouseup",c),p.bind(window,"touchend",c)}function l(x){b(x),p.bind(window,"mousemove",b),p.bind(window,"touchmove",b),p.bind(window,"mouseup",d),p.bind(window,"touchend",d)}function c(){p.unbind(window,"mousemove",v),p.unbind(window,"touchmove",v),p.unbind(window,"mouseup",c),p.unbind(window,"touchend",c),m()}function d(){p.unbind(window,"mousemove",b),p.unbind(window,"touchmove",b),p.unbind(window,"mouseup",d),p.unbind(window,"touchend",d),m()}function u(){var x=ei(this.value);x!==!1?(o.__color.__state=x,o.setValue(o.__color.toOriginal())):this.value=o.__color.toString()}function m(){o.__onFinishChange&&o.__onFinishChange.call(o,o.__color.toOriginal())}i.__saturation_field.appendChild(a),i.__selector.appendChild(i.__field_knob),i.__selector.appendChild(i.__saturation_field),i.__selector.appendChild(i.__hue_field),i.__hue_field.appendChild(i.__hue_knob),i.domElement.appendChild(i.__input),i.domElement.appendChild(i.__selector),i.updateDisplay();function v(x){x.type.indexOf("touch")===-1&&x.preventDefault();var g=o.__saturation_field.getBoundingClientRect(),T=x.touches&&x.touches[0]||x,w=T.clientX,_=T.clientY,S=(w-g.left)/(g.right-g.left),E=1-(_-g.top)/(g.bottom-g.top);return E>1?E=1:E<0&&(E=0),S>1?S=1:S<0&&(S=0),o.__color.v=E,o.__color.s=S,o.setValue(o.__color.toOriginal()),!1}function b(x){x.type.indexOf("touch")===-1&&x.preventDefault();var g=o.__hue_field.getBoundingClientRect(),T=x.touches&&x.touches[0]||x,w=T.clientY,_=1-(w-g.top)/(g.bottom-g.top);return _>1?_=1:_<0&&(_=0),o.__color.h=_*360,o.setValue(o.__color.toOriginal()),!1}return i}return Me(e,[{key:"updateDisplay",value:function(){var r=ei(this.getValue());if(r!==!1){var i=!1;h.each(ee.COMPONENTS,function(s){if(!h.isUndefined(r[s])&&!h.isUndefined(this.__color.__state[s])&&r[s]!==this.__color.__state[s])return i=!0,{}},this),i&&h.extend(this.__color.__state,r)}h.extend(this.__temp.__state,this.__color.__state),this.__temp.a=1;var o=this.__color.v<.5||this.__color.s>.5?255:0,a=255-o;h.extend(this.__field_knob.style,{marginLeft:100*this.__color.s-7+"px",marginTop:100*(1-this.__color.v)-7+"px",backgroundColor:this.__temp.toHexString(),border:this.__field_knob_border+"rgb("+o+","+o+","+o+")"}),this.__hue_knob.style.marginTop=(1-this.__color.h/360)*100+"px",this.__temp.s=1,this.__temp.v=1,Da(this.__saturation_field,"left","#fff",this.__temp.toHexString()),this.__input.value=this.__color.toString(),h.extend(this.__input.style,{backgroundColor:this.__color.toHexString(),color:"rgb("+o+","+o+","+o+")",textShadow:this.__input_textShadow+"rgba("+a+","+a+","+a+",.7)"})}}]),e}(at),ff=["-moz-","-o-","-webkit-","-ms-",""];function Da(t,e,n,r){t.style.background="",h.each(ff,function(i){t.style.cssText+="background: "+i+"linear-gradient("+e+", "+n+" 0%, "+r+" 100%); "})}function df(t){t.style.background="",t.style.cssText+="background: -moz-linear-gradient(top,  #ff0000 0%, #ff00ff 17%, #0000ff 34%, #00ffff 50%, #00ff00 67%, #ffff00 84%, #ff0000 100%);",t.style.cssText+="background: -webkit-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);",t.style.cssText+="background: -o-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);",t.style.cssText+="background: -ms-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);",t.style.cssText+="background: linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);"}var pf={load:function(e,n){var r=n||document,i=r.createElement("link");i.type="text/css",i.rel="stylesheet",i.href=e,r.getElementsByTagName("head")[0].appendChild(i)},inject:function(e,n){var r=n||document,i=document.createElement("style");i.type="text/css",i.innerHTML=e;var o=r.getElementsByTagName("head")[0];try{o.appendChild(i)}catch{}}},mf=`<div id="dg-save" class="dg dialogue">
+`;var nr=class t{static NAME="DrawGizmoPass";pipeline;bindingsCache=new R;constructor(e,n){let r=e.createShaderModule({label:B(t),code:Ua()});this.pipeline=e.createRenderPipeline({label:F(t),layout:"auto",vertex:{module:r,entryPoint:"main_vs"},fragment:{module:r,entryPoint:"main_fs",targets:[{format:n}]},primitive:{cullMode:"none",topology:"triangle-list"}})}onViewportResize=()=>{this.bindingsCache.clear()};cmdDrawGizmo(e){let{cmdBuf:n,profiler:r,hdrRenderTexture:i}=e,o=n.beginRenderPass({label:t.NAME,colorAttachments:[ee(i,u.clearColor,"load")],timestampWrites:r?.createScopeGpu(t.NAME)}),a=this.bindingsCache.getBindings("-",()=>this.createBindings(e));o.setPipeline(this.pipeline),o.setBindGroup(0,a);let s=u.colliderGizmo;s.isDragging?this.cmdDrawSingleAxis(o,s.activeAxis):this.cmdDrawAllAxis(o),o.end()}cmdDrawAllAxis(e){e.draw(6,3,0,0)}cmdDrawSingleAxis(e,n){n!==Ee.NONE&&e.draw(6,1,0,n)}createBindings=e=>{let{device:n,globalUniforms:r}=e,i=ai.bindings;return le(t,n,this.pipeline,[r.createBindingDesc(i.renderUniforms)])}};var qt={workgroupSizeX:256,bindings:{renderUniforms:0,segmentCountPerTile:1,sortBuckets:2}},li=(t,e)=>`
+
+const SORT_BUCKETS = ${u.hairRender.sortBuckets}u;
+const BUCKET_SIZE = ${u.hairRender.sortBucketSize}u;
+
+fn calcTileSortBucket(segmentCount: u32) -> u32 {
+  let key = segmentCount / BUCKET_SIZE;
+  return clamp(key, 0u, SORT_BUCKETS - 1u);
+}
+
+struct SortBucket {
+  // 1 pass: WRITE: inc for each tile that has segment count in this bucket
+  // 2 pass: READ: to get offsets
+  tileCount: ${pe(e==="count-tiles"?"read_write":"read")},
+  // 1 pass: -
+  // 2 pass: WRITE: in-bucket offsets
+  writeOffset: ${pe(e==="count-tiles"?"read":"read_write")},
+}
+
+@group(0) @binding(${t})
+var<storage, read_write> _buckets: array<SortBucket>;
+`,Tf=qt,si=qt.bindings,ka=()=>`
+
+${G}
+${Ue}
+${li(si.sortBuckets,"count-tiles")}
+
+${C.SHADER_SNIPPET(si.renderUniforms)}
+${Je(si.segmentCountPerTile,"read")}
+
+
+@compute
+@workgroup_size(${Tf.workgroupSizeX}, 1, 1)
+fn main(
+  @builtin(global_invocation_id) global_id: vec3<u32>,
+  @builtin(local_invocation_index) local_invocation_index: u32, // threadId inside workgroup
+) {
+  let tileIdx = global_id.x;
+  let viewportSize: vec2f = _uniforms.viewport.xy;
+
+  /*if (local_invocation_index == 0u) {
+    for (var i = 0u; i < SORT_BUCKETS; i++) {
+      atomicStore(_subResults[i], 0u);
+    }
+  }
+  workgroupBarrier();*/
+
+  let screenTileCount_2d = getTileCount(vec2u(viewportSize));
+  let screenTileCount = screenTileCount_2d.x * screenTileCount_2d.y;
+  let isValidTile = tileIdx < screenTileCount;
+
+  let segmentCount = _hairSegmentCountPerTile[tileIdx];
+  if (isValidTile && segmentCount > 0u) {
+    let sortBucket = calcTileSortBucket(segmentCount);
+    // atomicAdd(&_subResults[sortBucket], 1u);
+    atomicAdd(&_buckets[sortBucket].tileCount, 1u);
+  }
+  /*workgroupBarrier();
+
+  if (local_invocation_index == 0u) {
+    for (var i = 0u; i < SORT_BUCKETS; i++) {
+      let bucketValue = atomicLoad(_subResults[i]);
+      _segmentsInBucket[i] = bucketValue;
+    }
+  }*/
+}
+
+`;var Kt={workgroupSizeX:256,bindings:{renderUniforms:0,segmentCountPerTile:1,tileList:2,sortBuckets:3}},Mf=Kt,rr=Kt.bindings,za=()=>`
+
+${G}
+${Ue}
+
+${C.SHADER_SNIPPET(rr.renderUniforms)}
+${Je(rr.segmentCountPerTile,"read")}
+${Vn(rr.tileList,"read_write")}
+${li(rr.sortBuckets,"sort")}
+
+
+var<workgroup> _bucketOffsets: array<u32, SORT_BUCKETS>;
+
+@compute
+@workgroup_size(${Mf.workgroupSizeX}, 1, 1)
+fn main(
+  @builtin(global_invocation_id) global_id: vec3<u32>,
+  @builtin(local_invocation_index) local_invocation_index: u32, // threadId inside workgroup
+) {
+  let tileIdx = global_id.x;
+  let viewportSize: vec2f = _uniforms.viewport.xy;
+
+  if (local_invocation_index == 0u) {
+    calculateOffsetsForEachBucket();
+  }
+  workgroupBarrier();
+
+  let screenTileCount_2d = getTileCount(vec2u(viewportSize));
+  let screenTileCount = screenTileCount_2d.x * screenTileCount_2d.y;
+  let isValidTile = tileIdx < screenTileCount;
+
+  let segmentCount = _hairSegmentCountPerTile[tileIdx];
+  if (isValidTile && segmentCount > 0u) {
+    let sortBucket = calcTileSortBucket(segmentCount);
+    let bucketOffset = _bucketOffsets[sortBucket];
+    let inBucketOffset = atomicAdd(&_buckets[sortBucket].writeOffset, 1u);
+    let offset = bucketOffset + inBucketOffset;
+    _hairTileData.data[offset] = tileIdx;
+
+    // add to tile counter
+    atomicAdd(&_hairTileData.drawnTiles, 1u);
+  }
+}
+
+fn calculateOffsetsForEachBucket() {
+  var offset = 0u;
+  for (var i = 0u; i < SORT_BUCKETS; i++) {
+    let idx = SORT_BUCKETS - 1u - i; // reverse sort: heavier tiles first
+    _bucketOffsets[idx] = offset;
+    offset += _buckets[idx].tileCount;
+  }
+}
+
+`;var ci="count-tiles",ui="sort",ir=class t{static NAME="HairTileSortPass";pipelineCountPerBucket;pipelineSort;bindingsCache=new R;tileListBuffer=void 0;bucketsDataBuffer;constructor(e){let n=u.isTest?GPUBufferUsage.COPY_SRC:0;this.bucketsDataBuffer=e.createBuffer({label:Ut(t,"sortBuckets"),size:u.hairRender.sortBuckets*2*X,usage:GPUBufferUsage.STORAGE|GPUBufferUsage.COPY_DST|n}),this.pipelineCountPerBucket=zr(e,t,ka(),ci),this.pipelineSort=zr(e,t,za(),ui)}cmdClearBeforeRender(e){this.tileListBuffer&&e.cmdBuf.clearBuffer(this.tileListBuffer,0,X),Xe(e.cmdBuf,this.bucketsDataBuffer)}onViewportResize=(e,n)=>{this.bindingsCache.clear(),this.tileListBuffer&&this.tileListBuffer.destroy(),this.tileListBuffer=Sa(e,n)};cmdSortHairTiles(e){let{cmdBuf:n,profiler:r}=e,i=n.beginComputePass({label:t.NAME,timestampWrites:r?.createScopeGpu(t.NAME)});this.cmdCountTilesPerBucket(e,i),this.cmdSort(e,i),i.end()}getDispatchDims_EachTile(e,n){let r=Be(e.viewport);return ae(r.width*r.height,n)}cmdCountTilesPerBucket(e,n){let r=this.bindingsCache.getBindings(ci,()=>this.createBindings_countTilesPerBucket(e));n.setPipeline(this.pipelineCountPerBucket),n.setBindGroup(0,r);let i=this.getDispatchDims_EachTile(e,qt.workgroupSizeX);n.dispatchWorkgroups(i,1,1)}createBindings_countTilesPerBucket=e=>{let{device:n,globalUniforms:r,hairSegmentCountPerTileBuffer:i}=e,o=qt.bindings;return Z(t,ci,n,this.pipelineCountPerBucket,[r.createBindingDesc(o.renderUniforms),L(o.segmentCountPerTile,i),L(o.sortBuckets,this.bucketsDataBuffer)])};cmdSort(e,n){let r=this.bindingsCache.getBindings(ui,()=>this.createBindings_Sort(e));n.setPipeline(this.pipelineSort),n.setBindGroup(0,r);let i=this.getDispatchDims_EachTile(e,Kt.workgroupSizeX);n.dispatchWorkgroups(i,1,1)}createBindings_Sort=e=>{let{device:n,globalUniforms:r,hairSegmentCountPerTileBuffer:i,hairTileListBuffer:o}=e,a=Kt.bindings;return Z(t,ui,n,this.pipelineSort,[r.createBindingDesc(a.renderUniforms),L(a.segmentCountPerTile,i),L(a.tileList,o),L(a.sortBuckets,this.bucketsDataBuffer)])}};var or=class{constructor(e,n,r,i){this.device=e;this.profiler=i;this.cameraCtrl=new En,this.projectionMat=Br(u.camera.projection,n),this.renderUniformBuffer=new C(e),this.drawBackgroundGradientPass=new Fn(e,He),this.shadowMapPass=new Wn(e),this.aoPass=new jn(e,hr),this.drawMeshesPass=new Bn(e,He,hn),this.drawGizmoPass=new nr(e,He),this.hwHairPass=new Ze(e,He,hn),this.hairTilesPass=new Ln(e),this.hairTileSortPass=new ir(e),this.hairShadingPass=new $n(e),this.hairFinePass=new Hn(e),this.hairCombinePass=new kn(e,He),this.presentPass=new An(e,r),this.simulationUniformsBuffer=new ke(e),this.hairSimIntegrationPass=new Xn(e),this.gridPreSimPass=new tr(e),this.gridPostSimPass=new er(e),this.drawSdfColliderPass=new Jn(e,He),this.drawGridDbgPass=new Qn(e,He),this.handleViewportResize(n)}cameraCtrl;projectionMat;_viewProjectionMatrix=M.identity();viewportSize={width:0,height:0};frameIdx=0;depthTexture=void 0;depthTextureView=void 0;hdrRenderTexture=void 0;hdrRenderTextureView=void 0;normalsTexture=void 0;normalsTextureView=void 0;aoTexture=void 0;aoTextureView=void 0;renderUniformBuffer;drawBackgroundGradientPass;shadowMapPass;aoPass;drawMeshesPass;drawGizmoPass;hwHairPass;hairTilesPass;hairShadingPass;hairFinePass;hairTileSortPass;hairCombinePass;presentPass;simulationUniformsBuffer;hairSimIntegrationPass;gridPreSimPass;gridPostSimPass;drawSdfColliderPass;drawGridDbgPass;updateCamera(e,n){this.cameraCtrl.update(e,n)}beforeFirstFrame(e){let n=this.device.createCommandEncoder({label:"renderer--before-first-frame"}),r=u.hairSimulation,i=this.createPassCtx(n,e);this.renderUniformBuffer.update(i),this.simulationUniformsBuffer.update(i),r.physicsForcesGrid.enableUpdates&&this.gridPostSimPass.cmdUpdateGridsAfterSim(i,e.hairObject),this.drawMeshesPass.cmdDrawMeshes(i);let{hairObject:o}=i.scene;this.updateResourcesForNextFrame(i,o),this.device.queue.submit([n.finish()])}cmdRender(e,n,r){$(r);let i=u.hairSimulation,o=this.createPassCtx(e,n),{displayMode:a}=u;this.renderUniformBuffer.update(o),this.simulationUniformsBuffer.update(o),this.simulateHair(o,n.hairObject),this.drawBackgroundGradientPass.cmdDraw(o),this.cmdDrawScene(o),(a===A.HW_RENDER||a===A.FINAL)&&this.drawGizmoPass.cmdDrawGizmo(o),i.sdf.showDebugView?this.drawSdfColliderPass.cmdDrawSdf(o):i.physicsForcesGrid.showDebugView&&this.drawGridDbgPass.cmdDrawGridDbg(o),this.presentPass.cmdDraw(o,r,"load"),this.frameIdx+=1}simulateHair(e,n){let{cmdBuf:r,physicsForcesGrid:i}=e,o=u.hairSimulation;if(o.nextFrameResetSimulation){n.resetSimulation(r),i.clearDensityGradAndWindBuffer(r),i.clearDensityVelocityBuffer(r),o.nextFrameResetSimulation=!1;return}if(!o.enabled){i.clearDensityGradAndWindBuffer(r),i.clearDensityVelocityBuffer(r);return}o.physicsForcesGrid.enableUpdates&&this.gridPreSimPass.cmdUpdateGridsBeforeSim(e,n),this.hairSimIntegrationPass.cmdSimulateHairPositions(e,n),o.physicsForcesGrid.enableUpdates&&this.gridPostSimPass.cmdUpdateGridsAfterSim(e,n)}cmdDrawScene(e){let{hairObject:n}=e.scene;this.shadowMapPass.cmdUpdateShadowMap(e),this.drawMeshesPass.cmdDrawMeshes(e);let{displayMode:r}=u;if(r===A.HW_RENDER||r===A.DEPTH||r===A.AO||r===A.NORMALS){this.hwHairPass.cmdDrawHair(e),this.aoPass.cmdCalcAo(e),this.hairShadingPass.cmdComputeShadingPoints(e,n);return}this.hairTilesPass.cmdClearBeforeRender(e),this.hairFinePass.cmdClearBeforeRender(e),this.hairTileSortPass.cmdClearBeforeRender(e),this.hairTilesPass.cmdDrawHairToTiles(e,n),r!==A.TILES&&r!==A.TILES_PPLL&&(this.hairTileSortPass.cmdSortHairTiles(e),this.hairFinePass.cmdRasterizeSlicesHair(e,n)),this.hairCombinePass.cmdCombineRasterResults(e),this.updateResourcesForNextFrame(e,n)}updateResourcesForNextFrame(e,n){this.hwHairPass.cmdDrawHair(e),this.aoPass.cmdCalcAo(e),this.hairShadingPass.cmdComputeShadingPoints(e,n)}get viewMatrix(){return this.cameraCtrl.viewMatrix}createPassCtx(e,n){let r=bn(this.viewMatrix,this.projectionMat,this._viewProjectionMatrix);return{frameIdx:this.frameIdx,device:this.device,cmdBuf:e,viewport:this.viewportSize,scene:n,hdrRenderTexture:this.hdrRenderTextureView,normalsTexture:this.normalsTextureView,aoTexture:this.aoTextureView,profiler:this.profiler,viewMatrix:this.viewMatrix,vpMatrix:r,projMatrix:this.projectionMat,cameraPositionWorldSpace:this.cameraCtrl.positionWorldSpace,depthTexture:this.depthTextureView,shadowDepthTexture:this.shadowMapPass.shadowDepthTextureView,shadowMapSampler:this.shadowMapPass.shadowMapSampler,globalUniforms:this.renderUniformBuffer,simulationUniforms:this.simulationUniformsBuffer,physicsForcesGrid:n.physicsGrid,hairTilesBuffer:this.hairTilesPass.hairTilesBuffer,hairTileSegmentsBuffer:this.hairTilesPass.hairTileSegmentsBuffer,hairSegmentCountPerTileBuffer:this.hairTilesPass.segmentCountPerTileBuffer,hairRasterizerResultsBuffer:this.hairFinePass.hairRasterizerResultsBuffer,hairTileListBuffer:this.hairTileSortPass.tileListBuffer}}handleViewportResize=e=>{console.log("Viewport resize",e),this.viewportSize.width=e.width,this.viewportSize.height=e.height,this.projectionMat=Br(u.camera.projection,e),this.recreateTextures(e),this.presentPass.onViewportResize(),this.drawBackgroundGradientPass.onViewportResize(),this.hairTilesPass.onViewportResize(this.device,e),this.hairFinePass.onViewportResize(this.device,e),this.hairTileSortPass.onViewportResize(this.device,e),this.hairCombinePass.onViewportResize(),this.aoPass.onViewportResize(),this.hairShadingPass.onViewportResize(),this.drawMeshesPass.onViewportResize()};recreateTextures(e){this.depthTexture&&this.depthTexture.destroy(),this.hdrRenderTexture&&this.hdrRenderTexture.destroy(),this.normalsTexture&&this.normalsTexture.destroy(),this.aoTexture&&this.aoTexture.destroy();let n=`${e.width}x${e.height}`,r=GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING;this.hdrRenderTexture=this.device.createTexture({label:`hdr-texture-${n}`,size:[e.width,e.height],format:He,usage:r}),this.hdrRenderTextureView=this.hdrRenderTexture.createView(),this.normalsTexture=this.device.createTexture({label:`normals-texture-${n}`,size:[e.width,e.height],format:hn,usage:r}),this.normalsTextureView=this.normalsTexture.createView(),this.depthTexture=this.device.createTexture({label:`depth-texture-${n}`,size:[e.width,e.height],format:mn,usage:r}),this.depthTextureView=this.depthTexture.createView();let i=u.ao.textureSizeMul,o={width:Math.ceil(e.width*i),height:Math.ceil(e.height*i)};this.aoTexture=this.device.createTexture({label:`ao-texture-${n}`,size:[o.width,o.height],format:hr,usage:r}),this.aoTextureView=this.aoTexture.createView()}onCanvasResize=Oi(this.handleViewportResize,500)};function Cf(t){if(t&&!(typeof window>"u")){var e=document.createElement("style");return e.setAttribute("type","text/css"),e.innerHTML=t,document.head.appendChild(e),t}}function At(t,e){var n=t.__state.conversionName.toString(),r=Math.round(t.r),i=Math.round(t.g),o=Math.round(t.b),a=t.a,s=Math.round(t.h),l=t.s.toFixed(1),c=t.v.toFixed(1);if(e||n==="THREE_CHAR_HEX"||n==="SIX_CHAR_HEX"){for(var d=t.hex.toString(16);d.length<6;)d="0"+d;return"#"+d}else{if(n==="CSS_RGB")return"rgb("+r+","+i+","+o+")";if(n==="CSS_RGBA")return"rgba("+r+","+i+","+o+","+a+")";if(n==="HEX")return"0x"+t.hex.toString(16);if(n==="RGB_ARRAY")return"["+r+","+i+","+o+"]";if(n==="RGBA_ARRAY")return"["+r+","+i+","+o+","+a+"]";if(n==="RGB_OBJ")return"{r:"+r+",g:"+i+",b:"+o+"}";if(n==="RGBA_OBJ")return"{r:"+r+",g:"+i+",b:"+o+",a:"+a+"}";if(n==="HSV_OBJ")return"{h:"+s+",s:"+l+",v:"+c+"}";if(n==="HSVA_OBJ")return"{h:"+s+",s:"+l+",v:"+c+",a:"+a+"}"}return"unknown format"}var Va=Array.prototype.forEach,Zt=Array.prototype.slice,h={BREAK:{},extend:function(e){return this.each(Zt.call(arguments,1),function(n){var r=this.isObject(n)?Object.keys(n):[];r.forEach((function(i){this.isUndefined(n[i])||(e[i]=n[i])}).bind(this))},this),e},defaults:function(e){return this.each(Zt.call(arguments,1),function(n){var r=this.isObject(n)?Object.keys(n):[];r.forEach((function(i){this.isUndefined(e[i])&&(e[i]=n[i])}).bind(this))},this),e},compose:function(){var e=Zt.call(arguments);return function(){for(var n=Zt.call(arguments),r=e.length-1;r>=0;r--)n=[e[r].apply(this,n)];return n[0]}},each:function(e,n,r){if(e){if(Va&&e.forEach&&e.forEach===Va)e.forEach(n,r);else if(e.length===e.length+0){var i=void 0,o=void 0;for(i=0,o=e.length;i<o;i++)if(i in e&&n.call(r,e[i],i)===this.BREAK)return}else for(var a in e)if(n.call(r,e[a],a)===this.BREAK)return}},defer:function(e){setTimeout(e,0)},debounce:function(e,n,r){var i=void 0;return function(){var o=this,a=arguments;function s(){i=null,r||e.apply(o,a)}var l=r||!i;clearTimeout(i),i=setTimeout(s,n),l&&e.apply(o,a)}},toArray:function(e){return e.toArray?e.toArray():Zt.call(e)},isUndefined:function(e){return e===void 0},isNull:function(e){return e===null},isNaN:function(t){function e(n){return t.apply(this,arguments)}return e.toString=function(){return t.toString()},e}(function(t){return isNaN(t)}),isArray:Array.isArray||function(t){return t.constructor===Array},isObject:function(e){return e===Object(e)},isNumber:function(e){return e===e+0},isString:function(e){return e===e+""},isBoolean:function(e){return e===!1||e===!0},isFunction:function(e){return e instanceof Function}},Af=[{litmus:h.isString,conversions:{THREE_CHAR_HEX:{read:function(e){var n=e.match(/^#([A-F0-9])([A-F0-9])([A-F0-9])$/i);return n===null?!1:{space:"HEX",hex:parseInt("0x"+n[1].toString()+n[1].toString()+n[2].toString()+n[2].toString()+n[3].toString()+n[3].toString(),0)}},write:At},SIX_CHAR_HEX:{read:function(e){var n=e.match(/^#([A-F0-9]{6})$/i);return n===null?!1:{space:"HEX",hex:parseInt("0x"+n[1].toString(),0)}},write:At},CSS_RGB:{read:function(e){var n=e.match(/^rgb\(\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*\)/);return n===null?!1:{space:"RGB",r:parseFloat(n[1]),g:parseFloat(n[2]),b:parseFloat(n[3])}},write:At},CSS_RGBA:{read:function(e){var n=e.match(/^rgba\(\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*\)/);return n===null?!1:{space:"RGB",r:parseFloat(n[1]),g:parseFloat(n[2]),b:parseFloat(n[3]),a:parseFloat(n[4])}},write:At}}},{litmus:h.isNumber,conversions:{HEX:{read:function(e){return{space:"HEX",hex:e,conversionName:"HEX"}},write:function(e){return e.hex}}}},{litmus:h.isArray,conversions:{RGB_ARRAY:{read:function(e){return e.length!==3?!1:{space:"RGB",r:e[0],g:e[1],b:e[2]}},write:function(e){return[e.r,e.g,e.b]}},RGBA_ARRAY:{read:function(e){return e.length!==4?!1:{space:"RGB",r:e[0],g:e[1],b:e[2],a:e[3]}},write:function(e){return[e.r,e.g,e.b,e.a]}}}},{litmus:h.isObject,conversions:{RGBA_OBJ:{read:function(e){return h.isNumber(e.r)&&h.isNumber(e.g)&&h.isNumber(e.b)&&h.isNumber(e.a)?{space:"RGB",r:e.r,g:e.g,b:e.b,a:e.a}:!1},write:function(e){return{r:e.r,g:e.g,b:e.b,a:e.a}}},RGB_OBJ:{read:function(e){return h.isNumber(e.r)&&h.isNumber(e.g)&&h.isNumber(e.b)?{space:"RGB",r:e.r,g:e.g,b:e.b}:!1},write:function(e){return{r:e.r,g:e.g,b:e.b}}},HSVA_OBJ:{read:function(e){return h.isNumber(e.h)&&h.isNumber(e.s)&&h.isNumber(e.v)&&h.isNumber(e.a)?{space:"HSV",h:e.h,s:e.s,v:e.v,a:e.a}:!1},write:function(e){return{h:e.h,s:e.s,v:e.v,a:e.a}}},HSV_OBJ:{read:function(e){return h.isNumber(e.h)&&h.isNumber(e.s)&&h.isNumber(e.v)?{space:"HSV",h:e.h,s:e.s,v:e.v}:!1},write:function(e){return{h:e.h,s:e.s,v:e.v}}}}}],Jt=void 0,ar=void 0,di=function(){ar=!1;var e=arguments.length>1?h.toArray(arguments):arguments[0];return h.each(Af,function(n){if(n.litmus(e))return h.each(n.conversions,function(r,i){if(Jt=r.read(e),ar===!1&&Jt!==!1)return ar=Jt,Jt.conversionName=i,Jt.conversion=r,h.BREAK}),h.BREAK}),ar},Ha=void 0,lr={hsv_to_rgb:function(e,n,r){var i=Math.floor(e/60)%6,o=e/60-Math.floor(e/60),a=r*(1-n),s=r*(1-o*n),l=r*(1-(1-o)*n),c=[[r,l,a],[s,r,a],[a,r,l],[a,s,r],[l,a,r],[r,a,s]][i];return{r:c[0]*255,g:c[1]*255,b:c[2]*255}},rgb_to_hsv:function(e,n,r){var i=Math.min(e,n,r),o=Math.max(e,n,r),a=o-i,s=void 0,l=void 0;if(o!==0)l=a/o;else return{h:NaN,s:0,v:0};return e===o?s=(n-r)/a:n===o?s=2+(r-e)/a:s=4+(e-n)/a,s/=6,s<0&&(s+=1),{h:s*360,s:l,v:o/255}},rgb_to_hex:function(e,n,r){var i=this.hex_with_component(0,2,e);return i=this.hex_with_component(i,1,n),i=this.hex_with_component(i,0,r),i},component_from_hex:function(e,n){return e>>n*8&255},hex_with_component:function(e,n,r){return r<<(Ha=n*8)|e&~(255<<Ha)}},Rf=typeof Symbol=="function"&&typeof Symbol.iterator=="symbol"?function(t){return typeof t}:function(t){return t&&typeof Symbol=="function"&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},Ie=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")},Ce=function(){function t(e,n){for(var r=0;r<n.length;r++){var i=n[r];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,n,r){return n&&t(e.prototype,n),r&&t(e,r),e}}(),tt=function t(e,n,r){e===null&&(e=Function.prototype);var i=Object.getOwnPropertyDescriptor(e,n);if(i===void 0){var o=Object.getPrototypeOf(e);return o===null?void 0:t(o,n,r)}else{if("value"in i)return i.value;var a=i.get;return a===void 0?void 0:a.call(r)}},nt=function(t,e){if(typeof e!="function"&&e!==null)throw new TypeError("Super expression must either be null or a function, not "+typeof e);t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,enumerable:!1,writable:!0,configurable:!0}}),e&&(Object.setPrototypeOf?Object.setPrototypeOf(t,e):t.__proto__=e)},rt=function(t,e){if(!t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e&&(typeof e=="object"||typeof e=="function")?e:t},te=function(){function t(){if(Ie(this,t),this.__state=di.apply(this,arguments),this.__state===!1)throw new Error("Failed to interpret color arguments");this.__state.a=this.__state.a||1}return Ce(t,[{key:"toString",value:function(){return At(this)}},{key:"toHexString",value:function(){return At(this,!0)}},{key:"toOriginal",value:function(){return this.__state.conversion.write(this)}}]),t}();function xi(t,e,n){Object.defineProperty(t,e,{get:function(){return this.__state.space==="RGB"?this.__state[e]:(te.recalculateRGB(this,e,n),this.__state[e])},set:function(i){this.__state.space!=="RGB"&&(te.recalculateRGB(this,e,n),this.__state.space="RGB"),this.__state[e]=i}})}function Si(t,e){Object.defineProperty(t,e,{get:function(){return this.__state.space==="HSV"?this.__state[e]:(te.recalculateHSV(this),this.__state[e])},set:function(r){this.__state.space!=="HSV"&&(te.recalculateHSV(this),this.__state.space="HSV"),this.__state[e]=r}})}te.recalculateRGB=function(t,e,n){if(t.__state.space==="HEX")t.__state[e]=lr.component_from_hex(t.__state.hex,n);else if(t.__state.space==="HSV")h.extend(t.__state,lr.hsv_to_rgb(t.__state.h,t.__state.s,t.__state.v));else throw new Error("Corrupted color state")};te.recalculateHSV=function(t){var e=lr.rgb_to_hsv(t.r,t.g,t.b);h.extend(t.__state,{s:e.s,v:e.v}),h.isNaN(e.h)?h.isUndefined(t.__state.h)&&(t.__state.h=0):t.__state.h=e.h};te.COMPONENTS=["r","g","b","h","s","v","hex","a"];xi(te.prototype,"r",2);xi(te.prototype,"g",1);xi(te.prototype,"b",0);Si(te.prototype,"h");Si(te.prototype,"s");Si(te.prototype,"v");Object.defineProperty(te.prototype,"a",{get:function(){return this.__state.a},set:function(e){this.__state.a=e}});Object.defineProperty(te.prototype,"hex",{get:function(){return this.__state.space!=="HEX"&&(this.__state.hex=lr.rgb_to_hex(this.r,this.g,this.b),this.__state.space="HEX"),this.__state.hex},set:function(e){this.__state.space="HEX",this.__state.hex=e}});var ft=function(){function t(e,n){Ie(this,t),this.initialValue=e[n],this.domElement=document.createElement("div"),this.object=e,this.property=n,this.__onChange=void 0,this.__onFinishChange=void 0}return Ce(t,[{key:"onChange",value:function(n){return this.__onChange=n,this}},{key:"onFinishChange",value:function(n){return this.__onFinishChange=n,this}},{key:"setValue",value:function(n){return this.object[this.property]=n,this.__onChange&&this.__onChange.call(this,n),this.updateDisplay(),this}},{key:"getValue",value:function(){return this.object[this.property]}},{key:"updateDisplay",value:function(){return this}},{key:"isModified",value:function(){return this.initialValue!==this.getValue()}}]),t}(),Df={HTMLEvents:["change"],MouseEvents:["click","mousemove","mousedown","mouseup","mouseover"],KeyboardEvents:["keydown"]},Qa={};h.each(Df,function(t,e){h.each(t,function(n){Qa[n]=e})});var Bf=/(\d+(\.\d+)?)px/;function Ve(t){if(t==="0"||h.isUndefined(t))return 0;var e=t.match(Bf);return h.isNull(e)?0:parseFloat(e[1])}var p={makeSelectable:function(e,n){e===void 0||e.style===void 0||(e.onselectstart=n?function(){return!1}:function(){},e.style.MozUserSelect=n?"auto":"none",e.style.KhtmlUserSelect=n?"auto":"none",e.unselectable=n?"on":"off")},makeFullscreen:function(e,n,r){var i=r,o=n;h.isUndefined(o)&&(o=!0),h.isUndefined(i)&&(i=!0),e.style.position="absolute",o&&(e.style.left=0,e.style.right=0),i&&(e.style.top=0,e.style.bottom=0)},fakeEvent:function(e,n,r,i){var o=r||{},a=Qa[n];if(!a)throw new Error("Event type "+n+" not supported.");var s=document.createEvent(a);switch(a){case"MouseEvents":{var l=o.x||o.clientX||0,c=o.y||o.clientY||0;s.initMouseEvent(n,o.bubbles||!1,o.cancelable||!0,window,o.clickCount||1,0,0,l,c,!1,!1,!1,!1,0,null);break}case"KeyboardEvents":{var d=s.initKeyboardEvent||s.initKeyEvent;h.defaults(o,{cancelable:!0,ctrlKey:!1,altKey:!1,shiftKey:!1,metaKey:!1,keyCode:void 0,charCode:void 0}),d(n,o.bubbles||!1,o.cancelable,window,o.ctrlKey,o.altKey,o.shiftKey,o.metaKey,o.keyCode,o.charCode);break}default:{s.initEvent(n,o.bubbles||!1,o.cancelable||!0);break}}h.defaults(s,i),e.dispatchEvent(s)},bind:function(e,n,r,i){var o=i||!1;return e.addEventListener?e.addEventListener(n,r,o):e.attachEvent&&e.attachEvent("on"+n,r),p},unbind:function(e,n,r,i){var o=i||!1;return e.removeEventListener?e.removeEventListener(n,r,o):e.detachEvent&&e.detachEvent("on"+n,r),p},addClass:function(e,n){if(e.className===void 0)e.className=n;else if(e.className!==n){var r=e.className.split(/ +/);r.indexOf(n)===-1&&(r.push(n),e.className=r.join(" ").replace(/^\s+/,"").replace(/\s+$/,""))}return p},removeClass:function(e,n){if(n)if(e.className===n)e.removeAttribute("class");else{var r=e.className.split(/ +/),i=r.indexOf(n);i!==-1&&(r.splice(i,1),e.className=r.join(" "))}else e.className=void 0;return p},hasClass:function(e,n){return new RegExp("(?:^|\\s+)"+n+"(?:\\s+|$)").test(e.className)||!1},getWidth:function(e){var n=getComputedStyle(e);return Ve(n["border-left-width"])+Ve(n["border-right-width"])+Ve(n["padding-left"])+Ve(n["padding-right"])+Ve(n.width)},getHeight:function(e){var n=getComputedStyle(e);return Ve(n["border-top-width"])+Ve(n["border-bottom-width"])+Ve(n["padding-top"])+Ve(n["padding-bottom"])+Ve(n.height)},getOffset:function(e){var n=e,r={left:0,top:0};if(n.offsetParent)do r.left+=n.offsetLeft,r.top+=n.offsetTop,n=n.offsetParent;while(n);return r},isActive:function(e){return e===document.activeElement&&(e.type||e.href)}},es=function(t){nt(e,t);function e(n,r){Ie(this,e);var i=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),o=i;i.__prev=i.getValue(),i.__checkbox=document.createElement("input"),i.__checkbox.setAttribute("type","checkbox");function a(){o.setValue(!o.__prev)}return p.bind(i.__checkbox,"change",a,!1),i.domElement.appendChild(i.__checkbox),i.updateDisplay(),i}return Ce(e,[{key:"setValue",value:function(r){var i=tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"setValue",this).call(this,r);return this.__onFinishChange&&this.__onFinishChange.call(this,this.getValue()),this.__prev=this.getValue(),i}},{key:"updateDisplay",value:function(){return this.getValue()===!0?(this.__checkbox.setAttribute("checked","checked"),this.__checkbox.checked=!0,this.__prev=!0):(this.__checkbox.checked=!1,this.__prev=!1),tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(ft),Of=function(t){nt(e,t);function e(n,r,i){Ie(this,e);var o=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),a=i,s=o;if(o.__select=document.createElement("select"),h.isArray(a)){var l={};h.each(a,function(c){l[c]=c}),a=l}return h.each(a,function(c,d){var f=document.createElement("option");f.innerHTML=d,f.setAttribute("value",c),s.__select.appendChild(f)}),o.updateDisplay(),p.bind(o.__select,"change",function(){var c=this.options[this.selectedIndex].value;s.setValue(c)}),o.domElement.appendChild(o.__select),o}return Ce(e,[{key:"setValue",value:function(r){var i=tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"setValue",this).call(this,r);return this.__onFinishChange&&this.__onFinishChange.call(this,this.getValue()),i}},{key:"updateDisplay",value:function(){return p.isActive(this.__select)?this:(this.__select.value=this.getValue(),tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this))}}]),e}(ft),Ff=function(t){nt(e,t);function e(n,r){Ie(this,e);var i=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),o=i;function a(){o.setValue(o.__input.value)}function s(){o.__onFinishChange&&o.__onFinishChange.call(o,o.getValue())}return i.__input=document.createElement("input"),i.__input.setAttribute("type","text"),p.bind(i.__input,"keyup",a),p.bind(i.__input,"change",a),p.bind(i.__input,"blur",s),p.bind(i.__input,"keydown",function(l){l.keyCode===13&&this.blur()}),i.updateDisplay(),i.domElement.appendChild(i.__input),i}return Ce(e,[{key:"updateDisplay",value:function(){return p.isActive(this.__input)||(this.__input.value=this.getValue()),tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(ft);function $a(t){var e=t.toString();return e.indexOf(".")>-1?e.length-e.indexOf(".")-1:0}var ts=function(t){nt(e,t);function e(n,r,i){Ie(this,e);var o=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),a=i||{};return o.__min=a.min,o.__max=a.max,o.__step=a.step,h.isUndefined(o.__step)?o.initialValue===0?o.__impliedStep=1:o.__impliedStep=Math.pow(10,Math.floor(Math.log(Math.abs(o.initialValue))/Math.LN10))/10:o.__impliedStep=o.__step,o.__precision=$a(o.__impliedStep),o}return Ce(e,[{key:"setValue",value:function(r){var i=r;return this.__min!==void 0&&i<this.__min?i=this.__min:this.__max!==void 0&&i>this.__max&&(i=this.__max),this.__step!==void 0&&i%this.__step!==0&&(i=Math.round(i/this.__step)*this.__step),tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"setValue",this).call(this,i)}},{key:"min",value:function(r){return this.__min=r,this}},{key:"max",value:function(r){return this.__max=r,this}},{key:"step",value:function(r){return this.__step=r,this.__impliedStep=r,this.__precision=$a(r),this}}]),e}(ft);function Gf(t,e){var n=Math.pow(10,e);return Math.round(t*n)/n}var cr=function(t){nt(e,t);function e(n,r,i){Ie(this,e);var o=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r,i));o.__truncationSuspended=!1;var a=o,s=void 0;function l(){var b=parseFloat(a.__input.value);h.isNaN(b)||a.setValue(b)}function c(){a.__onFinishChange&&a.__onFinishChange.call(a,a.getValue())}function d(){c()}function f(b){var x=s-b.clientY;a.setValue(a.getValue()+x*a.__impliedStep),s=b.clientY}function m(){p.unbind(window,"mousemove",f),p.unbind(window,"mouseup",m),c()}function v(b){p.bind(window,"mousemove",f),p.bind(window,"mouseup",m),s=b.clientY}return o.__input=document.createElement("input"),o.__input.setAttribute("type","text"),p.bind(o.__input,"change",l),p.bind(o.__input,"blur",d),p.bind(o.__input,"mousedown",v),p.bind(o.__input,"keydown",function(b){b.keyCode===13&&(a.__truncationSuspended=!0,this.blur(),a.__truncationSuspended=!1,c())}),o.updateDisplay(),o.domElement.appendChild(o.__input),o}return Ce(e,[{key:"updateDisplay",value:function(){return this.__input.value=this.__truncationSuspended?this.getValue():Gf(this.getValue(),this.__precision),tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(ts);function Wa(t,e,n,r,i){return r+(i-r)*((t-e)/(n-e))}var pi=function(t){nt(e,t);function e(n,r,i,o,a){Ie(this,e);var s=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r,{min:i,max:o,step:a})),l=s;s.__background=document.createElement("div"),s.__foreground=document.createElement("div"),p.bind(s.__background,"mousedown",c),p.bind(s.__background,"touchstart",m),p.addClass(s.__background,"slider"),p.addClass(s.__foreground,"slider-fg");function c(x){document.activeElement.blur(),p.bind(window,"mousemove",d),p.bind(window,"mouseup",f),d(x)}function d(x){x.preventDefault();var g=l.__background.getBoundingClientRect();return l.setValue(Wa(x.clientX,g.left,g.right,l.__min,l.__max)),!1}function f(){p.unbind(window,"mousemove",d),p.unbind(window,"mouseup",f),l.__onFinishChange&&l.__onFinishChange.call(l,l.getValue())}function m(x){x.touches.length===1&&(p.bind(window,"touchmove",v),p.bind(window,"touchend",b),v(x))}function v(x){var g=x.touches[0].clientX,T=l.__background.getBoundingClientRect();l.setValue(Wa(g,T.left,T.right,l.__min,l.__max))}function b(){p.unbind(window,"touchmove",v),p.unbind(window,"touchend",b),l.__onFinishChange&&l.__onFinishChange.call(l,l.getValue())}return s.updateDisplay(),s.__background.appendChild(s.__foreground),s.domElement.appendChild(s.__background),s}return Ce(e,[{key:"updateDisplay",value:function(){var r=(this.getValue()-this.__min)/(this.__max-this.__min);return this.__foreground.style.width=r*100+"%",tt(e.prototype.__proto__||Object.getPrototypeOf(e.prototype),"updateDisplay",this).call(this)}}]),e}(ts),ns=function(t){nt(e,t);function e(n,r,i){Ie(this,e);var o=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r)),a=o;return o.__button=document.createElement("div"),o.__button.innerHTML=i===void 0?"Fire":i,p.bind(o.__button,"click",function(s){return s.preventDefault(),a.fire(),!1}),p.addClass(o.__button,"button"),o.domElement.appendChild(o.__button),o}return Ce(e,[{key:"fire",value:function(){this.__onChange&&this.__onChange.call(this),this.getValue().call(this.object),this.__onFinishChange&&this.__onFinishChange.call(this,this.getValue())}}]),e}(ft),mi=function(t){nt(e,t);function e(n,r){Ie(this,e);var i=rt(this,(e.__proto__||Object.getPrototypeOf(e)).call(this,n,r));i.__color=new te(i.getValue()),i.__temp=new te(0);var o=i;i.domElement=document.createElement("div"),p.makeSelectable(i.domElement,!1),i.__selector=document.createElement("div"),i.__selector.className="selector",i.__saturation_field=document.createElement("div"),i.__saturation_field.className="saturation-field",i.__field_knob=document.createElement("div"),i.__field_knob.className="field-knob",i.__field_knob_border="2px solid ",i.__hue_knob=document.createElement("div"),i.__hue_knob.className="hue-knob",i.__hue_field=document.createElement("div"),i.__hue_field.className="hue-field",i.__input=document.createElement("input"),i.__input.type="text",i.__input_textShadow="0 1px 1px ",p.bind(i.__input,"keydown",function(x){x.keyCode===13&&f.call(this)}),p.bind(i.__input,"blur",f),p.bind(i.__selector,"mousedown",function(){p.addClass(this,"drag").bind(window,"mouseup",function(){p.removeClass(o.__selector,"drag")})}),p.bind(i.__selector,"touchstart",function(){p.addClass(this,"drag").bind(window,"touchend",function(){p.removeClass(o.__selector,"drag")})});var a=document.createElement("div");h.extend(i.__selector.style,{width:"122px",height:"102px",padding:"3px",backgroundColor:"#222",boxShadow:"0px 1px 3px rgba(0,0,0,0.3)"}),h.extend(i.__field_knob.style,{position:"absolute",width:"12px",height:"12px",border:i.__field_knob_border+(i.__color.v<.5?"#fff":"#000"),boxShadow:"0px 1px 3px rgba(0,0,0,0.5)",borderRadius:"12px",zIndex:1}),h.extend(i.__hue_knob.style,{position:"absolute",width:"15px",height:"2px",borderRight:"4px solid #fff",zIndex:1}),h.extend(i.__saturation_field.style,{width:"100px",height:"100px",border:"1px solid #555",marginRight:"3px",display:"inline-block",cursor:"pointer"}),h.extend(a.style,{width:"100%",height:"100%",background:"none"}),ja(a,"top","rgba(0,0,0,0)","#000"),h.extend(i.__hue_field.style,{width:"15px",height:"100px",border:"1px solid #555",cursor:"ns-resize",position:"absolute",top:"3px",right:"3px"}),Lf(i.__hue_field),h.extend(i.__input.style,{outline:"none",textAlign:"center",color:"#fff",border:0,fontWeight:"bold",textShadow:i.__input_textShadow+"rgba(0,0,0,0.7)"}),p.bind(i.__saturation_field,"mousedown",s),p.bind(i.__saturation_field,"touchstart",s),p.bind(i.__field_knob,"mousedown",s),p.bind(i.__field_knob,"touchstart",s),p.bind(i.__hue_field,"mousedown",l),p.bind(i.__hue_field,"touchstart",l);function s(x){v(x),p.bind(window,"mousemove",v),p.bind(window,"touchmove",v),p.bind(window,"mouseup",c),p.bind(window,"touchend",c)}function l(x){b(x),p.bind(window,"mousemove",b),p.bind(window,"touchmove",b),p.bind(window,"mouseup",d),p.bind(window,"touchend",d)}function c(){p.unbind(window,"mousemove",v),p.unbind(window,"touchmove",v),p.unbind(window,"mouseup",c),p.unbind(window,"touchend",c),m()}function d(){p.unbind(window,"mousemove",b),p.unbind(window,"touchmove",b),p.unbind(window,"mouseup",d),p.unbind(window,"touchend",d),m()}function f(){var x=di(this.value);x!==!1?(o.__color.__state=x,o.setValue(o.__color.toOriginal())):this.value=o.__color.toString()}function m(){o.__onFinishChange&&o.__onFinishChange.call(o,o.__color.toOriginal())}i.__saturation_field.appendChild(a),i.__selector.appendChild(i.__field_knob),i.__selector.appendChild(i.__saturation_field),i.__selector.appendChild(i.__hue_field),i.__hue_field.appendChild(i.__hue_knob),i.domElement.appendChild(i.__input),i.domElement.appendChild(i.__selector),i.updateDisplay();function v(x){x.type.indexOf("touch")===-1&&x.preventDefault();var g=o.__saturation_field.getBoundingClientRect(),T=x.touches&&x.touches[0]||x,P=T.clientX,_=T.clientY,S=(P-g.left)/(g.right-g.left),E=1-(_-g.top)/(g.bottom-g.top);return E>1?E=1:E<0&&(E=0),S>1?S=1:S<0&&(S=0),o.__color.v=E,o.__color.s=S,o.setValue(o.__color.toOriginal()),!1}function b(x){x.type.indexOf("touch")===-1&&x.preventDefault();var g=o.__hue_field.getBoundingClientRect(),T=x.touches&&x.touches[0]||x,P=T.clientY,_=1-(P-g.top)/(g.bottom-g.top);return _>1?_=1:_<0&&(_=0),o.__color.h=_*360,o.setValue(o.__color.toOriginal()),!1}return i}return Ce(e,[{key:"updateDisplay",value:function(){var r=di(this.getValue());if(r!==!1){var i=!1;h.each(te.COMPONENTS,function(s){if(!h.isUndefined(r[s])&&!h.isUndefined(this.__color.__state[s])&&r[s]!==this.__color.__state[s])return i=!0,{}},this),i&&h.extend(this.__color.__state,r)}h.extend(this.__temp.__state,this.__color.__state),this.__temp.a=1;var o=this.__color.v<.5||this.__color.s>.5?255:0,a=255-o;h.extend(this.__field_knob.style,{marginLeft:100*this.__color.s-7+"px",marginTop:100*(1-this.__color.v)-7+"px",backgroundColor:this.__temp.toHexString(),border:this.__field_knob_border+"rgb("+o+","+o+","+o+")"}),this.__hue_knob.style.marginTop=(1-this.__color.h/360)*100+"px",this.__temp.s=1,this.__temp.v=1,ja(this.__saturation_field,"left","#fff",this.__temp.toHexString()),this.__input.value=this.__color.toString(),h.extend(this.__input.style,{backgroundColor:this.__color.toHexString(),color:"rgb("+o+","+o+","+o+")",textShadow:this.__input_textShadow+"rgba("+a+","+a+","+a+",.7)"})}}]),e}(ft),Nf=["-moz-","-o-","-webkit-","-ms-",""];function ja(t,e,n,r){t.style.background="",h.each(Nf,function(i){t.style.cssText+="background: "+i+"linear-gradient("+e+", "+n+" 0%, "+r+" 100%); "})}function Lf(t){t.style.background="",t.style.cssText+="background: -moz-linear-gradient(top,  #ff0000 0%, #ff00ff 17%, #0000ff 34%, #00ffff 50%, #00ff00 67%, #ffff00 84%, #ff0000 100%);",t.style.cssText+="background: -webkit-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);",t.style.cssText+="background: -o-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);",t.style.cssText+="background: -ms-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);",t.style.cssText+="background: linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);"}var Uf={load:function(e,n){var r=n||document,i=r.createElement("link");i.type="text/css",i.rel="stylesheet",i.href=e,r.getElementsByTagName("head")[0].appendChild(i)},inject:function(e,n){var r=n||document,i=document.createElement("style");i.type="text/css",i.innerHTML=e;var o=r.getElementsByTagName("head")[0];try{o.appendChild(i)}catch{}}},kf=`<div id="dg-save" class="dg dialogue">
 
   Here's the new load parameter for your <code>GUI</code>'s constructor:
 
@@ -6309,6 +6504,6 @@ fn getAxisVector(axisIdx: u32) -> vec3f {
 
   </div>
 
-</div>`,hf=function(e,n){var r=e[n];return h.isArray(arguments[2])||h.isObject(arguments[2])?new lf(e,n,arguments[2]):h.isNumber(r)?h.isNumber(arguments[2])&&h.isNumber(arguments[3])?h.isNumber(arguments[4])?new ti(e,n,arguments[2],arguments[3],arguments[4]):new ti(e,n,arguments[2],arguments[3]):h.isNumber(arguments[4])?new er(e,n,{min:arguments[2],max:arguments[3],step:arguments[4]}):new er(e,n,{min:arguments[2],max:arguments[3]}):h.isString(r)?new cf(e,n):h.isFunction(r)?new za(e,n,""):h.isBoolean(r)?new La(e,n):null};function gf(t){setTimeout(t,1e3/60)}var _f=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||gf,xf=function(){function t(){Ee(this,t),this.backgroundElement=document.createElement("div"),h.extend(this.backgroundElement.style,{backgroundColor:"rgba(0,0,0,0.8)",top:0,left:0,display:"none",zIndex:"1000",opacity:0,WebkitTransition:"opacity 0.2s linear",transition:"opacity 0.2s linear"}),p.makeFullscreen(this.backgroundElement),this.backgroundElement.style.position="fixed",this.domElement=document.createElement("div"),h.extend(this.domElement.style,{position:"fixed",display:"none",zIndex:"1001",opacity:0,WebkitTransition:"-webkit-transform 0.2s ease-out, opacity 0.2s linear",transition:"transform 0.2s ease-out, opacity 0.2s linear"}),document.body.appendChild(this.backgroundElement),document.body.appendChild(this.domElement);var e=this;p.bind(this.backgroundElement,"click",function(){e.hide()})}return Me(t,[{key:"show",value:function(){var n=this;this.backgroundElement.style.display="block",this.domElement.style.display="block",this.domElement.style.opacity=0,this.domElement.style.webkitTransform="scale(1.1)",this.layout(),h.defer(function(){n.backgroundElement.style.opacity=1,n.domElement.style.opacity=1,n.domElement.style.webkitTransform="scale(1)"})}},{key:"hide",value:function(){var n=this,r=function i(){n.domElement.style.display="none",n.backgroundElement.style.display="none",p.unbind(n.domElement,"webkitTransitionEnd",i),p.unbind(n.domElement,"transitionend",i),p.unbind(n.domElement,"oTransitionEnd",i)};p.bind(this.domElement,"webkitTransitionEnd",r),p.bind(this.domElement,"transitionend",r),p.bind(this.domElement,"oTransitionEnd",r),this.backgroundElement.style.opacity=0,this.domElement.style.opacity=0,this.domElement.style.webkitTransform="scale(1.1)"}},{key:"layout",value:function(){this.domElement.style.left=window.innerWidth/2-p.getWidth(this.domElement)/2+"px",this.domElement.style.top=window.innerHeight/2-p.getHeight(this.domElement)/2+"px"}}]),t}(),Sf=nf(`.dg ul{list-style:none;margin:0;padding:0;width:100%;clear:both}.dg.ac{position:fixed;top:0;left:0;right:0;height:0;z-index:0}.dg:not(.ac) .main{overflow:hidden}.dg.main{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear}.dg.main.taller-than-window{overflow-y:auto}.dg.main.taller-than-window .close-button{opacity:1;margin-top:-1px;border-top:1px solid #2c2c2c}.dg.main ul.closed .close-button{opacity:1 !important}.dg.main:hover .close-button,.dg.main .close-button.drag{opacity:1}.dg.main .close-button{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear;border:0;line-height:19px;height:20px;cursor:pointer;text-align:center;background-color:#000}.dg.main .close-button.close-top{position:relative}.dg.main .close-button.close-bottom{position:absolute}.dg.main .close-button:hover{background-color:#111}.dg.a{float:right;margin-right:15px;overflow-y:visible}.dg.a.has-save>ul.close-top{margin-top:0}.dg.a.has-save>ul.close-bottom{margin-top:27px}.dg.a.has-save>ul.closed{margin-top:0}.dg.a .save-row{top:0;z-index:1002}.dg.a .save-row.close-top{position:relative}.dg.a .save-row.close-bottom{position:fixed}.dg li{-webkit-transition:height .1s ease-out;-o-transition:height .1s ease-out;-moz-transition:height .1s ease-out;transition:height .1s ease-out;-webkit-transition:overflow .1s linear;-o-transition:overflow .1s linear;-moz-transition:overflow .1s linear;transition:overflow .1s linear}.dg li:not(.folder){cursor:auto;height:27px;line-height:27px;padding:0 4px 0 5px}.dg li.folder{padding:0;border-left:4px solid rgba(0,0,0,0)}.dg li.title{cursor:pointer;margin-left:-4px}.dg .closed li:not(.title),.dg .closed ul li,.dg .closed ul li>*{height:0;overflow:hidden;border:0}.dg .cr{clear:both;padding-left:3px;height:27px;overflow:hidden}.dg .property-name{cursor:default;float:left;clear:left;width:40%;overflow:hidden;text-overflow:ellipsis}.dg .cr.function .property-name{width:100%}.dg .c{float:left;width:60%;position:relative}.dg .c input[type=text]{border:0;margin-top:4px;padding:3px;width:100%;float:right}.dg .has-slider input[type=text]{width:30%;margin-left:0}.dg .slider{float:left;width:66%;margin-left:-5px;margin-right:0;height:19px;margin-top:4px}.dg .slider-fg{height:100%}.dg .c input[type=checkbox]{margin-top:7px}.dg .c select{margin-top:5px}.dg .cr.function,.dg .cr.function .property-name,.dg .cr.function *,.dg .cr.boolean,.dg .cr.boolean *{cursor:pointer}.dg .cr.color{overflow:visible}.dg .selector{display:none;position:absolute;margin-left:-9px;margin-top:23px;z-index:10}.dg .c:hover .selector,.dg .selector.drag{display:block}.dg li.save-row{padding:0}.dg li.save-row .button{display:inline-block;padding:0px 6px}.dg.dialogue{background-color:#222;width:460px;padding:15px;font-size:13px;line-height:15px}#dg-new-constructor{padding:10px;color:#222;font-family:Monaco, monospace;font-size:10px;border:0;resize:none;box-shadow:inset 1px 1px 1px #888;word-wrap:break-word;margin:12px 0;display:block;width:440px;overflow-y:scroll;height:100px;position:relative}#dg-local-explain{display:none;font-size:11px;line-height:17px;border-radius:3px;background-color:#333;padding:8px;margin-top:10px}#dg-local-explain code{font-size:10px}#dat-gui-save-locally{display:none}.dg{color:#eee;font:11px 'Lucida Grande', sans-serif;text-shadow:0 -1px 0 #111}.dg.main::-webkit-scrollbar{width:5px;background:#1a1a1a}.dg.main::-webkit-scrollbar-corner{height:0;display:none}.dg.main::-webkit-scrollbar-thumb{border-radius:5px;background:#676767}.dg li:not(.folder){background:#1a1a1a;border-bottom:1px solid #2c2c2c}.dg li.save-row{line-height:25px;background:#dad5cb;border:0}.dg li.save-row select{margin-left:5px;width:108px}.dg li.save-row .button{margin-left:5px;margin-top:1px;border-radius:2px;font-size:9px;line-height:7px;padding:4px 4px 5px 4px;background:#c5bdad;color:#fff;text-shadow:0 1px 0 #b0a58f;box-shadow:0 -1px 0 #b0a58f;cursor:pointer}.dg li.save-row .button.gears{background:#c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;height:7px;width:8px}.dg li.save-row .button:hover{background-color:#bab19e;box-shadow:0 -1px 0 #b0a58f}.dg li.folder{border-bottom:0}.dg li.title{padding-left:16px;background:#000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.2)}.dg .closed li.title{background-image:url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)}.dg .cr.boolean{border-left:3px solid #806787}.dg .cr.color{border-left:3px solid}.dg .cr.function{border-left:3px solid #e61d5f}.dg .cr.number{border-left:3px solid #2FA1D6}.dg .cr.number input[type=text]{color:#2FA1D6}.dg .cr.string{border-left:3px solid #1ed36f}.dg .cr.string input[type=text]{color:#1ed36f}.dg .cr.function:hover,.dg .cr.boolean:hover{background:#111}.dg .c input[type=text]{background:#303030;outline:none}.dg .c input[type=text]:hover{background:#3c3c3c}.dg .c input[type=text]:focus{background:#494949;color:#fff}.dg .c .slider{background:#303030;cursor:ew-resize}.dg .c .slider-fg{background:#2FA1D6;max-width:100%}.dg .c .slider:hover{background:#3c3c3c}.dg .c .slider:hover .slider-fg{background:#44abda}
-`);pf.inject(Sf);var Ra="dg",Ca=72,Ba=20,Xt="Default",Wt=function(){try{return!!window.localStorage}catch{return!1}}(),jt=void 0,Oa=!0,Pt=void 0,Qr=!1,Va=[],W=function t(e){var n=this,r=e||{};this.domElement=document.createElement("div"),this.__ul=document.createElement("ul"),this.domElement.appendChild(this.__ul),p.addClass(this.domElement,Ra),this.__folders={},this.__controllers=[],this.__rememberedObjects=[],this.__rememberedObjectIndecesToControllers=[],this.__listening=[],r=h.defaults(r,{closeOnTop:!1,autoPlace:!0,width:t.DEFAULT_WIDTH}),r=h.defaults(r,{resizable:r.autoPlace,hideable:r.autoPlace}),h.isUndefined(r.load)?r.load={preset:Xt}:r.preset&&(r.load.preset=r.preset),h.isUndefined(r.parent)&&r.hideable&&Va.push(this),r.resizable=h.isUndefined(r.parent)&&r.resizable,r.autoPlace&&h.isUndefined(r.scrollable)&&(r.scrollable=!0);var i=Wt&&localStorage.getItem(Tt(this,"isLocal"))==="true",o=void 0,a=void 0;if(Object.defineProperties(this,{parent:{get:function(){return r.parent}},scrollable:{get:function(){return r.scrollable}},autoPlace:{get:function(){return r.autoPlace}},closeOnTop:{get:function(){return r.closeOnTop}},preset:{get:function(){return n.parent?n.getRoot().preset:r.load.preset},set:function(m){n.parent?n.getRoot().preset=m:r.load.preset=m,yf(this),n.revert()}},width:{get:function(){return r.width},set:function(m){r.width=m,oi(n,m)}},name:{get:function(){return r.name},set:function(m){r.name=m,a&&(a.innerHTML=r.name)}},closed:{get:function(){return r.closed},set:function(m){r.closed=m,r.closed?p.addClass(n.__ul,t.CLASS_CLOSED):p.removeClass(n.__ul,t.CLASS_CLOSED),this.onResize(),n.__closeButton&&(n.__closeButton.innerHTML=m?t.TEXT_OPEN:t.TEXT_CLOSED)}},load:{get:function(){return r.load}},useLocalStorage:{get:function(){return i},set:function(m){Wt&&(i=m,m?p.bind(window,"unload",o):p.unbind(window,"unload",o),localStorage.setItem(Tt(n,"isLocal"),m))}}}),h.isUndefined(r.parent)){if(this.closed=r.closed||!1,p.addClass(this.domElement,t.CLASS_MAIN),p.makeSelectable(this.domElement,!1),Wt&&i){n.useLocalStorage=!0;var s=localStorage.getItem(Tt(this,"gui"));s&&(r.load=JSON.parse(s))}this.__closeButton=document.createElement("div"),this.__closeButton.innerHTML=t.TEXT_CLOSED,p.addClass(this.__closeButton,t.CLASS_CLOSE_BUTTON),r.closeOnTop?(p.addClass(this.__closeButton,t.CLASS_CLOSE_TOP),this.domElement.insertBefore(this.__closeButton,this.domElement.childNodes[0])):(p.addClass(this.__closeButton,t.CLASS_CLOSE_BOTTOM),this.domElement.appendChild(this.__closeButton)),p.bind(this.__closeButton,"click",function(){n.closed=!n.closed})}else{r.closed===void 0&&(r.closed=!0);var l=document.createTextNode(r.name);p.addClass(l,"controller-name"),a=li(n,l);var c=function(m){return m.preventDefault(),n.closed=!n.closed,!1};p.addClass(this.__ul,t.CLASS_CLOSED),p.addClass(a,"title"),p.bind(a,"click",c),r.closed||(this.closed=!1)}r.autoPlace&&(h.isUndefined(r.parent)&&(Oa&&(Pt=document.createElement("div"),p.addClass(Pt,Ra),p.addClass(Pt,t.CLASS_AUTO_PLACE_CONTAINER),document.body.appendChild(Pt),Oa=!1),Pt.appendChild(this.domElement),p.addClass(this.domElement,t.CLASS_AUTO_PLACE)),this.parent||oi(n,r.width)),this.__resizeHandler=function(){n.onResizeDebounced()},p.bind(window,"resize",this.__resizeHandler),p.bind(this.__ul,"webkitTransitionEnd",this.__resizeHandler),p.bind(this.__ul,"transitionend",this.__resizeHandler),p.bind(this.__ul,"oTransitionEnd",this.__resizeHandler),this.onResize(),r.resizable&&wf(this),o=function(){Wt&&localStorage.getItem(Tt(n,"isLocal"))==="true"&&localStorage.setItem(Tt(n,"gui"),JSON.stringify(n.getSaveObject()))},this.saveToLocalStorageIfPossible=o;function d(){var u=n.getRoot();u.width+=1,h.defer(function(){u.width-=1})}r.parent||d()};W.toggleHide=function(){Qr=!Qr,h.each(Va,function(t){t.domElement.style.display=Qr?"none":""})};W.CLASS_AUTO_PLACE="a";W.CLASS_AUTO_PLACE_CONTAINER="ac";W.CLASS_MAIN="main";W.CLASS_CONTROLLER_ROW="cr";W.CLASS_TOO_TALL="taller-than-window";W.CLASS_CLOSED="closed";W.CLASS_CLOSE_BUTTON="close-button";W.CLASS_CLOSE_TOP="close-top";W.CLASS_CLOSE_BOTTOM="close-bottom";W.CLASS_DRAG="drag";W.DEFAULT_WIDTH=245;W.TEXT_CLOSED="Close Controls";W.TEXT_OPEN="Open Controls";W._keydownHandler=function(t){document.activeElement.type!=="text"&&(t.which===Ca||t.keyCode===Ca)&&W.toggleHide()};p.bind(window,"keydown",W._keydownHandler,!1);h.extend(W.prototype,{add:function(e,n){return Yt(this,e,n,{factoryArgs:Array.prototype.slice.call(arguments,2)})},addColor:function(e,n){return Yt(this,e,n,{color:!0})},remove:function(e){this.__ul.removeChild(e.__li),this.__controllers.splice(this.__controllers.indexOf(e),1);var n=this;h.defer(function(){n.onResize()})},destroy:function(){if(this.parent)throw new Error("Only the root GUI should be removed with .destroy(). For subfolders, use gui.removeFolder(folder) instead.");this.autoPlace&&Pt.removeChild(this.domElement);var e=this;h.each(this.__folders,function(n){e.removeFolder(n)}),p.unbind(window,"keydown",W._keydownHandler,!1),Fa(this)},addFolder:function(e){if(this.__folders[e]!==void 0)throw new Error('You already have a folder in this GUI by the name "'+e+'"');var n={name:e,parent:this};n.autoPlace=this.autoPlace,this.load&&this.load.folders&&this.load.folders[e]&&(n.closed=this.load.folders[e].closed,n.load=this.load.folders[e]);var r=new W(n);this.__folders[e]=r;var i=li(this,r.domElement);return p.addClass(i,"folder"),r},removeFolder:function(e){this.__ul.removeChild(e.domElement.parentElement),delete this.__folders[e.name],this.load&&this.load.folders&&this.load.folders[e.name]&&delete this.load.folders[e.name],Fa(e);var n=this;h.each(e.__folders,function(r){e.removeFolder(r)}),h.defer(function(){n.onResize()})},open:function(){this.closed=!1},close:function(){this.closed=!0},hide:function(){this.domElement.style.display="none"},show:function(){this.domElement.style.display=""},onResize:function(){var e=this.getRoot();if(e.scrollable){var n=p.getOffset(e.__ul).top,r=0;h.each(e.__ul.childNodes,function(i){e.autoPlace&&i===e.__save_row||(r+=p.getHeight(i))}),window.innerHeight-n-Ba<r?(p.addClass(e.domElement,W.CLASS_TOO_TALL),e.__ul.style.height=window.innerHeight-n-Ba+"px"):(p.removeClass(e.domElement,W.CLASS_TOO_TALL),e.__ul.style.height="auto")}e.__resize_handle&&h.defer(function(){e.__resize_handle.style.height=e.__ul.offsetHeight+"px"}),e.__closeButton&&(e.__closeButton.style.width=e.width+"px")},onResizeDebounced:h.debounce(function(){this.onResize()},50),remember:function(){if(h.isUndefined(jt)&&(jt=new xf,jt.domElement.innerHTML=mf),this.parent)throw new Error("You can only call remember on a top level GUI.");var e=this;h.each(Array.prototype.slice.call(arguments),function(n){e.__rememberedObjects.length===0&&bf(e),e.__rememberedObjects.indexOf(n)===-1&&e.__rememberedObjects.push(n)}),this.autoPlace&&oi(this,this.width)},getRoot:function(){for(var e=this;e.parent;)e=e.parent;return e},getSaveObject:function(){var e=this.load;return e.closed=this.closed,this.__rememberedObjects.length>0&&(e.preset=this.preset,e.remembered||(e.remembered={}),e.remembered[this.preset]=Jn(this)),e.folders={},h.each(this.__folders,function(n,r){e.folders[r]=n.getSaveObject()}),e},save:function(){this.load.remembered||(this.load.remembered={}),this.load.remembered[this.preset]=Jn(this),ri(this,!1),this.saveToLocalStorageIfPossible()},saveAs:function(e){this.load.remembered||(this.load.remembered={},this.load.remembered[Xt]=Jn(this,!0)),this.load.remembered[e]=Jn(this),this.preset=e,ii(this,e,!0),this.saveToLocalStorageIfPossible()},revert:function(e){h.each(this.__controllers,function(n){this.getRoot().load.remembered?ka(e||this.getRoot(),n):n.setValue(n.initialValue),n.__onFinishChange&&n.__onFinishChange.call(n,n.getValue())},this),h.each(this.__folders,function(n){n.revert(n)}),e||ri(this.getRoot(),!1)},listen:function(e){var n=this.__listening.length===0;this.__listening.push(e),n&&Ha(this.__listening)},updateDisplay:function(){h.each(this.__controllers,function(e){e.updateDisplay()}),h.each(this.__folders,function(e){e.updateDisplay()})}});function li(t,e,n){var r=document.createElement("li");return e&&r.appendChild(e),n?t.__ul.insertBefore(r,n):t.__ul.appendChild(r),t.onResize(),r}function Fa(t){p.unbind(window,"resize",t.__resizeHandler),t.saveToLocalStorageIfPossible&&p.unbind(window,"unload",t.saveToLocalStorageIfPossible)}function ri(t,e){var n=t.__preset_select[t.__preset_select.selectedIndex];e?n.innerHTML=n.value+"*":n.innerHTML=n.value}function vf(t,e,n){if(n.__li=e,n.__gui=t,h.extend(n,{options:function(a){if(arguments.length>1){var s=n.__li.nextElementSibling;return n.remove(),Yt(t,n.object,n.property,{before:s,factoryArgs:[h.toArray(arguments)]})}if(h.isArray(a)||h.isObject(a)){var l=n.__li.nextElementSibling;return n.remove(),Yt(t,n.object,n.property,{before:l,factoryArgs:[a]})}},name:function(a){return n.__li.firstElementChild.firstElementChild.innerHTML=a,n},listen:function(){return n.__gui.listen(n),n},remove:function(){return n.__gui.remove(n),n}}),n instanceof ti){var r=new er(n.object,n.property,{min:n.__min,max:n.__max,step:n.__step});h.each(["updateDisplay","onChange","onFinishChange","step","min","max"],function(o){var a=n[o],s=r[o];n[o]=r[o]=function(){var l=Array.prototype.slice.call(arguments);return s.apply(r,l),a.apply(n,l)}}),p.addClass(e,"has-slider"),n.domElement.insertBefore(r.domElement,n.domElement.firstElementChild)}else if(n instanceof er){var i=function(a){if(h.isNumber(n.__min)&&h.isNumber(n.__max)){var s=n.__li.firstElementChild.firstElementChild.innerHTML,l=n.__gui.__listening.indexOf(n)>-1;n.remove();var c=Yt(t,n.object,n.property,{before:n.__li.nextElementSibling,factoryArgs:[n.__min,n.__max,n.__step]});return c.name(s),l&&c.listen(),c}return a};n.min=h.compose(i,n.min),n.max=h.compose(i,n.max)}else n instanceof La?(p.bind(e,"click",function(){p.fakeEvent(n.__checkbox,"click")}),p.bind(n.__checkbox,"click",function(o){o.stopPropagation()})):n instanceof za?(p.bind(e,"click",function(){p.fakeEvent(n.__button,"click")}),p.bind(e,"mouseover",function(){p.addClass(n.__button,"hover")}),p.bind(e,"mouseout",function(){p.removeClass(n.__button,"hover")})):n instanceof ni&&(p.addClass(e,"color"),n.updateDisplay=h.compose(function(o){return e.style.borderLeftColor=n.__color.toString(),o},n.updateDisplay),n.updateDisplay());n.setValue=h.compose(function(o){return t.getRoot().__preset_select&&n.isModified()&&ri(t.getRoot(),!0),o},n.setValue)}function ka(t,e){var n=t.getRoot(),r=n.__rememberedObjects.indexOf(e.object);if(r!==-1){var i=n.__rememberedObjectIndecesToControllers[r];if(i===void 0&&(i={},n.__rememberedObjectIndecesToControllers[r]=i),i[e.property]=e,n.load&&n.load.remembered){var o=n.load.remembered,a=void 0;if(o[t.preset])a=o[t.preset];else if(o[Xt])a=o[Xt];else return;if(a[r]&&a[r][e.property]!==void 0){var s=a[r][e.property];e.initialValue=s,e.setValue(s)}}}}function Yt(t,e,n,r){if(e[n]===void 0)throw new Error('Object "'+e+'" has no property "'+n+'"');var i=void 0;if(r.color)i=new ni(e,n);else{var o=[e,n].concat(r.factoryArgs);i=hf.apply(t,o)}r.before instanceof at&&(r.before=r.before.__li),ka(t,i),p.addClass(i.domElement,"c");var a=document.createElement("span");p.addClass(a,"property-name"),a.innerHTML=i.property;var s=document.createElement("div");s.appendChild(a),s.appendChild(i.domElement);var l=li(t,s,r.before);return p.addClass(l,W.CLASS_CONTROLLER_ROW),i instanceof ni?p.addClass(l,"color"):p.addClass(l,of(i.getValue())),vf(t,l,i),t.__controllers.push(i),i}function Tt(t,e){return document.location.href+"."+e}function ii(t,e,n){var r=document.createElement("option");r.innerHTML=e,r.value=e,t.__preset_select.appendChild(r),n&&(t.__preset_select.selectedIndex=t.__preset_select.length-1)}function Ga(t,e){e.style.display=t.useLocalStorage?"block":"none"}function bf(t){var e=t.__save_row=document.createElement("li");p.addClass(t.domElement,"has-save"),t.__ul.insertBefore(e,t.__ul.firstChild),p.addClass(e,"save-row");var n=document.createElement("span");n.innerHTML="&nbsp;",p.addClass(n,"button gears");var r=document.createElement("span");r.innerHTML="Save",p.addClass(r,"button"),p.addClass(r,"save");var i=document.createElement("span");i.innerHTML="New",p.addClass(i,"button"),p.addClass(i,"save-as");var o=document.createElement("span");o.innerHTML="Revert",p.addClass(o,"button"),p.addClass(o,"revert");var a=t.__preset_select=document.createElement("select");if(t.load&&t.load.remembered?h.each(t.load.remembered,function(u,m){ii(t,m,m===t.preset)}):ii(t,Xt,!1),p.bind(a,"change",function(){for(var u=0;u<t.__preset_select.length;u++)t.__preset_select[u].innerHTML=t.__preset_select[u].value;t.preset=this.value}),e.appendChild(a),e.appendChild(n),e.appendChild(r),e.appendChild(i),e.appendChild(o),Wt){var s=document.getElementById("dg-local-explain"),l=document.getElementById("dg-local-storage"),c=document.getElementById("dg-save-locally");c.style.display="block",localStorage.getItem(Tt(t,"isLocal"))==="true"&&l.setAttribute("checked","checked"),Ga(t,s),p.bind(l,"change",function(){t.useLocalStorage=!t.useLocalStorage,Ga(t,s)})}var d=document.getElementById("dg-new-constructor");p.bind(d,"keydown",function(u){u.metaKey&&(u.which===67||u.keyCode===67)&&jt.hide()}),p.bind(n,"click",function(){d.innerHTML=JSON.stringify(t.getSaveObject(),void 0,2),jt.show(),d.focus(),d.select()}),p.bind(r,"click",function(){t.save()}),p.bind(i,"click",function(){var u=prompt("Enter a new preset name.");u&&t.saveAs(u)}),p.bind(o,"click",function(){t.revert()})}function wf(t){var e=void 0;t.__resize_handle=document.createElement("div"),h.extend(t.__resize_handle.style,{width:"6px",marginLeft:"-3px",height:"200px",cursor:"ew-resize",position:"absolute"});function n(o){return o.preventDefault(),t.width+=e-o.clientX,t.onResize(),e=o.clientX,!1}function r(){p.removeClass(t.__closeButton,W.CLASS_DRAG),p.unbind(window,"mousemove",n),p.unbind(window,"mouseup",r)}function i(o){return o.preventDefault(),e=o.clientX,p.addClass(t.__closeButton,W.CLASS_DRAG),p.bind(window,"mousemove",n),p.bind(window,"mouseup",r),!1}p.bind(t.__resize_handle,"mousedown",i),p.bind(t.__closeButton,"mousedown",i),t.domElement.insertBefore(t.__resize_handle,t.domElement.firstElementChild)}function oi(t,e){t.domElement.style.width=e+"px",t.__save_row&&t.autoPlace&&(t.__save_row.style.width=e+"px"),t.__closeButton&&(t.__closeButton.style.width=e+"px")}function Jn(t,e){var n={};return h.each(t.__rememberedObjects,function(r,i){var o={},a=t.__rememberedObjectIndecesToControllers[i];h.each(a,function(s,l){o[l]=e?s.initialValue:s.getValue()}),n[i]=o}),n}function yf(t){for(var e=0;e<t.__preset_select.length;e++)t.__preset_select[e].value===t.preset&&(t.__preset_select.selectedIndex=e)}function Ha(t){t.length!==0&&_f.call(window,function(){Ha(t)}),h.each(t,function(e){e.updateDisplay()})}var $a=W;function Wa(t,e,n,r){let i=new $a,o={openGithub:()=>{window.location.href=f.githubRepoLink},profile:()=>{e.profileNextFrame(!0)},resetCamera:()=>{r.resetPosition()},resetSimulation:()=>{f.hairSimulation.nextFrameResetSimulation=!0},resetBall:()=>{X.copy(f.hairSimulation.collisionSphereInitial,f.hairSimulation.collisionSphere)},modelRotation:0};i.add(o,"openGithub").name("GITHUB"),i.add(o,"profile").name("Profile");let a=ui(f,"displayMode",[{label:"Final",value:G.FINAL},{label:"DBG: tiles",value:G.TILES},{label:"DBG: slices cnt",value:G.USED_SLICES},{label:"DBG: hw-render",value:G.HW_RENDER},{label:"DBG: depth",value:G.DEPTH},{label:"DBG: normals",value:G.NORMALS},{label:"DBG: ao",value:G.AO}]),s=i.add(a,"displayMode",a.values).name("Display mode");l(i),c(i),d(i),u(i),m(i),v(i,f.lights[0],"Light 0"),v(i,f.lights[1],"Light 1"),v(i,f.lights[2],"Light 2"),b(i),x(i),g();function l(w){let _=w.addFolder("Scene"),S=f.background;_.add(o,"resetCamera").name("Reset camera"),_.add(o,"modelRotation",0,360).step(1).name("Rotation").onChange(E=>{M.rotationY(Ie(E),n.modelMatrix)}),T(_,S,"color0","Bg color 0"),T(_,S,"color1","Bg color 1"),_.add(S,"noiseScale",0,10).name("Bg noise scale"),_.add(S,"gradientStrength",0,1).name("Bg gradient")}function c(w){let _=f.hairRender,S=w.addFolder("Hair render");S.open(),S.add(_,"lodRenderPercent",0,100).step(1).name("Render %"),S.add(_,"fiberRadius",1e-4,.002).name("Radius");let E=S.add(_,"dbgTileModeMaxSegments",1,512).step(1).name("Max segments"),F=S.add(_,"dbgSlicesModeMaxSlices",1,128).step(1).name("Max slices"),A=S.add(_,"dbgShowTiles").name("Show tiles");s.onFinishChange(z);function z(){let y=f.displayMode;ci(E,y===G.TILES),ci(F,y===G.USED_SLICES),ci(A,y===G.FINAL)}}function d(w){let _=f.hairRender.material,S=w.addFolder("Hair material");T(S,_,"color0","Color root"),T(S,_,"color1","Color tip"),S.add(_,"colorRng",0,1).name("Color RNG"),S.add(_,"lumaRng",0,1).name("Luma RNG"),S.add(_,"specular",0,3,.01).name("Specular"),S.add(_,"weightTT",0,2,.01).name("Weight TT"),S.add(_,"weightTRT",0,2,.01).name("Weight TRT"),S.add(_,"shift",-1,1,.01).name("Shift"),S.add(_,"roughness",0,1,.01).name("Roughness"),S.add(_,"attenuation",0,40).name("Attenuation"),S.add(_,"shadows",0,1).name("Shadows")}function u(w){let _=f.hairSimulation,S=_.sdf,E=_.physicsForcesGrid,F=_.constraints,A=_.wind,z=w.addFolder("Hair simulation"),y=z;y.open(),y.add(o,"resetSimulation").name("Reset simulation"),y.add(_,"enabled").name("Enabled"),y.add(_,"gravity",0,.1).name("Gravity"),y.add(_,"friction",0,1).name("Friction"),y.add(_,"volumePreservation",0,25e-5).name("Vol. Preserv."),y.add(o,"resetBall").name("Reset ball"),y.add(f,"drawColliders").name("Draw ball"),y=z.addFolder("Constraints"),y.open(),y.add(F,"constraintIterations",1,10).step(1).name("Iterations"),y.add(F,"stiffnessLengthConstr",0,1).name("Stiff. len"),y.add(F,"stiffnessGlobalConstr",0,1).name("Stiff. global"),y.add(F,"globalExtent",0,1).name("Global extent"),y.add(F,"globalFade",0,1).name("Global fade"),y.add(F,"stiffnessLocalConstr",0,1).name("Stiff. local"),y.add(F,"stiffnessCollisions",0,1).name("Stiff. collisions"),y.add(F,"stiffnessSDF",0,1).name("Stiff. SDF"),y.add(S,"distanceOffset",-.003,.003).name("SDF offset"),y=z.addFolder("Wind"),y.open(),y.add(A,"dirPhi",-179,179).step(1).name("Dir phi"),y.add(A,"dirTheta",15,165).step(1).name("Dir th"),y.add(A,"strength",0,1).name("Strength"),y.add(A,"strengthLull",0,1).name("Lull strength"),y.add(A,"strengthFrequency",.001,2).name("Str. frequency"),y.add(A,"strengthJitter",0,1).name("Str. Jitter"),y.add(A,"phaseOffset",0,.5).name("Phase offset"),y.add(A,"colisionTraceOffset",1,5).name("Collision offset"),y=z.addFolder("SDF preview"),y.add(S,"showDebugView").name("Enabled"),y.add(S,"debugSemitransparent").name("Semitransparent"),y.add(S,"debugSlice",0,1,.01).name("Slice"),y=z.addFolder("Grids preview"),y.add(E,"showDebugView").name("Enabled");let J=ui(E,"debugValue",[{label:"Density",value:_e.DENSITY},{label:"Density Grad",value:_e.DENSITY_GRADIENT},{label:"Velocity",value:_e.VELOCITY},{label:"Wind",value:_e.WIND}]);y.add(J,"debugValue",J.values).name("Value"),y.add(E,"debugAbsValue").name("Vector abs"),y.add(E,"debugSlice",0,1,.01).name("Slice")}function m(w){let _=w.addFolder("Ambient light");T(_,f.lightAmbient,"color","Color"),_.add(f.lightAmbient,"energy",0,.2,.01).name("Energy")}function v(w,_,S){let E=w.addFolder(S);E.add(_,"posPhi",-179,179).step(1).name("Position phi"),E.add(_,"posTheta",15,165).step(1).name("Position th"),T(E,_,"color","Color"),E.add(_,"energy",0,2).name("Energy")}function b(w){let _=f.shadows,S=w.addFolder("Shadows"),E=ui(_,"usePCSS",[{label:"PCF",value:!1},{label:"PCSS",value:!0}]);S.add(E,"usePCSS",E.values).name("Technique"),S.add(_,"strength",0,1).name("Strength"),S.add(_,"PCF_Radius",[0,1,2,3,4]).name("PCF radius"),S.add(_,"bias",0,.001).name("Bias"),S.add(_,"hairFiberWidthMultiplier",.5,6).name("Hair width mul"),S.add(_.source,"posPhi",-179,179).step(1).name("Position phi"),S.add(_.source,"posTheta",15,165).step(1).name("Position th"),S.add(_,"showDebugView").name("Show preview")}function x(w){let _=f.ao,S=w.addFolder("Ambient occl.");S.add(_,"strength",0,1).name("Strength"),S.add(_,"radius",.001,2.5).name("Radius"),S.add(_,"numDirections",0,128,1).name("Directions"),S.add(_,"numSteps",2,32,1).name("Steps"),S.add(_,"directionOffset",0,5).name("Dir. offset"),S.add(_,"falloffStart2",0,.5).name("Falloff start"),S.add(_,"falloffEnd2",1,5).name("Falloff end")}function g(){let w=i.addFolder("Color mgmt"),_=f.colors;w.add(_,"gamma",1,3).name("Gamma"),w.add(_,"exposure",0,2).name("Exposure"),w.add(_,"ditherStrength",0,2).name("Dithering")}function T(w,_,S,E){let F={value:[]};Object.defineProperty(F,"value",{enumerable:!0,get:()=>{let A=_[S];return[A[0]*255,A[1]*255,A[2]*255]},set:A=>{let z=_[S];z[0]=A[0]/255,z[1]=A[1]/255,z[2]=A[2]/255}}),w.addColor(F,"value").name(E)}}function ci(t,e){if(!t){console.error("Not controller for gui element found!");return}let n=t.__li;e?n.style.display="":n.style.display="none"}var ui=(t,e,n)=>{let r={values:n.map(i=>i.label)};return Object.defineProperty(r,e,{enumerable:!0,get:()=>{let i=t[e];return(n.find(a=>a.value===i)||n[0]).label},set:i=>{let o=n.find(a=>a.label===i)||n[0];t[e]=o.value}}),r};function ja(t,e){let n=l();t.width=n.width,t.height=n.height,console.log("Init canvas size:",n);let r=[];return{revalidateCanvasSize:a,addListener:c=>r.push(c),getViewportSize:l,getScreenTextureView:()=>e.getCurrentTexture().createView()};function a(){let c=l();(c.width!==t.width||c.height!==t.height)&&c.width&&c.height&&s(c)}function s(c){t.width=c.width,t.height=c.height,r.forEach(d=>d(c))}function l(){let c=window.devicePixelRatio||1;return{width:t.clientWidth*c,height:t.clientHeight*c}}}function Ya(t){let e=["internal","out-of-memory","validation"],n=e.toReversed(),r="-";return{startErrorScope:i,reportErrorScopeAsync:o};function i(a="-"){r=a,e.forEach(s=>t.pushErrorScope(s))}async function o(a){let s;for(let l of n){let c=await t.popErrorScope();if(c){let d=`WebGPU error [${r}][${l}]: ${c.message}`;s=d,a?a(d):console.error(d)}}return s}}var Xa=t=>t=="0"?"1":"0",tr=class{constructor(e,n,r,i,o){this.name=e;this.strandsCount=n;this.pointsPerStrand=r;this.bounds=i;this.buffers=o}_currentPositionsBuffer="0";get pointsCount(){return this.strandsCount*this.pointsPerStrand}get segmentCount(){return this.strandsCount*(this.pointsPerStrand-1)}get currentPositionsBufferIdx(){return this._currentPositionsBuffer}getRenderedStrandCount(){let e=It(f.hairRender.lodRenderPercent,0,100),{strandsCount:n}=this,r=Math.ceil(n*e/100);return It(r,0,n)}reportRenderedStrandCount(){let{strandsCount:e,pointsPerStrand:n,segmentCount:r}=this,i=this.getRenderedStrandCount();U.update("Rendered strands",ur(i,e,0));let o=i*(n-1);return U.update("Rendered segments",ur(o,r,0)),i}resetSimulation(e){let{initialPointsPositionsBuffer:n,pointsPositionsBuffer_0:r,pointsPositionsBuffer_1:i}=this.buffers,o=n.size;e.copyBufferToBuffer(n,0,r,0,o),e.copyBufferToBuffer(n,0,i,0,o)}swapPositionBuffersAfterSimIntegration(){this._currentPositionsBuffer=Xa(this._currentPositionsBuffer)}bindPointsPositions=e=>this.bindPointsPositionsByPosIdx(e,this._currentPositionsBuffer);bindPointsPositions_PREV=e=>this.bindPointsPositionsByPosIdx(e,Xa(this._currentPositionsBuffer));bindPointsPositionsByPosIdx=(e,n)=>{let r=n=="0"?this.buffers.pointsPositionsBuffer_0:this.buffers.pointsPositionsBuffer_1;return{binding:e,resource:{buffer:r}}};bindTangents=e=>K(e,this.buffers.tangentsBuffer);bindPointsPositions_INITIAL=e=>K(e,this.buffers.initialPointsPositionsBuffer);bindInitialSegmentLengths=e=>K(e,this.buffers.initialSegmentLengthsBuffer);bindHairData=e=>K(e,this.buffers.dataBuffer);bindShading=e=>K(e,this.buffers.shadingBuffer);bindIndexBuffer(e){e.setIndexBuffer(this.buffers.indicesData.indexBuffer,this.buffers.indicesData.indexFormat)}};var Tf=t=>{let e=new Float32Array(t,0,1)[0],n=new Uint32Array(t,4,7);return{version:e,numHairStrands:n[0],numVerticesPerStrand:n[1],offsetVertexPosition:n[2],offsetStrandUV:n[3],offsetVertexUV:n[4],offsetStrandThickness:n[5],offsetVertexColor:n[6]}},qa=(t,e)=>{let n=Tf(t);console.log("Loaded Tfx file with header",n);let i=n.numHairStrands*n.numVerticesPerStrand*4,a=new Float32Array(t,n.offsetVertexPosition,i).map(s=>s*e);return{header:n,vertexPositions:a}};var nr=xs(Ka());var Ef=nr.default?.Mesh||nr.Mesh,Za=t=>Math.ceil(t.vertices.length/3),Mf=t=>Math.ceil(t.indices.length/3);function Ja(t,e,n,r=1){let i=new Ef(n);Df(i,r);let o=Za(i),a=Mf(i),s=Dt(Float32Array,i.vertices),l=dn(t,`${e}-positions`,s),c=dn(t,`${e}-normals`,i.vertexNormals),d=dn(t,`${e}-uvs`,i.textures),u=pn(t,`${e}-indices`,i.indices),m=Ao(s);return console.log(`Loaded OBJ object '${e}', bounds`,m.sphere),{name:e,vertexCount:o,triangleCount:a,positionsBuffer:l,normalsBuffer:c,uvBuffer:d,indexBuffer:u,bounds:m,isColliderPreview:!1}}var If=t=>{if(!t.vertexNormals||!Array.isArray(t.vertexNormals))return!1;let e=t.vertexNormals[0];return typeof e=="number"&&!isNaN(e)},Af=t=>{if(!t.textures||!Array.isArray(t.textures))return!1;let e=t.textures[0];return typeof e=="number"&&!isNaN(e)};function Df(t,e){if(t.vertices=t.vertices.map(n=>n*e),!If(t))throw new Error("Expected normals in the OBJ file");if(Af(t))for(let n=0;n<t.textures.length;n+=1){let r=t.textures[n];r=r%1,r=r<0?1-Math.abs(r):r,r=(n&1)==1?1-r:r,t.textures[n]=r}else{let n=Za(t);t.textures=He(n*2).fill(.5)}}var Rf="r32float";function Qa(t,e,n,r){let i={width:n,height:n,depthOrArrayLayers:n},o=t.createTexture({label:`${e}-texture`,dimension:"3d",size:i,format:Rf,usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST});return t.queue.writeTexture({texture:o},r,{bytesPerRow:we*n,rowsPerImage:n},i),o}function es(t,e){return t.createSampler({label:`${e}-sampler`,addressModeU:"clamp-to-edge",addressModeV:"clamp-to-edge",addressModeW:"clamp-to-edge",magFilter:"linear",minFilter:"linear"})}function ts(t,e,n){let r=new Uint32Array(n,0,1)[0],i=2,o=new Float32Array(n),a=[[o[i+0],o[i+1],o[i+2]],[o[i+3],o[i+4],o[i+5]]];i+=6;let s=o.slice(i),l=r*r*r;if(s.length!==l)throw new Error(`Invalid SDF binary file. With dims=${r} expected ${l} values. Got ${s.length}.`);let c=Qa(t,e,r,s),d=c.createView(),u=es(t,e);return new ae(e,a,r,c,d,u)}var Cf=[{name:"sintel",file:"sintel.obj"},{name:"sintelEyes",file:"sintel-eyes.obj"},{name:"sphereCollider",file:"sphere.obj",isColliderPreview:!0}],ns={name:"sintel-sdf",file:"sintel-sdf.bin"};async function rs(t){let e=[];for(let l of Cf){console.groupCollapsed(l.name);let c=await f.loaders.textFileReader(`${on}/${l.file}`),d=Ja(t,l.name,c);d.isColliderPreview=!!l.isColliderPreview,e.push(d),console.groupEnd()}X.copy(f.hairSimulation.collisionSphere,f.hairSimulation.collisionSphereInitial);let n=await Of(f.hairFile,1),r=await Bf(t,"sintelHair",n);f.pointsPerStrand=r.pointsPerStrand,U.update("Strands",un(r.strandsCount,1)),U.update("Points per strand",r.pointsPerStrand),U.update("Segments",un(r.segmentCount,0));let i=await f.loaders.binaryFileReader(`${on}/${ns.file}`),o=ts(t,ns.name,i),a=new De(t,r.bounds.box),s=M.identity();return M.rotateY(s,Ie(0),s),{objects:e,hairObject:r,sdfCollider:o,modelMatrix:s,physicsGrid:a}}function Bf(t,e,n){let r=Dr(n.vertexPositions,4),i={box:r,sphere:Rr(r)};console.log("Hair bounds",i.sphere);let o=Wo(t,e,n,i.sphere),a=qo(t,e,n),s=Xo(t,e,n),l=$o(t,e,n),c=ha(t,e,n.header.numVerticesPerStrand,n.vertexPositions),d=(b,x=0)=>Yo(t,b,n.vertexPositions,x),u=d(`${e}-points-positions-initial`,GPUBufferUsage.COPY_SRC),m=d(`${e}-points-positions-0`),v=d(`${e}-points-positions-1`);return new tr(e,n.header.numHairStrands,n.header.numVerticesPerStrand,i,{dataBuffer:o,indicesData:l,initialPointsPositionsBuffer:u,initialSegmentLengthsBuffer:c,pointsPositionsBuffer_0:m,pointsPositionsBuffer_1:v,shadingBuffer:s,tangentsBuffer:a})}async function Of(t,e=1){console.log(`Loading hair file: '${t}'`);let n=await f.loaders.binaryFileReader(`${on}/${t}`);return qa(n,e)}var Ff=hr.create(),is=X.create(),fi=X.create(),Gf=M.create(),os=(t,e,n,r)=>{let i=hr.set(n[0]/t.width,n[1]/t.height,Ff);i[0]=i[0]*2-1,i[1]=(1-i[1])*2-1;let o=M.invert(e,Gf),a=X.set(i[0],i[1],0,1,is),s=X.set(i[0],i[1],1,1,fi),l=Mr(o,a,is),c=Mr(o,s,fi);return P.copy(l,r.origin),P.normalize(P.subtract(c,l,fi),r.dir),r},di=(t,e,n)=>P.addScaled(t.origin,t.dir,e,n),pi=(t,e,n)=>{let r=P.subtract(e,t.origin,n),i=P.dot(r,t.dir);return di(t,i,n)},Nf=P.create(),Je=(t,e)=>{let n=pi(t,e,Nf);return P.distance(e,n)},Lf=P.create(),Uf=P.create(),as=(t,e,n,r=5)=>{let i=P.copy(e,Lf),o=P.copy(n,Uf);for(let l=0;l<r;l++){let c=Je(t,i),d=Je(t,o);c<d?P.midpoint(i,o,o):P.midpoint(i,o,i)}let a=Je(t,i),s=Je(t,o);return a<s?i:o};var zf=P.create(),Vf=(t,e)=>{let n=e.d+P.dot(t.origin,e.normal,zf),r=P.dot(t.dir,e.normal);return-n/r},ss=(t,e,n)=>{let r=Vf(t,e);return di(t,r,n)};var kf=P.create(1,0,0),Hf=P.create(0,1,0),$f=P.create(0,0,1),mi=[kf,Hf,$f],Wf=[ye.AXIS_X,ye.AXIS_Y,ye.AXIS_Z],jf=f.colliderGizmo.lineLength*.1,Yf=X.create(),Xf=X.create(),qf=M.create(),Kf={origin:P.create(),dir:P.create()},hi=t=>document.body.style.cursor=t;function cs(){let t=f.colliderGizmo,e=0;return function(n,r,i,o){let a=n.mouse.touching,s=[n.mouse.x,n.mouse.y],l=mn(i,o,qf),c=os(r,l,s,Kf);if(t.isDragging)Zf(c,e);else{let d=P.create(),u=Jf(c,d);Qf(u);let m=f.hairSimulation.collisionSphere;e=P.distance(m,d),a&&(a=u!==ye.NONE,hi("grabbing"))}return t.isDragging=a,a}}function Zf(t,e){let n=f.colliderGizmo,r=f.hairSimulation.collisionSphere,i=n.activeAxis,o={dir:mi[i],origin:r},a={normal:t.dir,d:-P.dot(t.dir,r)},s=ss(t,a),l=pi(o,s),c=e;l=P.addScaled(l,o.dir,-c),r[i]=l[i]}function Jf(t,e){let{lineWidth:n,hoverPadding:r}=f.colliderGizmo,i=Number.MAX_SAFE_INTEGER,o=0;mi.forEach((m,v)=>{let[b,x]=ls(m),g=Math.min(Je(t,b),Je(t,x));g<i&&(i=g,o=v)});let a=mi[o],[s,l]=ls(a),c=as(t,s,l),d=Je(t,c),u=n*r;return d<u?(P.copy(c,e),o):ye.NONE}function Qf(t){t===ye.NONE?(f.colliderGizmo.activeAxis=ye.NONE,hi("default")):(f.colliderGizmo.activeAxis=Wf[t],hi("grab"))}function ls(t){let{lineLength:e}=f.colliderGizmo,n=f.hairSimulation.collisionSphere,r=P.addScaled(n,t,jf,Yf),i=P.addScaled(r,t,e,Xf);return[r,i]}function us(t){console.log("Profiler:",t);let e=document.getElementById("profiler-results");e.innerHTML="",tt(e.parentNode);let n={},r=new Set;t.forEach(([a,s])=>{let l=n[a]||0;n[a]=l+s,r.add(a)});let i=0;r.forEach(a=>{let s=n[a],l=document.createElement("li");l.innerHTML=`${a}: ${s.toFixed(2)}ms`,e.appendChild(l),i+=s});let o=document.createElement("li");o.innerHTML=`--- TOTAL: ${i.toFixed(2)}ms ---`,e.appendChild(o)}(async function(){globalThis._config=f;let t=await Ui();if(!t){rr();return}let e=Ya(t);e.startErrorScope("init");let n=navigator.gpu.getPreferredCanvasFormat(),[r,i]=ed("#gpu-canvas",t,n),o=ja(r,i),a=zi(window,r),s=await rs(t),l=new ln(t),c=new Kn(t,o.getViewportSize(),n,l);o.addListener(c.onCanvasResize),Wa(t,l,s,c.cameraCtrl);let d=cs();U.show();let u=!1,m=await e.reportErrorScopeAsync();if(m){rr(m);return}if(e.startErrorScope("beforeFirstFrame"),c.beforeFirstFrame(s),m=await e.reportErrorScopeAsync(),m){rr(m);return}let v={label:"main-frame-cmd-buffer"},b=()=>{e.startErrorScope("frame"),U.onEndFrame(),U.onBeginFrame(),l.beginFrame();let g=U.deltaTimeMS*Di;o.revalidateCanvasSize();let T=a();d(T,o.getViewportSize(),c.viewMatrix,c.projectionMat)||c.updateCamera(g,T);let _=t.createCommandEncoder(v),S=o.getScreenTextureView();c.cmdRender(_,s,S),l.endFrame(_),t.queue.submit([_.finish()]),l.scheduleRaportIfNeededAsync(us),u||(e.reportErrorScopeAsync(x),requestAnimationFrame(b))};requestAnimationFrame(b);function x(g){throw rr(g),u=!0,new Error(g)}})();function ed(t,e,n){let r=document.querySelector(t),i=r.getContext("webgpu");return i.configure({device:e,format:n,alphaMode:"premultiplied"}),[r,i]}function rr(t){cn(document.getElementById("gpu-canvas")),tt(document.getElementById("no-webgpu"),"flex"),t&&(document.getElementById("error-msg").textContent=t)}})();
+</div>`,zf=function(e,n){var r=e[n];return h.isArray(arguments[2])||h.isObject(arguments[2])?new Of(e,n,arguments[2]):h.isNumber(r)?h.isNumber(arguments[2])&&h.isNumber(arguments[3])?h.isNumber(arguments[4])?new pi(e,n,arguments[2],arguments[3],arguments[4]):new pi(e,n,arguments[2],arguments[3]):h.isNumber(arguments[4])?new cr(e,n,{min:arguments[2],max:arguments[3],step:arguments[4]}):new cr(e,n,{min:arguments[2],max:arguments[3]}):h.isString(r)?new Ff(e,n):h.isFunction(r)?new ns(e,n,""):h.isBoolean(r)?new es(e,n):null};function Vf(t){setTimeout(t,1e3/60)}var Hf=window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||Vf,$f=function(){function t(){Ie(this,t),this.backgroundElement=document.createElement("div"),h.extend(this.backgroundElement.style,{backgroundColor:"rgba(0,0,0,0.8)",top:0,left:0,display:"none",zIndex:"1000",opacity:0,WebkitTransition:"opacity 0.2s linear",transition:"opacity 0.2s linear"}),p.makeFullscreen(this.backgroundElement),this.backgroundElement.style.position="fixed",this.domElement=document.createElement("div"),h.extend(this.domElement.style,{position:"fixed",display:"none",zIndex:"1001",opacity:0,WebkitTransition:"-webkit-transform 0.2s ease-out, opacity 0.2s linear",transition:"transform 0.2s ease-out, opacity 0.2s linear"}),document.body.appendChild(this.backgroundElement),document.body.appendChild(this.domElement);var e=this;p.bind(this.backgroundElement,"click",function(){e.hide()})}return Ce(t,[{key:"show",value:function(){var n=this;this.backgroundElement.style.display="block",this.domElement.style.display="block",this.domElement.style.opacity=0,this.domElement.style.webkitTransform="scale(1.1)",this.layout(),h.defer(function(){n.backgroundElement.style.opacity=1,n.domElement.style.opacity=1,n.domElement.style.webkitTransform="scale(1)"})}},{key:"hide",value:function(){var n=this,r=function i(){n.domElement.style.display="none",n.backgroundElement.style.display="none",p.unbind(n.domElement,"webkitTransitionEnd",i),p.unbind(n.domElement,"transitionend",i),p.unbind(n.domElement,"oTransitionEnd",i)};p.bind(this.domElement,"webkitTransitionEnd",r),p.bind(this.domElement,"transitionend",r),p.bind(this.domElement,"oTransitionEnd",r),this.backgroundElement.style.opacity=0,this.domElement.style.opacity=0,this.domElement.style.webkitTransform="scale(1.1)"}},{key:"layout",value:function(){this.domElement.style.left=window.innerWidth/2-p.getWidth(this.domElement)/2+"px",this.domElement.style.top=window.innerHeight/2-p.getHeight(this.domElement)/2+"px"}}]),t}(),Wf=Cf(`.dg ul{list-style:none;margin:0;padding:0;width:100%;clear:both}.dg.ac{position:fixed;top:0;left:0;right:0;height:0;z-index:0}.dg:not(.ac) .main{overflow:hidden}.dg.main{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear}.dg.main.taller-than-window{overflow-y:auto}.dg.main.taller-than-window .close-button{opacity:1;margin-top:-1px;border-top:1px solid #2c2c2c}.dg.main ul.closed .close-button{opacity:1 !important}.dg.main:hover .close-button,.dg.main .close-button.drag{opacity:1}.dg.main .close-button{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear;border:0;line-height:19px;height:20px;cursor:pointer;text-align:center;background-color:#000}.dg.main .close-button.close-top{position:relative}.dg.main .close-button.close-bottom{position:absolute}.dg.main .close-button:hover{background-color:#111}.dg.a{float:right;margin-right:15px;overflow-y:visible}.dg.a.has-save>ul.close-top{margin-top:0}.dg.a.has-save>ul.close-bottom{margin-top:27px}.dg.a.has-save>ul.closed{margin-top:0}.dg.a .save-row{top:0;z-index:1002}.dg.a .save-row.close-top{position:relative}.dg.a .save-row.close-bottom{position:fixed}.dg li{-webkit-transition:height .1s ease-out;-o-transition:height .1s ease-out;-moz-transition:height .1s ease-out;transition:height .1s ease-out;-webkit-transition:overflow .1s linear;-o-transition:overflow .1s linear;-moz-transition:overflow .1s linear;transition:overflow .1s linear}.dg li:not(.folder){cursor:auto;height:27px;line-height:27px;padding:0 4px 0 5px}.dg li.folder{padding:0;border-left:4px solid rgba(0,0,0,0)}.dg li.title{cursor:pointer;margin-left:-4px}.dg .closed li:not(.title),.dg .closed ul li,.dg .closed ul li>*{height:0;overflow:hidden;border:0}.dg .cr{clear:both;padding-left:3px;height:27px;overflow:hidden}.dg .property-name{cursor:default;float:left;clear:left;width:40%;overflow:hidden;text-overflow:ellipsis}.dg .cr.function .property-name{width:100%}.dg .c{float:left;width:60%;position:relative}.dg .c input[type=text]{border:0;margin-top:4px;padding:3px;width:100%;float:right}.dg .has-slider input[type=text]{width:30%;margin-left:0}.dg .slider{float:left;width:66%;margin-left:-5px;margin-right:0;height:19px;margin-top:4px}.dg .slider-fg{height:100%}.dg .c input[type=checkbox]{margin-top:7px}.dg .c select{margin-top:5px}.dg .cr.function,.dg .cr.function .property-name,.dg .cr.function *,.dg .cr.boolean,.dg .cr.boolean *{cursor:pointer}.dg .cr.color{overflow:visible}.dg .selector{display:none;position:absolute;margin-left:-9px;margin-top:23px;z-index:10}.dg .c:hover .selector,.dg .selector.drag{display:block}.dg li.save-row{padding:0}.dg li.save-row .button{display:inline-block;padding:0px 6px}.dg.dialogue{background-color:#222;width:460px;padding:15px;font-size:13px;line-height:15px}#dg-new-constructor{padding:10px;color:#222;font-family:Monaco, monospace;font-size:10px;border:0;resize:none;box-shadow:inset 1px 1px 1px #888;word-wrap:break-word;margin:12px 0;display:block;width:440px;overflow-y:scroll;height:100px;position:relative}#dg-local-explain{display:none;font-size:11px;line-height:17px;border-radius:3px;background-color:#333;padding:8px;margin-top:10px}#dg-local-explain code{font-size:10px}#dat-gui-save-locally{display:none}.dg{color:#eee;font:11px 'Lucida Grande', sans-serif;text-shadow:0 -1px 0 #111}.dg.main::-webkit-scrollbar{width:5px;background:#1a1a1a}.dg.main::-webkit-scrollbar-corner{height:0;display:none}.dg.main::-webkit-scrollbar-thumb{border-radius:5px;background:#676767}.dg li:not(.folder){background:#1a1a1a;border-bottom:1px solid #2c2c2c}.dg li.save-row{line-height:25px;background:#dad5cb;border:0}.dg li.save-row select{margin-left:5px;width:108px}.dg li.save-row .button{margin-left:5px;margin-top:1px;border-radius:2px;font-size:9px;line-height:7px;padding:4px 4px 5px 4px;background:#c5bdad;color:#fff;text-shadow:0 1px 0 #b0a58f;box-shadow:0 -1px 0 #b0a58f;cursor:pointer}.dg li.save-row .button.gears{background:#c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;height:7px;width:8px}.dg li.save-row .button:hover{background-color:#bab19e;box-shadow:0 -1px 0 #b0a58f}.dg li.folder{border-bottom:0}.dg li.title{padding-left:16px;background:#000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.2)}.dg .closed li.title{background-image:url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)}.dg .cr.boolean{border-left:3px solid #806787}.dg .cr.color{border-left:3px solid}.dg .cr.function{border-left:3px solid #e61d5f}.dg .cr.number{border-left:3px solid #2FA1D6}.dg .cr.number input[type=text]{color:#2FA1D6}.dg .cr.string{border-left:3px solid #1ed36f}.dg .cr.string input[type=text]{color:#1ed36f}.dg .cr.function:hover,.dg .cr.boolean:hover{background:#111}.dg .c input[type=text]{background:#303030;outline:none}.dg .c input[type=text]:hover{background:#3c3c3c}.dg .c input[type=text]:focus{background:#494949;color:#fff}.dg .c .slider{background:#303030;cursor:ew-resize}.dg .c .slider-fg{background:#2FA1D6;max-width:100%}.dg .c .slider:hover{background:#3c3c3c}.dg .c .slider:hover .slider-fg{background:#44abda}
+`);Uf.inject(Wf);var Ya="dg",Xa=72,qa=20,nn="Default",Qt=function(){try{return!!window.localStorage}catch{return!1}}(),en=void 0,Ka=!0,It=void 0,fi=!1,rs=[],j=function t(e){var n=this,r=e||{};this.domElement=document.createElement("div"),this.__ul=document.createElement("ul"),this.domElement.appendChild(this.__ul),p.addClass(this.domElement,Ya),this.__folders={},this.__controllers=[],this.__rememberedObjects=[],this.__rememberedObjectIndecesToControllers=[],this.__listening=[],r=h.defaults(r,{closeOnTop:!1,autoPlace:!0,width:t.DEFAULT_WIDTH}),r=h.defaults(r,{resizable:r.autoPlace,hideable:r.autoPlace}),h.isUndefined(r.load)?r.load={preset:nn}:r.preset&&(r.load.preset=r.preset),h.isUndefined(r.parent)&&r.hideable&&rs.push(this),r.resizable=h.isUndefined(r.parent)&&r.resizable,r.autoPlace&&h.isUndefined(r.scrollable)&&(r.scrollable=!0);var i=Qt&&localStorage.getItem(Ct(this,"isLocal"))==="true",o=void 0,a=void 0;if(Object.defineProperties(this,{parent:{get:function(){return r.parent}},scrollable:{get:function(){return r.scrollable}},autoPlace:{get:function(){return r.autoPlace}},closeOnTop:{get:function(){return r.closeOnTop}},preset:{get:function(){return n.parent?n.getRoot().preset:r.load.preset},set:function(m){n.parent?n.getRoot().preset=m:r.load.preset=m,qf(this),n.revert()}},width:{get:function(){return r.width},set:function(m){r.width=m,_i(n,m)}},name:{get:function(){return r.name},set:function(m){r.name=m,a&&(a.innerHTML=r.name)}},closed:{get:function(){return r.closed},set:function(m){r.closed=m,r.closed?p.addClass(n.__ul,t.CLASS_CLOSED):p.removeClass(n.__ul,t.CLASS_CLOSED),this.onResize(),n.__closeButton&&(n.__closeButton.innerHTML=m?t.TEXT_OPEN:t.TEXT_CLOSED)}},load:{get:function(){return r.load}},useLocalStorage:{get:function(){return i},set:function(m){Qt&&(i=m,m?p.bind(window,"unload",o):p.unbind(window,"unload",o),localStorage.setItem(Ct(n,"isLocal"),m))}}}),h.isUndefined(r.parent)){if(this.closed=r.closed||!1,p.addClass(this.domElement,t.CLASS_MAIN),p.makeSelectable(this.domElement,!1),Qt&&i){n.useLocalStorage=!0;var s=localStorage.getItem(Ct(this,"gui"));s&&(r.load=JSON.parse(s))}this.__closeButton=document.createElement("div"),this.__closeButton.innerHTML=t.TEXT_CLOSED,p.addClass(this.__closeButton,t.CLASS_CLOSE_BUTTON),r.closeOnTop?(p.addClass(this.__closeButton,t.CLASS_CLOSE_TOP),this.domElement.insertBefore(this.__closeButton,this.domElement.childNodes[0])):(p.addClass(this.__closeButton,t.CLASS_CLOSE_BOTTOM),this.domElement.appendChild(this.__closeButton)),p.bind(this.__closeButton,"click",function(){n.closed=!n.closed})}else{r.closed===void 0&&(r.closed=!0);var l=document.createTextNode(r.name);p.addClass(l,"controller-name"),a=vi(n,l);var c=function(m){return m.preventDefault(),n.closed=!n.closed,!1};p.addClass(this.__ul,t.CLASS_CLOSED),p.addClass(a,"title"),p.bind(a,"click",c),r.closed||(this.closed=!1)}r.autoPlace&&(h.isUndefined(r.parent)&&(Ka&&(It=document.createElement("div"),p.addClass(It,Ya),p.addClass(It,t.CLASS_AUTO_PLACE_CONTAINER),document.body.appendChild(It),Ka=!1),It.appendChild(this.domElement),p.addClass(this.domElement,t.CLASS_AUTO_PLACE)),this.parent||_i(n,r.width)),this.__resizeHandler=function(){n.onResizeDebounced()},p.bind(window,"resize",this.__resizeHandler),p.bind(this.__ul,"webkitTransitionEnd",this.__resizeHandler),p.bind(this.__ul,"transitionend",this.__resizeHandler),p.bind(this.__ul,"oTransitionEnd",this.__resizeHandler),this.onResize(),r.resizable&&Xf(this),o=function(){Qt&&localStorage.getItem(Ct(n,"isLocal"))==="true"&&localStorage.setItem(Ct(n,"gui"),JSON.stringify(n.getSaveObject()))},this.saveToLocalStorageIfPossible=o;function d(){var f=n.getRoot();f.width+=1,h.defer(function(){f.width-=1})}r.parent||d()};j.toggleHide=function(){fi=!fi,h.each(rs,function(t){t.domElement.style.display=fi?"none":""})};j.CLASS_AUTO_PLACE="a";j.CLASS_AUTO_PLACE_CONTAINER="ac";j.CLASS_MAIN="main";j.CLASS_CONTROLLER_ROW="cr";j.CLASS_TOO_TALL="taller-than-window";j.CLASS_CLOSED="closed";j.CLASS_CLOSE_BUTTON="close-button";j.CLASS_CLOSE_TOP="close-top";j.CLASS_CLOSE_BOTTOM="close-bottom";j.CLASS_DRAG="drag";j.DEFAULT_WIDTH=245;j.TEXT_CLOSED="Close Controls";j.TEXT_OPEN="Open Controls";j._keydownHandler=function(t){document.activeElement.type!=="text"&&(t.which===Xa||t.keyCode===Xa)&&j.toggleHide()};p.bind(window,"keydown",j._keydownHandler,!1);h.extend(j.prototype,{add:function(e,n){return tn(this,e,n,{factoryArgs:Array.prototype.slice.call(arguments,2)})},addColor:function(e,n){return tn(this,e,n,{color:!0})},remove:function(e){this.__ul.removeChild(e.__li),this.__controllers.splice(this.__controllers.indexOf(e),1);var n=this;h.defer(function(){n.onResize()})},destroy:function(){if(this.parent)throw new Error("Only the root GUI should be removed with .destroy(). For subfolders, use gui.removeFolder(folder) instead.");this.autoPlace&&It.removeChild(this.domElement);var e=this;h.each(this.__folders,function(n){e.removeFolder(n)}),p.unbind(window,"keydown",j._keydownHandler,!1),Za(this)},addFolder:function(e){if(this.__folders[e]!==void 0)throw new Error('You already have a folder in this GUI by the name "'+e+'"');var n={name:e,parent:this};n.autoPlace=this.autoPlace,this.load&&this.load.folders&&this.load.folders[e]&&(n.closed=this.load.folders[e].closed,n.load=this.load.folders[e]);var r=new j(n);this.__folders[e]=r;var i=vi(this,r.domElement);return p.addClass(i,"folder"),r},removeFolder:function(e){this.__ul.removeChild(e.domElement.parentElement),delete this.__folders[e.name],this.load&&this.load.folders&&this.load.folders[e.name]&&delete this.load.folders[e.name],Za(e);var n=this;h.each(e.__folders,function(r){e.removeFolder(r)}),h.defer(function(){n.onResize()})},open:function(){this.closed=!1},close:function(){this.closed=!0},hide:function(){this.domElement.style.display="none"},show:function(){this.domElement.style.display=""},onResize:function(){var e=this.getRoot();if(e.scrollable){var n=p.getOffset(e.__ul).top,r=0;h.each(e.__ul.childNodes,function(i){e.autoPlace&&i===e.__save_row||(r+=p.getHeight(i))}),window.innerHeight-n-qa<r?(p.addClass(e.domElement,j.CLASS_TOO_TALL),e.__ul.style.height=window.innerHeight-n-qa+"px"):(p.removeClass(e.domElement,j.CLASS_TOO_TALL),e.__ul.style.height="auto")}e.__resize_handle&&h.defer(function(){e.__resize_handle.style.height=e.__ul.offsetHeight+"px"}),e.__closeButton&&(e.__closeButton.style.width=e.width+"px")},onResizeDebounced:h.debounce(function(){this.onResize()},50),remember:function(){if(h.isUndefined(en)&&(en=new $f,en.domElement.innerHTML=kf),this.parent)throw new Error("You can only call remember on a top level GUI.");var e=this;h.each(Array.prototype.slice.call(arguments),function(n){e.__rememberedObjects.length===0&&Yf(e),e.__rememberedObjects.indexOf(n)===-1&&e.__rememberedObjects.push(n)}),this.autoPlace&&_i(this,this.width)},getRoot:function(){for(var e=this;e.parent;)e=e.parent;return e},getSaveObject:function(){var e=this.load;return e.closed=this.closed,this.__rememberedObjects.length>0&&(e.preset=this.preset,e.remembered||(e.remembered={}),e.remembered[this.preset]=sr(this)),e.folders={},h.each(this.__folders,function(n,r){e.folders[r]=n.getSaveObject()}),e},save:function(){this.load.remembered||(this.load.remembered={}),this.load.remembered[this.preset]=sr(this),hi(this,!1),this.saveToLocalStorageIfPossible()},saveAs:function(e){this.load.remembered||(this.load.remembered={},this.load.remembered[nn]=sr(this,!0)),this.load.remembered[e]=sr(this),this.preset=e,gi(this,e,!0),this.saveToLocalStorageIfPossible()},revert:function(e){h.each(this.__controllers,function(n){this.getRoot().load.remembered?is(e||this.getRoot(),n):n.setValue(n.initialValue),n.__onFinishChange&&n.__onFinishChange.call(n,n.getValue())},this),h.each(this.__folders,function(n){n.revert(n)}),e||hi(this.getRoot(),!1)},listen:function(e){var n=this.__listening.length===0;this.__listening.push(e),n&&os(this.__listening)},updateDisplay:function(){h.each(this.__controllers,function(e){e.updateDisplay()}),h.each(this.__folders,function(e){e.updateDisplay()})}});function vi(t,e,n){var r=document.createElement("li");return e&&r.appendChild(e),n?t.__ul.insertBefore(r,n):t.__ul.appendChild(r),t.onResize(),r}function Za(t){p.unbind(window,"resize",t.__resizeHandler),t.saveToLocalStorageIfPossible&&p.unbind(window,"unload",t.saveToLocalStorageIfPossible)}function hi(t,e){var n=t.__preset_select[t.__preset_select.selectedIndex];e?n.innerHTML=n.value+"*":n.innerHTML=n.value}function jf(t,e,n){if(n.__li=e,n.__gui=t,h.extend(n,{options:function(a){if(arguments.length>1){var s=n.__li.nextElementSibling;return n.remove(),tn(t,n.object,n.property,{before:s,factoryArgs:[h.toArray(arguments)]})}if(h.isArray(a)||h.isObject(a)){var l=n.__li.nextElementSibling;return n.remove(),tn(t,n.object,n.property,{before:l,factoryArgs:[a]})}},name:function(a){return n.__li.firstElementChild.firstElementChild.innerHTML=a,n},listen:function(){return n.__gui.listen(n),n},remove:function(){return n.__gui.remove(n),n}}),n instanceof pi){var r=new cr(n.object,n.property,{min:n.__min,max:n.__max,step:n.__step});h.each(["updateDisplay","onChange","onFinishChange","step","min","max"],function(o){var a=n[o],s=r[o];n[o]=r[o]=function(){var l=Array.prototype.slice.call(arguments);return s.apply(r,l),a.apply(n,l)}}),p.addClass(e,"has-slider"),n.domElement.insertBefore(r.domElement,n.domElement.firstElementChild)}else if(n instanceof cr){var i=function(a){if(h.isNumber(n.__min)&&h.isNumber(n.__max)){var s=n.__li.firstElementChild.firstElementChild.innerHTML,l=n.__gui.__listening.indexOf(n)>-1;n.remove();var c=tn(t,n.object,n.property,{before:n.__li.nextElementSibling,factoryArgs:[n.__min,n.__max,n.__step]});return c.name(s),l&&c.listen(),c}return a};n.min=h.compose(i,n.min),n.max=h.compose(i,n.max)}else n instanceof es?(p.bind(e,"click",function(){p.fakeEvent(n.__checkbox,"click")}),p.bind(n.__checkbox,"click",function(o){o.stopPropagation()})):n instanceof ns?(p.bind(e,"click",function(){p.fakeEvent(n.__button,"click")}),p.bind(e,"mouseover",function(){p.addClass(n.__button,"hover")}),p.bind(e,"mouseout",function(){p.removeClass(n.__button,"hover")})):n instanceof mi&&(p.addClass(e,"color"),n.updateDisplay=h.compose(function(o){return e.style.borderLeftColor=n.__color.toString(),o},n.updateDisplay),n.updateDisplay());n.setValue=h.compose(function(o){return t.getRoot().__preset_select&&n.isModified()&&hi(t.getRoot(),!0),o},n.setValue)}function is(t,e){var n=t.getRoot(),r=n.__rememberedObjects.indexOf(e.object);if(r!==-1){var i=n.__rememberedObjectIndecesToControllers[r];if(i===void 0&&(i={},n.__rememberedObjectIndecesToControllers[r]=i),i[e.property]=e,n.load&&n.load.remembered){var o=n.load.remembered,a=void 0;if(o[t.preset])a=o[t.preset];else if(o[nn])a=o[nn];else return;if(a[r]&&a[r][e.property]!==void 0){var s=a[r][e.property];e.initialValue=s,e.setValue(s)}}}}function tn(t,e,n,r){if(e[n]===void 0)throw new Error('Object "'+e+'" has no property "'+n+'"');var i=void 0;if(r.color)i=new mi(e,n);else{var o=[e,n].concat(r.factoryArgs);i=zf.apply(t,o)}r.before instanceof ft&&(r.before=r.before.__li),is(t,i),p.addClass(i.domElement,"c");var a=document.createElement("span");p.addClass(a,"property-name"),a.innerHTML=i.property;var s=document.createElement("div");s.appendChild(a),s.appendChild(i.domElement);var l=vi(t,s,r.before);return p.addClass(l,j.CLASS_CONTROLLER_ROW),i instanceof mi?p.addClass(l,"color"):p.addClass(l,Rf(i.getValue())),jf(t,l,i),t.__controllers.push(i),i}function Ct(t,e){return document.location.href+"."+e}function gi(t,e,n){var r=document.createElement("option");r.innerHTML=e,r.value=e,t.__preset_select.appendChild(r),n&&(t.__preset_select.selectedIndex=t.__preset_select.length-1)}function Ja(t,e){e.style.display=t.useLocalStorage?"block":"none"}function Yf(t){var e=t.__save_row=document.createElement("li");p.addClass(t.domElement,"has-save"),t.__ul.insertBefore(e,t.__ul.firstChild),p.addClass(e,"save-row");var n=document.createElement("span");n.innerHTML="&nbsp;",p.addClass(n,"button gears");var r=document.createElement("span");r.innerHTML="Save",p.addClass(r,"button"),p.addClass(r,"save");var i=document.createElement("span");i.innerHTML="New",p.addClass(i,"button"),p.addClass(i,"save-as");var o=document.createElement("span");o.innerHTML="Revert",p.addClass(o,"button"),p.addClass(o,"revert");var a=t.__preset_select=document.createElement("select");if(t.load&&t.load.remembered?h.each(t.load.remembered,function(f,m){gi(t,m,m===t.preset)}):gi(t,nn,!1),p.bind(a,"change",function(){for(var f=0;f<t.__preset_select.length;f++)t.__preset_select[f].innerHTML=t.__preset_select[f].value;t.preset=this.value}),e.appendChild(a),e.appendChild(n),e.appendChild(r),e.appendChild(i),e.appendChild(o),Qt){var s=document.getElementById("dg-local-explain"),l=document.getElementById("dg-local-storage"),c=document.getElementById("dg-save-locally");c.style.display="block",localStorage.getItem(Ct(t,"isLocal"))==="true"&&l.setAttribute("checked","checked"),Ja(t,s),p.bind(l,"change",function(){t.useLocalStorage=!t.useLocalStorage,Ja(t,s)})}var d=document.getElementById("dg-new-constructor");p.bind(d,"keydown",function(f){f.metaKey&&(f.which===67||f.keyCode===67)&&en.hide()}),p.bind(n,"click",function(){d.innerHTML=JSON.stringify(t.getSaveObject(),void 0,2),en.show(),d.focus(),d.select()}),p.bind(r,"click",function(){t.save()}),p.bind(i,"click",function(){var f=prompt("Enter a new preset name.");f&&t.saveAs(f)}),p.bind(o,"click",function(){t.revert()})}function Xf(t){var e=void 0;t.__resize_handle=document.createElement("div"),h.extend(t.__resize_handle.style,{width:"6px",marginLeft:"-3px",height:"200px",cursor:"ew-resize",position:"absolute"});function n(o){return o.preventDefault(),t.width+=e-o.clientX,t.onResize(),e=o.clientX,!1}function r(){p.removeClass(t.__closeButton,j.CLASS_DRAG),p.unbind(window,"mousemove",n),p.unbind(window,"mouseup",r)}function i(o){return o.preventDefault(),e=o.clientX,p.addClass(t.__closeButton,j.CLASS_DRAG),p.bind(window,"mousemove",n),p.bind(window,"mouseup",r),!1}p.bind(t.__resize_handle,"mousedown",i),p.bind(t.__closeButton,"mousedown",i),t.domElement.insertBefore(t.__resize_handle,t.domElement.firstElementChild)}function _i(t,e){t.domElement.style.width=e+"px",t.__save_row&&t.autoPlace&&(t.__save_row.style.width=e+"px"),t.__closeButton&&(t.__closeButton.style.width=e+"px")}function sr(t,e){var n={};return h.each(t.__rememberedObjects,function(r,i){var o={},a=t.__rememberedObjectIndecesToControllers[i];h.each(a,function(s,l){o[l]=e?s.initialValue:s.getValue()}),n[i]=o}),n}function qf(t){for(var e=0;e<t.__preset_select.length;e++)t.__preset_select[e].value===t.preset&&(t.__preset_select.selectedIndex=e)}function os(t){t.length!==0&&Hf.call(window,function(){os(t)}),h.each(t,function(e){e.updateDisplay()})}var as=j;function ss(t,e,n,r){let i=new as,o={openGithub:()=>{window.location.href=u.githubRepoLink},profile:()=>{e.profileNextFrame(!0)},resetCamera:()=>{r.resetPosition()},resetSimulation:()=>{u.hairSimulation.nextFrameResetSimulation=!0},resetBall:()=>{K.copy(u.hairSimulation.collisionSphereInitial,u.hairSimulation.collisionSphere)},modelRotation:0};i.add(o,"openGithub").name("GITHUB"),i.add(o,"profile").name("Profile");let a=wi(u,"displayMode",[{label:"Final",value:A.FINAL},{label:"DBG: tiles",value:A.TILES},{label:"DBG: tiles PPLL",value:A.TILES_PPLL},{label:"DBG: slices cnt",value:A.USED_SLICES},{label:"DBG: hw-render",value:A.HW_RENDER},{label:"DBG: depth",value:A.DEPTH},{label:"DBG: normals",value:A.NORMALS},{label:"DBG: ao",value:A.AO}]),s=i.add(a,"displayMode",a.values).name("Display mode");l(i),c(i),d(i),f(i),m(i),v(i,u.lights[0],"Light 0"),v(i,u.lights[1],"Light 1"),v(i,u.lights[2],"Light 2"),b(i),x(i),g();function l(P){let _=P.addFolder("Scene"),S=u.background;_.add(o,"resetCamera").name("Reset camera"),_.add(o,"modelRotation",0,360).step(1).name("Rotation").onChange(E=>{M.rotationY(Ae(E),n.modelMatrix)}),T(_,S,"color0","Bg color 0"),T(_,S,"color1","Bg color 1"),_.add(S,"noiseScale",0,10).name("Bg noise scale"),_.add(S,"gradientStrength",0,1).name("Bg gradient")}function c(P){let _=u.hairRender,S=P.addFolder("Hair render");S.open(),S.add(_,"lodRenderPercent",0,100).step(1).name("Render %"),S.add(_,"fiberRadius",1e-4,.002).name("Radius");let E=S.add(_,"dbgTileModeMaxSegments",1,512).step(1).name("Max segments"),N=S.add(_,"dbgSlicesModeMaxSlices",1,128).step(1).name("Max slices"),D=S.add(_,"dbgShowTiles").name("Show tiles");s.onFinishChange(V);function V(){let w=u.displayMode;bi(E,w===A.TILES||w===A.TILES_PPLL),bi(N,w===A.USED_SLICES),bi(D,w===A.FINAL)}}function d(P){let _=u.hairRender.material,S=P.addFolder("Hair material");T(S,_,"color0","Color root"),T(S,_,"color1","Color tip"),S.add(_,"colorRng",0,1).name("Color RNG"),S.add(_,"lumaRng",0,1).name("Luma RNG"),S.add(_,"specular",0,3,.01).name("Specular"),S.add(_,"weightTT",0,2,.01).name("Weight TT"),S.add(_,"weightTRT",0,2,.01).name("Weight TRT"),S.add(_,"shift",-1,1,.01).name("Shift"),S.add(_,"roughness",0,1,.01).name("Roughness"),S.add(_,"attenuation",0,40).name("Attenuation"),S.add(_,"shadows",0,1).name("Shadows")}function f(P){let _=u.hairSimulation,S=_.sdf,E=_.physicsForcesGrid,N=_.constraints,D=_.wind,V=P.addFolder("Hair simulation"),w=V;w.open(),w.add(o,"resetSimulation").name("Reset simulation"),w.add(_,"enabled").name("Enabled"),w.add(_,"gravity",0,.1).name("Gravity"),w.add(_,"friction",0,1).name("Friction"),w.add(_,"volumePreservation",0,25e-5).name("Vol. Preserv."),w.add(o,"resetBall").name("Reset ball"),w.add(u,"drawColliders").name("Draw ball"),w=V.addFolder("Constraints"),w.open(),w.add(N,"constraintIterations",1,10).step(1).name("Iterations"),w.add(N,"stiffnessLengthConstr",0,1).name("Stiff. len"),w.add(N,"stiffnessGlobalConstr",0,1).name("Stiff. global"),w.add(N,"globalExtent",0,1).name("Global extent"),w.add(N,"globalFade",0,1).name("Global fade"),w.add(N,"stiffnessLocalConstr",0,1).name("Stiff. local"),w.add(N,"stiffnessCollisions",0,1).name("Stiff. collisions"),w.add(N,"stiffnessSDF",0,1).name("Stiff. SDF"),w.add(S,"distanceOffset",-.003,.003).name("SDF offset"),w=V.addFolder("Wind"),w.open(),w.add(D,"dirPhi",-179,179).step(1).name("Dir phi"),w.add(D,"dirTheta",15,165).step(1).name("Dir th"),w.add(D,"strength",0,1).name("Strength"),w.add(D,"strengthLull",0,1).name("Lull strength"),w.add(D,"strengthFrequency",.001,2).name("Str. frequency"),w.add(D,"strengthJitter",0,1).name("Str. Jitter"),w.add(D,"phaseOffset",0,.5).name("Phase offset"),w.add(D,"colisionTraceOffset",1,5).name("Collision offset"),w=V.addFolder("SDF preview"),w.add(S,"showDebugView").name("Enabled"),w.add(S,"debugSemitransparent").name("Semitransparent"),w.add(S,"debugSlice",0,1,.01).name("Slice"),w=V.addFolder("Grids preview"),w.add(E,"showDebugView").name("Enabled");let Q=wi(E,"debugValue",[{label:"Density",value:xe.DENSITY},{label:"Density Grad",value:xe.DENSITY_GRADIENT},{label:"Velocity",value:xe.VELOCITY},{label:"Wind",value:xe.WIND}]);w.add(Q,"debugValue",Q.values).name("Value"),w.add(E,"debugAbsValue").name("Vector abs"),w.add(E,"debugSlice",0,1,.01).name("Slice")}function m(P){let _=P.addFolder("Ambient light");T(_,u.lightAmbient,"color","Color"),_.add(u.lightAmbient,"energy",0,.2,.01).name("Energy")}function v(P,_,S){let E=P.addFolder(S);E.add(_,"posPhi",-179,179).step(1).name("Position phi"),E.add(_,"posTheta",15,165).step(1).name("Position th"),T(E,_,"color","Color"),E.add(_,"energy",0,2).name("Energy")}function b(P){let _=u.shadows,S=P.addFolder("Shadows"),E=wi(_,"usePCSS",[{label:"PCF",value:!1},{label:"PCSS",value:!0}]);S.add(E,"usePCSS",E.values).name("Technique"),S.add(_,"strength",0,1).name("Strength"),S.add(_,"PCF_Radius",[0,1,2,3,4]).name("PCF radius"),S.add(_,"bias",0,.001).name("Bias"),S.add(_,"hairFiberWidthMultiplier",.5,6).name("Hair width mul"),S.add(_.source,"posPhi",-179,179).step(1).name("Position phi"),S.add(_.source,"posTheta",15,165).step(1).name("Position th"),S.add(_,"showDebugView").name("Show preview")}function x(P){let _=u.ao,S=P.addFolder("Ambient occl.");S.add(_,"strength",0,1).name("Strength"),S.add(_,"radius",.001,2.5).name("Radius"),S.add(_,"numDirections",0,128,1).name("Directions"),S.add(_,"numSteps",2,32,1).name("Steps"),S.add(_,"directionOffset",0,5).name("Dir. offset"),S.add(_,"falloffStart2",0,.5).name("Falloff start"),S.add(_,"falloffEnd2",1,5).name("Falloff end")}function g(){let P=i.addFolder("Color mgmt"),_=u.colors;P.add(_,"gamma",1,3).name("Gamma"),P.add(_,"exposure",0,2).name("Exposure"),P.add(_,"ditherStrength",0,2).name("Dithering")}function T(P,_,S,E){let N={value:[]};Object.defineProperty(N,"value",{enumerable:!0,get:()=>{let D=_[S];return[D[0]*255,D[1]*255,D[2]*255]},set:D=>{let V=_[S];V[0]=D[0]/255,V[1]=D[1]/255,V[2]=D[2]/255}}),P.addColor(N,"value").name(E)}}function bi(t,e){if(!t){console.error("Not controller for gui element found!");return}let n=t.__li;e?n.style.display="":n.style.display="none"}var wi=(t,e,n)=>{let r={values:n.map(i=>i.label)};return Object.defineProperty(r,e,{enumerable:!0,get:()=>{let i=t[e];return(n.find(a=>a.value===i)||n[0]).label},set:i=>{let o=n.find(a=>a.label===i)||n[0];t[e]=o.value}}),r};function ls(t,e){let n=l();t.width=n.width,t.height=n.height,console.log("Init canvas size:",n);let r=[];return{revalidateCanvasSize:a,addListener:c=>r.push(c),getViewportSize:l,getScreenTextureView:()=>e.getCurrentTexture().createView()};function a(){let c=l();(c.width!==t.width||c.height!==t.height)&&c.width&&c.height&&s(c)}function s(c){t.width=c.width,t.height=c.height,r.forEach(d=>d(c))}function l(){let c=window.devicePixelRatio||1;return{width:t.clientWidth*c,height:t.clientHeight*c}}}function cs(t){let e=["internal","out-of-memory","validation"],n=e.toReversed(),r="-";return{startErrorScope:i,reportErrorScopeAsync:o};function i(a="-"){r=a,e.forEach(s=>t.pushErrorScope(s))}async function o(a){let s;for(let l of n){let c=await t.popErrorScope();if(c){let d=`WebGPU error [${r}][${l}]: ${c.message}`;s=d,a?a(d):console.error(d)}}return s}}var us=t=>t=="0"?"1":"0",ur=class{constructor(e,n,r,i,o){this.name=e;this.strandsCount=n;this.pointsPerStrand=r;this.bounds=i;this.buffers=o}_currentPositionsBuffer="0";get pointsCount(){return this.strandsCount*this.pointsPerStrand}get segmentCount(){return this.strandsCount*(this.pointsPerStrand-1)}get currentPositionsBufferIdx(){return this._currentPositionsBuffer}getRenderedStrandCount(){let e=Dt(u.hairRender.lodRenderPercent,0,100),{strandsCount:n}=this,r=Math.ceil(n*e/100);return Dt(r,0,n)}reportRenderedStrandCount(){let{strandsCount:e,pointsPerStrand:n,segmentCount:r}=this,i=this.getRenderedStrandCount();z.update("Rendered strands",Sr(i,e,0));let o=i*(n-1);return z.update("Rendered segments",Sr(o,r,0)),i}resetSimulation(e){let{initialPointsPositionsBuffer:n,pointsPositionsBuffer_0:r,pointsPositionsBuffer_1:i}=this.buffers,o=n.size;e.copyBufferToBuffer(n,0,r,0,o),e.copyBufferToBuffer(n,0,i,0,o)}swapPositionBuffersAfterSimIntegration(){this._currentPositionsBuffer=us(this._currentPositionsBuffer)}bindPointsPositions=e=>this.bindPointsPositionsByPosIdx(e,this._currentPositionsBuffer);bindPointsPositions_PREV=e=>this.bindPointsPositionsByPosIdx(e,us(this._currentPositionsBuffer));bindPointsPositionsByPosIdx=(e,n)=>{let r=n=="0"?this.buffers.pointsPositionsBuffer_0:this.buffers.pointsPositionsBuffer_1;return{binding:e,resource:{buffer:r}}};bindTangents=e=>L(e,this.buffers.tangentsBuffer);bindPointsPositions_INITIAL=e=>L(e,this.buffers.initialPointsPositionsBuffer);bindInitialSegmentLengths=e=>L(e,this.buffers.initialSegmentLengthsBuffer);bindHairData=e=>L(e,this.buffers.dataBuffer);bindShading=e=>L(e,this.buffers.shadingBuffer);bindIndexBuffer(e){e.setIndexBuffer(this.buffers.indicesData.indexBuffer,this.buffers.indicesData.indexFormat)}};var Zf=t=>{let e=new Float32Array(t,0,1)[0],n=new Uint32Array(t,4,7);return{version:e,numHairStrands:n[0],numVerticesPerStrand:n[1],offsetVertexPosition:n[2],offsetStrandUV:n[3],offsetVertexUV:n[4],offsetStrandThickness:n[5],offsetVertexColor:n[6]}},fs=(t,e)=>{let n=Zf(t);console.log("Loaded Tfx file with header",n);let i=n.numHairStrands*n.numVerticesPerStrand*4,a=new Float32Array(t,n.offsetVertexPosition,i).map(s=>s*e);return{header:n,vertexPositions:a}};var fr=Os(ds());var Jf=fr.default?.Mesh||fr.Mesh,ps=t=>Math.ceil(t.vertices.length/3),Qf=t=>Math.ceil(t.indices.length/3);function ms(t,e,n,r=1){let i=new Jf(n);nd(i,r);let o=ps(i),a=Qf(i),s=Ot(Float32Array,i.vertices),l=Sn(t,`${e}-positions`,s),c=Sn(t,`${e}-normals`,i.vertexNormals),d=Sn(t,`${e}-uvs`,i.textures),f=vn(t,`${e}-indices`,i.indices),m=ko(s);return console.log(`Loaded OBJ object '${e}', bounds`,m.sphere),{name:e,vertexCount:o,triangleCount:a,positionsBuffer:l,normalsBuffer:c,uvBuffer:d,indexBuffer:f,bounds:m,isColliderPreview:!1}}var ed=t=>{if(!t.vertexNormals||!Array.isArray(t.vertexNormals))return!1;let e=t.vertexNormals[0];return typeof e=="number"&&!isNaN(e)},td=t=>{if(!t.textures||!Array.isArray(t.textures))return!1;let e=t.textures[0];return typeof e=="number"&&!isNaN(e)};function nd(t,e){if(t.vertices=t.vertices.map(n=>n*e),!ed(t))throw new Error("Expected normals in the OBJ file");if(td(t))for(let n=0;n<t.textures.length;n+=1){let r=t.textures[n];r=r%1,r=r<0?1-Math.abs(r):r,r=(n&1)==1?1-r:r,t.textures[n]=r}else{let n=ps(t);t.textures=Ye(n*2).fill(.5)}}var rd="r32float";function hs(t,e,n,r){let i={width:n,height:n,depthOrArrayLayers:n},o=t.createTexture({label:`${e}-texture`,dimension:"3d",size:i,format:rd,usage:GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.COPY_DST});return t.queue.writeTexture({texture:o},r,{bytesPerRow:Te*n,rowsPerImage:n},i),o}function gs(t,e){return t.createSampler({label:`${e}-sampler`,addressModeU:"clamp-to-edge",addressModeV:"clamp-to-edge",addressModeW:"clamp-to-edge",magFilter:"linear",minFilter:"linear"})}function _s(t,e,n){let r=new Uint32Array(n,0,1)[0],i=2,o=new Float32Array(n),a=[[o[i+0],o[i+1],o[i+2]],[o[i+3],o[i+4],o[i+5]]];i+=6;let s=o.slice(i),l=r*r*r;if(s.length!==l)throw new Error(`Invalid SDF binary file. With dims=${r} expected ${l} values. Got ${s.length}.`);let c=hs(t,e,r,s),d=c.createView(),f=gs(t,e);return new se(e,a,r,c,d,f)}var id=[{name:"sintel",file:"sintel.obj"},{name:"sintelEyes",file:"sintel-eyes.obj"},{name:"sphereCollider",file:"sphere.obj",isColliderPreview:!0}],xs={name:"sintel-sdf",file:"sintel-sdf.bin"};async function Ss(t){let e=[];for(let l of id){console.groupCollapsed(l.name);let c=await u.loaders.textFileReader(`${pn}/${l.file}`),d=ms(t,l.name,c);d.isColliderPreview=!!l.isColliderPreview,e.push(d),console.groupEnd()}K.copy(u.hairSimulation.collisionSphere,u.hairSimulation.collisionSphereInitial);let n=await ad(u.hairFile,1),r=await od(t,"sintelHair",n);u.pointsPerStrand=r.pointsPerStrand,z.update("Strands",xn(r.strandsCount,1)),z.update("Points per strand",r.pointsPerStrand),z.update("Segments",xn(r.segmentCount,0));let i=await u.loaders.binaryFileReader(`${pn}/${xs.file}`),o=_s(t,xs.name,i),a=new Oe(t,r.bounds.box),s=M.identity();return M.rotateY(s,Ae(0),s),{objects:e,hairObject:r,sdfCollider:o,modelMatrix:s,physicsGrid:a}}function od(t,e,n){let r=Lr(n.vertexPositions,4),i={box:r,sphere:Ur(r)};console.log("Hair bounds",i.sphere);let o=na(t,e,n,i.sphere),a=aa(t,e,n),s=oa(t,e,n),l=ta(t,e,n),c=Ca(t,e,n.header.numVerticesPerStrand,n.vertexPositions),d=(b,x=0)=>ia(t,b,n.vertexPositions,x),f=d(`${e}-points-positions-initial`,GPUBufferUsage.COPY_SRC),m=d(`${e}-points-positions-0`),v=d(`${e}-points-positions-1`);return new ur(e,n.header.numHairStrands,n.header.numVerticesPerStrand,i,{dataBuffer:o,indicesData:l,initialPointsPositionsBuffer:f,initialSegmentLengthsBuffer:c,pointsPositionsBuffer_0:m,pointsPositionsBuffer_1:v,shadingBuffer:s,tangentsBuffer:a})}async function ad(t,e=1){console.log(`Loading hair file: '${t}'`);let n=await u.loaders.binaryFileReader(`${pn}/${t}`);return fs(n,e)}var sd=yr.create(),vs=K.create(),Pi=K.create(),ld=M.create(),bs=(t,e,n,r)=>{let i=yr.set(n[0]/t.width,n[1]/t.height,sd);i[0]=i[0]*2-1,i[1]=(1-i[1])*2-1;let o=M.invert(e,ld),a=K.set(i[0],i[1],0,1,vs),s=K.set(i[0],i[1],1,1,Pi),l=Fr(o,a,vs),c=Fr(o,s,Pi);return y.copy(l,r.origin),y.normalize(y.subtract(c,l,Pi),r.dir),r},yi=(t,e,n)=>y.addScaled(t.origin,t.dir,e,n),Ti=(t,e,n)=>{let r=y.subtract(e,t.origin,n),i=y.dot(r,t.dir);return yi(t,i,n)},cd=y.create(),it=(t,e)=>{let n=Ti(t,e,cd);return y.distance(e,n)},ud=y.create(),fd=y.create(),ws=(t,e,n,r=5)=>{let i=y.copy(e,ud),o=y.copy(n,fd);for(let l=0;l<r;l++){let c=it(t,i),d=it(t,o);c<d?y.midpoint(i,o,o):y.midpoint(i,o,i)}let a=it(t,i),s=it(t,o);return a<s?i:o};var dd=y.create(),pd=(t,e)=>{let n=e.d+y.dot(t.origin,e.normal,dd),r=y.dot(t.dir,e.normal);return-n/r},Ps=(t,e,n)=>{let r=pd(t,e);return yi(t,r,n)};var md=y.create(1,0,0),hd=y.create(0,1,0),gd=y.create(0,0,1),Ei=[md,hd,gd],_d=[Ee.AXIS_X,Ee.AXIS_Y,Ee.AXIS_Z],xd=u.colliderGizmo.lineLength*.1,Sd=K.create(),vd=K.create(),bd=M.create(),wd={origin:y.create(),dir:y.create()},Mi=t=>document.body.style.cursor=t;function Ts(){let t=u.colliderGizmo,e=0;return function(n,r,i,o){let a=n.mouse.touching,s=[n.mouse.x,n.mouse.y],l=bn(i,o,bd),c=bs(r,l,s,wd);if(t.isDragging)Pd(c,e);else{let d=y.create(),f=yd(c,d);Td(f);let m=u.hairSimulation.collisionSphere;e=y.distance(m,d),a&&(a=f!==Ee.NONE,Mi("grabbing"))}return t.isDragging=a,a}}function Pd(t,e){let n=u.colliderGizmo,r=u.hairSimulation.collisionSphere,i=n.activeAxis,o={dir:Ei[i],origin:r},a={normal:t.dir,d:-y.dot(t.dir,r)},s=Ps(t,a),l=Ti(o,s),c=e;l=y.addScaled(l,o.dir,-c),r[i]=l[i]}function yd(t,e){let{lineWidth:n,hoverPadding:r}=u.colliderGizmo,i=Number.MAX_SAFE_INTEGER,o=0;Ei.forEach((m,v)=>{let[b,x]=ys(m),g=Math.min(it(t,b),it(t,x));g<i&&(i=g,o=v)});let a=Ei[o],[s,l]=ys(a),c=ws(t,s,l),d=it(t,c),f=n*r;return d<f?(y.copy(c,e),o):Ee.NONE}function Td(t){t===Ee.NONE?(u.colliderGizmo.activeAxis=Ee.NONE,Mi("default")):(u.colliderGizmo.activeAxis=_d[t],Mi("grab"))}function ys(t){let{lineLength:e}=u.colliderGizmo,n=u.hairSimulation.collisionSphere,r=y.addScaled(n,t,xd,Sd),i=y.addScaled(r,t,e,vd);return[r,i]}function Es(t){console.log("Profiler:",t);let e=document.getElementById("profiler-results");e.innerHTML="",st(e.parentNode);let n={},r=new Set;t.forEach(([a,s])=>{let l=n[a]||0;n[a]=l+s,r.add(a)});let i=0;r.forEach(a=>{let s=n[a],l=document.createElement("li");l.innerHTML=`${a}: ${s.toFixed(2)}ms`,e.appendChild(l),i+=s});let o=document.createElement("li");o.innerHTML=`--- TOTAL: ${i.toFixed(2)}ms ---`,e.appendChild(o)}(async function(){globalThis._config=u;let t=await Zi();if(!t){dr();return}let e=cs(t);e.startErrorScope("init");let n=navigator.gpu.getPreferredCanvasFormat(),[r,i]=Ed("#gpu-canvas",t,n),o=ls(r,i),a=Ji(window,r),s=await Ss(t),l=new gn(t),c=new or(t,o.getViewportSize(),n,l);o.addListener(c.onCanvasResize),ss(t,l,s,c.cameraCtrl);let d=Ts();z.show();let f=!1,m=await e.reportErrorScopeAsync();if(m){dr(m);return}if(e.startErrorScope("beforeFirstFrame"),c.beforeFirstFrame(s),m=await e.reportErrorScopeAsync(),m){dr(m);return}let v={label:"main-frame-cmd-buffer"},b=()=>{e.startErrorScope("frame"),z.onEndFrame(),z.onBeginFrame(),l.beginFrame();let g=z.deltaTimeMS*Vi;o.revalidateCanvasSize();let T=a();d(T,o.getViewportSize(),c.viewMatrix,c.projectionMat)||c.updateCamera(g,T);let _=t.createCommandEncoder(v),S=o.getScreenTextureView();c.cmdRender(_,s,S),l.endFrame(_),t.queue.submit([_.finish()]),l.scheduleRaportIfNeededAsync(Es),f||(e.reportErrorScopeAsync(x),requestAnimationFrame(b))};requestAnimationFrame(b);function x(g){throw dr(g),f=!0,new Error(g)}})();function Ed(t,e,n){let r=document.querySelector(t),i=r.getContext("webgpu");return i.configure({device:e,format:n,alphaMode:"premultiplied"}),[r,i]}function dr(t){_n(document.getElementById("gpu-canvas")),st(document.getElementById("no-webgpu"),"flex"),t&&(document.getElementById("error-msg").textContent=t)}})();
 //# sourceMappingURL=index.web.js.map
