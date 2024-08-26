@@ -43,12 +43,18 @@ type RGBColor = [number, number, number];
 
 export const DISPLAY_MODE = {
   FINAL: 0,
+  /** Hair tiles using segment count per-tile buffer */
   TILES: 1,
-  HW_RENDER: 2,
-  USED_SLICES: 3,
-  DEPTH: 4,
-  NORMALS: 5,
-  AO: 6,
+  /** Hair tiles using PPLL */
+  TILES_PPLL: 2,
+  /** Harware rasterize */
+  HW_RENDER: 3,
+  /** HairFinePass' slices per pixel. Not super accurate due to per pixel/tile early-out optimizations */
+  USED_SLICES: 4,
+  /**zBuffer clamped to sensible values */
+  DEPTH: 5,
+  NORMALS: 6,
+  AO: 7,
 };
 
 export type HairFile =
@@ -251,6 +257,10 @@ export const CONFIG = {
     finePassWorkgroupSizeX: 1,
     /** Where to store the PPLL slice heads data */
     sliceHeadsMemory: 'workgroup' as SliceHeadsMemory,
+    /** Given distance between pixel and strand, how to calculate alpha? Can be linear 0-1 from strand edge to middle. Or quadratic (faster, denser, but more error prone and 'blocky'). */
+    alphaQuadratic: false,
+    /** Alpha comes from pixel's distance to strand. Multiply to make strands "fatter". Faster pixel/tile convergence at the cost of Anti Alias. fuzzy edges. */
+    alphaMultipler: 1.1,
 
     ////// LOD
     lodRenderPercent: 100, // LOD %. Fun fact, performance is NOT linear. Range [0..100]

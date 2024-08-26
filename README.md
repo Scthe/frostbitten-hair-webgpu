@@ -31,13 +31,15 @@ https://github.com/user-attachments/assets/02859b92-a940-42b6-8381-dcac4b81b4d4
     * The second pass is dispatched for every tile and blends its hair segments in a front-to-back order. Done by dividing each depth bin into slices, assigning segments to each, and blending.
         * It uses a task queue internally. Each "processor" grabs the next tile from a list once it's done with the current tile.
 * Separate [strand-space shading calculation](https://youtu.be/ool2E8SQPGU?si=T0YirLDpKp83CjD2&t=1339). Instead of calculating shading for every pixel, I precalculate the values for every strand. You can select how many points are shaded for each strand. The last point always fades to transparency for a nice, thin tip.
-    * **Kajiya-Kay diffuse, Marschner specular.** Although I do not calculate depth maps for lights, so TT lobe's weight is 0 by default. I like how the current initial scene looks and reconfiguring lights is booooring!
+    * **Kajiya-Kay diffuse, Marschner specular.** However, I do not calculate depth maps for lights, so TT lobe's weight is 0 by default. I like how the current initial scene looks and reconfiguring lights is booooring!
     * **Fake multiple scattering** [like in UE5](https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=39). See "Physically based hair shading in Unreal" by Brian Karis slide 39 if SIGGRAPH does not allow link.
     * **Fake attenuation** mimicking [Beer–Lambert law](https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law).
     * It also **casts and receives shadows as well as AO**. You can also randomize some settings for each strand.
-* [LOD](https://youtu.be/ool2E8SQPGU?si=Zv-1N5Y4-nWvlB6v&t=1643) - the user has strand% slider. In a production system, you would automate this and increase hair width with distance. The randomization happens [in my blender exporter](scripts/tfx_exporter.py).
+* [LOD](https://youtu.be/ool2E8SQPGU?si=Zv-1N5Y4-nWvlB6v&t=1643). The user has strand% slider. In a production system, you would automate this and increase hair width with distance. The randomization happens [in my blender exporter](scripts/tfx_exporter.py).
+* [Tile sort](https://youtu.be/ool2E8SQPGU?si=85yOaqCmYkUR9nHL&t=1803). Ensures stable frametimes. Sorting is approximate (buckets).
 * Blender exporter for the older Blender hair system. It's actually the same file format as I've used in my TressFX ports ([1](https://github.com/Scthe/TressFX-OpenGL), [2](https://github.com/Scthe/WebFX), [3](https://github.com/Scthe/Rust-Vulkan-TressFX)).
 * Uses [Sintel Lite 2.57b](http://www.blendswap.com/blends/view/7093) by BenDansie as a 3D model. There were no changes to "make it work" or optimize. Only selecting how many points per each strand.
+    * You might notice that Sintel's hair is less dense than the one showcased in FIFA. This is actually not good as it means we have to process more depth bins/slices till the pixel/tile saturates. Reminds me of similar nonobvious tradeoffs from [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu/tree/master). On the other hand, the tile pass is cheaper.
 
 ### Features: Physics simulation
 
@@ -66,22 +68,21 @@ Check [src/constants.ts](src/constants.ts) for full documentation.
 
 I'm using Robin Taillandier and Jon Valdes's presentation ["Every Strand Counts: Physics and Rendering Behind Frostbite’s Hair"](https://www.youtube.com/watch?v=ool2E8SQPGU) as a reference point.
 
-* No skinning to triangles. If a character has a beard, it should move based on the underlying mesh.
-* There is a [pass that takes all strands and writes their shaded values](https://youtu.be/ool2E8SQPGU?si=HKPzUIWsHh75qBps&t=1333) (in strand-space) into a buffer. I do this for every strand, Frostbite only for visible ones. This pass is entirely separate from rasterization.
-* No hair color from texture. The shading pass has the `strandIdx`, so it's a matter of fetching uv and sampling texture.
-* Frostbite uses a software rasterizer to write to a depth (and maybe normal) buffer. This is a bit of a problem because of how software rasterizers work. So I re-render the hair using a hardware rasterizer just for depth and normals. Only the color is software rasterized.
+* **No skinning to triangles.** If a character has a beard, it should move based on the underlying mesh.
+* We both have a [pass that takes all strands and writes their shaded values](https://youtu.be/ool2E8SQPGU?si=HKPzUIWsHh75qBps&t=1333) (in strand-space) into a buffer. I do this for every strand, **Frostbite only for visible ones**.
+* **No hair color from texture.** The shading pass has the `strandIdx`, so it's a matter of fetching uv and sampling texture. This tech was not needed for my demo app.
+* **Frostbite uses a software rasterizer to write to a depth (and maybe normal) buffer.** This is a problem because of how software rasterizers work. **So I re-render the hair using a hardware rasterizer just for depth and normals.** Only the color is software rasterized.
     * Depth is not a problem (just an atomic op on a separate buffer), normals are. However, the Frostbite presentation does not mention normals. Don't they need them for AO or other stuff? Hair shading can omit AO (I even have supplementary [Beer–Lambert law](https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law) attenuation). But what about the skin from which the hair grows? Is it faked in diffuse texture? Or is the hair always dense?
     * I also use a hardware rasterizer to render hair into shadow maps. Again, it's not complicated, but someone would have to spend time writing it. And I can't be bothered.
-* No pre-sorting of tiles, which can result in some frames taking a bit longer than others.
-* No curly hair subdivisions.
-    * The algorithm they use is part of my Blender exporter. In Blender, each hair is a spline. I convert it to equidistant points. Although implementing this in software rasterizer is *a bit* different.
-* No specialized support for [headgear](https://youtu.be/ool2E8SQPGU?si=aAFV_WnUwxJPoIRM&t=2071) like headbands. In Frostbite it requires content authoring to mark selected points as non-dynamic.
-* No automatic LODs.Instead, you have a slider that works [exactly like Frostbite's system](https://youtu.be/ool2E8SQPGU?si=NTmreF8azhRz4sVB&t=1646). I randomize the strand order in my Blender exporter.
-* A different set of constraints. We both have stretch/length constraints and colliders (both Signed Distance Fields and primitives).
+* **No curly hair subdivisions.**
+    * The algorithm they use is part of my Blender exporter. In Blender, each hair is a spline. I convert it to equidistant points. However, implementing this in software rasterizer is *a bit* different.
+* **No specialized support for [headgear](https://youtu.be/ool2E8SQPGU?si=aAFV_WnUwxJPoIRM&t=2071) like headbands.** Frostbite requires content authoring to mark selected points as non-dynamic.
+* **LOD is manual instead of automatic.** Frostbite [automatically calculates rendered strand count](https://youtu.be/ool2E8SQPGU?si=NTmreF8azhRz4sVB&t=1646). I give you control over this parameter.
+* **I simulate all hair strands. Frostbite can choose how much and interpolate the rest.**
+* **A different set of constraints.** We both have stretch/length constraints and colliders (both Signed Distance Fields and primitives).
     * I have extra global shape constraints, based on my experience with [TressFX](https://github.com/Scthe/Rust-Vulkan-TressFX). I assume that Frostbite also has this, but maybe under a different term (like "shape matching")?
     * Frostbite has a global length constraint.
     * We have different implementations for local shape constraints. Mine is based on "A Triangle Bending Constraint Model for Position-Based Dynamics" - [Kelager10](http://image.diku.dk/kenny/download/kelager.niebe.ea10.pdf).
-* I simulate all hair strands. Frostbite can choose how much and interpolate the rest.
 
 Some things were not explained in the presentation, so I gave my best guess. E.g. the aero grid update step takes wind and colliders as input.  But does it do fluid simulation for nice turbulence and vortexes? Possible, but not likely. I just mark 3 regions: lull (inside the mesh), half-lull (grid point is shielded by a collider, half strength), and full strength.
 
@@ -91,7 +92,7 @@ Ofc. I cannot rival Frostbite's performance. I am a single person and I have muc
 ## Usage
 
 * Firefox does not support WebGPU. Use Chrome instead.
-* Use the `[W, S, A, D]` keys to move and `[Z, SPACEBAR]` to fly up or down. `[Shift]` to move faster. `[E]` to toggle depth pyramid debug mode.
+* Use the `[W, S, A, D]` keys to move and `[Z, SPACEBAR]` to fly up or down. `[Shift]` to move faster.
 * As all browsers enforce VSync, use the "Profile" button for accurate timings.
 
 ### Running the app locally

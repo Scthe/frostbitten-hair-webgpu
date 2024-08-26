@@ -5,6 +5,7 @@ import * as SHADER_SNIPPETS from '../_shaderSnippets/shaderSnippets.wgls.ts';
 import { BUFFER_HAIR_TILE_SEGMENTS } from '../swHair/shared/hairTileSegmentsBuffer.ts';
 import { BUFFER_HAIR_RASTERIZER_RESULTS } from '../swHair/shared/hairRasterizerResultBuffer.ts';
 import { SHADER_TILE_UTILS } from '../swHair/shaderImpl/tileUtils.wgsl.ts';
+import { BUFFER_SEGMENT_COUNT_PER_TILE } from '../swHair/shared/segmentCountPerTileBuffer.ts';
 
 export const SHADER_PARAMS = {
   bindings: {
@@ -12,6 +13,7 @@ export const SHADER_PARAMS = {
     tilesBuffer: 1,
     tileSegmentsBuffer: 2,
     rasterizeResultBuffer: 3,
+    segmentCountPerTile: 4,
   },
 };
 
@@ -31,6 +33,7 @@ ${RenderUniformsBuffer.SHADER_SNIPPET(b.renderUniforms)}
 ${BUFFER_HAIR_TILES_RESULT(b.tilesBuffer, 'read')}
 ${BUFFER_HAIR_TILE_SEGMENTS(b.tileSegmentsBuffer, 'read')}
 ${BUFFER_HAIR_RASTERIZER_RESULTS(b.rasterizeResultBuffer, 'read')}
+${BUFFER_SEGMENT_COUNT_PER_TILE(b.segmentCountPerTile, 'read')}
 
 
 @vertex
@@ -62,8 +65,8 @@ fn main_fs(
   let tileXY = getHairTileXY_FromPx(fragPositionPx);
   let displayMode = getDisplayMode();
 
-  if (displayMode == DISPLAY_MODE_TILES) {
-    result.color = renderTileSegmentCount(viewportSizeU32, tileXY);
+  if (displayMode == DISPLAY_MODE_TILES || displayMode == DISPLAY_MODE_TILES_PPLL) {
+    result.color = renderTileSegmentCount(displayMode, viewportSizeU32, tileXY);
 
   } else {
     var color = vec4f(0.0, 0.0, 0.0, 1.0);
@@ -95,6 +98,7 @@ fn getDebugTileColor(tileXY: vec2u) -> vec4f {
 }
 
 fn renderTileSegmentCount(
+  displayMode: u32,
   viewportSize: vec2u,
   tileXY: vec2u
 ) -> vec4f {
@@ -102,12 +106,18 @@ fn renderTileSegmentCount(
 
   // output: segment count in each tile normalized by UI provided value
   let maxSegmentsCount = getDbgTileModeMaxSegments();
-  let segments = getSegmentCountInTiles(viewportSize, maxSegmentsCount, tileXY);
+  var segments = 0u;
+  if (displayMode == DISPLAY_MODE_TILES) {
+    segments = getSegmentCountInTiles_Count(viewportSize, maxSegmentsCount, tileXY);
+  } else {
+    segments = getSegmentCountInTiles_PPLL(viewportSize, maxSegmentsCount, tileXY);
+  }
+  
   color.r = f32(segments) / f32(maxSegmentsCount);
   color.g = 1.0 - color.r;
 
   // dbg: tile bounds
-  // let tileIdx: u32 = getHairTileIdx(viewportSize, tileXY, 0u);
+  // let tileIdx: u32 = getHairTileDepthBinIdx(viewportSize, tileXY, 0u);
   // color.r = f32((tileIdx * 17) % 33) / 33.0;
   // color.a = 1.0;
   
@@ -117,7 +127,7 @@ fn renderTileSegmentCount(
   return color;
 }
 
-fn getSegmentCountInTiles(
+fn getSegmentCountInTiles_PPLL(
   viewportSize: vec2u,
   maxSegmentsCount: u32,
   tileXY: vec2u
@@ -140,6 +150,15 @@ fn getSegmentCountInTiles(
   }
 
   return count;
+}
+
+fn getSegmentCountInTiles_Count(
+  viewportSize: vec2u,
+  maxSegmentsCount: u32,
+  tileXY: vec2u
+) -> u32 {
+  let tileIdx = getHairTileIdx(viewportSize, tileXY);
+  return _hairSegmentCountPerTile[tileIdx];
 }
 
 `;

@@ -260,11 +260,19 @@ export class Renderer {
     this.hairFinePass.cmdClearBeforeRender(ctx);
     this.hairTileSortPass.cmdClearBeforeRender(ctx);
 
+    // hair rasterize pass 1
     this.hairTilesPass.cmdDrawHairToTiles(ctx, hairObject);
-    if (displayMode !== DISPLAY_MODE.TILES) {
+
+    if (
+      displayMode !== DISPLAY_MODE.TILES &&
+      displayMode !== DISPLAY_MODE.TILES_PPLL
+    ) {
       this.hairTileSortPass.cmdSortHairTiles(ctx);
+      // hair rasterize pass 2
       this.hairFinePass.cmdRasterizeSlicesHair(ctx, hairObject);
     }
+
+    // combine meshes + hair
     this.hairCombinePass.cmdCombineRasterResults(ctx);
 
     this.updateResourcesForNextFrame(ctx, hairObject);
