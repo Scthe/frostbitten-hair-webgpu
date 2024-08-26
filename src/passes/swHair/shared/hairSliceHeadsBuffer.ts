@@ -7,11 +7,25 @@ const ENTRIES_PER_PROCESSOR =
   CONFIG.hairRender.tileSize *
   CONFIG.hairRender.tileSize *
   CONFIG.hairRender.slicesPerPixel;
+const PROCESSOR_COUNT = CONFIG.hairRender.processorCount;
 
 const SLICE_HEADS_MEMORY = CONFIG.hairRender.sliceHeadsMemory;
 
 export const getLocalMemoryRequirements = () =>
   SLICE_HEADS_MEMORY === 'workgroup' ? ENTRIES_PER_PROCESSOR * BYTES_U32 : 0;
+
+export const MEMORY_PARALLEL_SIZE = () => {
+  if (SLICE_HEADS_MEMORY === 'workgroup')
+    return CONFIG.hairRender.finePassWorkgroupSizeX;
+  if (SLICE_HEADS_MEMORY === 'global') return PROCESSOR_COUNT;
+  return 1; // registers
+};
+
+export const MEMORY_PROCESSOR_OFFSET = () => {
+  if (SLICE_HEADS_MEMORY === 'workgroup') return '_local_invocation_index';
+  if (SLICE_HEADS_MEMORY === 'global') return 'processorId';
+  return '0u'; // registers
+};
 
 ///////////////////////////
 /// SHADER CODE - SHARED - UTILS
@@ -25,13 +39,13 @@ fn _getHeadsSliceIdx(
   processorId: u32,
   pixelInTile: vec2u, sliceIdx: u32,
 ) -> u32 {
-  let offset = _getHeadsProcessorOffset(processorId);
-  let offsetInProcessor = (
-    pixelInTile.y * TILE_SIZE * SLICES_PER_PIXEL +
-    pixelInTile.x * SLICES_PER_PIXEL +
-    sliceIdx
+  let OFFSET = ${MEMORY_PARALLEL_SIZE()}u;
+  return (
+    pixelInTile.y * OFFSET * TILE_SIZE * SLICES_PER_PIXEL +
+    pixelInTile.x * OFFSET * SLICES_PER_PIXEL +
+    sliceIdx * OFFSET +
+    ${MEMORY_PROCESSOR_OFFSET()}
   );
-  return offset + offsetInProcessor;
 }
 
 fn _setSlicesHeadPtr(
@@ -54,12 +68,12 @@ fn _getSlicesHeadPtr(
 }
 
 fn _clearSlicesHeadPtrs(processorId: u32) {
-  let offset = _getHeadsProcessorOffset(processorId);
-  let count = ${ENTRIES_PER_PROCESSOR}u;
-
-  for (var i: u32 = 0u; i < count; i += 1u) {
-    _hairSliceHeads[offset + i] = INVALID_SLICE_DATA_PTR;
-  }
+  for (var y: u32 = 0u; y < TILE_SIZE; y += 1u) {
+  for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
+    for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
+      _clearSliceHeadPtr(processorId, vec2u(x, y), s);
+    }
+  }}
 }
 
 fn _clearSliceHeadPtr(
@@ -94,10 +108,6 @@ const BUFFER_HAIR_SLICES_HEADS_GLOBAL = (
 @group(0) @binding(${bindingIdx})
 var<storage, ${access}> _hairSliceHeads: array<u32>;
 
-fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
-  return processorId * ${ENTRIES_PER_PROCESSOR};
-}
-
 ${SHARED_UTILS}
 `;
 
@@ -107,17 +117,17 @@ ${SHARED_UTILS}
 
 const LOCAL_MEMORY_ACCESS =
   SLICE_HEADS_MEMORY === 'workgroup' ? 'workgroup' : 'private';
+const LOCAL_MEMORY_SIZE =
+  SLICE_HEADS_MEMORY === 'workgroup'
+    ? ENTRIES_PER_PROCESSOR * CONFIG.hairRender.finePassWorkgroupSizeX
+    : ENTRIES_PER_PROCESSOR;
 
 const BUFFER_HAIR_SLICES_HEADS_LOCAL = (
   _bindingIdx: number,
   _access: 'read_write'
 ) => /* wgsl */ `
 
-var<${LOCAL_MEMORY_ACCESS}> _hairSliceHeads: array<u32, ${ENTRIES_PER_PROCESSOR}u>;
-
-fn _getHeadsProcessorOffset(processorId: u32) -> u32 {
-  return 0u;
-}
+var<${LOCAL_MEMORY_ACCESS}> _hairSliceHeads: array<u32, ${LOCAL_MEMORY_SIZE}u>;
 
 ${SHARED_UTILS}
 `;
@@ -138,17 +148,12 @@ function createHairSlicesHeadsBuffer_GLOBAL(device: GPUDevice): GPUBuffer {
 
   return device.createBuffer({
     label: `hair-slices-heads`,
-    size,
+    size: Math.max(size, WEBGPU_MINIMAL_BUFFER_SIZE),
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });
 }
 
 function createHairSlicesHeadsBuffer_LOCAL(_device: GPUDevice): undefined {
-  const { finePassWorkgroupSizeX: grSize, sliceHeadsMemory } =
-    CONFIG.hairRender;
-  if (grSize !== 1 && sliceHeadsMemory === 'workgroup') {
-    throw new Error(`Expected finePassWorkgroupSizeX to be 1, was ${grSize}`);
-  }
   calcMemoryReqs();
   return undefined;
 }
@@ -159,12 +164,11 @@ export const createHairSlicesHeadsBuffer: Allocator =
     : createHairSlicesHeadsBuffer_LOCAL;
 
 function calcMemoryReqs() {
-  const { tileSize, slicesPerPixel, processorCount } = CONFIG.hairRender;
+  const { processorCount } = CONFIG.hairRender;
 
-  const entriesPerProcessor = tileSize * tileSize * slicesPerPixel;
-  const entries = processorCount * entriesPerProcessor;
+  const entries = processorCount * ENTRIES_PER_PROCESSOR;
   const bytesPerEntry = BYTES_U32;
-  const size = Math.max(entries * bytesPerEntry, WEBGPU_MINIMAL_BUFFER_SIZE);
+  const size = entries * bytesPerEntry;
 
   const memRegionNames: Record<SliceHeadsMemory, string> = {
     global: 'VRAM',
@@ -176,7 +180,7 @@ function calcMemoryReqs() {
   STATS.update('Slices heads', `${memRegionName} ${formatBytes(size)}`);
   STATS.update(
     ' \\ Per processor',
-    formatBytes(entriesPerProcessor * bytesPerEntry)
+    formatBytes(ENTRIES_PER_PROCESSOR * bytesPerEntry)
   );
 
   return size;

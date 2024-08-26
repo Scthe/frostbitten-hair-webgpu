@@ -4,6 +4,7 @@ import { Dimensions } from '../../utils/index.ts';
 import {
   assertIsGPUTextureView,
   bindBuffer,
+  cmdClearWholeBuffer,
   getItemsPerThread,
 } from '../../utils/webgpu.ts';
 import { BindingsCache } from '../_shared/bindingsCache.ts';
@@ -16,6 +17,7 @@ import { PassCtx } from '../passCtx.ts';
 import { SHADER_CODE, SHADER_PARAMS } from './hairTilesPass.wgsl.ts';
 import { createHairTileSegmentsBuffer } from './shared/hairTileSegmentsBuffer.ts';
 import { createHairTilesResultBuffer } from './shared/hairTilesResultBuffer.ts';
+import { createHairSegmentCountPerTileBuffer } from './shared/segmentCountPerTileBuffer.ts';
 
 export class HairTilesPass {
   public static NAME: string = 'HairTilesPass';
@@ -26,6 +28,7 @@ export class HairTilesPass {
   /** result framebuffer as flat buffer */
   public hairTilesBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
   public hairTileSegmentsBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
+  public segmentCountPerTileBuffer: GPUBuffer = undefined!; // see this.handleViewportResize()
 
   constructor(device: GPUDevice) {
     const shaderModule = device.createShaderModule({
@@ -42,9 +45,9 @@ export class HairTilesPass {
     });
   }
 
-  /** Clears to 0. We cannot select a number */
-  clearFramebuffer(ctx: PassCtx) {
-    ctx.cmdBuf.clearBuffer(this.hairTilesBuffer, 0, this.hairTilesBuffer.size);
+  cmdClearBeforeRender(ctx: PassCtx) {
+    cmdClearWholeBuffer(ctx.cmdBuf, this.hairTilesBuffer);
+    cmdClearWholeBuffer(ctx.cmdBuf, this.segmentCountPerTileBuffer);
     ctx.cmdBuf.clearBuffer(this.hairTileSegmentsBuffer, 0, BYTES_U32);
   }
 
@@ -57,9 +60,16 @@ export class HairTilesPass {
     if (this.hairTileSegmentsBuffer) {
       this.hairTileSegmentsBuffer.destroy();
     }
+    if (this.segmentCountPerTileBuffer) {
+      this.segmentCountPerTileBuffer.destroy();
+    }
 
     this.hairTilesBuffer = createHairTilesResultBuffer(device, viewportSize);
     this.hairTileSegmentsBuffer = createHairTileSegmentsBuffer(
+      device,
+      viewportSize
+    );
+    this.segmentCountPerTileBuffer = createHairSegmentCountPerTileBuffer(
       device,
       viewportSize
     );
@@ -119,6 +129,7 @@ export class HairTilesPass {
         globalUniforms.createBindingDesc(b.renderUniforms),
         bindBuffer(b.tilesBuffer, this.hairTilesBuffer),
         bindBuffer(b.tileSegmentsBuffer, this.hairTileSegmentsBuffer),
+        bindBuffer(b.segmentCountPerTileBuffer, this.segmentCountPerTileBuffer),
         object.bindHairData(b.hairData),
         object.bindPointsPositions(b.hairPositions),
         object.bindTangents(b.hairTangents),

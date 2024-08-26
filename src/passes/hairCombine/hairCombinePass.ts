@@ -91,6 +91,7 @@ export class HairCombinePass {
       hairTilesBuffer,
       hairTileSegmentsBuffer,
       hairRasterizerResultsBuffer,
+      hairSegmentCountPerTileBuffer,
     } = ctx;
     const b = SHADER_PARAMS.bindings;
 
@@ -99,6 +100,7 @@ export class HairCombinePass {
       bindBuffer(b.tilesBuffer, hairTilesBuffer),
       bindBuffer(b.tileSegmentsBuffer, hairTileSegmentsBuffer),
       bindBuffer(b.rasterizeResultBuffer, hairRasterizerResultsBuffer),
+      bindBuffer(b.segmentCountPerTile, hairSegmentCountPerTileBuffer),
     ]);
   };
 }

@@ -37,6 +37,7 @@ import { DrawGridDbgPass } from './passes/drawGridDbg/drawGridDbgPass.ts';
 import { GridPostSimPass } from './passes/simulation/gridPostSimPass.ts';
 import { GridPreSimPass } from './passes/simulation/gridPreSimPass.ts';
 import { DrawGizmoPass } from './passes/drawGizmo/drawGizmoPass.ts';
+import { HairTileSortPass } from './passes/swHair/hairTileSortPass.ts';
 
 export class Renderer {
   public readonly cameraCtrl: Camera;
@@ -67,6 +68,7 @@ export class Renderer {
   private readonly hairTilesPass: HairTilesPass;
   private readonly hairShadingPass: HairShadingPass;
   private readonly hairFinePass: HairFinePass;
+  private readonly hairTileSortPass: HairTileSortPass;
   private readonly hairCombinePass: HairCombinePass;
   private readonly presentPass: PresentPass;
 
@@ -111,6 +113,7 @@ export class Renderer {
       NORMALS_TEX_FORMAT
     );
     this.hairTilesPass = new HairTilesPass(device);
+    this.hairTileSortPass = new HairTileSortPass(device);
     this.hairShadingPass = new HairShadingPass(device);
     this.hairFinePass = new HairFinePass(device);
     this.hairCombinePass = new HairCombinePass(device, HDR_RENDER_TEX_FORMAT);
@@ -253,13 +256,23 @@ export class Renderer {
       return;
     }
 
-    this.hairTilesPass.clearFramebuffer(ctx);
-    this.hairFinePass.clearFramebuffer(ctx);
+    this.hairTilesPass.cmdClearBeforeRender(ctx);
+    this.hairFinePass.cmdClearBeforeRender(ctx);
+    this.hairTileSortPass.cmdClearBeforeRender(ctx);
 
+    // hair rasterize pass 1
     this.hairTilesPass.cmdDrawHairToTiles(ctx, hairObject);
-    if (displayMode !== DISPLAY_MODE.TILES) {
+
+    if (
+      displayMode !== DISPLAY_MODE.TILES &&
+      displayMode !== DISPLAY_MODE.TILES_PPLL
+    ) {
+      this.hairTileSortPass.cmdSortHairTiles(ctx);
+      // hair rasterize pass 2
       this.hairFinePass.cmdRasterizeSlicesHair(ctx, hairObject);
     }
+
+    // combine meshes + hair
     this.hairCombinePass.cmdCombineRasterResults(ctx);
 
     this.updateResourcesForNextFrame(ctx, hairObject);
@@ -310,8 +323,11 @@ export class Renderer {
       // hair:
       hairTilesBuffer: this.hairTilesPass.hairTilesBuffer,
       hairTileSegmentsBuffer: this.hairTilesPass.hairTileSegmentsBuffer,
+      hairSegmentCountPerTileBuffer:
+        this.hairTilesPass.segmentCountPerTileBuffer,
       hairRasterizerResultsBuffer:
         this.hairFinePass.hairRasterizerResultsBuffer,
+      hairTileListBuffer: this.hairTileSortPass.tileListBuffer,
     };
   }
 
@@ -333,6 +349,7 @@ export class Renderer {
     this.drawBackgroundGradientPass.onViewportResize();
     this.hairTilesPass.onViewportResize(this.device, viewportSize);
     this.hairFinePass.onViewportResize(this.device, viewportSize);
+    this.hairTileSortPass.onViewportResize(this.device, viewportSize);
     this.hairCombinePass.onViewportResize();
     this.aoPass.onViewportResize();
     this.hairShadingPass.onViewportResize();

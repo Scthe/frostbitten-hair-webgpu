@@ -15,6 +15,9 @@ run:
 test:
 	$(DENO) task test
 
+testSort:
+	$(DENO) task testSort
+
 # Generate .exe
 compile:
 	$(DENO) task compile

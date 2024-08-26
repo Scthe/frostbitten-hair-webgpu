@@ -18,10 +18,6 @@ fn _setRasterizerResult(viewportSize: vec2u, posPx: vec2u, color: vec4f) {
   let idx = viewportSize.x * posPx.y + posPx.x;
   _hairRasterizerResults.data[idx] = color;
 }
-
-fn _getNextTileIdx() -> u32 {
-  return atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, 1u);
-}
 `;
 
 export const BUFFER_HAIR_RASTERIZER_RESULTS = (

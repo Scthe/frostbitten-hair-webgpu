@@ -30,4 +30,6 @@ export interface PassCtx {
   hairTilesBuffer: GPUBuffer;
   hairTileSegmentsBuffer: GPUBuffer;
   hairRasterizerResultsBuffer: GPUBuffer;
+  hairTileListBuffer: GPUBuffer;
+  hairSegmentCountPerTileBuffer: GPUBuffer;
 }

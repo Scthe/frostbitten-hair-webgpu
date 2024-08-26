@@ -9,21 +9,23 @@ for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
 }}
 */
 
+import { CONFIG } from '../../../constants.ts';
+
 export const SHADER_IMPL_PROCESS_HAIR_SEGMENT = () => /* wgsl */ `
 
 fn processHairSegment(
-  p: FineRasterParams,
+  params: FineRasterParams,
   tileBoundsPx: vec4u, tileDepth: vec2f,
   sliceDataOffset: u32,
   strandIdx: u32, segmentIdx: u32
 ) -> u32 {
   var writtenSliceDataCount: u32 = 0u;
-  let segmentCount = p.pointsPerStrand - 1;
+  let segmentCount = params.pointsPerStrand - 1;
 
   let projParams = ProjectHairParams(
-    p.pointsPerStrand,
-    p.viewportSize,
-    p.fiberRadius,
+    params.pointsPerStrand,
+    params.viewportSize,
+    params.fiberRadius,
   );
   let projSegm = projectHairSegment(
     projParams,
@@ -80,11 +82,17 @@ fn processHairSegment(
     let interpW = interpolateHairQuad(projSegm, posPx);
     let t = interpW.y; // 0 .. 1
     let hairDepth: f32 = interpolateHairF32(interpW, projSegm.depthsProj);
-    // TODO [IGNORE] instead of linear, have quadratic interp? It makes strands "fatter", so user would provide lower fiber radius. Which is good for us.
-    let alpha = 1.0 - abs(interpW.x * 2. - 1.); // interpW.x is in 0..1. Turn it so strand middle is 1.0 and then 0.0 at edges.
+    
+    // interpW.x is in 0..1. Transform it so strand middle is 1.0 and then 0.0 at edges.
+    var alpha = 1.0 - abs(interpW.x * 2. - 1.);
+    if (${CONFIG.hairRender.alphaQuadratic}) { // see CONFIG docs
+      alpha = sqrt(alpha);
+    }
+    // optimization: -0.5ms with x1.1 'fatter' strands. Fills the pixel/tiles faster
+    alpha = saturate(alpha * ${CONFIG.hairRender.alphaMultipler});
 
     // sample depth buffer, depth test with GL_LESS
-    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(p.viewportSize.y - y)); // wgpu's naga requiers vec2i..
+    let depthTextSamplePx: vec2i = vec2i(i32(posPx_u32.x), i32(params.viewportSize.y - y)); // wgpu's naga requiers vec2i..
     let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
     if (hairDepth >= depthBufferValue) {
       continue;
@@ -93,14 +101,16 @@ fn processHairSegment(
     // calculate final color
     let tFullStrand = (f32(segmentIdx) + t) / f32(segmentCount);
     // let color = vec4f(1.0 - t, t, 0.0, alpha); // red at root, green at tip
+    // Either shade here and store RGBA per slice or at least
+    // (strandIdx: u32, tFullStrand: f16, alpha: f16).
+    // Either way it's u32 for nextSlicePtr and 2*u32 for payload.
     var color = _sampleShading(strandIdx, tFullStrand);
     color.a = color.a * alpha;
-    let sliceIdx = getSliceIdx(tileDepth, hairDepth);
-
+    
     // insert into per-slice linked list
-    // WARNING: Both lines below can be slow!
-    let previousPtr: u32 = _setSlicesHeadPtr(p.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
-    _setSliceData(p.processorId, nextSliceDataPtr, color, previousPtr);
+    let sliceIdx = getSliceIdx(tileDepth, hairDepth);
+    let previousPtr: u32 = _setSlicesHeadPtr(params.processorId, pxInTile, sliceIdx, nextSliceDataPtr);
+    _setSliceData(params.processorId, nextSliceDataPtr, color, previousPtr);
     writtenSliceDataCount += 1u;
   }
   CY0 += CC0.B;

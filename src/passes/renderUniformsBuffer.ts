@@ -36,6 +36,7 @@ export class RenderUniformsBuffer {
 
     const DISPLAY_MODE_FINAL = ${DISPLAY_MODE.FINAL}u;
     const DISPLAY_MODE_TILES = ${DISPLAY_MODE.TILES}u;
+    const DISPLAY_MODE_TILES_PPLL = ${DISPLAY_MODE.TILES_PPLL}u;
     const DISPLAY_MODE_HW_RENDER = ${DISPLAY_MODE.HW_RENDER}u;
     const DISPLAY_MODE_USED_SLICES = ${DISPLAY_MODE.USED_SLICES}u;
     const DISPLAY_MODE_DEPTH = ${DISPLAY_MODE.DEPTH}u;
@@ -398,7 +399,10 @@ export class RenderUniformsBuffer {
     const hr = CONFIG.hairRender;
     let extraData = 0;
 
-    if (c.displayMode === DISPLAY_MODE.TILES) {
+    if (
+      c.displayMode === DISPLAY_MODE.TILES ||
+      c.displayMode === DISPLAY_MODE.TILES_PPLL
+    ) {
       extraData = hr.dbgTileModeMaxSegments;
     } else if (c.displayMode === DISPLAY_MODE.USED_SLICES) {
       extraData = hr.dbgSlicesModeMaxSlices;

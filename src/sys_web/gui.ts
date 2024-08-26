@@ -57,6 +57,7 @@ export function initializeGUI(
   const modeDummy = createDummy(CONFIG, 'displayMode', [
     { label: 'Final', value: DISPLAY_MODE.FINAL },
     { label: 'DBG: tiles', value: DISPLAY_MODE.TILES },
+    { label: 'DBG: tiles PPLL', value: DISPLAY_MODE.TILES_PPLL },
     { label: 'DBG: slices cnt', value: DISPLAY_MODE.USED_SLICES },
     { label: 'DBG: hw-render', value: DISPLAY_MODE.HW_RENDER },
     { label: 'DBG: depth', value: DISPLAY_MODE.DEPTH },
@@ -128,7 +129,10 @@ export function initializeGUI(
 
     function onDisplayModeChange() {
       const mode = CONFIG.displayMode;
-      setVisible(tileSegmentsCtrl, mode === DISPLAY_MODE.TILES);
+      setVisible(
+        tileSegmentsCtrl,
+        mode === DISPLAY_MODE.TILES || mode === DISPLAY_MODE.TILES_PPLL
+      );
       setVisible(slicesCtrl, mode === DISPLAY_MODE.USED_SLICES);
       setVisible(showTilesCtrl, mode === DISPLAY_MODE.FINAL);
     }

@@ -77,3 +77,25 @@ export const useDepthStencilAttachment = (
     depthStoreOp,
   };
 };
+
+// TODO [LOW] use everywhere
+export const createComputePipeline = (
+  device: GPUDevice,
+  passClass: PassClass,
+  shaderText: string,
+  name = '',
+  mainFn = 'main'
+): GPUComputePipeline => {
+  const shaderModule = device.createShaderModule({
+    label: labelShader(passClass, name),
+    code: shaderText,
+  });
+  return device.createComputePipeline({
+    label: labelPipeline(passClass, name),
+    layout: 'auto',
+    compute: {
+      module: shaderModule,
+      entryPoint: mainFn,
+    },
+  });
+};

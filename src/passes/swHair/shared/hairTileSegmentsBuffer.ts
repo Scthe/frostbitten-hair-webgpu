@@ -4,7 +4,7 @@ import {
   WEBGPU_MINIMAL_BUFFER_SIZE,
   u32_type,
 } from '../../../utils/webgpu.ts';
-import { getTileCount } from './hairTilesResultBuffer.ts';
+import { getTileCount } from './utils.ts';
 import { Dimensions } from '../../../utils/index.ts';
 import { STATS } from '../../../stats.ts';
 import { formatBytes } from '../../../utils/string.ts';
