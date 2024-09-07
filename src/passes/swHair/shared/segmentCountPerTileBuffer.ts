@@ -38,7 +38,7 @@ export function createHairSegmentCountPerTileBuffer(
   const size = entries * BYTES_U32;
 
   return device.createBuffer({
-    label: `hair-segments-per-tile`,
+    label: `hair-segment-count-per-tile`,
     size,
     usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
   });

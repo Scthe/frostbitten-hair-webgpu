@@ -5,6 +5,14 @@ export interface Dimensions {
   height: number;
 }
 
+/** https://github.com/Scthe/nanite-webgpu/issues/2 */
+export function ensureIntegerDimensions(dims: Dimensions): Dimensions {
+  return {
+    width: Math.ceil(dims.width),
+    height: Math.ceil(dims.height),
+  };
+}
+
 export type ValueOf<T> = T[keyof T];
 
 /** Remove readonly from object properties */

@@ -1,5 +1,5 @@
 import { getRowPadding, createCapture } from 'std/webgpu';
-import { Dimensions } from './utils/index.ts';
+import { Dimensions, ensureIntegerDimensions } from './utils/index.ts';
 import { Renderer } from './renderer.ts';
 import { createGpuDevice } from './utils/webgpu.ts';
 import { createErrorSystem } from './utils/errors.ts';
@@ -43,10 +43,11 @@ async function renderSceneToFile(
 
   // create canvas
   console.log('Creating output canvas..');
+  const canvasDimensions = ensureIntegerDimensions(VIEWPORT_SIZE);
   const { texture: windowTexture, outputBuffer } = createCapture(
     device,
-    VIEWPORT_SIZE.width,
-    VIEWPORT_SIZE.height
+    canvasDimensions.width,
+    canvasDimensions.height
   );
   const windowTextureView = windowTexture.createView();
 
@@ -95,7 +96,12 @@ async function renderSceneToFile(
   renderer.cmdRender(cmdBuf, scene, windowTextureView);
 
   // result to buffer
-  cmdCopyTextureToBuffer(cmdBuf, windowTexture, outputBuffer, VIEWPORT_SIZE);
+  cmdCopyTextureToBuffer(
+    cmdBuf,
+    windowTexture,
+    outputBuffer,
+    renderer.viewportSize
+  );
 
   // submit commands
   // profiler.endFrame(cmdBuf);
@@ -107,7 +113,7 @@ async function renderSceneToFile(
   await assertNoWebGPUErrorsAsync();
 
   // write output
-  await writePngFromGPUBuffer(outputBuffer, VIEWPORT_SIZE, outputPath);
+  await writePngFromGPUBuffer(outputBuffer, renderer.viewportSize, outputPath);
 
   // end scope now, after guaranteed GPU sync point. The timings are skewed,
   // but best we get

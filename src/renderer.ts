@@ -1,6 +1,10 @@
 import { Mat4, mat4 } from 'wgpu-matrix';
 import { RenderUniformsBuffer } from './passes/renderUniformsBuffer.ts';
-import { Dimensions, debounce } from './utils/index.ts';
+import {
+  Dimensions,
+  debounce,
+  ensureIntegerDimensions,
+} from './utils/index.ts';
 import Input from './sys_web/input.ts';
 import {
   AO_TEX_FORMAT,
@@ -43,7 +47,7 @@ export class Renderer {
   public readonly cameraCtrl: Camera;
   public projectionMat: Mat4;
   private readonly _viewProjectionMatrix = mat4.identity(); // cached to prevent allocs.
-  private readonly viewportSize: Dimensions = { width: 0, height: 0 };
+  public readonly viewportSize: Dimensions = { width: 0, height: 0 };
   private frameIdx = 0;
 
   // render target textures
@@ -332,6 +336,7 @@ export class Renderer {
   }
 
   private handleViewportResize = (viewportSize: Dimensions) => {
+    viewportSize = ensureIntegerDimensions(viewportSize);
     console.log(`Viewport resize`, viewportSize);
 
     this.viewportSize.width = viewportSize.width;

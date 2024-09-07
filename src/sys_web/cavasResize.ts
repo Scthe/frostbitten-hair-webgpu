@@ -1,4 +1,4 @@
-import { Dimensions } from '../utils/index.ts';
+import { Dimensions, ensureIntegerDimensions } from '../utils/index.ts';
 
 export type ResizeHandler = (viewportSize: Dimensions) => void;
 
@@ -45,9 +45,9 @@ export function initCanvasResizeSystem(
   function getViewportSize(): Dimensions {
     // deno-lint-ignore no-explicit-any
     const devicePixelRatio = (window as any).devicePixelRatio || 1;
-    return {
+    return ensureIntegerDimensions({
       width: canvas.clientWidth * devicePixelRatio,
       height: canvas.clientHeight * devicePixelRatio,
-    };
+    });
   }
 }
