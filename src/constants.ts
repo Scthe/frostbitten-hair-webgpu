@@ -93,7 +93,7 @@ export const CONFIG = {
     binaryFileReader: binaryFileReader_Web,
     createTextureFromFile: createTextureFromFile_Web,
   },
-  increaseStorageMemoryLimits: false,
+  increaseStorageMemoryLimits: true,
   displayMode: DISPLAY_MODE.FINAL,
 
   ///////////////
@@ -240,7 +240,7 @@ export const CONFIG = {
      * ANYTHING WRONG IF IT WAS A SIMPLE COLLISION (INCREASE SDF OFFSET,
      * OR HIDE THE BALL IN THAT CASE).
      */
-    invalidTilesPerSegmentThreshold: 64,
+    invalidTilesPerSegmentThreshold: 64 * 2,
 
     ////// SORT PASS
     sortBuckets: 64,
@@ -282,7 +282,7 @@ export const CONFIG = {
     // https://youtu.be/ool2E8SQPGU?si=yKgmYF6Wjbu6HXsF&t=815
     friction: 0.3,
     // 0.0 - do not use density gradient as external force. Hair can "squish" together
-    // >0.0 - move hair strands so from densely oocupied grid cells into ones that are more "free"
+    // >0.0 - move hair strands from densely occupied grid cells into ones that are more "free"
     volumePreservation: 0.00003,
     // If you set the radius to 0, the ball will disappear. There is a reason for this statement.
     // collisionSphere: [0.05, 1.48, 0.01, 0.06], // inside hair

@@ -28,8 +28,19 @@ export async function createGpuDevice() {
     // Limits change: https://gpuweb.github.io/gpuweb/#gpusupportedlimits
     const requiredLimits: GPUSupportedLimits = {};
     if (CONFIG.increaseStorageMemoryLimits) {
-      requiredLimits.maxStorageBufferBindingSize = getBytes(1024, 'MB');
-      requiredLimits.maxBufferSize = getBytes(1024, 'MB');
+      // Warning: BigInt is used for memory limits (unsigned long long in WebGPU spec)
+      const lims = adapter.limits;
+
+      if (Number.isSafeInteger(lims.maxStorageBufferBindingSize)) {
+        requiredLimits.maxStorageBufferBindingSize = Number(lims.maxStorageBufferBindingSize); // prettier-ignore
+      }
+      if (Number.isSafeInteger(lims.maxBufferSize)) {
+        requiredLimits.maxBufferSize = Number(lims.maxBufferSize);
+      }
+
+      // defaults just in case
+      requiredLimits.maxStorageBufferBindingSize ||= getBytes(1024, 'MB');
+      requiredLimits.maxBufferSize ||= getBytes(1024, 'MB');
     }
     requiredLimits.maxComputeWorkgroupStorageSize = Math.max(
       getLocalMemoryRequirements(),
