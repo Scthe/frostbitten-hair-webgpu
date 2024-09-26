@@ -20,27 +20,6 @@ struct TilesList {
 
 @group(0) @binding(${bindingIdx})
 var<storage, ${access}> _hairTileData: TilesList;
-
-${access == 'read_write' ? '' : getNextTileToProcess}
-`;
-
-const getNextTileToProcess = /* wgsl */ `
-  fn _getNextTileIdx(tileCount: u32) -> u32 {
-    // we could do 'atomicAdd(_, 1)' on each thread. But which thread in wkgrp
-    // receives the smallest value? It is the one that decides if we are done.
-    // 'atomicAdd(_, 1)' does not give us guarantee inside wkgrp. And clever ways
-    // to find this are more complicated then the following code.
-    if (_local_invocation_index == 0u) {
-      let wkgrpThreadCnt = ${CONFIG.hairRender.finePassWorkgroupSizeX}u;
-      _tileStartOffset = atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, wkgrpThreadCnt);
-      _isDone = _tileStartOffset >= tileCount;
-    }
-  
-    // workgroupUniformLoad() has implicit barrier
-    let tileStartOffset = workgroupUniformLoad(&_tileStartOffset);
-    let idx =  tileStartOffset + _local_invocation_index;
-    return _hairTileData.data[idx];
-  }
 `;
 
 ///////////////////////////

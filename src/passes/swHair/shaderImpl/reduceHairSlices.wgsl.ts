@@ -11,22 +11,15 @@ fn reduceHairSlices(
   processorId: u32,
   viewportSizeU32: vec2u,
   dbgSlicesModeMaxSlices: u32,
-  tileBoundsPx: ptr<function, vec4u>
+  tileBoundsPx: vec4u
 ) -> bool {
   let isDbgSliceCnt = dbgSlicesModeMaxSlices != 0u;
   var sliceData: SliceData;
-  var allPixelsDone = true;
-  let boundRectMax = vec2u((*tileBoundsPx).zw);
-  let boundRectMin = vec2u((*tileBoundsPx).xy);
-  // further depth bins will not have to process pixels that they have no chance to affect.
-  var noFinishedPixelsRect = vec4u(*tileBoundsPx);
+  let boundRectMin = tileBoundsPx.xy;
+  let posPx = boundRectMin + _pixelInTilePos; // pixel coordinates wrt. viewport
+    // let px = vec2u(x, y); // pixel coordinates wrt. viewport
 
-  for (var y: u32 = boundRectMin.y; y < boundRectMax.y; y += 1u) {
-  for (var x: u32 = boundRectMin.x; x < boundRectMax.x; x += 1u) {
-    let px = vec2u(x, y); // pixel coordinates wrt. viewport
-    let pxInTile: vec2u = vec2u(px - boundRectMin); // pixel coordinates wrt. tile
-
-    var finalColor = _getRasterizerResult(viewportSizeU32, px);
+    var finalColor = _getRasterizerResult(viewportSizeU32, posPx);
     var sliceCount = select(0u, u32(finalColor.r * f32(dbgSlicesModeMaxSlices)), isDbgSliceCnt); // debug value
     
     // START: ITERATE SLICES (front to back)
@@ -39,7 +32,7 @@ fn reduceHairSlices(
       }
 
       var requiresSliceHeadClear = false;
-      var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, s);
+      var slicePtr = _getSlicesHeadPtr(processorId, _pixelInTilePos, s);
       
       // aggregate colors in this slice
       while (_getSliceData(processorId, slicePtr, &sliceData)) {
@@ -56,45 +49,32 @@ fn reduceHairSlices(
       }
 
       if (requiresSliceHeadClear) {
-        _clearSliceHeadPtr(processorId, pxInTile, s);
+        _clearSliceHeadPtr(processorId, _pixelInTilePos, s);
       }
     } // END: ITERATE SLICES
     
     // finish remaining iterations if we "break;" early
     for(; s < SLICES_PER_PIXEL; s += 1u) {
-      _clearSliceHeadPtr(processorId, pxInTile, s);
+      _clearSliceHeadPtr(processorId, _pixelInTilePos, s);
     }
 
     // dbg: color using only head ptrs
-    /*var slicePtr = _getSlicesHeadPtr(processorId, pxInTile, 0u);
+    /*var slicePtr = _getSlicesHeadPtr(processorId, _pixelInTilePos, 0u);
     if (slicePtr != INVALID_SLICE_DATA_PTR) {
       finalColor.r = 1.0;
       finalColor.a = 1.0;
     }*/
 
-    if (!isPixelDone(finalColor)) {
-      allPixelsDone = false;
-      noFinishedPixelsRect.x = min(noFinishedPixelsRect.x, px.x);
-      noFinishedPixelsRect.y = min(noFinishedPixelsRect.y, px.y);
-      noFinishedPixelsRect.z = max(noFinishedPixelsRect.z, px.x);
-      noFinishedPixelsRect.w = max(noFinishedPixelsRect.w, px.y);
-    }
+    let isDone = isPixelDone(finalColor);
     
     // final write
     if (isDbgSliceCnt) { // debug value
       let c = saturate(f32(sliceCount) / f32(dbgSlicesModeMaxSlices));
       finalColor = vec4f(c, 0., 0., 1.0);
     }
-    _setRasterizerResult(viewportSizeU32, px, finalColor);
-  }}
+    _setRasterizerResult(viewportSizeU32, posPx, finalColor);
 
-  (*tileBoundsPx) = noFinishedPixelsRect;
-  allPixelsDone = (allPixelsDone ||
-    noFinishedPixelsRect.x >= noFinishedPixelsRect.z ||
-    noFinishedPixelsRect.y >= noFinishedPixelsRect.w
-  );
-
-  return allPixelsDone;
+  return isDone;
 }
 
 /** Returns true, if any subsequent hair segments/slices do not matter. */

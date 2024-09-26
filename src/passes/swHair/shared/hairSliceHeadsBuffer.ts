@@ -7,21 +7,22 @@ const ENTRIES_PER_PROCESSOR =
   CONFIG.hairRender.tileSize *
   CONFIG.hairRender.tileSize *
   CONFIG.hairRender.slicesPerPixel;
-const PROCESSOR_COUNT = CONFIG.hairRender.processorCount;
 
+const TILE_SIZE = CONFIG.hairRender.tileSize;
+const WORKGROUP_SIZE = TILE_SIZE * TILE_SIZE;
+const PROCESSOR_COUNT = CONFIG.hairRender.processorCount;
 const SLICE_HEADS_MEMORY = CONFIG.hairRender.sliceHeadsMemory;
 
 export const getLocalMemoryRequirements = () =>
   SLICE_HEADS_MEMORY === 'workgroup' ? ENTRIES_PER_PROCESSOR * BYTES_U32 : 0;
 
-export const MEMORY_PARALLEL_SIZE = () => {
-  if (SLICE_HEADS_MEMORY === 'workgroup')
-    return CONFIG.hairRender.finePassWorkgroupSizeX;
+const MEMORY_PARALLEL_SIZE = () => {
+  if (SLICE_HEADS_MEMORY === 'workgroup') return WORKGROUP_SIZE;
   if (SLICE_HEADS_MEMORY === 'global') return PROCESSOR_COUNT;
   return 1; // registers
 };
 
-export const MEMORY_PROCESSOR_OFFSET = () => {
+const MEMORY_PROCESSOR_OFFSET = () => {
   if (SLICE_HEADS_MEMORY === 'workgroup') return '_local_invocation_index';
   if (SLICE_HEADS_MEMORY === 'global') return 'processorId';
   return '0u'; // registers
@@ -67,13 +68,10 @@ fn _getSlicesHeadPtr(
   return _hairSliceHeads[idx];
 }
 
-fn _clearSlicesHeadPtrs(processorId: u32) {
-  for (var y: u32 = 0u; y < TILE_SIZE; y += 1u) {
-  for (var x: u32 = 0u; x < TILE_SIZE; x += 1u) {
-    for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
-      _clearSliceHeadPtr(processorId, vec2u(x, y), s);
-    }
-  }}
+fn _clearSlicesHeadPtrs(pixelInTilePos: vec2u, processorId: u32) {
+  for (var s: u32 = 0u; s < SLICES_PER_PIXEL; s += 1u) {
+    _clearSliceHeadPtr(processorId, pixelInTilePos, s);
+  }
 }
 
 fn _clearSliceHeadPtr(
@@ -119,7 +117,7 @@ const LOCAL_MEMORY_ACCESS =
   SLICE_HEADS_MEMORY === 'workgroup' ? 'workgroup' : 'private';
 const LOCAL_MEMORY_SIZE =
   SLICE_HEADS_MEMORY === 'workgroup'
-    ? ENTRIES_PER_PROCESSOR * CONFIG.hairRender.finePassWorkgroupSizeX
+    ? ENTRIES_PER_PROCESSOR * WORKGROUP_SIZE
     : ENTRIES_PER_PROCESSOR;
 
 const BUFFER_HAIR_SLICES_HEADS_LOCAL = (
