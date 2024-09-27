@@ -7,8 +7,6 @@ fn processHairSegment(
   tileBoundsPx: vec4u, tileDepth: vec2f,
   strandIdx: u32, segmentIdx: u32
 ) {
-  let segmentCount = params.pointsPerStrand - 1;
-
   // get pixel coordinates
   // Half-of-the-pixel offset not added as it causes problems (small random pixels around the strand)
   // https://www.sctheblog.com/blog/hair-software-rasterize/#half-of-the-pixel-offset
@@ -19,18 +17,17 @@ fn processHairSegment(
   let CX3 = edgeFunction(_wkgrp_hairSegment.v00, _wkgrp_hairSegment.v10, posPx);
   
   let isOutside = CX0 < 0 || CX1 < 0 || CX2 < 0 || CX3 < 0;
-  // let isOutside = CX0 > 0 || CX1 > 0 || CX2 > 0 || CX3 > 0; // TODO remove
   if (isOutside) {
     return;
   }
 
   // https://www.sctheblog.com/blog/hair-software-rasterize/#segment-space-coordinates
   let interpW = interpolateHairQuad(_wkgrp_hairSegment, posPx);
-  let t = interpW.y; // 0 .. 1 wrt. to hair segment length: 0 is start, 1 is end
+  let t = interpW.y; // 0..1 wrt. to hair segment length: 0 is start, 1 is end
   let hairDepth: f32 = interpolateHairF32(interpW, _wkgrp_hairSegment.depthsProj);
   
   // sample depth buffer, depth test with GL_LESS
-  let depthTextSamplePx: vec2i = vec2i(i32(posPx.x), i32(params.viewportSize.y - posPx.y)); // wgpu's naga requiers vec2i..
+  let depthTextSamplePx: vec2i = vec2i(i32(posPx.x), i32(params.viewportSize.y - posPx.y)); // wgpu's naga requires vec2i..
   let depthBufferValue: f32 = textureLoad(_depthTexture, depthTextSamplePx, 0);
   if (hairDepth >= depthBufferValue) {
     return;
@@ -38,15 +35,15 @@ fn processHairSegment(
 
   // allocate data pointer
   let nextSliceDataPtr = atomicAdd(&_wkgrp.sliceDataOffset, 1u);
-  if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) { return; }
+  if (!_hasMoreSliceDataSlots(nextSliceDataPtr)) {
+    return;
+  }
 
   // calculate final color
   let alpha = getAlphaCoverage(interpW);
+  let segmentCount = params.pointsPerStrand - 1;
   let tFullStrand = (f32(segmentIdx) + t) / f32(segmentCount);
-  // let color = vec4f(1.0 - t, t, 0.0, alpha); // red at root, green at tip
-  // Either shade here and store RGBA per slice or at least
-  // (strandIdx: u32, tFullStrand: f16, alpha: f16).
-  // Either way it's u32 for nextSlicePtr and 2*u32 for payload.
+  // var color = vec4f(1.0 - t, t, 0.0, alpha); // dbg: red at root, green at tip
   var color = _sampleShading(strandIdx, tFullStrand);
   color.a = color.a * alpha;
   
@@ -57,7 +54,8 @@ fn processHairSegment(
 }
 
 fn getSliceIdx(tileDepth: vec2f, pixelDepth: f32) -> u32 {
-  return getDepthBin(SLICES_PER_PIXEL, tileDepth, pixelDepth); // reuse fn. Ignore the name
+  // reuse fn. Ignore the name
+  return getDepthBin(SLICES_PER_PIXEL, tileDepth, pixelDepth);
 }
 
 fn getAlphaCoverage(interpW: vec2f) -> f32 {

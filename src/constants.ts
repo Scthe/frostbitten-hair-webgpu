@@ -49,7 +49,7 @@ export const DISPLAY_MODE = {
   TILES_PPLL: 2,
   /** Harware rasterize */
   HW_RENDER: 3,
-  /** HairFinePass' slices per pixel. Not super accurate due to per pixel/tile early-out optimizations */
+  /** HairFinePass' slices per pixel */
   USED_SLICES: 4,
   /**zBuffer clamped to sensible values */
   DEPTH: 5,

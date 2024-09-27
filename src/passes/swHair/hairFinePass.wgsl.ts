@@ -65,7 +65,7 @@ ${BUFFER_TILE_LIST(b.tileList, 'read')}
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
 
-// TODO into workgroup mem?
+// TODO [MEDIUM] into workgroup mem to save a few registers?
 struct FineRasterParams {
   // START: vec4u
   strandsCount: u32, // u32's first
@@ -119,8 +119,8 @@ var<private> _isPixelDone: bool;
 
 // We run a thread per each pixel in a tile.
 // A lot of work will be done only on the 1st thread
-// (e.g. calculating hair segment raster params),
-// rest of the threads will just compare it's pixel coordinates.
+// (e.g. calculating hair segment raster params).
+// Rest of the threads will just compare it's pixel coordinates to the result.
 //
 // See https://research.nvidia.com/sites/default/files/pubs/2011-08_High-Performance-Software-Rasterization/laine2011hpg_paper.pdf
 @compute
@@ -164,7 +164,7 @@ fn main(
   var tileIdx = getNextTileIdx(_local_invocation_index, tilesToProcess);
 
   while (!workgroupUniformLoad(&_wkgrp.hasMoreTiles)) {
-    // prepare for next tile
+    // prepare for new tile
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
     var tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
     _isPixelDone = false;
@@ -175,11 +175,13 @@ fn main(
       depthBin < TILE_DEPTH_BINS_COUNT && tileIdx < tileCount;
       depthBin += 1u
     ) {
+      // reset offset into slices data
       if (_local_invocation_index == 0u) {
         atomicStore(&_wkgrp.sliceDataOffset, 0u);
       }
       workgroupBarrier();
 
+      // main algorithm - process tile's depth bin
       processTile(
         params,
         maxDrawnSegments,
@@ -188,7 +190,7 @@ fn main(
         tileBoundsPx
       );
       
-      // early out for whole tile TODO
+      // early out for whole tile
       if (checkAllPixelsInWkgrpDone(_local_invocation_index)) {
         // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
         break;
@@ -209,18 +211,19 @@ fn processTile(
 ) {
   let MAX_PROCESSED_SEGMENTS = params.strandsCount * params.pointsPerStrand; // just in case
   
-  let tileDepth = _getTileDepth(params.viewportSizeU32, tileXY, depthBin); // TODO only on first thread
+  let tileDepth = _getTileDepth(params.viewportSizeU32, tileXY, depthBin);
   if (tileDepth.y == 0.0) { return; } // no depth written means empty tile
   var segmentPtr = _getTileSegmentPtr(params.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
   var processedSegmentCnt = 0u;
 
-  // for each segment:
-  //    iterate over tile's pixels and write color to appropriate depth-slice
+  // iterate over hair segments in a tile.
+  // The code is a bit strange to make it more obvious the flow is uniform for all threads
   while (processedSegmentCnt < MAX_PROCESSED_SEGMENTS){
     let hasValidSegment = _getTileSegment(maxDrawnSegments, segmentPtr, &segmentData);
 
+    // set rasterize params for hair segment
     if (hasValidSegment && _local_invocation_index == 0u) {
       let projParams = ProjectHairParams(
         params.pointsPerStrand,
@@ -235,6 +238,7 @@ fn processTile(
     }
     workgroupBarrier();
 
+    // update tile pixels
     if (hasValidSegment && !_isPixelDone) {
       processHairSegment(
         params,
@@ -255,7 +259,9 @@ fn processTile(
     //   1. run out of PPLL memory
     //   2. no more hair segments in a tile (see $hasValidSegment)
     let sliceDataOffset = getUniformSliceDataOffset(_local_invocation_index);
-    if (!_hasMoreSliceDataSlots(sliceDataOffset)) { break; }
+    if (!_hasMoreSliceDataSlots(sliceDataOffset)) {
+      break;
+    }
 
     // move to next segment
     processedSegmentCnt = processedSegmentCnt + 1;
