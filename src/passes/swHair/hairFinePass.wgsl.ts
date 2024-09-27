@@ -36,15 +36,13 @@ export const SHADER_PARAMS = {
 ///////////////////////////
 /// SHADER CODE
 ///////////////////////////
-const c = SHADER_PARAMS;
 const b = SHADER_PARAMS.bindings;
 
 export const SHADER_CODE = () => /* wgsl */ `
 
 const SLICES_PER_PIXEL: u32 = ${CONFIG.hairRender.slicesPerPixel}u;
-const SLICES_PER_PIXEL_f32: f32 = f32(SLICES_PER_PIXEL);
+const WORKGROUP_SIZE: u32 = TILE_SIZE * TILE_SIZE;
 // Stop processing slices once we reach opaque color
-// TBH does not help much, it's not where the actuall cost is. Still..
 const ALPHA_CUTOFF = 0.999;
 
 ${SHADER_SNIPPETS.GET_MVP_MAT}
@@ -67,7 +65,7 @@ ${BUFFER_TILE_LIST(b.tileList, 'read')}
 @group(0) @binding(${b.depthTexture})
 var _depthTexture: texture_depth_2d;
 
-
+// TODO into workgroup mem?
 struct FineRasterParams {
   // START: vec4u
   strandsCount: u32, // u32's first
@@ -84,27 +82,47 @@ struct FineRasterParams {
 ${SHADER_IMPL_PROCESS_HAIR_SEGMENT()}
 ${SHADER_IMPL_REDUCE_HAIR_SLICES()}
 
+struct WorkgroupVars {
+  // Index of currently processed tile for this workgroup
+  currentTileIdx: u32,
+  // Stop condition for entire algorithm
+  hasMoreTiles: bool,
 
-const WORKGROUP_SIZE: u32 = TILE_SIZE * TILE_SIZE;
+  // Write offset into slices data buffer
+  sliceDataOffset: atomic<u32>,
+  // Same as above, but not atomic, so we can use workgroupUniformLoad()
+  // fixes "workgroupUniformLoad must not be called with an argument that contains an atomic type"
+  sliceDataOffset_NOT_ATOMIC: u32,
 
-var<workgroup> _currentTileIdx: u32;
-var<workgroup> _hasMoreTiles: bool;
-var<workgroup> _sliceDataOffset: atomic<u32>;
-// bypass "workgroupUniformLoad must not be called with an argument that contains an atomic type"
-var<workgroup> _sliceDataOffset_NOT_ATOMIC: u32;
-var<workgroup> _finishedPixels: atomic<u32>;
-var<workgroup> _arePixelsDone: atomic<i32>;
-// bypass "workgroupUniformLoad must not be called with an argument that contains an atomic type"
-var<workgroup> _arePixelsDone_NOT_ATOMIC: bool;
+  // Actually a bool, where each thread will AND if they are done.
+  // If the value is still TRUE afterwards, then all pixels in the tile are done
+  arePixelsDone: atomic<i32>,
+  // Same as above, but not atomic, so we can use workgroupUniformLoad()
+  // fixes "workgroupUniformLoad must not be called with an argument that contains an atomic type"
+  arePixelsDone_NOT_ATOMIC: bool,
+}
+var<workgroup> _wkgrp: WorkgroupVars;
 
+// Current hair segment processed by the tile.
+// All threads (1 per pixel) will test against it.
+// This value is only calculated by the first thread.
+var<workgroup> _wkgrp_hairSegment: ProjectedHairSegment;
 
-var<workgroup> projSegm: ProjectedHairSegment; // TODO rename
-
+// Thread ID
 var<private> _local_invocation_index: u32;
+// Per-thread position of the pixel inside the tile.
+// Both coordinates are in range: 0..TILE_SIZE
 var<private> _pixelInTilePos: vec2u;
+// Flag if pixel alpha is saturated and no futher hair segments will change it's color
 var<private> _isPixelDone: bool;
 
-// https://research.nvidia.com/sites/default/files/pubs/2011-08_High-Performance-Software-Rasterization/laine2011hpg_paper.pdf
+
+// We run a thread per each pixel in a tile.
+// A lot of work will be done only on the 1st thread
+// (e.g. calculating hair segment raster params),
+// rest of the threads will just compare it's pixel coordinates.
+//
+// See https://research.nvidia.com/sites/default/files/pubs/2011-08_High-Performance-Software-Rasterization/laine2011hpg_paper.pdf
 @compute
 @workgroup_size(TILE_SIZE, TILE_SIZE, 1)
 fn main(
@@ -131,8 +149,8 @@ fn main(
   );
 
   _pixelInTilePos = vec2u(
-    local_invocation_index % TILE_SIZE,
-    local_invocation_index / TILE_SIZE
+    _local_invocation_index % TILE_SIZE,
+    _local_invocation_index / TILE_SIZE
   );
 
   // clear memory before starting work
@@ -143,9 +161,9 @@ fn main(
   let tileCount = tileCount2d.x * tileCount2d.y;
   // size of task queue
   let tilesToProcess = _hairTileData.drawnTiles;
-  var tileIdx = getNextTileIdx(local_invocation_index, tilesToProcess);
+  var tileIdx = getNextTileIdx(_local_invocation_index, tilesToProcess);
 
-  while (!workgroupUniformLoad(&_hasMoreTiles)) {
+  while (!workgroupUniformLoad(&_wkgrp.hasMoreTiles)) {
     // prepare for next tile
     let tileXY = getTileXY(params.viewportSizeU32, tileIdx);
     var tileBoundsPx: vec4u = getTileBoundsPx(params.viewportSizeU32, tileXY);
@@ -157,13 +175,12 @@ fn main(
       depthBin < TILE_DEPTH_BINS_COUNT && tileIdx < tileCount;
       depthBin += 1u
     ) {
-      if (local_invocation_index == 0u) {
-        atomicStore(&_sliceDataOffset, 0u);
+      if (_local_invocation_index == 0u) {
+        atomicStore(&_wkgrp.sliceDataOffset, 0u);
       }
       workgroupBarrier();
 
       processTile(
-        local_invocation_index,
         params,
         maxDrawnSegments,
         tileXY,
@@ -172,19 +189,18 @@ fn main(
       );
       
       // early out for whole tile TODO
-      if (checkAllPixelsInWkgrpDone(local_invocation_index)) {
+      if (checkAllPixelsInWkgrpDone(_local_invocation_index)) {
         // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
         break;
       }
     } // END: iterate over depth bins
 
     // move to next tile
-    tileIdx = getNextTileIdx(local_invocation_index, tilesToProcess);
+    tileIdx = getNextTileIdx(_local_invocation_index, tilesToProcess);
   }
 }
 
 fn processTile(
-  local_invocation_index: u32,
   params: FineRasterParams,
   maxDrawnSegments: u32,
   tileXY: vec2u,
@@ -205,13 +221,13 @@ fn processTile(
   while (processedSegmentCnt < MAX_PROCESSED_SEGMENTS){
     let hasValidSegment = _getTileSegment(maxDrawnSegments, segmentPtr, &segmentData);
 
-    if (hasValidSegment && local_invocation_index == 0u) {
+    if (hasValidSegment && _local_invocation_index == 0u) {
       let projParams = ProjectHairParams(
         params.pointsPerStrand,
         params.viewportSize,
         params.fiberRadius,
       );
-      projSegm = projectHairSegment(
+      _wkgrp_hairSegment = projectHairSegment(
         projParams,
         segmentData.x, // strandIdx,
         segmentData.y  // segmentIdx
@@ -230,15 +246,15 @@ fn processTile(
 
 
     // break condition if has no more hair segments in a tile
-    if (!hasValidSegment && local_invocation_index == 0u) {
+    if (!hasValidSegment && _local_invocation_index == 0u) {
       // set invalid index that will trigger 'break;'
-      atomicStore(&_sliceDataOffset, SLICE_DATA_PER_PROCESSOR_COUNT);
+      atomicStore(&_wkgrp.sliceDataOffset, SLICE_DATA_PER_PROCESSOR_COUNT);
     }
 
     // trigger 'break;' if:
     //   1. run out of PPLL memory
     //   2. no more hair segments in a tile (see $hasValidSegment)
-    let sliceDataOffset = getUniformSliceDataOffset(local_invocation_index);
+    let sliceDataOffset = getUniformSliceDataOffset(_local_invocation_index);
     if (!_hasMoreSliceDataSlots(sliceDataOffset)) { break; }
 
     // move to next segment
@@ -246,7 +262,7 @@ fn processTile(
     segmentPtr = segmentData.z;
   }
 
-  let sliceDataOffset = getUniformSliceDataOffset(local_invocation_index);
+  let sliceDataOffset = getUniformSliceDataOffset(_local_invocation_index);
   if (sliceDataOffset == 0) {
     // no pixels were changed. This can happen if depth bin is empty. Move to next depth bin in that case
     return;
@@ -267,44 +283,49 @@ fn processTile(
 
 
 //////////////////////////
-/// Tile processing utils
+/// Tile/slice processing utils
 
 fn getNextTileIdx(local_invocation_index: u32, tileCount: u32) -> u32 {
   if (local_invocation_index == 0u) {
-    _currentTileIdx = atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, 1u);
-    _hasMoreTiles = _currentTileIdx >= tileCount;
+    _wkgrp.currentTileIdx = atomicAdd(&_hairRasterizerResults.tileQueueAtomicIdx, 1u);
+    _wkgrp.hasMoreTiles = _wkgrp.currentTileIdx >= tileCount;
   }
   workgroupBarrier();
 
-  let idx = workgroupUniformLoad(&_currentTileIdx);
+  let idx = workgroupUniformLoad(&_wkgrp.currentTileIdx);
   return _hairTileData.data[idx];
 }
 
 fn checkAllPixelsInWkgrpDone(local_invocation_index: u32) -> bool {
+  // set initial bool to TRUE
   if (local_invocation_index == 0u) {
-    atomicStore(&_arePixelsDone, 1);
+    atomicStore(&_wkgrp.arePixelsDone, 1);
   }
   workgroupBarrier();
 
-  atomicAnd(&_arePixelsDone, select(0, 1, _isPixelDone));
+  // ATOMIC_AND across all 
+  // the select() semantic in WGLS is ..........
+  // Just read it as '_isPixelDone ? 1 : 0'
+  atomicAnd(&_wkgrp.arePixelsDone, select(0, 1, _isPixelDone));
   workgroupBarrier();
 
+  // broadcast the result
   // fixes: "workgroupUniformLoad must not be called with an argument that contains an atomic type"
   if (local_invocation_index == 0u) {
-    let v = atomicLoad(&_arePixelsDone);
-    _arePixelsDone_NOT_ATOMIC = v > 0;
+    let v = atomicLoad(&_wkgrp.arePixelsDone);
+    _wkgrp.arePixelsDone_NOT_ATOMIC = v > 0;
   }
 
   // has implicit barrier
-  return workgroupUniformLoad(&_arePixelsDone_NOT_ATOMIC);
+  return workgroupUniformLoad(&_wkgrp.arePixelsDone_NOT_ATOMIC);
 }
 
 // Cannot call workgroupUniformLoad() on atomic<u32>. Copy to normal u32 first
 fn getUniformSliceDataOffset(local_invocation_index: u32) -> u32 {
   if (local_invocation_index == 0u) {
-    _sliceDataOffset_NOT_ATOMIC = atomicLoad(&_sliceDataOffset);
+    _wkgrp.sliceDataOffset_NOT_ATOMIC = atomicLoad(&_wkgrp.sliceDataOffset);
   }
-  return workgroupUniformLoad(&_sliceDataOffset_NOT_ATOMIC);
+  return workgroupUniformLoad(&_wkgrp.sliceDataOffset_NOT_ATOMIC);
 }
 
 
