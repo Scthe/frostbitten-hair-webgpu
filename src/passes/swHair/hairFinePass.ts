@@ -82,10 +82,7 @@ export class HairFinePass {
     computePass.setBindGroup(0, bindings);
 
     // dispatch
-    const workgroupsX = getItemsPerThread(
-      CONFIG.hairRender.processorCount,
-      SHADER_PARAMS.workgroupSizeX
-    );
+    const workgroupsX = CONFIG.hairRender.processorCount;
     // console.log(`${HairFinePass.NAME}.dispatch(${workgroupsX}, 1, 1)`);
     computePass.dispatchWorkgroups(workgroupsX, 1, 1);
 

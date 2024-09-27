@@ -24,19 +24,20 @@ https://github.com/user-attachments/assets/02859b92-a940-42b6-8381-dcac4b81b4d4
 ### Features: Rendering
 
 * **Analytical anti-aliasing using software rasterizer**.
-* **Order-independent transparency** using 2 passes and depth slices.
+    * Based on ["High-Performance Software Rasterization on GPUs"](https://research.nvidia.com/sites/default/files/pubs/2011-08_High-Performance-Software-Rasterization/laine2011hpg_paper.pdf) by Samuli Laine and Tero Karras.
+* **Order-independent transparency (OIT)** using 2 passes and depth slices.
     * The first pass calculates min and max depth for a tile as well as a list of its visible hair segments.
         * I've also implemented the [ponytail optimization](https://youtu.be/ool2E8SQPGU?si=C0zOZh1mrB8hX_jY&t=1880) so it's actually min and max depth for each of the tile's depth bins. Frostbite uses different terminology, but I found "depth bin" more intuitive.
         * The speakers actually undersold the **ponytail/depth bins optimization** for each tile. It allows A LOT of further improvements. But they only had so much time to present and the presentation is already dense with cool tricks and tips.
     * The second pass is dispatched for every tile and blends its hair segments in a front-to-back order. Done by dividing each depth bin into slices, assigning segments to each, and blending.
         * It uses a task queue internally. Each "processor" grabs the next tile from a list once it's done with the current tile.
 * Separate [strand-space shading calculation](https://youtu.be/ool2E8SQPGU?si=T0YirLDpKp83CjD2&t=1339). Instead of calculating shading for every pixel, I precalculate the values for every strand. You can select how many points are shaded for each strand. The last point always fades to transparency for a nice, thin tip.
-    * **Kajiya-Kay diffuse, Marschner specular.** However, I do not calculate depth maps for lights, so TT lobe's weight is 0 by default. I like how the current initial scene looks and reconfiguring lights is booooring!
-    * **Fake multiple scattering** [like in UE5](https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=39). See "Physically based hair shading in Unreal" by Brian Karis slide 39 if SIGGRAPH does not allow link.
+    * **Kajiya-Kay diffuse, Marschner specular.** However, I do not calculate depth maps for lights, so the TT lobe's weight is 0 by default. I like how the current initial scene looks and reconfiguring lights is booooring!
+    * **Fake multiple scattering** [like in UE5](https://blog.selfshadow.com/publications/s2016-shading-course/karis/s2016_pbs_epic_hair.pdf#page=39). See "Physically based hair shading in Unreal" by Brian Karis slide 39 if SIGGRAPH does not allow a direct link.
     * **Fake attenuation** mimicking [Beer–Lambert law](https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law).
     * It also **casts and receives shadows as well as AO**. You can also randomize some settings for each strand.
-* [LOD](https://youtu.be/ool2E8SQPGU?si=Zv-1N5Y4-nWvlB6v&t=1643). The user has strand% slider. In a production system, you would automate this and increase hair width with distance. The randomization happens [in my blender exporter](scripts/tfx_exporter.py).
-* [Tile sort](https://youtu.be/ool2E8SQPGU?si=85yOaqCmYkUR9nHL&t=1803). Ensures stable frametimes. Sorting is approximate (buckets).
+* [LOD](https://youtu.be/ool2E8SQPGU?si=Zv-1N5Y4-nWvlB6v&t=1643). The user has a strand% slider. In a production system, you would automate this and increase hair width with distance. The randomization happens [in my blender exporter](scripts/tfx_exporter.py).
+* [Tile sort](https://youtu.be/ool2E8SQPGU?si=85yOaqCmYkUR9nHL&t=1803). Ensures stable frame times. Sorting is approximate (buckets).
 * Blender exporter for the older Blender hair system. It's actually the same file format as I've used in my TressFX ports ([1](https://github.com/Scthe/TressFX-OpenGL), [2](https://github.com/Scthe/WebFX), [3](https://github.com/Scthe/Rust-Vulkan-TressFX)).
 * Uses [Sintel Lite 2.57b](http://www.blendswap.com/blends/view/7093) by BenDansie as a 3D model. There were no changes to "make it work" or optimize. Only selecting how many points per each strand.
     * You might notice that Sintel's hair is less dense than the one showcased in FIFA. This is actually not good as it means we have to process more depth bins/slices till the pixel/tile saturates. Reminds me of similar nonobvious tradeoffs from [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu/tree/master). On the other hand, the tile pass is cheaper.
@@ -45,11 +46,11 @@ https://github.com/user-attachments/assets/02859b92-a940-42b6-8381-dcac4b81b4d4
 
 Check [src/constants.ts](src/constants.ts) for full documentation.
 
-* **Constraints:** length, global shape, local shape, primitives and SDF collisions.
+* **Constraints:** length, global shape, local shape, primitives, and SDF collisions.
 * **Grids:** average velocity, density gradient, wind force.
     * Use [friction](https://youtu.be/ool2E8SQPGU?si=JORsKS0Y6UQGpJ5C&t=814) to mix between each particle's velocity and the average velocity around it. Prevents single strands from fluttering in the wind.
     * Use **density gradient** to make the hair more "puffy". Useful if stronger wind squishes all hair strands into the character's head.
-* **A Wind** that respects collisions. I differentiate 3 regions: lull (inside the mesh), half-lull (grid point is behind a collider, half-strength), and full strength.
+* **A Wind** that respects collisions. I differentiate 3 regions: lull (inside the mesh), half-strength (grid point is behind a collider), and full strength.
     * Randomize strength, phase, etc.
 * **Physics colliders.** Both **sphere primitives** and **Signed Distance Fields**.
     * [Offline-generated SDF](https://github.com/Azkellas/mesh_to_sdf) is used to approximate intersections with more complex meshes. Like the character's face. TEST IT NOW!
@@ -75,18 +76,17 @@ I'm using Robin Taillandier and Jon Valdes's presentation ["Every Strand Counts:
     * Depth is not a problem (just an atomic op on a separate buffer), normals are. However, the Frostbite presentation does not mention normals. Don't they need them for AO or other stuff? Hair shading can omit AO (I even have supplementary [Beer–Lambert law](https://en.wikipedia.org/wiki/Beer%E2%80%93Lambert_law) attenuation). But what about the skin from which the hair grows? Is it faked in diffuse texture? Or is the hair always dense?
     * I also use a hardware rasterizer to render hair into shadow maps. Again, it's not complicated, but someone would have to spend time writing it. And I can't be bothered.
 * **No curly hair subdivisions.**
-    * The algorithm they use is part of my Blender exporter. In Blender, each hair is a spline. I convert it to equidistant points. However, implementing this in software rasterizer is *a bit* different.
+    * The algorithm they use is part of my Blender exporter. In Blender, each hair is a spline. I convert it to equidistant points. However, implementing this in a software rasterizer is *a bit* different.
 * **No specialized support for [headgear](https://youtu.be/ool2E8SQPGU?si=aAFV_WnUwxJPoIRM&t=2071) like headbands.** Frostbite requires content authoring to mark selected points as non-dynamic.
 * **LOD is manual instead of automatic.** Frostbite [automatically calculates rendered strand count](https://youtu.be/ool2E8SQPGU?si=NTmreF8azhRz4sVB&t=1646). I give you control over this parameter.
 * **I simulate all hair strands. Frostbite can choose how much and interpolate the rest.**
 * **A different set of constraints.** We both have stretch/length constraints and colliders (both Signed Distance Fields and primitives).
     * I have extra global shape constraints, based on my experience with [TressFX](https://github.com/Scthe/Rust-Vulkan-TressFX). I assume that Frostbite also has this, but maybe under a different term (like "shape matching")?
-    * Frostbite has a global length constraint.
     * We have different implementations for local shape constraints. Mine is based on "A Triangle Bending Constraint Model for Position-Based Dynamics" - [Kelager10](http://image.diku.dk/kenny/download/kelager.niebe.ea10.pdf).
 
-Some things were not explained in the presentation, so I gave my best guess. E.g. the aero grid update step takes wind and colliders as input.  But does it do fluid simulation for nice turbulence and vortexes? Possible, but not likely. I just mark 3 regions: lull (inside the mesh), half-lull (grid point is shielded by a collider, half strength), and full strength.
+Some things were not explained in the presentation, so I gave my best guess. E.g. the aero grid update step takes wind and colliders as input.  But does it do fluid simulation for nice turbulence and vortexes? Possible, but not likely. I just mark 3 regions: lull (inside the mesh), half-strength (grid point is behind a collider), and full strength.
 
-Ofc. I cannot rival Frostbite's performance. I am a single person and I have much better things to do than pore over a side project. I get stable <16ms on RTX3060 in the default view. It's enough FPS so that swinging the ball through the hair is FUN! There is a button to hide the ball, which is EVEN MORE FUN!!!
+Ofc. I cannot rival Frostbite's performance. I am a single person and I have much better things to do than pore over a side project. I get stable <10ms (total frame time) on RTX3060 in the default view. It's enough so that swinging the ball through the hair is FUN! There is a button to hide the ball, which is EVEN MORE FUN!!!
 
 
 ## Usage
@@ -156,34 +156,39 @@ Instead, let's list some more interesting aspects:
 
 In the last few years, we have seen more rendering systems that lean on software rasterization. Two of the most known examples are [UE5's Nanite](https://advances.realtimerendering.com/s2021/Karis_Nanite_SIGGRAPH_Advances_2021_final.pdf#page=81) and [Frostbite's hair system](https://www.youtube.com/watch?v=ool2E8SQPGU). My previous project was [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu), which is a Nanite implementation that works in a browser. It has a meshlet hierarchy, software rasterizer, impostor billboards, etc.  We can compare how software rasterization is used in both projects.
 
-* For Nanite WebGPU, I've opened the first 3 links from Google, adapted the code, and called it done. Better implementations would have to also add a visibility buffer. I was limited by WGSL's lack of 64-bit atomics. But, after the basic implementation, you don't spend time actually developing on top of it. For hair, software rasterization is only a beginning. It's used in both `TilePass` and `FinePass`. Most of the code is the respective shaders implements the pass' logic. Software rasterization is just a utility function for them.
-* Nanite uses the software rasterization as it's faster for its use case. As the triangles become pixel-sized (with inevitable overdraw), it becomes inefficient to run the whole pipeline or waste 75% of the performance.
-* Nanite can switch meshlet rasterization techniques on the fly. Neighboring meshlets can be rasterized differently. It's important that both methods use the exact same rules and settings to not leave holes in the model.
-* For hair, there are 2 main use cases: analytical anti-aliasing and control over the result (e.g. 2-pass with depth bins).
-* While hair also consists of thin triangles, I feel like this is not as important. That might be because I've spent hours working with software rasterization and forgot that this can be a problem.
-* Nanite works on triangles, while hair segments are quads. Triangles are well documented. I had trouble getting barycentric coordinates for quads, so I had to roll my own algorithm.
-* Some optimizations do not work that well with quads. You can the rewrite edge function as `Ax + By + C`, but in TilePass this takes too many registers and is actually slower.
+* **Use case**
+    * Nanite uses software rasterization as it's faster for its use case. As the triangles become pixel-sized (with inevitable overdraw), it becomes inefficient to run the whole pipeline or waste 75% of the performance.
+    * Nanite can switch meshlet rasterization techniques on the fly (either hardware or software rasterization). Neighboring meshlets can be rasterized differently. It's important that both methods use the exact same rasterization rules to not leave holes in the model.
+    * For hair, there are 2 main use cases: analytical anti-aliasing and control over the result (e.g. OIT). Hair also consists of thin and tiny triangles (arranged into quads). This is a nightmare for the hardware rasterizer.
+* **Complexity**
+    * For Nanite WebGPU, I've opened the first 3 links from Google, adapted the code, and called it done. Better implementations would have to also add a visibility buffer. I was limited by WGSL's lack of 64-bit atomics. But, after the basic implementation, you don't spend time actually developing on top of it. Later on, you can add [programmable raster](https://www.sctheblog.com/blog/nanite-materials-notes/#programmable-raster-in-ue-5-1-2022), but the rasterization is still "the main thing" done in that pass.
+    * For hair, software rasterization is only a beginning. It's used in both `HairTilesPass` and `HairFinePass`. Most of the code in the respective shaders implement the pass' logic. Software rasterization is just a utility function for them.
+* Nanite works on triangles, while hair segments are quads. Triangles are well documented. I had trouble getting barycentric coordinates for quads, so I had to roll [my own algorithm](https://www.sctheblog.com/blog/hair-software-rasterize/#segment-space-coordinates).
+    * Some optimizations do not work that well with quads. You can rewrite edge function as `Ax + By + C`, but in `HairTilesPass` this takes too many registers and is actually slower.
+
+
 
 ### Anything about performance optimization?
 
 WebGPU does not offer access to profilers. Or debuggers. With custom shader language (WGSL), writing isolated tests is painful. It's designed with no visibility in mind. The performance tests were done manually. By commenting out code, testing alternatives, etc. Here are a few things I've seen.
 
-* Fix the major bugs first. You can find an "interesting" commit if you look for it. I'm not going to spoil it, so here is some other issue:
-    * Just before finishing the project, I noticed a problem when calculating `cross(tangent, toCamera)` in view space. Depending on `toCamera.z` (either 1 or -1), it rendered only some strands. I had to switch to world space calculation. Then all strands rendered fine. Somehow this bugfix decreased HairFinePass time from 30ms to 27ms.
-* Make it easy to check. For me, profiling it's just a button right below the GitHub link. Ofc. mashing the button is not the most scientific approach. But it's the best that the WebGPU can offer.
-* Test it. For triangles, it's a [common optimization](https://fgiesen.wordpress.com/2013/02/10/optimizing-the-basic-rasterizer/) to write the edge function as `Ax + By + C`. You pre-calculate A, B, C. Then, the pixel iteration is a single addition. IIRC from [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu), it was 7% faster for my test scene. For quads, this is not always the case. The `HairTilesPass` is **slower** with this optimization, but the HairFinePass is faster. I assume it hits a register breakpoint?
+* Fix major bugs first. You can find an "interesting" commit if you look for it. I'm not going to spoil it, so here is some other issue:
+    * Just before finishing the project, I noticed a problem when calculating `cross(tangent, toCamera)` in view space. Depending on `toCamera.z` (either 1 or -1), it rendered only some strands. I had to switch to world space calculation. Then all strands rendered fine. Somehow this bugfix decreased `HairFinePass` time from 30ms to 27ms.
+* Make it easy to check. For me, profiling it's just a button right below the GitHub link. Of course, mashing the button is not the most scientific approach. But it's the best that the WebGPU can offer.
+* Test it. For triangles, it's a [common optimization](https://fgiesen.wordpress.com/2013/02/10/optimizing-the-basic-rasterizer/) to write the edge function as `Ax + By + C`. You pre-calculate A, B, C. Then, the pixel iteration is a single addition. IIRC from [Nanite WebGPU](https://github.com/Scthe/nanite-webgpu), it was 7% faster for my test scene. For quads, this is not always the case. The `HairTilesPass` is **slower** with this optimization, but the `HairFinePass` is faster. I assume it hits a register breakpoint?
+    * **(EDIT 27.09)** I've rewritten `HairFinePass` to parallelize over pixels in a tile. Now it also uses edge function.
 * Early returns from for loops can be slower. You think you are doing less work. In [one place](//github.com/Scthe/frostbitten-hair-webgpu/blob/c8479faf026676758e5f21e5f08784fdda628831/src/passes/swHair/shaderImpl/processHairSegment.wgsl.ts#L59) it increases frame time by 0.4ms.
     * Basically, do not assume you know how to write a for-loop.
-* Don't test things when you have 300+ fps. Set the test scene. If you have <20 FPS and save 5ms you know you did the right thing. You can go line-by-line and find the exact line that contributes to a problem.
-* For this app, frame time can be similar no matter if you render all strands or only half. The number of points in a strand also has a low impact. In foresight, it's not exactly unexpected.
-* Algorithms are one thing, but config is the other. Switching from tile size 16px to 8px decreases HairFinePass time from ~19ms to ~10ms. Some workgroup sizes matter, and some do not. For some reason, the `HairTilesPass` has a lot of irrational workgroup sizes that are only marginally slower than the prod values.
+* Algorithms are one thing, but config is the other. Switching from tile size 16px to 8px decreases `HairFinePass` time from ~19ms to ~10ms. Some workgroup sizes matter, and some do not. For some reason, the `HairTilesPass` has a lot of irrational workgroup sizes that are only marginally slower than the prod values.
 * A lot of experiments. A lot of [throwaway code](//github.com/Scthe/frostbitten-hair-webgpu/blob/d6306a69ab1cde4ef1321fc98c2040fd64ccac37/src/passes/swHair/hairTilesPass.perStrand.wgsl.ts).
 * Have a quick, reproducible environment. I can write `make run` and compare what Deno spews out to check if it seems OK.
-* Decide if it's worth it. This app is a side project. Performance is often a matter of staring at something long enough. Works fine (<16ms) on my RTX3060.
+* Decide if it's worth it. This app is a side project. Performance is often a matter of staring at something long enough. Works fine (<10ms per frame) on my RTX3060.
 
-In two days after merging the `physics` branch into `master` I was able to bring the HairFinePass from 30ms to 10ms. Mostly done by fixing a bug, which allowed for a much more aggressive config. E.g. half the tile size to 8px, smaller memory allocations, etc. I suspect there are a few low-hanging fruits still left. I just wish I had a profiler to know what is actually going on.
 
-I also wonder if Frostbite's team were able to have a more optimal HairFinePass workgroup size than `(1, 1, 1)` (99.9% sure they did). There is a lot of thread divergence. Usually, GPU task queues have a single task representing SIMD. E.g. it assigns a separate game object to each workgroup thread. And taking a task is a simple atomic counter increase op. But HairFinePass operates on tiles. Taking a single task would mean each of the workgroup threads would receive its own tile. Even with Frostbite's pre-sorted tile list, this could run into issues. You would also have to change memory access patterns (tried this and it by itself does nothing). I'd say this is the no. 1 priority in the codebase, as the findings would be interesting. There is not much info on the internet on GPU task queues. I know UE5's Nanite uses one. They have heterogeneous tasks, but each is easier to SIMD-ify.
+In two days after merging the `physics` branch into `master`, I was able to bring the `HairFinePass` from 30ms to 10ms. Mostly done by fixing a bug, which allowed for a much more aggressive config. E.g. half the tile size to 8px, smaller memory allocations, etc. I suspect there are a few low-hanging fruits still left. I just wish I had a profiler to know what is actually going on.
+
+> **(EDIT 27.09)** I've rewritten `HairFinePass` to parallelize over pixels in a tile. Now it takes ~3.3ms instead of 10ms. Still above the 144Hz VSync breakpoint on RTX3060, but it's a solid improvement.
+
 
 
 ## Honourable mentions

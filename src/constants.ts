@@ -49,7 +49,7 @@ export const DISPLAY_MODE = {
   TILES_PPLL: 2,
   /** Harware rasterize */
   HW_RENDER: 3,
-  /** HairFinePass' slices per pixel. Not super accurate due to per pixel/tile early-out optimizations */
+  /** HairFinePass' slices per pixel */
   USED_SLICES: 4,
   /**zBuffer clamped to sensible values */
   DEPTH: 5,
@@ -253,10 +253,8 @@ export const CONFIG = {
     avgFragmentsPerSlice: 16,
     /** If you have a lot of slices, naive impl. would require `viewport.x * viewport.y * slicesPerPixel * sizeof(u32)` data. This is SIGNIFICANTLY reduced if ponytail optimization is implemented (as I did). Still, to limit memory, we use task queue. Each processor grabs tiles from a queue. We might (?) not even be able to dispatch all processors at once (hw and sliceHeadsMemory dependent). Does not matter cause task queue. */
     processorCount: 64 * 8,
-    /** (1, 1, 1) dispatch. I am not going to comment on this. If you know what that means, that statement is probably enough. Change will decrease performance. Kinda wonder if Frostbite team found a way around this? The divergence is.. it is. */
-    finePassWorkgroupSizeX: 1,
     /** Where to store the PPLL slice heads data */
-    sliceHeadsMemory: 'workgroup' as SliceHeadsMemory,
+    sliceHeadsMemory: 'registers' as SliceHeadsMemory,
     /** Given distance between pixel and strand, how to calculate alpha? Can be linear 0-1 from strand edge to middle. Or quadratic (faster, denser, but more error prone and 'blocky'). */
     alphaQuadratic: false,
     /** Alpha comes from pixel's distance to strand. Multiply to make strands "fatter". Faster pixel/tile convergence at the cost of Anti Alias. fuzzy edges. */
