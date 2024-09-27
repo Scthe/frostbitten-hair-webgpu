@@ -76,7 +76,7 @@ struct FineRasterParams {
   // START: mixed
   viewportSize: vec2f, // f32's
   fiberRadius: f32,
-  processorId: u32, // TODO remove
+  processorId: u32,
   dbgSlicesModeMaxSlices: u32,
 }
 
@@ -97,22 +97,28 @@ var<workgroup> _arePixelsDone: atomic<i32>;
 // bypass "workgroupUniformLoad must not be called with an argument that contains an atomic type"
 var<workgroup> _arePixelsDone_NOT_ATOMIC: bool;
 
+
+var<workgroup> projSegm: ProjectedHairSegment; // TODO rename
+
+var<private> _local_invocation_index: u32;
 var<private> _pixelInTilePos: vec2u;
 var<private> _isPixelDone: bool;
 
-
+// https://research.nvidia.com/sites/default/files/pubs/2011-08_High-Performance-Software-Rasterization/laine2011hpg_paper.pdf
 @compute
 @workgroup_size(TILE_SIZE, TILE_SIZE, 1)
 fn main(
-  // @builtin(global_invocation_id) global_id: vec3<u32>,
-  @builtin(local_invocation_index) local_invocation_index: u32, // threadId inside workgroup
+  // global index for entire workgroup
+  @builtin(workgroup_id) workgroup_id: vec3<u32>,
+  // threadId inside workgroup
+  @builtin(local_invocation_index) local_invocation_index: u32,
 ) {
-  let processorId = 0u; //global_id.x;
+  let processorId = workgroup_id.x;
   let viewportSize: vec2f = _uniforms.viewport.xy;
   let maxDrawnSegments: u32 = _uniforms.maxDrawnHairSegments;
   let strandsCount: u32 = _hairData.strandsCount;
   let pointsPerStrand: u32 = _hairData.pointsPerStrand;
-  // _local_invocation_index = local_invocation_index;
+  _local_invocation_index = local_invocation_index;
 
   let params = FineRasterParams(
     strandsCount,
@@ -165,7 +171,7 @@ fn main(
         tileBoundsPx
       );
       
-      // early out for whole tile
+      // early out for whole tile TODO
       if (checkAllPixelsInWkgrpDone(local_invocation_index)) {
         // debugColorWholeTile(tileBoundsPx, vec4f(1., 0., 0., 1.));
         break;
@@ -188,7 +194,7 @@ fn processTile(
   let MAX_PROCESSED_SEGMENTS = params.strandsCount * params.pointsPerStrand; // just in case
   
   let tileDepth = _getTileDepth(params.viewportSizeU32, tileXY, depthBin); // TODO only on first thread
-  // if (tileDepth.y == 0.0) { return false; } // no depth written means empty tile // TODO
+  if (tileDepth.y == 0.0) { return; } // no depth written means empty tile
   var segmentPtr = _getTileSegmentPtr(params.viewportSizeU32, tileXY, depthBin);
 
   var segmentData = vec3u(); // [strandIdx, segmentIdx, nextPtr]
@@ -199,7 +205,21 @@ fn processTile(
   while (processedSegmentCnt < MAX_PROCESSED_SEGMENTS){
     let hasValidSegment = _getTileSegment(maxDrawnSegments, segmentPtr, &segmentData);
 
-    if (!_isPixelDone && hasValidSegment) {
+    if (hasValidSegment && local_invocation_index == 0u) {
+      let projParams = ProjectHairParams(
+        params.pointsPerStrand,
+        params.viewportSize,
+        params.fiberRadius,
+      );
+      projSegm = projectHairSegment(
+        projParams,
+        segmentData.x, // strandIdx,
+        segmentData.y  // segmentIdx
+      );
+    }
+    workgroupBarrier();
+
+    if (hasValidSegment && !_isPixelDone) {
       processHairSegment(
         params,
         tileBoundsPx, tileDepth,
@@ -210,8 +230,9 @@ fn processTile(
 
 
     // break condition if has no more hair segments in a tile
-    if (!hasValidSegment && tileXY.x == 0u && tileXY.y == 0u) {
-      atomicStore(&_sliceDataOffset, SLICE_DATA_PER_PROCESSOR_COUNT); // set invalid
+    if (!hasValidSegment && local_invocation_index == 0u) {
+      // set invalid index that will trigger 'break;'
+      atomicStore(&_sliceDataOffset, SLICE_DATA_PER_PROCESSOR_COUNT);
     }
 
     // trigger 'break;' if:
@@ -255,7 +276,8 @@ fn getNextTileIdx(local_invocation_index: u32, tileCount: u32) -> u32 {
   }
   workgroupBarrier();
 
-  return workgroupUniformLoad(&_currentTileIdx);
+  let idx = workgroupUniformLoad(&_currentTileIdx);
+  return _hairTileData.data[idx];
 }
 
 fn checkAllPixelsInWkgrpDone(local_invocation_index: u32) -> bool {

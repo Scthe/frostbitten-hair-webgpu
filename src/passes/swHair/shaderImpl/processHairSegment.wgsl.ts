@@ -6,34 +6,21 @@ export const SHADER_IMPL_PROCESS_HAIR_SEGMENT = () => /* wgsl */ `
 fn processHairSegment(
   params: FineRasterParams,
   tileBoundsPx: vec4u, tileDepth: vec2f,
-  strandIdx: u32, segmentIdx: u32 // TODO fetch only once?
+  strandIdx: u32, segmentIdx: u32
 ) {
   let segmentCount = params.pointsPerStrand - 1;
-
-  let projParams = ProjectHairParams(
-    params.pointsPerStrand,
-    params.viewportSize,
-    params.fiberRadius,
-  );
-  let projSegm = projectHairSegment( // TODO store in wkgrp memory to not allocate per-thread
-    projParams,
-    strandIdx,
-    segmentIdx
-  );
-
-  // bounds
-  let boundRectMin = tileBoundsPx.xy;
 
   // get pixel coordinates
   // Half-of-the-pixel offset not added as it causes problems (small random pixels around the strand)
   // https://www.sctheblog.com/blog/hair-software-rasterize/#half-of-the-pixel-offset
-  let posPx = vec2f(boundRectMin + _pixelInTilePos); // pixel coordinates wrt. viewport
+  let posPx = vec2f(tileBoundsPx.xy + _pixelInTilePos); // pixel coordinates wrt. viewport
   let CX0 = edgeFunction(projSegm.v01, projSegm.v00, posPx);
   let CX1 = edgeFunction(projSegm.v11, projSegm.v01, posPx);
   let CX2 = edgeFunction(projSegm.v10, projSegm.v11, posPx);
   let CX3 = edgeFunction(projSegm.v00, projSegm.v10, posPx);
     
     let isOutside = CX0 < 0 || CX1 < 0 || CX2 < 0 || CX3 < 0;
+    // let isOutside = CX0 > 0 || CX1 > 0 || CX2 > 0 || CX3 > 0; // TODO remove
     if (isOutside) {
       return;
     }
